@@ -41574,7 +41574,7 @@ pub mod types {
 /// Python, Unix shell, and Google Apps Script. These examples are based on a
 /// simple doc that looks something like this:
 ///
-///![](https://cdn.coda.io/external/img/api_example_doc.png)
+/// ![](https://cdn.coda.io/external/img/api_example_doc.png)
 ///
 ///### Python examples
 ///
@@ -41592,7 +41592,7 @@ pub mod types {
 ///
 ///### Google Apps Script examples
 ///
-///![](https://cdn.coda.io/external/img/api_gas.png)
+/// ![](https://cdn.coda.io/external/img/api_gas.png)
 ///
 ///[Google Apps Script](https://script.google.com/) makes it easy to write code in a JavaScript-like syntax and
 ///easily access many Google products with built-in libraries. You can set up

@@ -120,6 +120,7 @@ cat $SPEC \
 cargo progenitor -i $SPEC -o $TEMP -n coda_api -v 0.1.0
 mkdir -p src
 mv $TEMP/$LIB $LIB
+$SDF '///!' '/// !' $LIB
 echo "pub mod ext;" >> $LIB
 echo "#[cfg(test)] pub mod test;" >> $LIB
 
