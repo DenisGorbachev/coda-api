@@ -4,7 +4,7 @@ impl Client {
     pub const BASE_URL: &'static str = "https://coda.io/apis/v1";
 
     pub fn new_with_key(api_key: &str) -> reqwest::Result<Client> {
-        let authorization_header = format!("Bearer {}", api_key);
+        let authorization_header = format!("Bearer {api_key}");
 
         let mut headers = reqwest::header::HeaderMap::with_capacity(1);
         headers.insert(
