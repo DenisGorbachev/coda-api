@@ -17,6 +17,8 @@ cargo-binstall = "1.10.15"
 "cargo:cargo-hack" = "0.6.33"
 "cargo:cargo-machete" = "0.7.0"
 "cargo:cargo-nextest" = "0.9.72"
+"cargo:sd" = "1.0.0"
+jq = "1.8.1"
 
 [tasks."build"]
 run = "cargo build"
@@ -31,7 +33,8 @@ depends = ["lint:code", "lint:docs", "lint:deps"]
 depends = ["test:code", "test:docs"]
 
 [tasks."lint:code"]
-run = "cargo clippy --all-targets --all-features -- -D warnings"
+run = "cargo clippy --all-targets --all-features"
+# NOTE: I have removed "-- -D warnings" because I don't want to fix the "irrefutable `if let` pattern" warnings
 
 [tasks."lint:docs"]
 run = "mise run remark ."
@@ -85,3 +88,40 @@ remark --ignore-path .gitignore --ignore-pattern CHANGELOG.md --quiet --frail --
 
 [tasks."commitlint"]
 run = "commitlint --extends \"$(mise where npm:@commitlint/config-conventional)/lib/node_modules/@commitlint/config-conventional/lib/index.js\""
+
+[tasks."gen"]
+run = """
+#!/usr/bin/env bash
+
+set -xeuo pipefail
+
+SPEC="coda.openapi.json"
+LIB="src/lib.rs"
+SDF="sd --fixed-strings"
+TEMP=$(mktemp -d)
+
+# download the spec
+curl https://coda.io/apis/v1/openapi.json > $SPEC
+
+# fix & format the spec
+for ENUM in PageType TableType ControlType; do
+    $SDF "$ENUM" "${ENUM}Enum" $SPEC
+done
+for FIELD in aiCreditsChat aiCreditsBlock aiCreditsColumn aiCreditsAssistant aiCreditsReviewer aiCredits; do
+    $SDF "$FIELD," "$FIELD" $SPEC
+done
+# add the "json" language tag
+$SDF '[JSON-LD](https://json-ld.org/) format.\\n\\n```\\n  // Currency' '[JSON-LD](https://json-ld.org/) format.\\n\\n```json\\n  // Currency' $SPEC
+cat $SPEC \
+    | jq 'del(.paths["/docs/{docId}/hooks/automation/{ruleId}"].post.requestBody.content["application/x-www-form-urlencoded","text/plain"])' \
+    | jq . \
+    | sponge $SPEC
+
+cargo progenitor -i $SPEC -o $TEMP -n coda_api -v 0.1.0
+mkdir -p src
+mv $TEMP/$LIB $LIB
+echo "pub mod ext;" >> $LIB
+echo "#[cfg(test)] pub mod test;" >> $LIB
+
+cargo test
+"""

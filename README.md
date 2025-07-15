@@ -4,7 +4,7 @@
 
 # Coda API client
 
-
+[![Documentation](https://docs.rs/coda-api/badge.svg)](https://docs.rs/coda-api)
 
 ## Installation
 

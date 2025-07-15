@@ -2,7 +2,6 @@
 use progenitor_client::{encode_path, RequestBuilderExt};
 #[allow(unused_imports)]
 pub use progenitor_client::{ByteStream, Error, ResponseValue};
-
 /// Types used as operation parameters and responses.
 #[allow(clippy::all)]
 pub mod types {
@@ -5244,8 +5243,13 @@ pub mod types {
     impl ::std::str::FromStr for CurrencyAmount {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            let Ok(v) = value.parse();
-            Ok(Self::Variant0(v))
+            if let Ok(v) = value.parse() {
+                Ok(Self::Variant0(v))
+            } else if let Ok(v) = value.parse() {
+                Ok(Self::Variant1(v))
+            } else {
+                Err("string conversion failed for all variants".into())
+            }
         }
     }
 
@@ -18242,9 +18246,10 @@ pub mod types {
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             if let Ok(v) = value.parse() {
                 Ok(Self::Variant0(v))
-            } else {
-                let Ok(v) = value.parse();
+            } else if let Ok(v) = value.parse() {
                 Ok(Self::Variant1(v))
+            } else {
+                Err("string conversion failed for all variants".into())
             }
         }
     }
@@ -35702,8 +35707,15 @@ pub mod types {
     impl ::std::str::FromStr for ScalarValue {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            let Ok(v) = value.parse();
-            Ok(Self::Variant0(v))
+            if let Ok(v) = value.parse() {
+                Ok(Self::Variant0(v))
+            } else if let Ok(v) = value.parse() {
+                Ok(Self::Variant1(v))
+            } else if let Ok(v) = value.parse() {
+                Ok(Self::Variant2(v))
+            } else {
+                Err("string conversion failed for all variants".into())
+            }
         }
     }
 
@@ -40315,8 +40327,15 @@ pub mod types {
     impl ::std::str::FromStr for ValueVariant0 {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            let Ok(v) = value.parse();
-            Ok(Self::Variant0(v))
+            if let Ok(v) = value.parse() {
+                Ok(Self::Variant0(v))
+            } else if let Ok(v) = value.parse() {
+                Ok(Self::Variant1(v))
+            } else if let Ok(v) = value.parse() {
+                Ok(Self::Variant2(v))
+            } else {
+                Err("string conversion failed for all variants".into())
+            }
         }
     }
 
@@ -41539,12 +41558,12 @@ pub mod types {
 ///
 /// - For the [`#createDoc`](#operation/createDoc) endpoint specifically, the
 ///   owner of the API token must be a Doc
-///   Maker (or Admin) in the workspace. If the "Any member can create docs"
-///   option in enabled in the workspace  settings, they can be an Editor and will
-///   get auto-promoted to Doc Maker upon using this endpoint. Lastly, if in
-///   addition, the API key owner matches the "Auto-join email domains" setting,
-///   they will be auto-added to the  workspace and promoted to Doc Maker upon
-///   using this endpoint
+///  Maker (or Admin) in the workspace. If the "Any member can create docs"
+/// option in enabled in the workspace  settings, they can be an Editor and will
+/// get auto-promoted to Doc Maker upon using this endpoint. Lastly, if in
+///  addition, the API key owner matches the "Auto-join email domains" setting,
+/// they will be auto-added to the  workspace and promoted to Doc Maker upon
+/// using this endpoint
 ///
 ///This behavior applies to the API as well as any integrations that may use
 /// it, such as Zapier.
@@ -41555,7 +41574,7 @@ pub mod types {
 /// Python, Unix shell, and Google Apps Script. These examples are based on a
 /// simple doc that looks something like this:
 ///
-/// ![](https://cdn.coda.io/external/img/api_example_doc.png)
+///![](https://cdn.coda.io/external/img/api_example_doc.png)
 ///
 ///### Python examples
 ///
@@ -41573,7 +41592,7 @@ pub mod types {
 ///
 ///### Google Apps Script examples
 ///
-/// ![](https://cdn.coda.io/external/img/api_gas.png)
+///![](https://cdn.coda.io/external/img/api_gas.png)
 ///
 ///[Google Apps Script](https://script.google.com/) makes it easy to write code in a JavaScript-like syntax and
 ///easily access many Google products with built-in libraries. You can set up
@@ -42626,7 +42645,7 @@ impl Client {
     ///  `
     ///  * For `currency`, `lookup`, `image`, `person` and `hyperlink` values, the value will be encoded in [JSON-LD](https://json-ld.org/) format.
     ///
-    ///```
+    ///```json
     ///  // Currency
     ///  {
     ///    "@context": "http://schema.org",
@@ -45826,3 +45845,6 @@ pub mod prelude {
     #[allow(unused_imports)]
     pub use super::Client;
 }
+pub mod ext;
+#[cfg(test)]
+pub mod test;
