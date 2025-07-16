@@ -1,5 +1,5 @@
-use crate::types::{Column, ColumnList, Doc, DocList, NextPageToken, Table, TableList, TableReference};
-use crate::Client;
+use crate::types::{Column, ColumnList, Doc, DocList, ListTablesResponse, NextPageToken, Table, TableList, TableReference};
+use crate::{types, Client, Error};
 use std::collections::HashMap;
 
 pub type TableId = String;
@@ -89,12 +89,12 @@ impl Client {
     pub const BASE_URL: &'static str = "https://coda.io/apis/v1";
 
     // Generic pagination helper that collects all pages into a Vec
-    pub async fn paginate_all<T, R, F, Fut>(&self, mut request_fn: F) -> Vec<T>
+    pub async fn paginate_all<T, R, F, Fut, E>(&self, mut request_fn: F) -> Result<Vec<T>, E>
     where
         T: Clone,
         R: PaginatedResponse<T>,
         F: FnMut(Option<String>) -> Fut,
-        Fut: std::future::Future<Output = Result<R, Box<dyn std::error::Error>>>,
+        Fut: std::future::Future<Output = Result<R, E>>,
     {
         let mut all_items = Vec::new();
         let mut pagination_state = PaginationState::new();
@@ -110,23 +110,20 @@ impl Client {
                         break;
                     }
                 }
-                Err(_) => break,
+                Err(e) => return Err(e),
             }
         }
 
-        all_items
+        Ok(all_items)
     }
 
     pub fn new_with_key(api_key: &str) -> reqwest::Result<Client> {
-        let authorization_header = format!("Bearer {api_key}");
+        let authorization_header = format!("Bearer {api_key}")
+            .parse()
+            .expect("API key should be valid");
 
         let mut headers = reqwest::header::HeaderMap::with_capacity(1);
-        headers.insert(
-            reqwest::header::AUTHORIZATION,
-            authorization_header
-                .parse()
-                .expect("API key should be valid"),
-        );
+        headers.insert(reqwest::header::AUTHORIZATION, authorization_header);
 
         let client_with_custom_defaults = reqwest::ClientBuilder::new()
             .default_headers(headers)
@@ -137,101 +134,45 @@ impl Client {
         Ok(client)
     }
 
-    pub async fn tables(&self, doc_id: String) -> Vec<Table> {
+    pub async fn tables(&self, doc_id: &str) -> Result<Vec<Table>, Error<ListTablesResponse>> {
         // Use the generic pagination helper to get all table references
-        let doc_id_clone = doc_id.clone();
         let table_refs = self
-            .paginate_all(move |page_token| {
-                let doc_id = doc_id_clone.clone();
-                async move {
-                    self.list_tables(&doc_id, None, page_token.as_deref(), None, None)
-                        .await
-                        .map(|response| response.into_inner())
-                        .map_err(|e| Box::new(e) as Box<dyn std::error::Error>)
-                }
+            .paginate_all(move |page_token| async move {
+                self.list_tables(doc_id, None, page_token.as_deref(), None, None)
+                    .await
+                    .map(|response| response.into_inner())
             })
-            .await;
+            .await?;
 
         // Get full table details for each table reference
         let mut all_tables = Vec::new();
         for table_ref in table_refs {
-            if let Ok(table_response) = self.get_table(&doc_id, &table_ref.id, None).await {
-                all_tables.push(table_response.into_inner());
+            match self.get_table(doc_id, &table_ref.id, None).await {
+                Ok(table_response) => all_tables.push(table_response.into_inner()),
+                Err(_) => continue, // Skip tables that fail to load details
             }
         }
 
-        all_tables
+        Ok(all_tables)
     }
 
-    pub async fn columns_map(&self, table_ids: impl IntoIterator<Item = TableId>) -> HashMap<TableId, Vec<Column>> {
+    pub async fn columns_map(&self, doc_id: &str, table_ids: impl IntoIterator<Item = TableId>) -> Result<HashMap<TableId, Vec<Column>>, Error<types::ListColumnsResponse>> {
         let mut columns_map = HashMap::new();
-
-        // First, get all docs to find the table's doc_id
-        let docs = self
-            .paginate_all(move |page_token| {
-                async move {
-                    self.list_docs(
-                        None, // folder_id
-                        None, // in_gallery
-                        None, // is_owner
-                        None, // is_published
-                        None, // is_starred
-                        None, // limit
-                        page_token.as_deref(),
-                        None, // query
-                        None, // source_doc
-                        None, // workspace_id
-                    )
-                    .await
-                    .map(|response| response.into_inner())
-                    .map_err(|e| Box::new(e) as Box<dyn std::error::Error>)
-                }
-            })
-            .await;
-
-        // Build doc_id -> table_id mapping
-        let mut doc_table_map = HashMap::new();
-        for doc in docs {
-            let doc_id = doc.id.clone();
-            let table_refs = self
-                .paginate_all(move |page_token| {
-                    let doc_id = doc_id.clone();
-                    async move {
-                        self.list_tables(&doc_id, None, page_token.as_deref(), None, None)
-                            .await
-                            .map(|response| response.into_inner())
-                            .map_err(|e| Box::new(e) as Box<dyn std::error::Error>)
-                    }
-                })
-                .await;
-
-            for table_ref in table_refs {
-                doc_table_map.insert(table_ref.id.clone(), doc.id.clone());
-            }
-        }
 
         // Now get columns for each requested table
         for table_id in table_ids {
-            if let Some(doc_id) = doc_table_map.get(&table_id) {
-                let doc_id = doc_id.clone();
-                let table_id_clone = table_id.clone();
-                let columns = self
-                    .paginate_all(move |page_token| {
-                        let doc_id = doc_id.clone();
-                        let table_id = table_id_clone.clone();
-                        async move {
-                            self.list_columns(&doc_id, &table_id, None, page_token.as_deref(), None)
-                                .await
-                                .map(|response| response.into_inner())
-                                .map_err(|e| Box::new(e) as Box<dyn std::error::Error>)
-                        }
-                    })
-                    .await;
+            let table_id_ref = table_id.as_ref();
+            let columns = self
+                .paginate_all(move |page_token| async move {
+                    self.list_columns(doc_id, table_id_ref, None, page_token.as_deref(), None)
+                        .await
+                        .map(|response| response.into_inner())
+                })
+                .await?;
 
-                columns_map.insert(table_id, columns);
-            }
+            columns_map.insert(table_id, columns);
         }
 
-        columns_map
+        Ok(columns_map)
     }
 }
