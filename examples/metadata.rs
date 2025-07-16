@@ -11,10 +11,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let client = Client::new_with_key(&key)?;
     let tables = client.tables(&doc_id).await?;
     let tables_ids = tables.iter().map(|t| t.id.clone());
-    let columns_map = client.columns_map(&doc_id, tables_ids).await?;
+    // let columns_map = client.columns_map(&doc_id, tables_ids).await?;
     let output = json!({
         "tables": tables,
-        "columns_map": columns_map
+        // "columns_map": columns_map
     });
     println!("{output}");
     Ok(())

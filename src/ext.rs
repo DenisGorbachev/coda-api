@@ -1,4 +1,4 @@
-use crate::types::{Column, ColumnList, Doc, DocList, ListTablesResponse, NextPageToken, Table, TableList, TableReference};
+use crate::types::{Column, ColumnList, Doc, DocList, ListTablesResponse, NextPageToken, Row, RowList, Table, TableList, TableReference};
 use crate::{types, Client, Error};
 use std::collections::HashMap;
 
@@ -81,6 +81,20 @@ impl PaginatedResponse<Doc> for DocList {
     }
 
     fn into_items(self) -> Vec<Doc> {
+        self.items
+    }
+}
+
+impl PaginatedResponse<Row> for RowList {
+    fn items(&self) -> &Vec<Row> {
+        &self.items
+    }
+
+    fn next_page_token(&self) -> Option<&NextPageToken> {
+        self.next_page_token.as_ref()
+    }
+
+    fn into_items(self) -> Vec<Row> {
         self.items
     }
 }
@@ -174,5 +188,25 @@ impl Client {
         }
 
         Ok(columns_map)
+    }
+
+    pub async fn rows(&self, doc_id: &str, table_id: &str, sync_token: Option<&str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<Vec<Row>, Error<types::ListRowsResponse>> {
+        // Use the generic pagination helper to get all rows
+        self.paginate_all(move |page_token| async move {
+            self.list_rows(doc_id, table_id, None, page_token.as_deref(), None, None, sync_token, use_column_names, value_format, None)
+                .await
+                .map(|response| response.into_inner())
+        })
+        .await
+    }
+
+    pub async fn rows_map(&self, doc_id: &str, table_ids: impl IntoIterator<Item = TableId>, sync_token: Option<&str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<Vec<Row>, Error<types::ListRowsResponse>> {
+        let _rows_futures = table_ids.into_iter().map(async |table_id| {
+            self.rows(doc_id, &table_id, sync_token, use_column_names, value_format)
+                .await
+        });
+        // AI: await all futures
+        // Use HashMap::from
+        todo!()
     }
 }
