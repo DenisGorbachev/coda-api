@@ -1,4 +1,8 @@
+use crate::types::{Column, Table};
 use crate::Client;
+use std::collections::HashMap;
+
+pub type TableId = String;
 
 impl Client {
     pub const BASE_URL: &'static str = "https://coda.io/apis/v1";
@@ -21,5 +25,13 @@ impl Client {
         let client = Self::new_with_client(Self::BASE_URL, client_with_custom_defaults);
 
         Ok(client)
+    }
+
+    pub fn tables(&self) -> Vec<Table> {
+        todo!()
+    }
+
+    pub fn columns_map(&self, _table_ids: impl IntoIterator<Item = TableId>) -> HashMap<TableId, Vec<Column>> {
+        todo!()
     }
 }
