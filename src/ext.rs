@@ -27,11 +27,11 @@ impl Client {
         Ok(client)
     }
 
-    pub fn tables(&self) -> Vec<Table> {
+    pub async fn tables(&self) -> Vec<Table> {
         todo!()
     }
 
-    pub fn columns_map(&self, _table_ids: impl IntoIterator<Item = TableId>) -> HashMap<TableId, Vec<Column>> {
+    pub async fn columns_map(&self, _table_ids: impl IntoIterator<Item = TableId>) -> HashMap<TableId, Vec<Column>> {
         todo!()
     }
 }
