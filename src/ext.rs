@@ -200,13 +200,21 @@ impl Client {
         .await
     }
 
-    pub async fn rows_map(&self, doc_id: &str, table_ids: impl IntoIterator<Item = TableId>, sync_token: Option<&str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<Vec<Row>, Error<types::ListRowsResponse>> {
-        let _rows_futures = table_ids.into_iter().map(async |table_id| {
-            self.rows(doc_id, &table_id, sync_token, use_column_names, value_format)
-                .await
+    pub async fn rows_map(&self, doc_id: &str, table_ids: impl IntoIterator<Item = TableId>, sync_token: Option<&str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<HashMap<TableId, Vec<Row>>, Error<types::ListRowsResponse>> {
+        let rows_futures = table_ids.into_iter().map(|table_id| async {
+            let rows = self
+                .rows(doc_id, &table_id, sync_token, use_column_names, value_format)
+                .await?;
+            Ok::<(TableId, Vec<Row>), Error<types::ListRowsResponse>>((table_id, rows))
         });
-        // AI: await all futures
-        // Use HashMap::from
-        todo!()
+
+        let mut rows_map = HashMap::new();
+
+        for future in rows_futures {
+            let (table_id, rows) = future.await?;
+            rows_map.insert(table_id, rows);
+        }
+
+        Ok(rows_map)
     }
 }
