@@ -1,7 +1,7 @@
 #[allow(unused_imports)]
-use progenitor_client::{encode_path, RequestBuilderExt};
-#[allow(unused_imports)]
 pub use progenitor_client::{ByteStream, Error, ResponseValue};
+#[allow(unused_imports)]
+use progenitor_client::{RequestBuilderExt, encode_path};
 
 /// Types used as operation parameters and responses.
 #[allow(clippy::all)]
@@ -41719,7 +41719,7 @@ impl Client {
 }
 
 #[allow(clippy::all)]
-#[allow(elided_named_lifetimes)]
+#[allow(mismatched_lifetime_syntaxes)]
 impl Client {
     ///Get doc categories
     ///
