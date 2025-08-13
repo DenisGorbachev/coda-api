@@ -1,5 +1,5 @@
 use crate::types::{Column, ColumnList, Doc, DocList, ListTablesResponse, NextPageToken, Row, RowList, Table, TableList, TableReference};
-use crate::{types, Client, Error};
+use crate::{Client, Error, types};
 use std::collections::HashMap;
 
 pub type TableId = String;
