@@ -19,6 +19,7 @@ cargo-binstall = "1.10.15"
 "cargo:cargo-nextest" = "0.9.102"
 "cargo:sd" = "1.0.0"
 jq = "1.8.1"
+"cargo:cargo-progenitor" = "0.10.0"
 
 [tasks."build"]
 run = "cargo build"
