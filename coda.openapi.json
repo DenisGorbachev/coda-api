@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "version": "1.4.17",
+    "version": "1.4.19",
     "title": "Coda API",
     "license": {
       "name": "Coda Developer Terms",
@@ -2826,6 +2826,60 @@
         }
       }
     },
+    "/folders/{folderId}": {
+      "get": {
+        "summary": "Get folder",
+        "description": "Returns the requested folder.\n",
+        "operationId": "getFolder",
+        "tags": [
+          "Folders"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/folderId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested Coda folder.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Folder"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        },
+        "x-codeSamples": [
+          {
+            "label": "Python 3.13",
+            "lang": "python",
+            "source": "import requests\n\nheaders = {'Authorization': 'Bearer <your API token>'}\nuri = 'https://coda.io/apis/v1/folders/<your folder id>'\nres = requests.get(uri, headers=headers).json()\n\nprint(f'Folder name is: {res[\"name\"]}')\n"
+          },
+          {
+            "label": "Shell",
+            "lang": "shell",
+            "source": "curl -s -H 'Authorization: Bearer <your API token>' \\\n  'https://coda.io/apis/v1/folders/<your folder id>' |\n  jq .name\n"
+          }
+        ]
+      }
+    },
     "/whoami": {
       "get": {
         "summary": "Get user info",
@@ -5439,6 +5493,15 @@
             }
           },
           {
+            "name": "ingestionId",
+            "description": "ID of the target ingestion for checking limit settings",
+            "in": "query",
+            "example": "uuid-uuid-uuid-uuid",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "installContext",
             "in": "query",
             "description": "Type of installation context for which Pack information is being requested.",
@@ -5697,6 +5760,22 @@
             "schema": {
               "type": "string",
               "format": "date-time"
+            }
+          },
+          {
+            "name": "ingestionStatus",
+            "description": "Only fetch logs with the given ingestion status. This only works in combination with the onlyExecutionCompletions parameter.\n",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/IngestionStatus"
+            }
+          },
+          {
+            "name": "onlyExecutionCompletions",
+            "description": "Only fetch logs that represent the completion of a child execution.",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
             }
           },
           {
@@ -6172,246 +6251,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/IngestionParentItemsList"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequestWithValidationErrors"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "403": {
-            "$ref": "#/components/responses/ForbiddenError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          },
-          "429": {
-            "$ref": "#/components/responses/TooManyRequestsError"
-          }
-        }
-      }
-    },
-    "/packs/{packId}/tenantId/{tenantId}/rootIngestionId/{rootIngestionId}/ingestionExecutions": {
-      "get": {
-        "summary": "Retrieve a list of ingestion execution ids for the given root ingestion id.",
-        "description": "Retrieve the ingestion execution ids of a root ingestion for debugging purpose.\n",
-        "operationId": "listIngestionExecutions",
-        "tags": [
-          "Packs"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/packId"
-          },
-          {
-            "name": "limit",
-            "description": "Maximum number of results to return in this query.",
-            "in": "query",
-            "example": 10,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 25,
-              "maximum": 100
-            }
-          },
-          {
-            "$ref": "#/components/parameters/pageToken"
-          },
-          {
-            "$ref": "#/components/parameters/tenantId"
-          },
-          {
-            "$ref": "#/components/parameters/rootIngestionId"
-          },
-          {
-            "name": "beforeTimestamp",
-            "description": "Only return logs before the given time (non-inclusive).\n",
-            "in": "query",
-            "required": false,
-            "example": "2018-04-11T00:18:57.946Z",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "afterTimestamp",
-            "description": "Only return logs after the given time (non-inclusive).\n",
-            "in": "query",
-            "required": false,
-            "example": "2018-04-11T00:18:57.946Z",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "order",
-            "description": "Specifies if the logs will be returned in time desc or asc. Default is desc.\n",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ]
-            }
-          },
-          {
-            "name": "ingestionStatus",
-            "description": "Status of the ingestion execution to filter to\n",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/IngestionStatus"
-            }
-          },
-          {
-            "name": "datasource",
-            "description": "Datasource of the ingestion execution to filter to\n",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "x-allow-empty": true
-            }
-          },
-          {
-            "name": "executionType",
-            "description": "Execution type of the ingestion execution to filter to\n",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "$ref": "#/components/schemas/IngestionExecutionType"
-            }
-          },
-          {
-            "name": "includeDeletedIngestions",
-            "description": "Include deleted ingestion executions in the response\n",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "csbIngestionId",
-            "description": "Ingestion id of the ingestion execution to filter to\n",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "csbIngestionExecutionId",
-            "description": "Ingestion execution id of the ingestion execution to filter to\n",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "list of ingestion execution contexts.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IngestionExecutionsList"
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/BadRequestWithValidationErrors"
-          },
-          "401": {
-            "$ref": "#/components/responses/UnauthorizedError"
-          },
-          "403": {
-            "$ref": "#/components/responses/ForbiddenError"
-          },
-          "404": {
-            "$ref": "#/components/responses/NotFoundError"
-          },
-          "429": {
-            "$ref": "#/components/responses/TooManyRequestsError"
-          }
-        }
-      }
-    },
-    "/packs/{packId}/tenantId/{tenantId}/rootIngestionId/{rootIngestionId}/ingestionExecutionId/{ingestionExecutionId}/attempts": {
-      "get": {
-        "summary": "Retrieve a list of ingestion execution ids for the given root ingestion id.",
-        "description": "Retrieve the ingestion execution ids of a root ingestion for debugging purpose.\n",
-        "operationId": "listIngestionExecutionAttempts",
-        "tags": [
-          "Packs"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/packId"
-          },
-          {
-            "name": "limit",
-            "description": "Maximum number of results to return in this query.",
-            "in": "query",
-            "example": 10,
-            "schema": {
-              "type": "integer",
-              "minimum": 1,
-              "default": 25,
-              "maximum": 100
-            }
-          },
-          {
-            "$ref": "#/components/parameters/pageToken"
-          },
-          {
-            "$ref": "#/components/parameters/tenantId"
-          },
-          {
-            "$ref": "#/components/parameters/rootIngestionId"
-          },
-          {
-            "name": "ingestionExecutionId",
-            "description": "ID of the ingestion execution.",
-            "in": "path",
-            "required": true,
-            "example": "a4e293c4-4a85-45a4-b2ba-7f305cba2703",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "order",
-            "description": "Specifies if the logs will be returned in time desc or asc. Default is desc.\n",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "asc",
-                "desc"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "list of ingestion execution attempts.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IngestionExecutionAttemptsList"
                 }
               }
             }
@@ -8028,6 +7867,58 @@
         "properties": {
           "provider": {
             "$ref": "#/components/schemas/CustomDocDomainProvider"
+          }
+        }
+      },
+      "Folder": {
+        "x-schema-name": "Folder",
+        "description": "A Coda folder.",
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "name",
+          "createdAt",
+          "workspaceId"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp for when the folder was created.",
+            "example": "2018-04-11T00:18:57.946Z"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the folder.",
+            "example": "A collection of project docs."
+          },
+          "icon": {
+            "$ref": "#/components/schemas/Icon"
+          },
+          "id": {
+            "type": "string",
+            "description": "ID of the Coda folder.",
+            "example": "fl-1Ab234"
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the folder.",
+            "example": "Projects"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of this resource.",
+            "enum": [
+              "folder"
+            ],
+            "x-tsType": "Type.Folder"
+          },
+          "workspaceId": {
+            "type": "string",
+            "description": "ID of the Coda workspace.",
+            "example": "ws-1Ab234"
           }
         }
       },
@@ -9736,7 +9627,15 @@
           {
             "type": "object",
             "additionalProperties": false,
-            "properties": {}
+            "properties": {
+              "options": {
+                "type": "array",
+                "description": "For select format columns, the list of available options. Only returned for select lists that used a fixed set of options. Returns the first 5000 options.",
+                "items": {
+                  "$ref": "#/components/schemas/SelectOption"
+                }
+              }
+            }
           }
         ]
       },
@@ -11106,6 +11005,7 @@
         "type": "string",
         "example": "slider",
         "enum": [
+          "aiBlock",
           "button",
           "checkbox",
           "datePicker",
@@ -11121,6 +11021,7 @@
           "timePicker"
         ],
         "x-tsEnumNames": [
+          "AIBlock",
           "Button",
           "Checkbox",
           "DatePicker",
@@ -12975,6 +12876,10 @@
             "type": "boolean",
             "description": "Denotes if the pack is certified by Coda."
           },
+          "certifiedAgent": {
+            "type": "boolean",
+            "description": "Denotes if the pack is certified by Grammarly to be optimized for agent usage."
+          },
           "sourceCodeVisibility": {
             "$ref": "#/components/schemas/PackSourceCodeVisibility"
           },
@@ -12994,6 +12899,12 @@
             "type": "string",
             "description": "A short version of the description of the Pack.",
             "example": "Calculate cool geometric formulas like surface area.",
+            "maxLength": 256
+          },
+          "agentShortDescription": {
+            "type": "string",
+            "description": "A short description for the pack as an agent.",
+            "example": "Chat with a tool that can calculate cool geometric formulas like surface area.",
             "maxLength": 256
           },
           "supportEmail": {
@@ -13077,6 +12988,10 @@
             "type": "boolean",
             "description": "Denotes if the pack is certified by Coda."
           },
+          "certifiedAgent": {
+            "type": "boolean",
+            "description": "Denotes if the pack is certified by Grammarly to be optimized for agent usage."
+          },
           "sourceCodeVisibility": {
             "$ref": "#/components/schemas/PackSourceCodeVisibility"
           },
@@ -13096,6 +13011,12 @@
             "type": "string",
             "description": "A short version of the description of the Pack.",
             "example": "Calculate cool geometric formulas like surface area.",
+            "maxLength": 256
+          },
+          "agentShortDescription": {
+            "type": "string",
+            "description": "A short description for the pack as an agent.",
+            "example": "Chat with a tool that can calculate cool geometric formulas like surface area.",
             "maxLength": 256
           },
           "supportEmail": {
@@ -13273,12 +13194,14 @@
         "x-schema-name": "PackAccessType",
         "type": "string",
         "enum": [
+          "none",
           "view",
           "test",
           "edit",
           "admin"
         ],
         "x-tsEnumNames": [
+          "None",
           "View",
           "Test",
           "Edit",
@@ -13894,6 +13817,11 @@
             "description": "A short version of the description of the Pack.",
             "example": "Calculate cool geometric formulas like surface area."
           },
+          "agentShortDescription": {
+            "type": "string",
+            "description": "A short description for the pack as an agent.",
+            "example": "Chat with a tool that can calculate cool geometric formulas like surface area."
+          },
           "supportEmail": {
             "type": "string",
             "description": "A contact email for the Pack.",
@@ -13926,6 +13854,10 @@
           "certified": {
             "type": "boolean",
             "description": "Denotes if the pack is certified by Coda."
+          },
+          "certifiedAgent": {
+            "type": "boolean",
+            "description": "Denotes if the pack is certified by Grammarly to be optimized for agent usage."
           },
           "minimumFeatureSet": {
             "$ref": "#/components/schemas/FeatureSet"
@@ -14028,6 +13960,11 @@
             "description": "A short version of the description of the Pack.",
             "example": "Calculate cool geometric formulas like surface area."
           },
+          "agentShortDescription": {
+            "type": "string",
+            "description": "A short description for the pack as an agent.",
+            "example": "Chat with a tool that can calculate cool geometric formulas like surface area."
+          },
           "supportEmail": {
             "type": "string",
             "description": "A contact email for the Pack.",
@@ -14060,6 +13997,10 @@
           "certified": {
             "type": "boolean",
             "description": "Denotes if the pack is certified by Coda."
+          },
+          "certifiedAgent": {
+            "type": "boolean",
+            "description": "Denotes if the pack is certified by Grammarly to be optimized for agent usage."
           },
           "minimumFeatureSet": {
             "$ref": "#/components/schemas/FeatureSet"
@@ -14225,6 +14166,9 @@
                 "$ref": "#/components/schemas/PackOrganizationAccessForCodaBrain"
               }
             ]
+          },
+          "ingestionLimitSettings": {
+            "$ref": "#/components/schemas/IngestionLimitSettings"
           }
         }
       },
@@ -15707,6 +15651,10 @@
             "type": "string",
             "description": "Key to be used in fetching log details."
           },
+          "ingestionChildExecutionIndex": {
+            "type": "number",
+            "description": "Child execution id for this ingestion log."
+          },
           "ingestionId": {
             "type": "string",
             "description": "Unique identifier of the ingestion that triggered this log."
@@ -16616,6 +16564,12 @@
             "example": "Calculate cool geometric formulas like surface area.",
             "maxLength": 256
           },
+          "agentShortDescription": {
+            "type": "string",
+            "description": "A short description for the pack as an agent.",
+            "example": "Chat with a tool that can calculate cool geometric formulas like surface area.",
+            "maxLength": 256
+          },
           "supportEmail": {
             "type": "string",
             "description": "A contact email for the Pack.",
@@ -17182,6 +17136,14 @@
             "type": "number",
             "description": "Creation time of the ingestion batch execution in seconds since epoch."
           },
+          "dynamicLabel": {
+            "type": "string",
+            "description": "The label of the dynamic URL of the ingestion, if any."
+          },
+          "dynamicUrl": {
+            "type": "string",
+            "description": "The dynamic URL of the ingestion."
+          },
           "executionType": {
             "$ref": "#/components/schemas/IngestionExecutionType"
           },
@@ -17199,7 +17161,7 @@
           },
           "ingestionName": {
             "type": "string",
-            "description": "The name of the ingestion batch execution."
+            "description": "The name of the ingestion."
           },
           "ingestionStatusCounts": {
             "type": "object",
@@ -17212,6 +17174,21 @@
               "FAILED": 5,
               "STARTED": 4
             }
+          },
+          "lastFinishedFullWorkflowExecutionId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the last full workflow execution that finished."
+          },
+          "lastFinishedIncrementalWorkflowExecutionId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the last incremental workflow execution that finished."
+          },
+          "latestFullWorkflowExecutionId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the latest full workflow execution."
           },
           "latestIncrementalWorkflowExecutionId": {
             "type": "string",
@@ -17413,6 +17390,10 @@
           "executionType": {
             "$ref": "#/components/schemas/IngestionChildExecutionType"
           },
+          "ingestionChildExecutionIndex": {
+            "type": "number",
+            "description": "Current execution index for this parent item's child execution."
+          },
           "ingestionExecutionId": {
             "type": "string",
             "description": "The ID of the ingestion child execution."
@@ -17434,7 +17415,7 @@
           },
           "rowCount": {
             "type": "number",
-            "description": "The number of rows processed in the ingestion child execution."
+            "description": "The number of rows processed so far in the current ingestion child execution."
           },
           "latestCheckpointTimestamp": {
             "type": "number",
@@ -17490,6 +17471,80 @@
           "Incremental",
           "Patch"
         ]
+      },
+      "IngestionLimitSettings": {
+        "x-schema-name": "IngestionLimitSettings",
+        "description": "Limits for a pack-driven ingestion",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "maxBytesPerSyncTableDefault",
+          "allowedTablesCount"
+        ],
+        "properties": {
+          "tableSettings": {
+            "type": "object",
+            "description": "Map from table name to per table settings. This may not include every table in the pack. Each setting per table will include an optional maxBytesPerSyncTableOverride that will override the default, an optional excludeIngestionByDefault flag, and an optional parameterLimits dictionary of allowed parameter values.\n",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/IngestionTableSetting"
+            }
+          },
+          "maxBytesPerSyncTableDefault": {
+            "type": "number",
+            "description": "The default bytes limit when ingesting data for a table in the pack. null means no limit.",
+            "nullable": true
+          },
+          "allowedTablesCount": {
+            "type": "number",
+            "description": "The maximum number of tables that can be included. -1 means no limit."
+          }
+        }
+      },
+      "IngestionTableSetting": {
+        "x-schema-name": "IngestionTableSetting",
+        "description": "Ingestion settings for a specific table",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "maxBytesPerSyncTableOverride": {
+            "type": "number",
+            "description": "The bytes limit when ingesting data for this table. null means no limit.",
+            "nullable": true
+          },
+          "excludeIngestionByDefault": {
+            "type": "boolean",
+            "description": "Whether to exclude this table from ingestions by default."
+          },
+          "parameterLimits": {
+            "type": "object",
+            "description": "Limits for allowed parameter values.",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ParameterSetting"
+            }
+          }
+        }
+      },
+      "ParameterSetting": {
+        "x-schema-name": "ParameterSetting",
+        "description": "Setting for a specific parameter",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "default",
+          "allowed"
+        ],
+        "properties": {
+          "default": {
+            "type": "string",
+            "description": "Default value for the parameter"
+          },
+          "allowed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
       },
       "AddGoLinkRequest": {
         "x-schema-name": "AddGoLinkRequest",
@@ -18070,6 +18125,16 @@
         "in": "path",
         "required": true,
         "example": "org-LxmbD9y2EU",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "folderId": {
+        "name": "folderId",
+        "description": "ID of the folder.",
+        "in": "path",
+        "required": true,
+        "example": "fl-1Ab234",
         "schema": {
           "type": "string"
         }

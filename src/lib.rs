@@ -2,7 +2,6 @@
 pub use progenitor_client::{ByteStream, Error, ResponseValue};
 #[allow(unused_imports)]
 use progenitor_client::{RequestBuilderExt, encode_path};
-
 /// Types used as operation parameters and responses.
 #[allow(clippy::all)]
 pub mod types {
@@ -4565,6 +4564,7 @@ pub mod types {
     ///  ],
     ///  "type": "string",
     ///  "enum": [
+    ///    "aiBlock",
     ///    "button",
     ///    "checkbox",
     ///    "datePicker",
@@ -4581,6 +4581,7 @@ pub mod types {
     ///  ],
     ///  "x-schema-name": "ControlTypeEnum",
     ///  "x-tsEnumNames": [
+    ///    "AIBlock",
     ///    "Button",
     ///    "Checkbox",
     ///    "DatePicker",
@@ -4600,6 +4601,8 @@ pub mod types {
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     pub enum ControlTypeEnum {
+        #[serde(rename = "aiBlock")]
+        AiBlock,
         #[serde(rename = "button")]
         Button,
         #[serde(rename = "checkbox")]
@@ -4637,6 +4640,7 @@ pub mod types {
     impl ::std::fmt::Display for ControlTypeEnum {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
+                Self::AiBlock => write!(f, "aiBlock"),
                 Self::Button => write!(f, "button"),
                 Self::Checkbox => write!(f, "checkbox"),
                 Self::DatePicker => write!(f, "datePicker"),
@@ -4658,6 +4662,7 @@ pub mod types {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
+                "aiBlock" => Ok(Self::AiBlock),
                 "button" => Ok(Self::Button),
                 "checkbox" => Ok(Self::Checkbox),
                 "datePicker" => Ok(Self::DatePicker),
@@ -9267,6 +9272,104 @@ pub mod types {
         }
     }
 
+    ///A Coda folder.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A Coda folder.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "createdAt",
+    ///    "id",
+    ///    "name",
+    ///    "type",
+    ///    "workspaceId"
+    ///  ],
+    ///  "properties": {
+    ///    "createdAt": {
+    ///      "description": "Timestamp for when the folder was created.",
+    ///      "examples": [
+    ///        "2018-04-11T00:18:57.946Z"
+    ///      ],
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "description": {
+    ///      "description": "The description of the folder.",
+    ///      "examples": [
+    ///        "A collection of project docs."
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "icon": {
+    ///      "$ref": "#/components/schemas/Icon"
+    ///    },
+    ///    "id": {
+    ///      "description": "ID of the Coda folder.",
+    ///      "examples": [
+    ///        "fl-1Ab234"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "description": "The name of the folder.",
+    ///      "examples": [
+    ///        "Projects"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "type": {
+    ///      "description": "The type of this resource.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "folder"
+    ///      ],
+    ///      "x-tsType": "Type.Folder"
+    ///    },
+    ///    "workspaceId": {
+    ///      "description": "ID of the Coda workspace.",
+    ///      "examples": [
+    ///        "ws-1Ab234"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "Folder"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct Folder {
+        ///Timestamp for when the folder was created.
+        #[serde(rename = "createdAt")]
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///The description of the folder.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub icon: ::std::option::Option<Icon>,
+        ///ID of the Coda folder.
+        pub id: ::std::string::String,
+        ///The name of the folder.
+        pub name: ::std::string::String,
+        ///The type of this resource.
+        #[serde(rename = "type")]
+        pub type_: FolderType,
+        ///ID of the Coda workspace.
+        #[serde(rename = "workspaceId")]
+        pub workspace_id: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&Folder> for Folder {
+        fn from(value: &Folder) -> Self {
+            value.clone()
+        }
+    }
+
     ///Reference to a Coda folder.
     ///
     /// <details><summary>JSON schema</summary>
@@ -9400,6 +9503,72 @@ pub mod types {
     }
 
     impl ::std::convert::TryFrom<::std::string::String> for FolderReferenceType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    ///The type of this resource.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The type of this resource.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "folder"
+    ///  ],
+    ///  "x-tsType": "Type.Folder"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum FolderType {
+        #[serde(rename = "folder")]
+        Folder,
+    }
+
+    impl ::std::convert::From<&Self> for FolderType {
+        fn from(value: &FolderType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for FolderType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Folder => write!(f, "folder"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for FolderType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "folder" => Ok(Self::Folder),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for FolderType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for FolderType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for FolderType {
         type Error = self::error::ConversionError;
         fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
@@ -10303,6 +10472,65 @@ pub mod types {
 
     impl ::std::convert::From<&GetDocResponse> for GetDocResponse {
         fn from(value: &GetDocResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct GetFolderResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&GetFolderResponse> for GetFolderResponse {
+        fn from(value: &GetFolderResponse) -> Self {
             value.clone()
         }
     }
@@ -13095,6 +13323,15 @@ pub mod types {
     /// seconds since epoch.",
     ///      "type": "number"
     ///    },
+    ///    "dynamicLabel": {
+    ///      "description": "The label of the dynamic URL of the ingestion, if
+    /// any.",
+    ///      "type": "string"
+    ///    },
+    ///    "dynamicUrl": {
+    ///      "description": "The dynamic URL of the ingestion.",
+    ///      "type": "string"
+    ///    },
     ///    "executionType": {
     ///      "$ref": "#/components/schemas/IngestionExecutionType"
     ///    },
@@ -13111,7 +13348,7 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "ingestionName": {
-    ///      "description": "The name of the ingestion batch execution.",
+    ///      "description": "The name of the ingestion.",
     ///      "type": "string"
     ///    },
     ///    "ingestionStatusCounts": {
@@ -13128,6 +13365,23 @@ pub mod types {
     ///      "additionalProperties": {
     ///        "type": "integer"
     ///      }
+    ///    },
+    ///    "lastFinishedFullWorkflowExecutionId": {
+    ///      "description": "The ID of the last full workflow execution that
+    /// finished.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "lastFinishedIncrementalWorkflowExecutionId": {
+    ///      "description": "The ID of the last incremental workflow execution
+    /// that finished.",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "latestFullWorkflowExecutionId": {
+    ///      "description": "The ID of the latest full workflow execution.",
+    ///      "type": "string",
+    ///      "format": "uuid"
     ///    },
     ///    "latestIncrementalWorkflowExecutionId": {
     ///      "description": "The ID of the latest incremental workflow
@@ -13173,6 +13427,12 @@ pub mod types {
         pub completion_timestamp: f64,
         #[serde(rename = "creationTimestamp")]
         pub creation_timestamp: f64,
+        ///The label of the dynamic URL of the ingestion, if any.
+        #[serde(rename = "dynamicLabel", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub dynamic_label: ::std::option::Option<::std::string::String>,
+        ///The dynamic URL of the ingestion.
+        #[serde(rename = "dynamicUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub dynamic_url: ::std::option::Option<::std::string::String>,
         #[serde(rename = "errorMessage")]
         pub error_message: ::serde_json::Value,
         #[serde(rename = "executionType")]
@@ -13186,7 +13446,7 @@ pub mod types {
         ///The ID of the ingestion.
         #[serde(rename = "ingestionId")]
         pub ingestion_id: ::std::string::String,
-        ///The name of the ingestion batch execution.
+        ///The name of the ingestion.
         #[serde(rename = "ingestionName")]
         pub ingestion_name: ::std::string::String,
         ///Histogram of IngestionStatus of child executions (even if there's
@@ -13195,6 +13455,15 @@ pub mod types {
         pub ingestion_status_counts: ::std::collections::HashMap<::std::string::String, i64>,
         #[serde(rename = "ingestionStatuses")]
         pub ingestion_statuses: ::serde_json::Value,
+        ///The ID of the last full workflow execution that finished.
+        #[serde(rename = "lastFinishedFullWorkflowExecutionId", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub last_finished_full_workflow_execution_id: ::std::option::Option<::uuid::Uuid>,
+        ///The ID of the last incremental workflow execution that finished.
+        #[serde(rename = "lastFinishedIncrementalWorkflowExecutionId", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub last_finished_incremental_workflow_execution_id: ::std::option::Option<::uuid::Uuid>,
+        ///The ID of the latest full workflow execution.
+        #[serde(rename = "latestFullWorkflowExecutionId", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub latest_full_workflow_execution_id: ::std::option::Option<::uuid::Uuid>,
         ///The ID of the latest incremental workflow execution.
         #[serde(rename = "latestIncrementalWorkflowExecutionId", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub latest_incremental_workflow_execution_id: ::std::option::Option<::uuid::Uuid>,
@@ -13778,6 +14047,73 @@ pub mod types {
         }
     }
 
+    ///Limits for a pack-driven ingestion
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Limits for a pack-driven ingestion",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "allowedTablesCount",
+    ///    "maxBytesPerSyncTableDefault"
+    ///  ],
+    ///  "properties": {
+    ///    "allowedTablesCount": {
+    ///      "description": "The maximum number of tables that can be included.
+    /// -1 means no limit.",
+    ///      "type": "number"
+    ///    },
+    ///    "maxBytesPerSyncTableDefault": {
+    ///      "description": "The default bytes limit when ingesting data for a
+    /// table in the pack. null means no limit.",
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "tableSettings": {
+    ///      "description": "Map from table name to per table settings. This may
+    /// not include every table in the pack. Each setting per table will include
+    /// an optional maxBytesPerSyncTableOverride that will override the default,
+    /// an optional excludeIngestionByDefault flag, and an optional
+    /// parameterLimits dictionary of allowed parameter values.\n",
+    ///      "type": "object",
+    ///      "additionalProperties": {
+    ///        "$ref": "#/components/schemas/IngestionTableSetting"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "IngestionLimitSettings"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct IngestionLimitSettings {
+        #[serde(rename = "allowedTablesCount")]
+        pub allowed_tables_count: f64,
+        ///The default bytes limit when ingesting data for a table in the pack.
+        /// null means no limit.
+        #[serde(rename = "maxBytesPerSyncTableDefault")]
+        pub max_bytes_per_sync_table_default: ::std::option::Option<f64>,
+        ///Map from table name to per table settings. This may not include
+        /// every table in the pack. Each setting per table will include an
+        /// optional maxBytesPerSyncTableOverride that will override the
+        /// default, an optional excludeIngestionByDefault flag, and an optional
+        /// parameterLimits dictionary of allowed parameter values.
+        #[serde(rename = "tableSettings", default, skip_serializing_if = ":: std :: collections :: HashMap::is_empty")]
+        pub table_settings: ::std::collections::HashMap<::std::string::String, IngestionTableSetting>,
+    }
+
+    impl ::std::convert::From<&IngestionLimitSettings> for IngestionLimitSettings {
+        fn from(value: &IngestionLimitSettings) -> Self {
+            value.clone()
+        }
+    }
+
     ///Live or Latest version of pack
     ///
     /// <details><summary>JSON schema</summary>
@@ -13893,6 +14229,11 @@ pub mod types {
     ///    "executionType": {
     ///      "$ref": "#/components/schemas/IngestionChildExecutionType"
     ///    },
+    ///    "ingestionChildExecutionIndex": {
+    ///      "description": "Current execution index for this parent item's
+    /// child execution.",
+    ///      "type": "number"
+    ///    },
     ///    "ingestionExecutionId": {
     ///      "description": "The ID of the ingestion child execution.",
     ///      "type": "string"
@@ -13914,8 +14255,8 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "rowCount": {
-    ///      "description": "The number of rows processed in the ingestion child
-    /// execution.",
+    ///      "description": "The number of rows processed so far in the current
+    /// ingestion child execution.",
     ///      "type": "number"
     ///    },
     ///    "startTimestamp": {
@@ -13942,6 +14283,8 @@ pub mod types {
         pub error_message: ::std::option::Option<::std::string::String>,
         #[serde(rename = "executionType")]
         pub execution_type: IngestionChildExecutionType,
+        #[serde(rename = "ingestionChildExecutionIndex", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ingestion_child_execution_index: ::std::option::Option<f64>,
         ///The ID of the ingestion child execution.
         #[serde(rename = "ingestionExecutionId")]
         pub ingestion_execution_id: ::std::string::String,
@@ -14104,6 +14447,72 @@ pub mod types {
         type Error = self::error::ConversionError;
         fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    ///Ingestion settings for a specific table
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Ingestion settings for a specific table",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "excludeIngestionByDefault": {
+    ///      "description": "Whether to exclude this table from ingestions by
+    /// default.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "maxBytesPerSyncTableOverride": {
+    ///      "description": "The bytes limit when ingesting data for this table.
+    /// null means no limit.",
+    ///      "type": [
+    ///        "number",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "parameterLimits": {
+    ///      "description": "Limits for allowed parameter values.",
+    ///      "type": "object",
+    ///      "additionalProperties": {
+    ///        "$ref": "#/components/schemas/ParameterSetting"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "IngestionTableSetting"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct IngestionTableSetting {
+        ///Whether to exclude this table from ingestions by default.
+        #[serde(rename = "excludeIngestionByDefault", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub exclude_ingestion_by_default: ::std::option::Option<bool>,
+        ///The bytes limit when ingesting data for this table. null means no
+        /// limit.
+        #[serde(rename = "maxBytesPerSyncTableOverride", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub max_bytes_per_sync_table_override: ::std::option::Option<f64>,
+        ///Limits for allowed parameter values.
+        #[serde(rename = "parameterLimits", default, skip_serializing_if = ":: std :: collections :: HashMap::is_empty")]
+        pub parameter_limits: ::std::collections::HashMap<::std::string::String, ParameterSetting>,
+    }
+
+    impl ::std::convert::From<&IngestionTableSetting> for IngestionTableSetting {
+        fn from(value: &IngestionTableSetting) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for IngestionTableSetting {
+        fn default() -> Self {
+            Self {
+                exclude_ingestion_by_default: Default::default(),
+                max_bytes_per_sync_table_override: Default::default(),
+                parameter_limits: Default::default(),
+            }
         }
     }
 
@@ -15485,374 +15894,6 @@ pub mod types {
     }
 
     impl ::std::default::Default for ListIngestionBatchExecutionsResponseCodaDetail {
-        fn default() -> Self {
-            Self {
-                validation_errors: Default::default(),
-            }
-        }
-    }
-
-    ///`ListIngestionExecutionAttemptsOrder`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "asc",
-    ///    "desc"
-    ///  ]
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-    pub enum ListIngestionExecutionAttemptsOrder {
-        #[serde(rename = "asc")]
-        Asc,
-        #[serde(rename = "desc")]
-        Desc,
-    }
-
-    impl ::std::convert::From<&Self> for ListIngestionExecutionAttemptsOrder {
-        fn from(value: &ListIngestionExecutionAttemptsOrder) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::fmt::Display for ListIngestionExecutionAttemptsOrder {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match *self {
-                Self::Asc => write!(f, "asc"),
-                Self::Desc => write!(f, "desc"),
-            }
-        }
-    }
-
-    impl ::std::str::FromStr for ListIngestionExecutionAttemptsOrder {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            match value {
-                "asc" => Ok(Self::Asc),
-                "desc" => Ok(Self::Desc),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for ListIngestionExecutionAttemptsOrder {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for ListIngestionExecutionAttemptsOrder {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for ListIngestionExecutionAttemptsOrder {
-        type Error = self::error::ConversionError;
-        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    ///An HTTP error resulting from an unsuccessful request.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "description": "An HTTP error resulting from an unsuccessful request.",
-    ///  "required": [
-    ///    "message",
-    ///    "statusCode",
-    ///    "statusMessage"
-    ///  ],
-    ///  "properties": {
-    ///    "codaDetail": {
-    ///      "description": "Detail about why this request was rejected.",
-    ///      "type": "object",
-    ///      "properties": {
-    ///        "validationErrors": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "$ref": "#/components/schemas/ValidationError"
-    ///          }
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    },
-    ///    "message": {
-    ///      "description": "Any additional context on the error, or the same as
-    /// `statusMessage` otherwise.",
-    ///      "examples": [
-    ///        "Bad Request"
-    ///      ],
-    ///      "type": "string"
-    ///    },
-    ///    "statusCode": {
-    ///      "description": "HTTP status code of the error.",
-    ///      "examples": [
-    ///        400
-    ///      ],
-    ///      "type": "number"
-    ///    },
-    ///    "statusMessage": {
-    ///      "description": "HTTP status message of the error.",
-    ///      "examples": [
-    ///        "Bad Request"
-    ///      ],
-    ///      "type": "string"
-    ///    }
-    ///  },
-    ///  "additionalProperties": false
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
-    #[serde(deny_unknown_fields)]
-    pub struct ListIngestionExecutionAttemptsResponse {
-        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub coda_detail: ::std::option::Option<ListIngestionExecutionAttemptsResponseCodaDetail>,
-        ///Any additional context on the error, or the same as `statusMessage`
-        /// otherwise.
-        pub message: ::std::string::String,
-        #[serde(rename = "statusCode")]
-        pub status_code: f64,
-        ///HTTP status message of the error.
-        #[serde(rename = "statusMessage")]
-        pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListIngestionExecutionAttemptsResponse> for ListIngestionExecutionAttemptsResponse {
-        fn from(value: &ListIngestionExecutionAttemptsResponse) -> Self {
-            value.clone()
-        }
-    }
-
-    ///Detail about why this request was rejected.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "description": "Detail about why this request was rejected.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "validationErrors": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/ValidationError"
-    ///      }
-    ///    }
-    ///  },
-    ///  "additionalProperties": false
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
-    #[serde(deny_unknown_fields)]
-    pub struct ListIngestionExecutionAttemptsResponseCodaDetail {
-        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
-        pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListIngestionExecutionAttemptsResponseCodaDetail> for ListIngestionExecutionAttemptsResponseCodaDetail {
-        fn from(value: &ListIngestionExecutionAttemptsResponseCodaDetail) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::default::Default for ListIngestionExecutionAttemptsResponseCodaDetail {
-        fn default() -> Self {
-            Self {
-                validation_errors: Default::default(),
-            }
-        }
-    }
-
-    ///`ListIngestionExecutionsOrder`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "asc",
-    ///    "desc"
-    ///  ]
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-    pub enum ListIngestionExecutionsOrder {
-        #[serde(rename = "asc")]
-        Asc,
-        #[serde(rename = "desc")]
-        Desc,
-    }
-
-    impl ::std::convert::From<&Self> for ListIngestionExecutionsOrder {
-        fn from(value: &ListIngestionExecutionsOrder) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::fmt::Display for ListIngestionExecutionsOrder {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match *self {
-                Self::Asc => write!(f, "asc"),
-                Self::Desc => write!(f, "desc"),
-            }
-        }
-    }
-
-    impl ::std::str::FromStr for ListIngestionExecutionsOrder {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            match value {
-                "asc" => Ok(Self::Asc),
-                "desc" => Ok(Self::Desc),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for ListIngestionExecutionsOrder {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for ListIngestionExecutionsOrder {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for ListIngestionExecutionsOrder {
-        type Error = self::error::ConversionError;
-        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    ///An HTTP error resulting from an unsuccessful request.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "description": "An HTTP error resulting from an unsuccessful request.",
-    ///  "required": [
-    ///    "message",
-    ///    "statusCode",
-    ///    "statusMessage"
-    ///  ],
-    ///  "properties": {
-    ///    "codaDetail": {
-    ///      "description": "Detail about why this request was rejected.",
-    ///      "type": "object",
-    ///      "properties": {
-    ///        "validationErrors": {
-    ///          "type": "array",
-    ///          "items": {
-    ///            "$ref": "#/components/schemas/ValidationError"
-    ///          }
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    },
-    ///    "message": {
-    ///      "description": "Any additional context on the error, or the same as
-    /// `statusMessage` otherwise.",
-    ///      "examples": [
-    ///        "Bad Request"
-    ///      ],
-    ///      "type": "string"
-    ///    },
-    ///    "statusCode": {
-    ///      "description": "HTTP status code of the error.",
-    ///      "examples": [
-    ///        400
-    ///      ],
-    ///      "type": "number"
-    ///    },
-    ///    "statusMessage": {
-    ///      "description": "HTTP status message of the error.",
-    ///      "examples": [
-    ///        "Bad Request"
-    ///      ],
-    ///      "type": "string"
-    ///    }
-    ///  },
-    ///  "additionalProperties": false
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
-    #[serde(deny_unknown_fields)]
-    pub struct ListIngestionExecutionsResponse {
-        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub coda_detail: ::std::option::Option<ListIngestionExecutionsResponseCodaDetail>,
-        ///Any additional context on the error, or the same as `statusMessage`
-        /// otherwise.
-        pub message: ::std::string::String,
-        #[serde(rename = "statusCode")]
-        pub status_code: f64,
-        ///HTTP status message of the error.
-        #[serde(rename = "statusMessage")]
-        pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListIngestionExecutionsResponse> for ListIngestionExecutionsResponse {
-        fn from(value: &ListIngestionExecutionsResponse) -> Self {
-            value.clone()
-        }
-    }
-
-    ///Detail about why this request was rejected.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "description": "Detail about why this request was rejected.",
-    ///  "type": "object",
-    ///  "properties": {
-    ///    "validationErrors": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/ValidationError"
-    ///      }
-    ///    }
-    ///  },
-    ///  "additionalProperties": false
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
-    #[serde(deny_unknown_fields)]
-    pub struct ListIngestionExecutionsResponseCodaDetail {
-        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
-        pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListIngestionExecutionsResponseCodaDetail> for ListIngestionExecutionsResponseCodaDetail {
-        fn from(value: &ListIngestionExecutionsResponseCodaDetail) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::default::Default for ListIngestionExecutionsResponseCodaDetail {
         fn default() -> Self {
             Self {
                 validation_errors: Default::default(),
@@ -18356,6 +18397,15 @@ pub mod types {
     ///    "workspaceId"
     ///  ],
     ///  "properties": {
+    ///    "agentShortDescription": {
+    ///      "description": "A short description for the pack as an agent.",
+    ///      "examples": [
+    ///        "Chat with a tool that can calculate cool geometric formulas like
+    /// surface area."
+    ///      ],
+    ///      "type": "string",
+    ///      "maxLength": 256
+    ///    },
     ///    "categories": {
     ///      "description": "Publishing categories associated with this Pack.",
     ///      "type": "array",
@@ -18365,6 +18415,11 @@ pub mod types {
     ///    },
     ///    "certified": {
     ///      "description": "Denotes if the pack is certified by Coda.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "certifiedAgent": {
+    ///      "description": "Denotes if the pack is certified by Grammarly to be
+    /// optimized for agent usage.",
     ///      "type": "boolean"
     ///    },
     ///    "coverUrl": {
@@ -18464,11 +18519,18 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct Pack {
+        ///A short description for the pack as an agent.
+        #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_short_description: ::std::option::Option<PackAgentShortDescription>,
         ///Publishing categories associated with this Pack.
         pub categories: ::std::vec::Vec<PublishingCategory>,
         ///Denotes if the pack is certified by Coda.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub certified: ::std::option::Option<bool>,
+        ///Denotes if the pack is certified by Grammarly to be optimized for
+        /// agent usage.
+        #[serde(rename = "certifiedAgent", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub certified_agent: ::std::option::Option<bool>,
         ///The link to the cover photo of the Pack.
         #[serde(rename = "coverUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub cover_url: ::std::option::Option<::std::string::String>,
@@ -18522,6 +18584,7 @@ pub mod types {
     ///{
     ///  "type": "string",
     ///  "enum": [
+    ///    "none",
     ///    "view",
     ///    "test",
     ///    "edit",
@@ -18529,6 +18592,7 @@ pub mod types {
     ///  ],
     ///  "x-schema-name": "PackAccessType",
     ///  "x-tsEnumNames": [
+    ///    "None",
     ///    "View",
     ///    "Test",
     ///    "Edit",
@@ -18539,6 +18603,8 @@ pub mod types {
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     pub enum PackAccessType {
+        #[serde(rename = "none")]
+        None,
         #[serde(rename = "view")]
         View,
         #[serde(rename = "test")]
@@ -18558,6 +18624,7 @@ pub mod types {
     impl ::std::fmt::Display for PackAccessType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
+                Self::None => write!(f, "none"),
                 Self::View => write!(f, "view"),
                 Self::Test => write!(f, "test"),
                 Self::Edit => write!(f, "edit"),
@@ -18570,6 +18637,7 @@ pub mod types {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
+                "none" => Ok(Self::None),
                 "view" => Ok(Self::View),
                 "test" => Ok(Self::Test),
                 "edit" => Ok(Self::Edit),
@@ -18641,6 +18709,86 @@ pub mod types {
     impl ::std::convert::From<::std::vec::Vec<PackAccessType>> for PackAccessTypes {
         fn from(value: ::std::vec::Vec<PackAccessType>) -> Self {
             Self(value)
+        }
+    }
+
+    ///A short description for the pack as an agent.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A short description for the pack as an agent.",
+    ///  "examples": [
+    ///    "Chat with a tool that can calculate cool geometric formulas like
+    /// surface area."
+    ///  ],
+    ///  "type": "string",
+    ///  "maxLength": 256
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackAgentShortDescription(::std::string::String);
+    impl ::std::ops::Deref for PackAgentShortDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackAgentShortDescription> for ::std::string::String {
+        fn from(value: PackAgentShortDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackAgentShortDescription> for PackAgentShortDescription {
+        fn from(value: &PackAgentShortDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackAgentShortDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 256usize {
+                return Err("longer than 256 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackAgentShortDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
 
@@ -26359,6 +26507,14 @@ pub mod types {
     ///    "shortDescription"
     ///  ],
     ///  "properties": {
+    ///    "agentShortDescription": {
+    ///      "description": "A short description for the pack as an agent.",
+    ///      "examples": [
+    ///        "Chat with a tool that can calculate cool geometric formulas like
+    /// surface area."
+    ///      ],
+    ///      "type": "string"
+    ///    },
     ///    "bundledPackPlan": {
     ///      "$ref": "#/components/schemas/BundledPackPlan"
     ///    },
@@ -26371,6 +26527,11 @@ pub mod types {
     ///    },
     ///    "certified": {
     ///      "description": "Denotes if the pack is certified by Coda.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "certifiedAgent": {
+    ///      "description": "Denotes if the pack is certified by Grammarly to be
+    /// optimized for agent usage.",
     ///      "type": "boolean"
     ///    },
     ///    "coverUrl": {
@@ -26503,6 +26664,9 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct PackListing {
+        ///A short description for the pack as an agent.
+        #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_short_description: ::std::option::Option<::std::string::String>,
         #[serde(rename = "bundledPackPlan", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub bundled_pack_plan: ::std::option::Option<BundledPackPlan>,
         ///Publishing Categories associated with this Pack.
@@ -26510,6 +26674,10 @@ pub mod types {
         ///Denotes if the pack is certified by Coda.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub certified: ::std::option::Option<bool>,
+        ///Denotes if the pack is certified by Grammarly to be optimized for
+        /// agent usage.
+        #[serde(rename = "certifiedAgent", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub certified_agent: ::std::option::Option<bool>,
         ///The link to the cover photo of the Pack.
         #[serde(rename = "coverUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub cover_url: ::std::option::Option<::std::string::String>,
@@ -26673,6 +26841,14 @@ pub mod types {
     ///    "userAccess"
     ///  ],
     ///  "properties": {
+    ///    "agentShortDescription": {
+    ///      "description": "A short description for the pack as an agent.",
+    ///      "examples": [
+    ///        "Chat with a tool that can calculate cool geometric formulas like
+    /// surface area."
+    ///      ],
+    ///      "type": "string"
+    ///    },
     ///    "bundledPackPlan": {
     ///      "$ref": "#/components/schemas/BundledPackPlan"
     ///    },
@@ -26685,6 +26861,11 @@ pub mod types {
     ///    },
     ///    "certified": {
     ///      "description": "Denotes if the pack is certified by Coda.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "certifiedAgent": {
+    ///      "description": "Denotes if the pack is certified by Grammarly to be
+    /// optimized for agent usage.",
     ///      "type": "boolean"
     ///    },
     ///    "codaHelpCenterUrl": {
@@ -26832,6 +27013,9 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct PackListingDetail {
+        ///A short description for the pack as an agent.
+        #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_short_description: ::std::option::Option<::std::string::String>,
         #[serde(rename = "bundledPackPlan", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub bundled_pack_plan: ::std::option::Option<BundledPackPlan>,
         ///Publishing Categories associated with this Pack.
@@ -26839,6 +27023,10 @@ pub mod types {
         ///Denotes if the pack is certified by Coda.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub certified: ::std::option::Option<bool>,
+        ///Denotes if the pack is certified by Grammarly to be optimized for
+        /// agent usage.
+        #[serde(rename = "certifiedAgent", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub certified_agent: ::std::option::Option<bool>,
         ///The URL of a Coda Help Center article with documentation about the
         /// Pack. This will only exist for select Coda-authored Packs.
         #[serde(rename = "codaHelpCenterUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -27367,6 +27555,10 @@ pub mod types {
     ///    "formulaName": {
     ///      "type": "string"
     ///    },
+    ///    "ingestionChildExecutionIndex": {
+    ///      "description": "Child execution id for this ingestion log.",
+    ///      "type": "number"
+    ///    },
     ///    "ingestionExecutionAttempt": {
     ///      "description": "Execution attempt for this ingestion log.",
     ///      "type": "integer"
@@ -27480,6 +27672,8 @@ pub mod types {
         pub doc_row_id: ::std::option::Option<::std::string::String>,
         #[serde(rename = "formulaName")]
         pub formula_name: ::std::string::String,
+        #[serde(rename = "ingestionChildExecutionIndex", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ingestion_child_execution_index: ::std::option::Option<f64>,
         ///Execution attempt for this ingestion log.
         #[serde(rename = "ingestionExecutionAttempt", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub ingestion_execution_attempt: ::std::option::Option<i64>,
@@ -29429,6 +29623,15 @@ pub mod types {
     ///    "workspaceId"
     ///  ],
     ///  "properties": {
+    ///    "agentShortDescription": {
+    ///      "description": "A short description for the pack as an agent.",
+    ///      "examples": [
+    ///        "Chat with a tool that can calculate cool geometric formulas like
+    /// surface area."
+    ///      ],
+    ///      "type": "string",
+    ///      "maxLength": 256
+    ///    },
     ///    "categories": {
     ///      "description": "Publishing categories associated with this Pack.",
     ///      "type": "array",
@@ -29438,6 +29641,11 @@ pub mod types {
     ///    },
     ///    "certified": {
     ///      "description": "Denotes if the pack is certified by Coda.",
+    ///      "type": "boolean"
+    ///    },
+    ///    "certifiedAgent": {
+    ///      "description": "Denotes if the pack is certified by Grammarly to be
+    /// optimized for agent usage.",
     ///      "type": "boolean"
     ///    },
     ///    "coverUrl": {
@@ -29528,11 +29736,18 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct PackSummary {
+        ///A short description for the pack as an agent.
+        #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_short_description: ::std::option::Option<PackSummaryAgentShortDescription>,
         ///Publishing categories associated with this Pack.
         pub categories: ::std::vec::Vec<PublishingCategory>,
         ///Denotes if the pack is certified by Coda.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub certified: ::std::option::Option<bool>,
+        ///Denotes if the pack is certified by Grammarly to be optimized for
+        /// agent usage.
+        #[serde(rename = "certifiedAgent", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub certified_agent: ::std::option::Option<bool>,
         ///The link to the cover photo of the Pack.
         #[serde(rename = "coverUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub cover_url: ::std::option::Option<::std::string::String>,
@@ -29569,6 +29784,86 @@ pub mod types {
     impl ::std::convert::From<&PackSummary> for PackSummary {
         fn from(value: &PackSummary) -> Self {
             value.clone()
+        }
+    }
+
+    ///A short description for the pack as an agent.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A short description for the pack as an agent.",
+    ///  "examples": [
+    ///    "Chat with a tool that can calculate cool geometric formulas like
+    /// surface area."
+    ///  ],
+    ///  "type": "string",
+    ///  "maxLength": 256
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackSummaryAgentShortDescription(::std::string::String);
+    impl ::std::ops::Deref for PackSummaryAgentShortDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackSummaryAgentShortDescription> for ::std::string::String {
+        fn from(value: PackSummaryAgentShortDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackSummaryAgentShortDescription> for PackSummaryAgentShortDescription {
+        fn from(value: &PackSummaryAgentShortDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackSummaryAgentShortDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 256usize {
+                return Err("longer than 256 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackSummaryAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackSummaryAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackSummaryAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackSummaryAgentShortDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
 
@@ -30299,6 +30594,9 @@ pub mod types {
     ///    "canView": {
     ///      "type": "boolean"
     ///    },
+    ///    "ingestionLimitSettings": {
+    ///      "$ref": "#/components/schemas/IngestionLimitSettings"
+    ///    },
     ///    "organization": {
     ///      "oneOf": [
     ///        {
@@ -30334,6 +30632,8 @@ pub mod types {
         pub can_test: bool,
         #[serde(rename = "canView")]
         pub can_view: bool,
+        #[serde(rename = "ingestionLimitSettings", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub ingestion_limit_settings: ::std::option::Option<IngestionLimitSettings>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub organization: ::std::option::Option<PackUserAccessOrganization>,
         #[serde(rename = "requiresTrial")]
@@ -33511,6 +33811,49 @@ pub mod types {
         }
     }
 
+    ///Setting for a specific parameter
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Setting for a specific parameter",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "allowed",
+    ///    "default"
+    ///  ],
+    ///  "properties": {
+    ///    "allowed": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "default": {
+    ///      "description": "Default value for the parameter",
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "ParameterSetting"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ParameterSetting {
+        pub allowed: ::std::vec::Vec<::std::string::String>,
+        ///Default value for the parameter
+        pub default: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&ParameterSetting> for ParameterSetting {
+        fn from(value: &ParameterSetting) -> Self {
+            value.clone()
+        }
+    }
+
     ///The request to patch pack system connection credentials.
     ///
     /// <details><summary>JSON schema</summary>
@@ -35876,6 +36219,17 @@ pub mod types {
     ///    },
     ///    {
     ///      "type": "object",
+    ///      "properties": {
+    ///        "options": {
+    ///          "description": "For select format columns, the list of
+    /// available options. Only returned for select lists that used a fixed set
+    /// of options. Returns the first 5000 options.",
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/SelectOption"
+    ///          }
+    ///        }
+    ///      },
     ///      "additionalProperties": false
     ///    }
     ///  ],
@@ -38403,6 +38757,15 @@ pub mod types {
     ///  "description": "Payload for updating a Pack.",
     ///  "type": "object",
     ///  "properties": {
+    ///    "agentShortDescription": {
+    ///      "description": "A short description for the pack as an agent.",
+    ///      "examples": [
+    ///        "Chat with a tool that can calculate cool geometric formulas like
+    /// surface area."
+    ///      ],
+    ///      "type": "string",
+    ///      "maxLength": 256
+    ///    },
     ///    "coverAssetId": {
     ///      "description": "The asset id of the Pack's cover image, returned by
     /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
@@ -38579,6 +38942,9 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct UpdatePackRequest {
+        ///A short description for the pack as an agent.
+        #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_short_description: ::std::option::Option<UpdatePackRequestAgentShortDescription>,
         ///The asset id of the Pack's cover image, returned by
         /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
         /// endpoint.
@@ -38629,6 +38995,7 @@ pub mod types {
     impl ::std::default::Default for UpdatePackRequest {
         fn default() -> Self {
             Self {
+                agent_short_description: Default::default(),
                 cover_asset_id: Default::default(),
                 description: Default::default(),
                 example_images: Default::default(),
@@ -38642,6 +39009,86 @@ pub mod types {
                 support_email: Default::default(),
                 terms_of_service_url: Default::default(),
             }
+        }
+    }
+
+    ///A short description for the pack as an agent.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A short description for the pack as an agent.",
+    ///  "examples": [
+    ///    "Chat with a tool that can calculate cool geometric formulas like
+    /// surface area."
+    ///  ],
+    ///  "type": "string",
+    ///  "maxLength": 256
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct UpdatePackRequestAgentShortDescription(::std::string::String);
+    impl ::std::ops::Deref for UpdatePackRequestAgentShortDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<UpdatePackRequestAgentShortDescription> for ::std::string::String {
+        fn from(value: UpdatePackRequestAgentShortDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&UpdatePackRequestAgentShortDescription> for UpdatePackRequestAgentShortDescription {
+        fn from(value: &UpdatePackRequestAgentShortDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for UpdatePackRequestAgentShortDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 256usize {
+                return Err("longer than 256 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for UpdatePackRequestAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for UpdatePackRequestAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for UpdatePackRequestAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for UpdatePackRequestAgentShortDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
 
@@ -41661,7 +42108,7 @@ pub mod types {
 ///
 ///https://coda.io/trust/tos
 ///
-///Version: 1.4.17
+///Version: 1.4.19
 pub struct Client {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -41714,7 +42161,7 @@ impl Client {
     /// This string is pulled directly from the source OpenAPI
     /// document and may be in any format the API selects.
     pub fn api_version(&self) -> &'static str {
-        "1.4.17"
+        "1.4.19"
     }
 }
 
@@ -43378,6 +43825,39 @@ impl Client {
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Get folder
+    ///
+    ///Returns the requested folder.
+    ///
+    ///
+    ///Sends a `GET` request to `/folders/{folderId}`
+    ///
+    ///Arguments:
+    /// - `folder_id`: ID of the folder.
+    pub async fn get_folder<'a>(&'a self, folder_id: &'a str) -> Result<ResponseValue<types::Folder>, Error<types::GetFolderResponse>> {
+        let url = format!("{}/folders/{}", self.baseurl, encode_path(&folder_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
             401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
             403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
             404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
@@ -45205,13 +45685,14 @@ impl Client {
     /// - `pack_id`: ID of a Pack
     /// - `doc_id`: ID of the target document for checking installation
     ///   privileges
+    /// - `ingestion_id`: ID of the target ingestion for checking limit settings
     /// - `install_context`: Type of installation context for which Pack
     ///   information is being requested.
     /// - `release_channel`: Release channel for which Pack information is being
     ///   requested.
     /// - `workspace_id`: ID of the target workspace (if applicable) for
     ///   checking installation privileges.
-    pub async fn get_pack_listing<'a>(&'a self, pack_id: ::std::num::NonZeroU64, doc_id: Option<&'a str>, install_context: Option<types::PackListingInstallContextType>, release_channel: Option<types::IngestionPackReleaseChannel>, workspace_id: Option<&'a str>) -> Result<ResponseValue<types::PackListingDetail>, Error<types::GetPackListingResponse>> {
+    pub async fn get_pack_listing<'a>(&'a self, pack_id: ::std::num::NonZeroU64, doc_id: Option<&'a str>, ingestion_id: Option<&'a str>, install_context: Option<types::PackListingInstallContextType>, release_channel: Option<types::IngestionPackReleaseChannel>, workspace_id: Option<&'a str>) -> Result<ResponseValue<types::PackListingDetail>, Error<types::GetPackListingResponse>> {
         let url = format!("{}/packs/{}/listing", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
@@ -45221,6 +45702,7 @@ impl Client {
             .get(url)
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .query(&progenitor_client::QueryParam::new("docId", &doc_id))
+            .query(&progenitor_client::QueryParam::new("ingestionId", &ingestion_id))
             .query(&progenitor_client::QueryParam::new("installContext", &install_context))
             .query(&progenitor_client::QueryParam::new("releaseChannel", &release_channel))
             .query(&progenitor_client::QueryParam::new("workspaceId", &workspace_id))
@@ -45315,8 +45797,14 @@ impl Client {
     ///   (non-inclusive).
     ///
     /// - `ingestion_execution_id`: ID of the ingestion execution.
+    /// - `ingestion_status`: Only fetch logs with the given ingestion status.
+    ///   This only works in combination with the onlyExecutionCompletions
+    ///   parameter.
+    ///
     /// - `limit`: Maximum number of results to return in this query.
     /// - `log_types`: Only return logs of the given types.
+    /// - `only_execution_completions`: Only fetch logs that represent the
+    ///   completion of a child execution.
     /// - `order`: Specifies if the logs will be returned in time desc or asc.
     ///   Default is desc.
     ///
@@ -45324,7 +45812,7 @@ impl Client {
     /// - `q`: A search query that follows Lucene syntax.
     ///
     /// - `request_ids`: Only return logs matching provided request IDs.
-    pub async fn list_ingestion_logs<'a>(&'a self, pack_id: ::std::num::NonZeroU64, tenant_id: &'a str, root_ingestion_id: &'a ::uuid::Uuid, after_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, before_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, ingestion_execution_id: Option<&'a ::uuid::Uuid>, limit: Option<::std::num::NonZeroU64>, log_types: Option<&'a ::std::vec::Vec<types::PackLogType>>, order: Option<types::ListIngestionLogsOrder>, page_token: Option<&'a str>, q: Option<&'a str>, request_ids: Option<&'a ::std::vec::Vec<::std::string::String>>) -> Result<ResponseValue<types::PackLogsList>, Error<types::ListIngestionLogsResponse>> {
+    pub async fn list_ingestion_logs<'a>(&'a self, pack_id: ::std::num::NonZeroU64, tenant_id: &'a str, root_ingestion_id: &'a ::uuid::Uuid, after_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, before_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, ingestion_execution_id: Option<&'a ::uuid::Uuid>, ingestion_status: Option<types::IngestionStatus>, limit: Option<::std::num::NonZeroU64>, log_types: Option<&'a ::std::vec::Vec<types::PackLogType>>, only_execution_completions: Option<bool>, order: Option<types::ListIngestionLogsOrder>, page_token: Option<&'a str>, q: Option<&'a str>, request_ids: Option<&'a ::std::vec::Vec<::std::string::String>>) -> Result<ResponseValue<types::PackLogsList>, Error<types::ListIngestionLogsResponse>> {
         let url = format!("{}/packs/{}/tenantId/{}/rootIngestionId/{}/logs", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&tenant_id.to_string()), encode_path(&root_ingestion_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
@@ -45336,8 +45824,10 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("afterTimestamp", &after_timestamp))
             .query(&progenitor_client::QueryParam::new("beforeTimestamp", &before_timestamp))
             .query(&progenitor_client::QueryParam::new("ingestionExecutionId", &ingestion_execution_id))
+            .query(&progenitor_client::QueryParam::new("ingestionStatus", &ingestion_status))
             .query(&progenitor_client::QueryParam::new("limit", &limit))
             .query(&progenitor_client::QueryParam::new("logTypes", &log_types))
+            .query(&progenitor_client::QueryParam::new("onlyExecutionCompletions", &only_execution_completions))
             .query(&progenitor_client::QueryParam::new("order", &order))
             .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
             .query(&progenitor_client::QueryParam::new("q", &q))
@@ -45574,131 +46064,6 @@ impl Client {
         }
     }
 
-    ///Retrieve a list of ingestion execution ids for the given root ingestion
-    /// id
-    ///
-    ///Retrieve the ingestion execution ids of a root ingestion for debugging
-    /// purpose.
-    ///
-    ///
-    ///Sends a `GET` request to
-    /// `/packs/{packId}/tenantId/{tenantId}/rootIngestionId/{rootIngestionId}/
-    /// ingestionExecutions`
-    ///
-    ///Arguments:
-    /// - `pack_id`: ID of a Pack
-    /// - `tenant_id`: ID of the tenant.
-    /// - `root_ingestion_id`: ID of the root ingestion.
-    /// - `after_timestamp`: Only return logs after the given time
-    ///   (non-inclusive).
-    ///
-    /// - `before_timestamp`: Only return logs before the given time
-    ///   (non-inclusive).
-    ///
-    /// - `csb_ingestion_execution_id`: Ingestion execution id of the ingestion
-    ///   execution to filter to
-    ///
-    /// - `csb_ingestion_id`: Ingestion id of the ingestion execution to filter
-    ///   to
-    ///
-    /// - `datasource`: Datasource of the ingestion execution to filter to
-    ///
-    /// - `execution_type`: Execution type of the ingestion execution to filter
-    ///   to
-    ///
-    /// - `include_deleted_ingestions`: Include deleted ingestion executions in
-    ///   the response
-    ///
-    /// - `ingestion_status`: Status of the ingestion execution to filter to
-    ///
-    /// - `limit`: Maximum number of results to return in this query.
-    /// - `order`: Specifies if the logs will be returned in time desc or asc.
-    ///   Default is desc.
-    ///
-    /// - `page_token`: An opaque token used to fetch the next page of results.
-    pub async fn list_ingestion_executions<'a>(&'a self, pack_id: ::std::num::NonZeroU64, tenant_id: &'a str, root_ingestion_id: &'a ::uuid::Uuid, after_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, before_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, csb_ingestion_execution_id: Option<&'a str>, csb_ingestion_id: Option<&'a str>, datasource: Option<&'a str>, execution_type: Option<types::IngestionExecutionType>, include_deleted_ingestions: Option<bool>, ingestion_status: Option<types::IngestionStatus>, limit: Option<::std::num::NonZeroU64>, order: Option<types::ListIngestionExecutionsOrder>, page_token: Option<&'a str>) -> Result<ResponseValue<types::IngestionExecutionsList>, Error<types::ListIngestionExecutionsResponse>> {
-        let url = format!("{}/packs/{}/tenantId/{}/rootIngestionId/{}/ingestionExecutions", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&tenant_id.to_string()), encode_path(&root_ingestion_id.to_string()),);
-        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
-        #[allow(unused_mut)]
-        let mut request = self
-            .client
-            .get(url)
-            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
-            .query(&progenitor_client::QueryParam::new("afterTimestamp", &after_timestamp))
-            .query(&progenitor_client::QueryParam::new("beforeTimestamp", &before_timestamp))
-            .query(&progenitor_client::QueryParam::new("csbIngestionExecutionId", &csb_ingestion_execution_id))
-            .query(&progenitor_client::QueryParam::new("csbIngestionId", &csb_ingestion_id))
-            .query(&progenitor_client::QueryParam::new("datasource", &datasource))
-            .query(&progenitor_client::QueryParam::new("executionType", &execution_type))
-            .query(&progenitor_client::QueryParam::new("includeDeletedIngestions", &include_deleted_ingestions))
-            .query(&progenitor_client::QueryParam::new("ingestionStatus", &ingestion_status))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new("order", &order))
-            .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
-            .headers(header_map)
-            .build()?;
-        let result = self.client.execute(request).await;
-        let response = result?;
-        match response.status().as_u16() {
-            200u16 => ResponseValue::from_response(response).await,
-            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
-            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
-            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
-            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
-            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
-            _ => Err(Error::UnexpectedResponse(response)),
-        }
-    }
-
-    ///Retrieve a list of ingestion execution ids for the given root ingestion
-    /// id
-    ///
-    ///Retrieve the ingestion execution ids of a root ingestion for debugging
-    /// purpose.
-    ///
-    ///
-    ///Sends a `GET` request to
-    /// `/packs/{packId}/tenantId/{tenantId}/rootIngestionId/{rootIngestionId}/
-    /// ingestionExecutionId/{ingestionExecutionId}/attempts`
-    ///
-    ///Arguments:
-    /// - `pack_id`: ID of a Pack
-    /// - `tenant_id`: ID of the tenant.
-    /// - `root_ingestion_id`: ID of the root ingestion.
-    /// - `ingestion_execution_id`: ID of the ingestion execution.
-    /// - `limit`: Maximum number of results to return in this query.
-    /// - `order`: Specifies if the logs will be returned in time desc or asc.
-    ///   Default is desc.
-    ///
-    /// - `page_token`: An opaque token used to fetch the next page of results.
-    pub async fn list_ingestion_execution_attempts<'a>(&'a self, pack_id: ::std::num::NonZeroU64, tenant_id: &'a str, root_ingestion_id: &'a ::uuid::Uuid, ingestion_execution_id: &'a ::uuid::Uuid, limit: Option<::std::num::NonZeroU64>, order: Option<types::ListIngestionExecutionAttemptsOrder>, page_token: Option<&'a str>) -> Result<ResponseValue<types::IngestionExecutionAttemptsList>, Error<types::ListIngestionExecutionAttemptsResponse>> {
-        let url = format!("{}/packs/{}/tenantId/{}/rootIngestionId/{}/ingestionExecutionId/{}/attempts", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&tenant_id.to_string()), encode_path(&root_ingestion_id.to_string()), encode_path(&ingestion_execution_id.to_string()),);
-        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
-        #[allow(unused_mut)]
-        let mut request = self
-            .client
-            .get(url)
-            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
-            .query(&progenitor_client::QueryParam::new("limit", &limit))
-            .query(&progenitor_client::QueryParam::new("order", &order))
-            .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
-            .headers(header_map)
-            .build()?;
-        let result = self.client.execute(request).await;
-        let response = result?;
-        match response.status().as_u16() {
-            200u16 => ResponseValue::from_response(response).await,
-            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
-            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
-            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
-            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
-            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
-            _ => Err(Error::UnexpectedResponse(response)),
-        }
-    }
-
     ///Retrieve the information for a specific log
     ///
     ///Retrieve the ingestion execution ids of a root ingestion for debugging
@@ -45846,6 +46211,8 @@ pub mod prelude {
     #[allow(unused_imports)]
     pub use super::Client;
 }
+mod parse;
+pub use parse::*;
 pub mod ext;
 #[cfg(test)]
 pub mod test;
