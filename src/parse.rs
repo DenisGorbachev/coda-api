@@ -58,10 +58,10 @@ mod time_impls {
     use time::{Duration, OffsetDateTime};
 
     impl TryFrom<CellValue> for Option<OffsetDateTime> {
-        type Error = ConvertCellValueToOffsetDateTime;
+        type Error = ConvertCellValueToOptionOffsetDateTimeError;
 
         fn try_from(value: CellValue) -> Result<Self, Self::Error> {
-            use ConvertCellValueToOffsetDateTime::*;
+            use ConvertCellValueToOptionOffsetDateTimeError::*;
             let string = handle!(String::try_from(value), ConvertCellValueToStringFailed);
             if string.is_empty() {
                 Ok(None)
@@ -73,10 +73,10 @@ mod time_impls {
     }
 
     impl TryFrom<CellValue> for Option<Duration> {
-        type Error = ConvertCellValueToDurationError;
+        type Error = ConvertCellValueToOptionDurationError;
 
         fn try_from(value: CellValue) -> Result<Self, Self::Error> {
-            use ConvertCellValueToDurationError::*;
+            use ConvertCellValueToOptionDurationError::*;
             let string = handle!(String::try_from(value), ConvertCellValueToStringFailed);
             if string.is_empty() {
                 Ok(None)
@@ -97,7 +97,7 @@ mod time_impls {
     }
 
     #[derive(Error, Display, Debug)]
-    pub enum ConvertCellValueToDurationError {
+    pub enum ConvertCellValueToOptionDurationError {
         ConvertCellValueToStringFailed { source: ConvertCellValueToStringError },
         NumberNotFound,
         NumberParseFailed { source: std::num::ParseIntError },
@@ -106,7 +106,7 @@ mod time_impls {
     }
 
     #[derive(Error, Display, Debug)]
-    pub enum ConvertCellValueToOffsetDateTime {
+    pub enum ConvertCellValueToOptionOffsetDateTimeError {
         ConvertCellValueToStringFailed { source: ConvertCellValueToStringError },
         OffsetDateTimeParseFailed { source: time::Error },
     }
@@ -143,6 +143,6 @@ pub enum ConvertCellValueError {
     },
     #[cfg(feature = "time")]
     ConvertCellValueToOffsetDateTimeFailed {
-        source: ConvertCellValueToOffsetDateTime,
+        source: ConvertCellValueToOptionOffsetDateTimeError,
     },
 }
