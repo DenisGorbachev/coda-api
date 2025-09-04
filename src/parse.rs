@@ -55,7 +55,7 @@ mod time_impls {
     use error_handling::handle;
     use fmt_derive::Display;
     use time::format_description::well_known::Rfc3339;
-    use time::OffsetDateTime;
+    use time::{Duration, OffsetDateTime};
 
     impl TryFrom<CellValue> for Option<OffsetDateTime> {
         type Error = ConvertCellValueToOffsetDateTime;
@@ -70,6 +70,39 @@ mod time_impls {
                 Ok(Some(value))
             }
         }
+    }
+
+    impl TryFrom<CellValue> for Option<Duration> {
+        type Error = ConvertCellValueToDurationError;
+
+        fn try_from(value: CellValue) -> Result<Self, Self::Error> {
+            use ConvertCellValueToDurationError::*;
+            let string = handle!(String::try_from(value), ConvertCellValueToStringFailed);
+            if string.is_empty() {
+                Ok(None)
+            } else {
+                let mut splinters = string.split(' ');
+                let number_str = splinters.next().ok_or(NumberNotFound)?;
+                let unit_str = splinters.next().ok_or(UnitNotFound)?;
+                let number = handle!(number_str.parse::<i64>(), NumberParseFailed);
+                match unit_str {
+                    "second" | "seconds" => Ok(Some(Duration::seconds(number))),
+                    "minute" | "minutes" => Ok(Some(Duration::minutes(number))),
+                    "hour" | "hours" => Ok(Some(Duration::hours(number))),
+                    "day" | "days" => Ok(Some(Duration::days(number))),
+                    _ => Err(UnitUnexpected),
+                }
+            }
+        }
+    }
+
+    #[derive(Error, Display, Debug)]
+    pub enum ConvertCellValueToDurationError {
+        ConvertCellValueToStringFailed { source: ConvertCellValueToStringError },
+        NumberNotFound,
+        NumberParseFailed { source: std::num::ParseIntError },
+        UnitNotFound,
+        UnitUnexpected,
     }
 
     #[derive(Error, Display, Debug)]
