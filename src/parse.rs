@@ -2,19 +2,44 @@ use crate::types::{CellValue, RichSingleValue, RichValue, ScalarValue, Value, Va
 use derive_more::Error;
 use fmt_derive::Display;
 
-pub enum CodaType {
-    String,
-    Duration,
-}
-
 impl TryFrom<CellValue> for String {
     type Error = ConvertCellValueToStringError;
 
     fn try_from(cell_value: CellValue) -> Result<Self, Self::Error> {
         use ConvertCellValueToStringError::*;
         match cell_value {
-            CellValue::Value(Value::Variant0(ValueVariant0::Variant0(string))) => Ok(string),
-            CellValue::RichValue(RichValue::Variant0(RichSingleValue::ScalarValue(ScalarValue::Variant0(string)))) => Ok(string),
+            CellValue::Value(Value::Variant0(ValueVariant0::Variant0(value))) => Ok(value),
+            CellValue::RichValue(RichValue::Variant0(RichSingleValue::ScalarValue(ScalarValue::Variant0(value)))) => Ok(value),
+            cell_value => Err(InvalidCellValue {
+                cell_value,
+            }),
+        }
+    }
+}
+
+impl TryFrom<CellValue> for f64 {
+    type Error = ConvertCellValueToF64Error;
+
+    fn try_from(cell_value: CellValue) -> Result<Self, Self::Error> {
+        use ConvertCellValueToF64Error::*;
+        match cell_value {
+            CellValue::Value(Value::Variant0(ValueVariant0::Variant1(value))) => Ok(value),
+            CellValue::RichValue(RichValue::Variant0(RichSingleValue::ScalarValue(ScalarValue::Variant1(value)))) => Ok(value),
+            cell_value => Err(InvalidCellValue {
+                cell_value,
+            }),
+        }
+    }
+}
+
+impl TryFrom<CellValue> for bool {
+    type Error = ConvertCellValueToBoolError;
+
+    fn try_from(cell_value: CellValue) -> Result<Self, Self::Error> {
+        use ConvertCellValueToBoolError::*;
+        match cell_value {
+            CellValue::Value(Value::Variant0(ValueVariant0::Variant2(value))) => Ok(value),
+            CellValue::RichValue(RichValue::Variant0(RichSingleValue::ScalarValue(ScalarValue::Variant2(value)))) => Ok(value),
             cell_value => Err(InvalidCellValue {
                 cell_value,
             }),
@@ -60,4 +85,31 @@ pub use time_impls::*;
 #[derive(Error, Display, Debug)]
 pub enum ConvertCellValueToStringError {
     InvalidCellValue { cell_value: CellValue },
+}
+
+#[derive(Error, Display, Debug)]
+pub enum ConvertCellValueToF64Error {
+    InvalidCellValue { cell_value: CellValue },
+}
+
+#[derive(Error, Display, Debug)]
+pub enum ConvertCellValueToBoolError {
+    InvalidCellValue { cell_value: CellValue },
+}
+
+#[derive(Error, Display, Debug)]
+pub enum ConvertCellValueError {
+    ConvertCellValueToStringFailed {
+        source: ConvertCellValueToStringError,
+    },
+    ConvertCellValueToF64Failed {
+        source: ConvertCellValueToF64Error,
+    },
+    ConvertCellValueToBoolFailed {
+        source: ConvertCellValueToBoolError,
+    },
+    #[cfg(feature = "time")]
+    ConvertCellValueToOffsetDateTimeFailed {
+        source: ConvertCellValueToOffsetDateTime,
+    },
 }
