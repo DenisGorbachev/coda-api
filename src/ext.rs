@@ -1,5 +1,8 @@
-use crate::types::{Column, ColumnList, Doc, DocList, ListTablesResponse, NextPageToken, Row, RowList, Table, TableList, TableReference};
-use crate::{Client, Error, types};
+use crate::types::{Column, ColumnList, Doc, DocList, GetTableResponse, ListTablesResponse, NextPageToken, Row, RowList, Table, TableList, TableReference};
+use crate::{types, Client, Error};
+use derive_more::Error;
+use error_handling::handle;
+use fmt_derive::Display;
 use std::collections::HashMap;
 
 pub type TableId = String;
@@ -148,23 +151,25 @@ impl Client {
         Ok(client)
     }
 
-    pub async fn tables(&self, doc_id: &str) -> Result<Vec<Table>, Error<ListTablesResponse>> {
+    pub async fn table_refs(&self, doc_id: &str) -> Result<Vec<TableReference>, Error<ListTablesResponse>> {
+        self.paginate_all(move |page_token| async move {
+            self.list_tables(doc_id, None, page_token.as_deref(), None, None)
+                .await
+                .map(|response| response.into_inner())
+        })
+        .await
+    }
+
+    pub async fn tables(&self, doc_id: &str) -> Result<Vec<Table>, ClientTablesError> {
+        use ClientTablesError::*;
         // Use the generic pagination helper to get all table references
-        let table_refs = self
-            .paginate_all(move |page_token| async move {
-                self.list_tables(doc_id, None, page_token.as_deref(), None, None)
-                    .await
-                    .map(|response| response.into_inner())
-            })
-            .await?;
+        let table_refs = handle!(self.table_refs(doc_id).await, ListTablesFailed);
 
         // Get full table details for each table reference
         let mut all_tables = Vec::new();
         for table_ref in table_refs {
-            match self.get_table(doc_id, &table_ref.id, None).await {
-                Ok(table_response) => all_tables.push(table_response.into_inner()),
-                Err(_) => continue, // Skip tables that fail to load details
-            }
+            let table_response = handle!(self.get_table(doc_id, &table_ref.id, None).await, GetTableFailed);
+            all_tables.push(table_response.into_inner());
         }
 
         Ok(all_tables)
@@ -217,4 +222,10 @@ impl Client {
 
         Ok(rows_map)
     }
+}
+
+#[derive(Error, Display, Debug)]
+pub enum ClientTablesError {
+    ListTablesFailed { source: Error<ListTablesResponse> },
+    GetTableFailed { source: Error<GetTableResponse> },
 }
