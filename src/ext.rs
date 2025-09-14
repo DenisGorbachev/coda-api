@@ -5,7 +5,11 @@ use error_handling::handle;
 use fmt_derive::Display;
 use std::collections::HashMap;
 
+pub type DocId = String;
+
 pub type TableId = String;
+
+pub type RowId = String;
 
 // Generic pagination trait for Coda API responses
 pub trait PaginatedResponse<T> {
@@ -111,7 +115,7 @@ impl Client {
         T: Clone,
         R: PaginatedResponse<T>,
         F: FnMut(Option<String>) -> Fut,
-        Fut: std::future::Future<Output = Result<R, E>>,
+        Fut: Future<Output = Result<R, E>>,
     {
         let mut all_items = Vec::new();
         let mut pagination_state = PaginationState::new();
