@@ -1,5 +1,5 @@
 use crate::types::{Column, ColumnList, Doc, DocList, GetTableResponse, ListTablesResponse, NextPageToken, Row, RowList, Table, TableList, TableReference};
-use crate::{types, Client, Error};
+use crate::{Client, Error, types};
 use derive_more::Error;
 use error_handling::handle;
 use fmt_derive::Display;

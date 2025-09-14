@@ -127,7 +127,8 @@ echo "mod parse;" >> $LIB
 echo "pub use parse::*;" >> $LIB
 # echo "mod metadata;" >> $LIB
 # echo "pub use metadata::*;" >> $LIB
-echo "pub mod ext;" >> $LIB
+echo "mod ext;" >> $LIB
+echo "pub use ext::*;" >> $LIB
 echo "#[cfg(test)] pub mod test;" >> $LIB
 
 mise run fmt

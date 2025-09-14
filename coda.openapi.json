@@ -12907,6 +12907,12 @@
             "example": "Chat with a tool that can calculate cool geometric formulas like surface area.",
             "maxLength": 256
           },
+          "agentDescription": {
+            "type": "string",
+            "description": "A full description for the pack as an agent.",
+            "example": "Chat with a comprehensive tool that can calculate cool geometric formulas like surface area, volume, and other mathematical operations. This agent can help with complex calculations and provide detailed explanations.",
+            "maxLength": 8192
+          },
           "supportEmail": {
             "type": "string",
             "description": "A contact email for the Pack.",
@@ -13018,6 +13024,12 @@
             "description": "A short description for the pack as an agent.",
             "example": "Chat with a tool that can calculate cool geometric formulas like surface area.",
             "maxLength": 256
+          },
+          "agentDescription": {
+            "type": "string",
+            "description": "A full description for the pack as an agent.",
+            "example": "Chat with a comprehensive tool that can calculate cool geometric formulas like surface area, volume, and other mathematical operations. This agent can help with complex calculations and provide detailed explanations.",
+            "maxLength": 8192
           },
           "supportEmail": {
             "type": "string",
@@ -13822,6 +13834,11 @@
             "description": "A short description for the pack as an agent.",
             "example": "Chat with a tool that can calculate cool geometric formulas like surface area."
           },
+          "agentDescription": {
+            "type": "string",
+            "description": "A full description for the pack as an agent.",
+            "example": "Chat with a comprehensive tool that can calculate cool geometric formulas like surface area, volume, and other mathematical operations. This agent can help with complex calculations and provide detailed explanations."
+          },
           "supportEmail": {
             "type": "string",
             "description": "A contact email for the Pack.",
@@ -13964,6 +13981,11 @@
             "type": "string",
             "description": "A short description for the pack as an agent.",
             "example": "Chat with a tool that can calculate cool geometric formulas like surface area."
+          },
+          "agentDescription": {
+            "type": "string",
+            "description": "A full description for the pack as an agent.",
+            "example": "Chat with a comprehensive tool that can calculate cool geometric formulas like surface area, volume, and other mathematical operations. This agent can help with complex calculations and provide detailed explanations."
           },
           "supportEmail": {
             "type": "string",
@@ -15602,6 +15624,9 @@
           "connectionId": {
             "type": "string"
           },
+          "connectionName": {
+            "type": "string"
+          },
           "requestId": {
             "type": "string",
             "description": "A unique identifier of the Pack invocation that can be used to associate all log types generated in one call of a Pack formula.\n"
@@ -16569,6 +16594,12 @@
             "description": "A short description for the pack as an agent.",
             "example": "Chat with a tool that can calculate cool geometric formulas like surface area.",
             "maxLength": 256
+          },
+          "agentDescription": {
+            "type": "string",
+            "description": "A full description for the pack as an agent.",
+            "example": "Chat with a comprehensive tool that can calculate cool geometric formulas like surface area, volume, and other mathematical operations. This agent can help with complex calculations and provide detailed explanations.",
+            "maxLength": 8192
           },
           "supportEmail": {
             "type": "string",

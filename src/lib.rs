@@ -18397,6 +18397,17 @@ pub mod types {
     ///    "workspaceId"
     ///  ],
     ///  "properties": {
+    ///    "agentDescription": {
+    ///      "description": "A full description for the pack as an agent.",
+    ///      "examples": [
+    ///        "Chat with a comprehensive tool that can calculate cool geometric
+    /// formulas like surface area, volume, and other mathematical operations.
+    /// This agent can help with complex calculations and provide detailed
+    /// explanations."
+    ///      ],
+    ///      "type": "string",
+    ///      "maxLength": 8192
+    ///    },
     ///    "agentShortDescription": {
     ///      "description": "A short description for the pack as an agent.",
     ///      "examples": [
@@ -18519,6 +18530,9 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct Pack {
+        ///A full description for the pack as an agent.
+        #[serde(rename = "agentDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_description: ::std::option::Option<PackAgentDescription>,
         ///A short description for the pack as an agent.
         #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_short_description: ::std::option::Option<PackAgentShortDescription>,
@@ -18709,6 +18723,88 @@ pub mod types {
     impl ::std::convert::From<::std::vec::Vec<PackAccessType>> for PackAccessTypes {
         fn from(value: ::std::vec::Vec<PackAccessType>) -> Self {
             Self(value)
+        }
+    }
+
+    ///A full description for the pack as an agent.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A full description for the pack as an agent.",
+    ///  "examples": [
+    ///    "Chat with a comprehensive tool that can calculate cool geometric
+    /// formulas like surface area, volume, and other mathematical operations.
+    /// This agent can help with complex calculations and provide detailed
+    /// explanations."
+    ///  ],
+    ///  "type": "string",
+    ///  "maxLength": 8192
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackAgentDescription(::std::string::String);
+    impl ::std::ops::Deref for PackAgentDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackAgentDescription> for ::std::string::String {
+        fn from(value: PackAgentDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackAgentDescription> for PackAgentDescription {
+        fn from(value: &PackAgentDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackAgentDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 8192usize {
+                return Err("longer than 8192 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackAgentDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
 
@@ -26507,6 +26603,16 @@ pub mod types {
     ///    "shortDescription"
     ///  ],
     ///  "properties": {
+    ///    "agentDescription": {
+    ///      "description": "A full description for the pack as an agent.",
+    ///      "examples": [
+    ///        "Chat with a comprehensive tool that can calculate cool geometric
+    /// formulas like surface area, volume, and other mathematical operations.
+    /// This agent can help with complex calculations and provide detailed
+    /// explanations."
+    ///      ],
+    ///      "type": "string"
+    ///    },
     ///    "agentShortDescription": {
     ///      "description": "A short description for the pack as an agent.",
     ///      "examples": [
@@ -26664,6 +26770,9 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct PackListing {
+        ///A full description for the pack as an agent.
+        #[serde(rename = "agentDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_description: ::std::option::Option<::std::string::String>,
         ///A short description for the pack as an agent.
         #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_short_description: ::std::option::Option<::std::string::String>,
@@ -26841,6 +26950,16 @@ pub mod types {
     ///    "userAccess"
     ///  ],
     ///  "properties": {
+    ///    "agentDescription": {
+    ///      "description": "A full description for the pack as an agent.",
+    ///      "examples": [
+    ///        "Chat with a comprehensive tool that can calculate cool geometric
+    /// formulas like surface area, volume, and other mathematical operations.
+    /// This agent can help with complex calculations and provide detailed
+    /// explanations."
+    ///      ],
+    ///      "type": "string"
+    ///    },
     ///    "agentShortDescription": {
     ///      "description": "A short description for the pack as an agent.",
     ///      "examples": [
@@ -27013,6 +27132,9 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct PackListingDetail {
+        ///A full description for the pack as an agent.
+        #[serde(rename = "agentDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_description: ::std::option::Option<::std::string::String>,
         ///A short description for the pack as an agent.
         #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_short_description: ::std::option::Option<::std::string::String>,
@@ -27522,6 +27644,9 @@ pub mod types {
     ///    "connectionId": {
     ///      "type": "string"
     ///    },
+    ///    "connectionName": {
+    ///      "type": "string"
+    ///    },
     ///    "createdAt": {
     ///      "description": "Creation time of the log.",
     ///      "examples": [
@@ -27653,6 +27778,8 @@ pub mod types {
         pub autocomplete_parameter_name: ::std::option::Option<::std::string::String>,
         #[serde(rename = "connectionId")]
         pub connection_id: ::std::string::String,
+        #[serde(rename = "connectionName", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub connection_name: ::std::option::Option<::std::string::String>,
         ///Creation time of the log.
         #[serde(rename = "createdAt")]
         pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
@@ -29623,6 +29750,17 @@ pub mod types {
     ///    "workspaceId"
     ///  ],
     ///  "properties": {
+    ///    "agentDescription": {
+    ///      "description": "A full description for the pack as an agent.",
+    ///      "examples": [
+    ///        "Chat with a comprehensive tool that can calculate cool geometric
+    /// formulas like surface area, volume, and other mathematical operations.
+    /// This agent can help with complex calculations and provide detailed
+    /// explanations."
+    ///      ],
+    ///      "type": "string",
+    ///      "maxLength": 8192
+    ///    },
     ///    "agentShortDescription": {
     ///      "description": "A short description for the pack as an agent.",
     ///      "examples": [
@@ -29736,6 +29874,9 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct PackSummary {
+        ///A full description for the pack as an agent.
+        #[serde(rename = "agentDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_description: ::std::option::Option<PackSummaryAgentDescription>,
         ///A short description for the pack as an agent.
         #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_short_description: ::std::option::Option<PackSummaryAgentShortDescription>,
@@ -29784,6 +29925,88 @@ pub mod types {
     impl ::std::convert::From<&PackSummary> for PackSummary {
         fn from(value: &PackSummary) -> Self {
             value.clone()
+        }
+    }
+
+    ///A full description for the pack as an agent.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A full description for the pack as an agent.",
+    ///  "examples": [
+    ///    "Chat with a comprehensive tool that can calculate cool geometric
+    /// formulas like surface area, volume, and other mathematical operations.
+    /// This agent can help with complex calculations and provide detailed
+    /// explanations."
+    ///  ],
+    ///  "type": "string",
+    ///  "maxLength": 8192
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackSummaryAgentDescription(::std::string::String);
+    impl ::std::ops::Deref for PackSummaryAgentDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackSummaryAgentDescription> for ::std::string::String {
+        fn from(value: PackSummaryAgentDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackSummaryAgentDescription> for PackSummaryAgentDescription {
+        fn from(value: &PackSummaryAgentDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackSummaryAgentDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 8192usize {
+                return Err("longer than 8192 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackSummaryAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackSummaryAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackSummaryAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackSummaryAgentDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
 
@@ -38757,6 +38980,17 @@ pub mod types {
     ///  "description": "Payload for updating a Pack.",
     ///  "type": "object",
     ///  "properties": {
+    ///    "agentDescription": {
+    ///      "description": "A full description for the pack as an agent.",
+    ///      "examples": [
+    ///        "Chat with a comprehensive tool that can calculate cool geometric
+    /// formulas like surface area, volume, and other mathematical operations.
+    /// This agent can help with complex calculations and provide detailed
+    /// explanations."
+    ///      ],
+    ///      "type": "string",
+    ///      "maxLength": 8192
+    ///    },
     ///    "agentShortDescription": {
     ///      "description": "A short description for the pack as an agent.",
     ///      "examples": [
@@ -38942,6 +39176,9 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct UpdatePackRequest {
+        ///A full description for the pack as an agent.
+        #[serde(rename = "agentDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_description: ::std::option::Option<UpdatePackRequestAgentDescription>,
         ///A short description for the pack as an agent.
         #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_short_description: ::std::option::Option<UpdatePackRequestAgentShortDescription>,
@@ -38995,6 +39232,7 @@ pub mod types {
     impl ::std::default::Default for UpdatePackRequest {
         fn default() -> Self {
             Self {
+                agent_description: Default::default(),
                 agent_short_description: Default::default(),
                 cover_asset_id: Default::default(),
                 description: Default::default(),
@@ -39009,6 +39247,88 @@ pub mod types {
                 support_email: Default::default(),
                 terms_of_service_url: Default::default(),
             }
+        }
+    }
+
+    ///A full description for the pack as an agent.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A full description for the pack as an agent.",
+    ///  "examples": [
+    ///    "Chat with a comprehensive tool that can calculate cool geometric
+    /// formulas like surface area, volume, and other mathematical operations.
+    /// This agent can help with complex calculations and provide detailed
+    /// explanations."
+    ///  ],
+    ///  "type": "string",
+    ///  "maxLength": 8192
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct UpdatePackRequestAgentDescription(::std::string::String);
+    impl ::std::ops::Deref for UpdatePackRequestAgentDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<UpdatePackRequestAgentDescription> for ::std::string::String {
+        fn from(value: UpdatePackRequestAgentDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&UpdatePackRequestAgentDescription> for UpdatePackRequestAgentDescription {
+        fn from(value: &UpdatePackRequestAgentDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for UpdatePackRequestAgentDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 8192usize {
+                return Err("longer than 8192 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for UpdatePackRequestAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for UpdatePackRequestAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for UpdatePackRequestAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for UpdatePackRequestAgentDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
 
@@ -46213,6 +46533,7 @@ pub mod prelude {
 }
 mod parse;
 pub use parse::*;
-pub mod ext;
+mod ext;
+pub use ext::*;
 #[cfg(test)]
 pub mod test;
