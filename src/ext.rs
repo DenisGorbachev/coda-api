@@ -1,8 +1,9 @@
 use crate::types::{Column, ColumnList, Doc, DocList, GetTableResponse, ListTablesResponse, NextPageToken, Row, RowList, Table, TableList, TableReference};
-use crate::{Client, Error, types};
+use crate::{types, Client, Error};
 use derive_more::Error;
 use error_handling::handle;
 use fmt_derive::Display;
+use progenitor_client::{encode_path, ResponseValue};
 use std::collections::HashMap;
 
 pub type DocId = String;
@@ -226,6 +227,58 @@ impl Client {
 
         Ok(rows_map)
     }
+
+    ///Update row
+    ///
+    ///Updates the specified row in the table. This endpoint will always return
+    /// a 202, so long as the row exists and is accessible (and the update is
+    /// structurally valid). Row updates are generally processed within several
+    /// seconds. When updating using a name as opposed to an ID, an arbitrary
+    /// row will be affected.
+    ///
+    ///
+    ///Sends a `PUT` request to
+    /// `/docs/{docId}/tables/{tableIdOrName}/rows/{rowIdOrName}`
+    ///
+    ///Arguments:
+    /// - `doc_id`: ID of the doc.
+    /// - `table_id_or_name`: ID or name of the table. Names are discouraged
+    ///   because they're easily prone to being changed by users. If you're
+    ///   using a name, be sure to URI-encode it.
+    /// - `row_id_or_name`: ID or name of the row. Names are discouraged because
+    ///   they're easily prone to being changed by users. If you're using a
+    ///   name, be sure to URI-encode it. If there are multiple rows with the
+    ///   same value in the identifying column, an arbitrary one will be
+    ///   selected.
+    ///
+    /// - `disable_parsing`: If true, the API will not attempt to parse the data
+    ///   in any way.
+    /// - `body`: Row update.
+    pub async fn update_row_correct<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowUpdate) -> Result<ResponseValue<RowUpdateResultCorrect>, Error<types::UpdateRowResponse>> {
+        let url = format!("{}/docs/{}/tables/{}/rows/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&table_id_or_name.to_string()), encode_path(&row_id_or_name.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .put(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .json(&body)
+            .query(&progenitor_client::QueryParam::new("disableParsing", &disable_parsing))
+            .headers(header_map)
+            .build()?;
+        let result = self.client.execute(request).await;
+        let response = result?;
+        match response.status().as_u16() {
+            202u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
 }
 
 #[derive(Error, Display, Debug)]
@@ -233,3 +286,49 @@ pub enum ClientTablesError {
     ListTablesFailed { source: Error<ListTablesResponse> },
     GetTableFailed { source: Error<GetTableResponse> },
 }
+
+///`RowUpdateResult`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "The result of a row update.",
+///  "allOf": [
+///    {
+///      "$ref": "#/components/schemas/DocumentMutateResponse"
+///    },
+///    {
+///      "type": "object",
+///      "required": [
+///        "id"
+///      ],
+///      "properties": {
+///        "id": {
+///          "description": "ID of the updated row.",
+///          "examples": [
+///            "i-tuVwxYz"
+///          ],
+///          "type": "string"
+///        }
+///      },
+///      "additionalProperties": false
+///    }
+///  ],
+///  "x-schema-name": "RowUpdateResult"
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[serde(deny_unknown_fields)]
+pub struct RowUpdateResultCorrect {
+    #[serde(rename = "id")]
+    id: RowId,
+    #[serde(rename = "requestId")]
+    pub request_id: String,
+}
+// impl ::std::convert::From<&Self> for crate::types::RowUpdateResult {
+//     fn from(value: &crate::types::RowUpdateResult) -> Self {
+//         value.clone()
+//     }
+// }
