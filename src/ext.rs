@@ -200,20 +200,20 @@ impl Client {
         Ok(columns_map)
     }
 
-    pub async fn rows(&self, doc_id: &str, table_id: &str, sync_token: Option<&str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<Vec<Row>, Error<types::ListRowsResponse>> {
+    pub async fn rows(&self, doc_id: &str, table_id: &str, query: Option<&str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<Vec<Row>, Error<types::ListRowsResponse>> {
         // Use the generic pagination helper to get all rows
         self.paginate_all(move |page_token| async move {
-            self.list_rows(doc_id, table_id, None, page_token.as_deref(), None, None, sync_token, use_column_names, value_format, None)
+            self.list_rows(doc_id, table_id, None, page_token.as_deref(), query, sort_by, sync_token, use_column_names, value_format, None)
                 .await
                 .map(|response| response.into_inner())
         })
         .await
     }
 
-    pub async fn rows_map(&self, doc_id: &str, table_ids: impl IntoIterator<Item = TableId>, sync_token: Option<&str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<HashMap<TableId, Vec<Row>>, Error<types::ListRowsResponse>> {
+    pub async fn rows_map(&self, doc_id: &str, table_ids: impl IntoIterator<Item = TableId>, query: Option<&str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<HashMap<TableId, Vec<Row>>, Error<types::ListRowsResponse>> {
         let rows_futures = table_ids.into_iter().map(|table_id| async {
             let rows = self
-                .rows(doc_id, &table_id, sync_token, use_column_names, value_format)
+                .rows(doc_id, &table_id, query, sort_by, sync_token, use_column_names, value_format)
                 .await?;
             Ok::<(TableId, Vec<Row>), Error<types::ListRowsResponse>>((table_id, rows))
         });
