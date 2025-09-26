@@ -12860,6 +12860,13 @@
               "$ref": "#/components/schemas/PackImageFile"
             }
           },
+          "agentImages": {
+            "type": "array",
+            "description": "The agent images for the Pack.",
+            "items": {
+              "$ref": "#/components/schemas/PackImageFile"
+            }
+          },
           "workspaceId": {
             "type": "string",
             "description": "The parent workspace for the Pack.",
@@ -12974,6 +12981,13 @@
           "exampleImages": {
             "type": "array",
             "description": "The example images for the Pack.",
+            "items": {
+              "$ref": "#/components/schemas/PackImageFile"
+            }
+          },
+          "agentImages": {
+            "type": "array",
+            "description": "The agent images for the Pack.",
             "items": {
               "$ref": "#/components/schemas/PackImageFile"
             }
@@ -13376,12 +13390,14 @@
         "enum": [
           "logo",
           "cover",
-          "exampleImage"
+          "exampleImage",
+          "agentImage"
         ],
         "x-tsEnumNames": [
           "Logo",
           "Cover",
-          "ExampleImage"
+          "ExampleImage",
+          "AgentImage"
         ]
       },
       "PackAssetUploadInfo": {
@@ -13813,6 +13829,13 @@
             },
             "description": "The example images for the Pack."
           },
+          "agentImages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PackImageFile"
+            },
+            "description": "The agent images for the Pack."
+          },
           "name": {
             "type": "string",
             "description": "The name of the Pack.",
@@ -13960,6 +13983,13 @@
               "$ref": "#/components/schemas/PackImageFile"
             },
             "description": "The example images for the Pack."
+          },
+          "agentImages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PackImageFile"
+            },
+            "description": "The agent images for the Pack."
           },
           "name": {
             "type": "string",
@@ -16553,6 +16583,34 @@
                 "assetId": {
                   "type": "string",
                   "description": "The asset id of the Pack's example image, returned by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint."
+                },
+                "filename": {
+                  "type": "string",
+                  "description": "The filename for the image."
+                },
+                "mimeType": {
+                  "type": "string",
+                  "description": "The media type of the image being sent.",
+                  "example": "image/jpeg"
+                }
+              }
+            },
+            "nullable": true
+          },
+          "agentImages": {
+            "type": "array",
+            "description": "The agent images for the Pack.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "assetId",
+                "filename"
+              ],
+              "properties": {
+                "assetId": {
+                  "type": "string",
+                  "description": "The asset id of the Pack's agent image, returned by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint."
                 },
                 "filename": {
                   "type": "string",

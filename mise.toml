@@ -20,7 +20,7 @@ cargo-binstall = "1.10.15"
 "cargo:cargo-nextest" = "0.9.102"
 "cargo:cargo-expand" = "1.0.114"
 "cargo:sd" = "1.0.0"
-"cargo:cargo-progenitor" = "0.10.0"
+"cargo:cargo-progenitor" = "0.11.1"
 jq = "1.8.1"
 
 [tasks."build"]

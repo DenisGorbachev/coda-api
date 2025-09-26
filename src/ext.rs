@@ -3,7 +3,7 @@ use crate::{Client, Error, types};
 use derive_more::Error;
 use error_handling::handle;
 use fmt_derive::Display;
-use progenitor_client::{ResponseValue, encode_path};
+use progenitor_client::{ClientInfo, ResponseValue, encode_path};
 use std::collections::HashMap;
 
 pub type DocId = String;
@@ -257,7 +257,7 @@ impl Client {
     pub async fn update_row_correct<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowUpdate) -> Result<ResponseValue<RowUpdateResultCorrect>, Error<types::UpdateRowResponse>> {
         let url = format!("{}/docs/{}/tables/{}/rows/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&table_id_or_name.to_string()), encode_path(&row_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client

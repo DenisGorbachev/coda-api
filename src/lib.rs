@@ -1,7 +1,7 @@
 #[allow(unused_imports)]
-pub use progenitor_client::{ByteStream, Error, ResponseValue};
+pub use progenitor_client::{ByteStream, ClientInfo, Error, ResponseValue};
 #[allow(unused_imports)]
-use progenitor_client::{RequestBuilderExt, encode_path};
+use progenitor_client::{ClientHooks, OperationInfo, RequestBuilderExt, encode_path};
 /// Types used as operation parameters and responses.
 #[allow(clippy::all)]
 pub mod types {
@@ -80,10 +80,10 @@ pub mod types {
     impl ::std::fmt::Display for AccessType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Readonly => write!(f, "readonly"),
-                Self::Write => write!(f, "write"),
-                Self::Comment => write!(f, "comment"),
-                Self::None => write!(f, "none"),
+                Self::Readonly => f.write_str("readonly"),
+                Self::Write => f.write_str("write"),
+                Self::Comment => f.write_str("comment"),
+                Self::None => f.write_str("none"),
             }
         }
     }
@@ -163,9 +163,9 @@ pub mod types {
     impl ::std::fmt::Display for AccessTypeNotNone {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Readonly => write!(f, "readonly"),
-                Self::Write => write!(f, "write"),
-                Self::Comment => write!(f, "comment"),
+                Self::Readonly => f.write_str("readonly"),
+                Self::Write => f.write_str("write"),
+                Self::Comment => f.write_str("comment"),
             }
         }
     }
@@ -819,11 +819,8 @@ pub mod types {
             if value.chars().count() > 128usize {
                 return Err("longer than 128 characters".into());
             }
-            if regress::Regex::new("^[a-zA-Z0-9\\-_]+$")
-                .unwrap()
-                .find(value)
-                .is_none()
-            {
+            static PATTERN: ::std::sync::LazyLock<::regress::Regex> = ::std::sync::LazyLock::new(|| ::regress::Regex::new("^[a-zA-Z0-9\\-_]+$").unwrap());
+            if PATTERN.find(value).is_none() {
                 return Err("doesn't match pattern \"^[a-zA-Z0-9\\-_]+$\"".into());
             }
             Ok(Self(value.to_string()))
@@ -1563,7 +1560,7 @@ pub mod types {
     impl ::std::fmt::Display for AddedAnyonePrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Anyone => write!(f, "anyone"),
+                Self::Anyone => f.write_str("anyone"),
             }
         }
     }
@@ -1677,7 +1674,7 @@ pub mod types {
     impl ::std::fmt::Display for AddedDomainPrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Domain => write!(f, "domain"),
+                Self::Domain => f.write_str("domain"),
             }
         }
     }
@@ -1791,7 +1788,7 @@ pub mod types {
     impl ::std::fmt::Display for AddedEmailPrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Email => write!(f, "email"),
+                Self::Email => f.write_str("email"),
             }
         }
     }
@@ -1906,7 +1903,7 @@ pub mod types {
     impl ::std::fmt::Display for AddedGroupPrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Group => write!(f, "group"),
+                Self::Group => f.write_str("group"),
             }
         }
     }
@@ -2095,7 +2092,7 @@ pub mod types {
     impl ::std::fmt::Display for AddedWorkspacePrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Workspace => write!(f, "workspace"),
+                Self::Workspace => f.write_str("workspace"),
             }
         }
     }
@@ -2234,8 +2231,8 @@ pub mod types {
     impl ::std::fmt::Display for AnalyticsScale {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Daily => write!(f, "daily"),
-                Self::Cumulative => write!(f, "cumulative"),
+                Self::Daily => f.write_str("daily"),
+                Self::Cumulative => f.write_str("cumulative"),
             }
         }
     }
@@ -2340,7 +2337,7 @@ pub mod types {
     impl ::std::fmt::Display for AnyonePrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Anyone => write!(f, "anyone"),
+                Self::Anyone => f.write_str("anyone"),
             }
         }
     }
@@ -2541,7 +2538,7 @@ pub mod types {
     impl ::std::fmt::Display for ApiLinkType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::ApiLink => write!(f, "apiLink"),
+                Self::ApiLink => f.write_str("apiLink"),
             }
         }
     }
@@ -2803,7 +2800,7 @@ pub mod types {
     impl ::std::fmt::Display for BundledPackPlanPricingType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::BundledWithTier => write!(f, "BundledWithTier"),
+                Self::BundledWithTier => f.write_str("BundledWithTier"),
             }
         }
     }
@@ -3198,8 +3195,8 @@ pub mod types {
     impl ::std::fmt::Display for CheckboxDisplayType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Toggle => write!(f, "toggle"),
-                Self::Check => write!(f, "check"),
+                Self::Toggle => f.write_str("toggle"),
+                Self::Check => f.write_str("check"),
             }
         }
     }
@@ -3503,7 +3500,7 @@ pub mod types {
     impl ::std::fmt::Display for ColumnDetailType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Column => write!(f, "column"),
+                Self::Column => f.write_str("column"),
             }
         }
     }
@@ -3848,30 +3845,30 @@ pub mod types {
     impl ::std::fmt::Display for ColumnFormatType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Text => write!(f, "text"),
-                Self::Person => write!(f, "person"),
-                Self::Lookup => write!(f, "lookup"),
-                Self::Number => write!(f, "number"),
-                Self::Percent => write!(f, "percent"),
-                Self::Currency => write!(f, "currency"),
-                Self::Date => write!(f, "date"),
-                Self::DateTime => write!(f, "dateTime"),
-                Self::Time => write!(f, "time"),
-                Self::Duration => write!(f, "duration"),
-                Self::Email => write!(f, "email"),
-                Self::Link => write!(f, "link"),
-                Self::Slider => write!(f, "slider"),
-                Self::Scale => write!(f, "scale"),
-                Self::Image => write!(f, "image"),
-                Self::ImageReference => write!(f, "imageReference"),
-                Self::Attachments => write!(f, "attachments"),
-                Self::Button => write!(f, "button"),
-                Self::Checkbox => write!(f, "checkbox"),
-                Self::Select => write!(f, "select"),
-                Self::PackObject => write!(f, "packObject"),
-                Self::Reaction => write!(f, "reaction"),
-                Self::Canvas => write!(f, "canvas"),
-                Self::Other => write!(f, "other"),
+                Self::Text => f.write_str("text"),
+                Self::Person => f.write_str("person"),
+                Self::Lookup => f.write_str("lookup"),
+                Self::Number => f.write_str("number"),
+                Self::Percent => f.write_str("percent"),
+                Self::Currency => f.write_str("currency"),
+                Self::Date => f.write_str("date"),
+                Self::DateTime => f.write_str("dateTime"),
+                Self::Time => f.write_str("time"),
+                Self::Duration => f.write_str("duration"),
+                Self::Email => f.write_str("email"),
+                Self::Link => f.write_str("link"),
+                Self::Slider => f.write_str("slider"),
+                Self::Scale => f.write_str("scale"),
+                Self::Image => f.write_str("image"),
+                Self::ImageReference => f.write_str("imageReference"),
+                Self::Attachments => f.write_str("attachments"),
+                Self::Button => f.write_str("button"),
+                Self::Checkbox => f.write_str("checkbox"),
+                Self::Select => f.write_str("select"),
+                Self::PackObject => f.write_str("packObject"),
+                Self::Reaction => f.write_str("reaction"),
+                Self::Canvas => f.write_str("canvas"),
+                Self::Other => f.write_str("other"),
             }
         }
     }
@@ -4088,7 +4085,7 @@ pub mod types {
     impl ::std::fmt::Display for ColumnReferenceType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Column => write!(f, "column"),
+                Self::Column => f.write_str("column"),
             }
         }
     }
@@ -4154,7 +4151,7 @@ pub mod types {
     impl ::std::fmt::Display for ColumnType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Column => write!(f, "column"),
+                Self::Column => f.write_str("column"),
             }
         }
     }
@@ -4450,7 +4447,7 @@ pub mod types {
     impl ::std::fmt::Display for ControlReferenceType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Control => write!(f, "control"),
+                Self::Control => f.write_str("control"),
             }
         }
     }
@@ -4516,7 +4513,7 @@ pub mod types {
     impl ::std::fmt::Display for ControlType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Control => write!(f, "control"),
+                Self::Control => f.write_str("control"),
             }
         }
     }
@@ -4640,20 +4637,20 @@ pub mod types {
     impl ::std::fmt::Display for ControlTypeEnum {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::AiBlock => write!(f, "aiBlock"),
-                Self::Button => write!(f, "button"),
-                Self::Checkbox => write!(f, "checkbox"),
-                Self::DatePicker => write!(f, "datePicker"),
-                Self::DateRangePicker => write!(f, "dateRangePicker"),
-                Self::DateTimePicker => write!(f, "dateTimePicker"),
-                Self::Lookup => write!(f, "lookup"),
-                Self::Multiselect => write!(f, "multiselect"),
-                Self::Select => write!(f, "select"),
-                Self::Scale => write!(f, "scale"),
-                Self::Slider => write!(f, "slider"),
-                Self::Reaction => write!(f, "reaction"),
-                Self::Textbox => write!(f, "textbox"),
-                Self::TimePicker => write!(f, "timePicker"),
+                Self::AiBlock => f.write_str("aiBlock"),
+                Self::Button => f.write_str("button"),
+                Self::Checkbox => f.write_str("checkbox"),
+                Self::DatePicker => f.write_str("datePicker"),
+                Self::DateRangePicker => f.write_str("dateRangePicker"),
+                Self::DateTimePicker => f.write_str("dateTimePicker"),
+                Self::Lookup => f.write_str("lookup"),
+                Self::Multiselect => f.write_str("multiselect"),
+                Self::Select => f.write_str("select"),
+                Self::Scale => f.write_str("scale"),
+                Self::Slider => f.write_str("slider"),
+                Self::Reaction => f.write_str("reaction"),
+                Self::Textbox => f.write_str("textbox"),
+                Self::TimePicker => f.write_str("timePicker"),
             }
         }
     }
@@ -5246,40 +5243,6 @@ pub mod types {
         }
     }
 
-    impl ::std::str::FromStr for CurrencyAmount {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if let Ok(v) = value.parse() {
-                Ok(Self::Variant0(v))
-            } else if let Ok(v) = value.parse() {
-                Ok(Self::Variant1(v))
-            } else {
-                Err("string conversion failed for all variants".into())
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for CurrencyAmount {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for CurrencyAmount {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for CurrencyAmount {
-        type Error = self::error::ConversionError;
-        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::fmt::Display for CurrencyAmount {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match self {
@@ -5388,9 +5351,9 @@ pub mod types {
     impl ::std::fmt::Display for CurrencyFormatType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Currency => write!(f, "currency"),
-                Self::Accounting => write!(f, "accounting"),
-                Self::Financial => write!(f, "financial"),
+                Self::Currency => f.write_str("currency"),
+                Self::Accounting => f.write_str("accounting"),
+                Self::Financial => f.write_str("financial"),
             }
         }
     }
@@ -5673,12 +5636,12 @@ pub mod types {
     impl ::std::fmt::Display for CustomDocDomainProvider {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::GoDaddy => write!(f, "GoDaddy"),
-                Self::Namecheap => write!(f, "Namecheap"),
-                Self::HoverTucows => write!(f, "Hover (Tucows)"),
-                Self::NetworkSolutions => write!(f, "Network Solutions"),
-                Self::GoogleDomains => write!(f, "Google Domains"),
-                Self::Other => write!(f, "Other"),
+                Self::GoDaddy => f.write_str("GoDaddy"),
+                Self::Namecheap => f.write_str("Namecheap"),
+                Self::HoverTucows => f.write_str("Hover (Tucows)"),
+                Self::NetworkSolutions => f.write_str("Network Solutions"),
+                Self::GoogleDomains => f.write_str("Google Domains"),
+                Self::Other => f.write_str("Other"),
             }
         }
     }
@@ -5793,9 +5756,9 @@ pub mod types {
     impl ::std::fmt::Display for CustomDocDomainSetupStatus {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Pending => write!(f, "pending"),
-                Self::Succeeded => write!(f, "succeeded"),
-                Self::Failed => write!(f, "failed"),
+                Self::Pending => f.write_str("pending"),
+                Self::Succeeded => f.write_str("succeeded"),
+                Self::Failed => f.write_str("failed"),
             }
         }
     }
@@ -5869,8 +5832,8 @@ pub mod types {
     impl ::std::fmt::Display for CustomDomainConnectedStatus {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Connected => write!(f, "connected"),
-                Self::NotConnected => write!(f, "notConnected"),
+                Self::Connected => f.write_str("connected"),
+                Self::NotConnected => f.write_str("notConnected"),
             }
         }
     }
@@ -7212,24 +7175,24 @@ pub mod types {
     impl ::std::fmt::Display for DocAnalyticsOrderBy {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Date => write!(f, "date"),
-                Self::DocId => write!(f, "docId"),
-                Self::Title => write!(f, "title"),
-                Self::CreatedAt => write!(f, "createdAt"),
-                Self::PublishedAt => write!(f, "publishedAt"),
-                Self::Likes => write!(f, "likes"),
-                Self::Copies => write!(f, "copies"),
-                Self::Views => write!(f, "views"),
-                Self::SessionsDesktop => write!(f, "sessionsDesktop"),
-                Self::SessionsMobile => write!(f, "sessionsMobile"),
-                Self::SessionsOther => write!(f, "sessionsOther"),
-                Self::TotalSessions => write!(f, "totalSessions"),
-                Self::AiCreditsChat => write!(f, "aiCreditsChat"),
-                Self::AiCreditsBlock => write!(f, "aiCreditsBlock"),
-                Self::AiCreditsColumn => write!(f, "aiCreditsColumn"),
-                Self::AiCreditsAssistant => write!(f, "aiCreditsAssistant"),
-                Self::AiCreditsReviewer => write!(f, "aiCreditsReviewer"),
-                Self::AiCredits => write!(f, "aiCredits"),
+                Self::Date => f.write_str("date"),
+                Self::DocId => f.write_str("docId"),
+                Self::Title => f.write_str("title"),
+                Self::CreatedAt => f.write_str("createdAt"),
+                Self::PublishedAt => f.write_str("publishedAt"),
+                Self::Likes => f.write_str("likes"),
+                Self::Copies => f.write_str("copies"),
+                Self::Views => f.write_str("views"),
+                Self::SessionsDesktop => f.write_str("sessionsDesktop"),
+                Self::SessionsMobile => f.write_str("sessionsMobile"),
+                Self::SessionsOther => f.write_str("sessionsOther"),
+                Self::TotalSessions => f.write_str("totalSessions"),
+                Self::AiCreditsChat => f.write_str("aiCreditsChat"),
+                Self::AiCreditsBlock => f.write_str("aiCreditsBlock"),
+                Self::AiCreditsColumn => f.write_str("aiCreditsColumn"),
+                Self::AiCreditsAssistant => f.write_str("aiCreditsAssistant"),
+                Self::AiCreditsReviewer => f.write_str("aiCreditsReviewer"),
+                Self::AiCredits => f.write_str("aiCredits"),
             }
         }
     }
@@ -7760,9 +7723,9 @@ pub mod types {
     impl ::std::fmt::Display for DocPublishMode {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::View => write!(f, "view"),
-                Self::Play => write!(f, "play"),
-                Self::Edit => write!(f, "edit"),
+                Self::View => f.write_str("view"),
+                Self::Play => f.write_str("play"),
+                Self::Edit => f.write_str("edit"),
             }
         }
     }
@@ -8005,7 +7968,7 @@ pub mod types {
     impl ::std::fmt::Display for DocReferenceType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Doc => write!(f, "doc"),
+                Self::Doc => f.write_str("doc"),
             }
         }
     }
@@ -8173,7 +8136,7 @@ pub mod types {
     impl ::std::fmt::Display for DocType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Doc => write!(f, "doc"),
+                Self::Doc => f.write_str("doc"),
             }
         }
     }
@@ -8554,7 +8517,7 @@ pub mod types {
     impl ::std::fmt::Display for DocumentCreationResultType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Doc => write!(f, "doc"),
+                Self::Doc => f.write_str("doc"),
             }
         }
     }
@@ -8708,7 +8671,7 @@ pub mod types {
     impl ::std::fmt::Display for DomainPrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Domain => write!(f, "domain"),
+                Self::Domain => f.write_str("domain"),
             }
         }
     }
@@ -8838,10 +8801,10 @@ pub mod types {
     impl ::std::fmt::Display for DurationUnit {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Days => write!(f, "days"),
-                Self::Hours => write!(f, "hours"),
-                Self::Minutes => write!(f, "minutes"),
-                Self::Seconds => write!(f, "seconds"),
+                Self::Days => f.write_str("days"),
+                Self::Hours => f.write_str("hours"),
+                Self::Minutes => f.write_str("minutes"),
+                Self::Seconds => f.write_str("seconds"),
             }
         }
     }
@@ -8959,9 +8922,9 @@ pub mod types {
     impl ::std::fmt::Display for EmailDisplayType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::IconAndEmail => write!(f, "iconAndEmail"),
-                Self::IconOnly => write!(f, "iconOnly"),
-                Self::EmailOnly => write!(f, "emailOnly"),
+                Self::IconAndEmail => f.write_str("iconAndEmail"),
+                Self::IconOnly => f.write_str("iconOnly"),
+                Self::EmailOnly => f.write_str("emailOnly"),
             }
         }
     }
@@ -9077,7 +9040,7 @@ pub mod types {
     impl ::std::fmt::Display for EmailPrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Email => write!(f, "email"),
+                Self::Email => f.write_str("email"),
             }
         }
     }
@@ -9155,10 +9118,10 @@ pub mod types {
     impl ::std::fmt::Display for FeatureSet {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Basic => write!(f, "Basic"),
-                Self::Pro => write!(f, "Pro"),
-                Self::Team => write!(f, "Team"),
-                Self::Enterprise => write!(f, "Enterprise"),
+                Self::Basic => f.write_str("Basic"),
+                Self::Pro => f.write_str("Pro"),
+                Self::Team => f.write_str("Team"),
+                Self::Enterprise => f.write_str("Enterprise"),
             }
         }
     }
@@ -9234,8 +9197,8 @@ pub mod types {
     impl ::std::fmt::Display for FeaturedDocStatus {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::DocInaccessibleOrDoesNotExist => write!(f, "docInaccessibleOrDoesNotExist"),
-                Self::InvalidPublishedDocUrl => write!(f, "invalidPublishedDocUrl"),
+                Self::DocInaccessibleOrDoesNotExist => f.write_str("docInaccessibleOrDoesNotExist"),
+                Self::InvalidPublishedDocUrl => f.write_str("invalidPublishedDocUrl"),
             }
         }
     }
@@ -9473,7 +9436,7 @@ pub mod types {
     impl ::std::fmt::Display for FolderReferenceType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Folder => write!(f, "folder"),
+                Self::Folder => f.write_str("folder"),
             }
         }
     }
@@ -9539,7 +9502,7 @@ pub mod types {
     impl ::std::fmt::Display for FolderType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Folder => write!(f, "folder"),
+                Self::Folder => f.write_str("folder"),
             }
         }
     }
@@ -9917,7 +9880,7 @@ pub mod types {
     impl ::std::fmt::Display for FormulaReferenceType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Formula => write!(f, "formula"),
+                Self::Formula => f.write_str("formula"),
             }
         }
     }
@@ -9983,7 +9946,7 @@ pub mod types {
     impl ::std::fmt::Display for FormulaType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Formula => write!(f, "formula"),
+                Self::Formula => f.write_str("formula"),
             }
         }
     }
@@ -10086,7 +10049,7 @@ pub mod types {
     impl ::std::fmt::Display for FreePackPlanPricingType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Free => write!(f, "Free"),
+                Self::Free => f.write_str("Free"),
             }
         }
     }
@@ -12318,7 +12281,7 @@ pub mod types {
     impl ::std::fmt::Display for GroupPrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Group => write!(f, "group"),
+                Self::Group => f.write_str("group"),
             }
         }
     }
@@ -12436,7 +12399,7 @@ pub mod types {
     impl ::std::fmt::Display for GroupedPackAuthLogType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Auth => write!(f, "auth"),
+                Self::Auth => f.write_str("auth"),
             }
         }
     }
@@ -12554,7 +12517,7 @@ pub mod types {
     impl ::std::fmt::Display for GroupedPackInvocationLogType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Invocation => write!(f, "invocation"),
+                Self::Invocation => f.write_str("invocation"),
             }
         }
     }
@@ -12864,26 +12827,26 @@ pub mod types {
     impl ::std::fmt::Display for IconSet {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Star => write!(f, "star"),
-                Self::Circle => write!(f, "circle"),
-                Self::Fire => write!(f, "fire"),
-                Self::Bug => write!(f, "bug"),
-                Self::Diamond => write!(f, "diamond"),
-                Self::Bell => write!(f, "bell"),
-                Self::Thumbsup => write!(f, "thumbsup"),
-                Self::Heart => write!(f, "heart"),
-                Self::Chili => write!(f, "chili"),
-                Self::Smiley => write!(f, "smiley"),
-                Self::Lightning => write!(f, "lightning"),
-                Self::Currency => write!(f, "currency"),
-                Self::Coffee => write!(f, "coffee"),
-                Self::Person => write!(f, "person"),
-                Self::Battery => write!(f, "battery"),
-                Self::Cocktail => write!(f, "cocktail"),
-                Self::Cloud => write!(f, "cloud"),
-                Self::Sun => write!(f, "sun"),
-                Self::Checkmark => write!(f, "checkmark"),
-                Self::Lightbulb => write!(f, "lightbulb"),
+                Self::Star => f.write_str("star"),
+                Self::Circle => f.write_str("circle"),
+                Self::Fire => f.write_str("fire"),
+                Self::Bug => f.write_str("bug"),
+                Self::Diamond => f.write_str("diamond"),
+                Self::Bell => f.write_str("bell"),
+                Self::Thumbsup => f.write_str("thumbsup"),
+                Self::Heart => f.write_str("heart"),
+                Self::Chili => f.write_str("chili"),
+                Self::Smiley => f.write_str("smiley"),
+                Self::Lightning => f.write_str("lightning"),
+                Self::Currency => f.write_str("currency"),
+                Self::Coffee => f.write_str("coffee"),
+                Self::Person => f.write_str("person"),
+                Self::Battery => f.write_str("battery"),
+                Self::Cocktail => f.write_str("cocktail"),
+                Self::Cloud => f.write_str("cloud"),
+                Self::Sun => f.write_str("sun"),
+                Self::Checkmark => f.write_str("checkmark"),
+                Self::Lightbulb => f.write_str("lightbulb"),
             }
         }
     }
@@ -13101,8 +13064,8 @@ pub mod types {
     impl ::std::fmt::Display for ImageShapeStyle {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Auto => write!(f, "auto"),
-                Self::Circle => write!(f, "circle"),
+                Self::Auto => f.write_str("auto"),
+                Self::Circle => f.write_str("circle"),
             }
         }
     }
@@ -13180,9 +13143,9 @@ pub mod types {
     impl ::std::fmt::Display for ImageStatus {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Live => write!(f, "live"),
-                Self::Deleted => write!(f, "deleted"),
-                Self::Failed => write!(f, "failed"),
+                Self::Live => f.write_str("live"),
+                Self::Deleted => f.write_str("deleted"),
+                Self::Failed => f.write_str("failed"),
             }
         }
     }
@@ -13570,9 +13533,9 @@ pub mod types {
     impl ::std::fmt::Display for IngestionChildExecutionType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Full => write!(f, "FULL"),
-                Self::Incremental => write!(f, "INCREMENTAL"),
-                Self::Patch => write!(f, "PATCH"),
+                Self::Full => f.write_str("FULL"),
+                Self::Incremental => f.write_str("INCREMENTAL"),
+                Self::Patch => f.write_str("PATCH"),
             }
         }
     }
@@ -13968,8 +13931,8 @@ pub mod types {
     impl ::std::fmt::Display for IngestionExecutionType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Full => write!(f, "FULL"),
-                Self::Incremental => write!(f, "INCREMENTAL"),
+                Self::Full => f.write_str("FULL"),
+                Self::Incremental => f.write_str("INCREMENTAL"),
             }
         }
     }
@@ -14151,8 +14114,8 @@ pub mod types {
     impl ::std::fmt::Display for IngestionPackReleaseChannel {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Live => write!(f, "LIVE"),
-                Self::Latest => write!(f, "LATEST"),
+                Self::Live => f.write_str("LIVE"),
+                Self::Latest => f.write_str("LATEST"),
             }
         }
     }
@@ -14404,12 +14367,12 @@ pub mod types {
     impl ::std::fmt::Display for IngestionStatus {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Queued => write!(f, "QUEUED"),
-                Self::Started => write!(f, "STARTED"),
-                Self::Cancelled => write!(f, "CANCELLED"),
-                Self::UpForRetry => write!(f, "UP_FOR_RETRY"),
-                Self::Completed => write!(f, "COMPLETED"),
-                Self::Failed => write!(f, "FAILED"),
+                Self::Queued => f.write_str("QUEUED"),
+                Self::Started => f.write_str("STARTED"),
+                Self::Cancelled => f.write_str("CANCELLED"),
+                Self::UpForRetry => f.write_str("UP_FOR_RETRY"),
+                Self::Completed => f.write_str("COMPLETED"),
+                Self::Failed => f.write_str("FAILED"),
             }
         }
     }
@@ -14605,21 +14568,21 @@ pub mod types {
     impl ::std::fmt::Display for Layout {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Default => write!(f, "default"),
-                Self::AreaChart => write!(f, "areaChart"),
-                Self::BarChart => write!(f, "barChart"),
-                Self::BubbleChart => write!(f, "bubbleChart"),
-                Self::Calendar => write!(f, "calendar"),
-                Self::Card => write!(f, "card"),
-                Self::Detail => write!(f, "detail"),
-                Self::Form => write!(f, "form"),
-                Self::GanttChart => write!(f, "ganttChart"),
-                Self::LineChart => write!(f, "lineChart"),
-                Self::MasterDetail => write!(f, "masterDetail"),
-                Self::PieChart => write!(f, "pieChart"),
-                Self::ScatterChart => write!(f, "scatterChart"),
-                Self::Slide => write!(f, "slide"),
-                Self::WordCloud => write!(f, "wordCloud"),
+                Self::Default => f.write_str("default"),
+                Self::AreaChart => f.write_str("areaChart"),
+                Self::BarChart => f.write_str("barChart"),
+                Self::BubbleChart => f.write_str("bubbleChart"),
+                Self::Calendar => f.write_str("calendar"),
+                Self::Card => f.write_str("card"),
+                Self::Detail => f.write_str("detail"),
+                Self::Form => f.write_str("form"),
+                Self::GanttChart => f.write_str("ganttChart"),
+                Self::LineChart => f.write_str("lineChart"),
+                Self::MasterDetail => f.write_str("masterDetail"),
+                Self::PieChart => f.write_str("pieChart"),
+                Self::ScatterChart => f.write_str("scatterChart"),
+                Self::Slide => f.write_str("slide"),
+                Self::WordCloud => f.write_str("wordCloud"),
             }
         }
     }
@@ -14760,11 +14723,11 @@ pub mod types {
     impl ::std::fmt::Display for LinkDisplayType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::IconOnly => write!(f, "iconOnly"),
-                Self::Url => write!(f, "url"),
-                Self::Title => write!(f, "title"),
-                Self::Card => write!(f, "card"),
-                Self::Embed => write!(f, "embed"),
+                Self::IconOnly => f.write_str("iconOnly"),
+                Self::Url => f.write_str("url"),
+                Self::Title => f.write_str("title"),
+                Self::Card => f.write_str("card"),
+                Self::Embed => f.write_str("embed"),
             }
         }
     }
@@ -14902,11 +14865,11 @@ pub mod types {
     impl ::std::fmt::Display for LinkedDataType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::ImageObject => write!(f, "ImageObject"),
-                Self::MonetaryAmount => write!(f, "MonetaryAmount"),
-                Self::Person => write!(f, "Person"),
-                Self::WebPage => write!(f, "WebPage"),
-                Self::StructuredValue => write!(f, "StructuredValue"),
+                Self::ImageObject => f.write_str("ImageObject"),
+                Self::MonetaryAmount => f.write_str("MonetaryAmount"),
+                Self::Person => f.write_str("Person"),
+                Self::WebPage => f.write_str("WebPage"),
+                Self::StructuredValue => f.write_str("StructuredValue"),
             }
         }
     }
@@ -15449,8 +15412,8 @@ pub mod types {
     impl ::std::fmt::Display for ListGroupedIngestionLogsOrder {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Asc => write!(f, "asc"),
-                Self::Desc => write!(f, "desc"),
+                Self::Asc => f.write_str("asc"),
+                Self::Desc => f.write_str("desc"),
             }
         }
     }
@@ -15633,8 +15596,8 @@ pub mod types {
     impl ::std::fmt::Display for ListGroupedPackLogsOrder {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Asc => write!(f, "asc"),
-                Self::Desc => write!(f, "desc"),
+                Self::Asc => f.write_str("asc"),
+                Self::Desc => f.write_str("desc"),
             }
         }
     }
@@ -15932,8 +15895,8 @@ pub mod types {
     impl ::std::fmt::Display for ListIngestionLogsOrder {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Asc => write!(f, "asc"),
-                Self::Desc => write!(f, "desc"),
+                Self::Asc => f.write_str("asc"),
+                Self::Desc => f.write_str("desc"),
             }
         }
     }
@@ -16662,8 +16625,8 @@ pub mod types {
     impl ::std::fmt::Display for ListPackLogsOrder {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Asc => write!(f, "asc"),
-                Self::Desc => write!(f, "desc"),
+                Self::Asc => f.write_str("asc"),
+                Self::Desc => f.write_str("desc"),
             }
         }
     }
@@ -17587,12 +17550,12 @@ pub mod types {
     impl ::std::fmt::Display for LogLevel {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Error => write!(f, "error"),
-                Self::Warn => write!(f, "warn"),
-                Self::Info => write!(f, "info"),
-                Self::Debug => write!(f, "debug"),
-                Self::Trace => write!(f, "trace"),
-                Self::Unknown => write!(f, "unknown"),
+                Self::Error => f.write_str("error"),
+                Self::Warn => f.write_str("warn"),
+                Self::Info => f.write_str("info"),
+                Self::Debug => f.write_str("debug"),
+                Self::Trace => f.write_str("trace"),
+                Self::Unknown => f.write_str("unknown"),
             }
         }
     }
@@ -17879,7 +17842,7 @@ pub mod types {
     impl ::std::fmt::Display for MonthlyDocMakerPackPlanPricingType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::MonthlyDocMaker => write!(f, "MonthlyDocMaker"),
+                Self::MonthlyDocMaker => f.write_str("MonthlyDocMaker"),
             }
         }
     }
@@ -18283,40 +18246,6 @@ pub mod types {
         }
     }
 
-    impl ::std::str::FromStr for NumberOrNumberFormula {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if let Ok(v) = value.parse() {
-                Ok(Self::Variant0(v))
-            } else if let Ok(v) = value.parse() {
-                Ok(Self::Variant1(v))
-            } else {
-                Err("string conversion failed for all variants".into())
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for NumberOrNumberFormula {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for NumberOrNumberFormula {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for NumberOrNumberFormula {
-        type Error = self::error::ConversionError;
-        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
     impl ::std::fmt::Display for NumberOrNumberFormula {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match self {
@@ -18407,6 +18336,13 @@ pub mod types {
     ///      ],
     ///      "type": "string",
     ///      "maxLength": 8192
+    ///    },
+    ///    "agentImages": {
+    ///      "description": "The agent images for the Pack.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PackImageFile"
+    ///      }
     ///    },
     ///    "agentShortDescription": {
     ///      "description": "A short description for the pack as an agent.",
@@ -18533,6 +18469,9 @@ pub mod types {
         ///A full description for the pack as an agent.
         #[serde(rename = "agentDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_description: ::std::option::Option<PackAgentDescription>,
+        ///The agent images for the Pack.
+        #[serde(rename = "agentImages", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub agent_images: ::std::vec::Vec<PackImageFile>,
         ///A short description for the pack as an agent.
         #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_short_description: ::std::option::Option<PackAgentShortDescription>,
@@ -18638,11 +18577,11 @@ pub mod types {
     impl ::std::fmt::Display for PackAccessType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::None => write!(f, "none"),
-                Self::View => write!(f, "view"),
-                Self::Test => write!(f, "test"),
-                Self::Edit => write!(f, "edit"),
-                Self::Admin => write!(f, "admin"),
+                Self::None => f.write_str("none"),
+                Self::View => f.write_str("view"),
+                Self::Test => f.write_str("test"),
+                Self::Edit => f.write_str("edit"),
+                Self::Admin => f.write_str("admin"),
             }
         }
     }
@@ -19501,31 +19440,29 @@ pub mod types {
     impl ::std::fmt::Display for PackAnalyticsOrderBy {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Date => write!(f, "date"),
-                Self::PackId => write!(f, "packId"),
-                Self::Name => write!(f, "name"),
-                Self::CreatedAt => write!(f, "createdAt"),
-                Self::DocInstalls => write!(f, "docInstalls"),
-                Self::WorkspaceInstalls => write!(f, "workspaceInstalls"),
-                Self::NumFormulaInvocations => write!(f, "numFormulaInvocations"),
-                Self::NumActionInvocations => write!(f, "numActionInvocations"),
-                Self::NumSyncInvocations => write!(f, "numSyncInvocations"),
-                Self::NumMetadataInvocations => write!(f, "numMetadataInvocations"),
-                Self::DocsActivelyUsing => write!(f, "docsActivelyUsing"),
-                Self::DocsActivelyUsing7Day => write!(f, "docsActivelyUsing7Day"),
-                Self::DocsActivelyUsing30Day => write!(f, "docsActivelyUsing30Day"),
-                Self::DocsActivelyUsing90Day => write!(f, "docsActivelyUsing90Day"),
-                Self::DocsActivelyUsingAllTime => write!(f, "docsActivelyUsingAllTime"),
-                Self::WorkspacesActivelyUsing => write!(f, "workspacesActivelyUsing"),
-                Self::WorkspacesActivelyUsing7Day => write!(f, "workspacesActivelyUsing7Day"),
-                Self::WorkspacesActivelyUsing30Day => write!(f, "workspacesActivelyUsing30Day"),
-                Self::WorkspacesActivelyUsing90Day => write!(f, "workspacesActivelyUsing90Day"),
-                Self::WorkspacesActivelyUsingAllTime => write!(f, "workspacesActivelyUsingAllTime"),
-                Self::WorkspacesWithActiveSubscriptions => {
-                    write!(f, "workspacesWithActiveSubscriptions")
-                }
-                Self::WorkspacesWithSuccessfulTrials => write!(f, "workspacesWithSuccessfulTrials"),
-                Self::RevenueUsd => write!(f, "revenueUsd"),
+                Self::Date => f.write_str("date"),
+                Self::PackId => f.write_str("packId"),
+                Self::Name => f.write_str("name"),
+                Self::CreatedAt => f.write_str("createdAt"),
+                Self::DocInstalls => f.write_str("docInstalls"),
+                Self::WorkspaceInstalls => f.write_str("workspaceInstalls"),
+                Self::NumFormulaInvocations => f.write_str("numFormulaInvocations"),
+                Self::NumActionInvocations => f.write_str("numActionInvocations"),
+                Self::NumSyncInvocations => f.write_str("numSyncInvocations"),
+                Self::NumMetadataInvocations => f.write_str("numMetadataInvocations"),
+                Self::DocsActivelyUsing => f.write_str("docsActivelyUsing"),
+                Self::DocsActivelyUsing7Day => f.write_str("docsActivelyUsing7Day"),
+                Self::DocsActivelyUsing30Day => f.write_str("docsActivelyUsing30Day"),
+                Self::DocsActivelyUsing90Day => f.write_str("docsActivelyUsing90Day"),
+                Self::DocsActivelyUsingAllTime => f.write_str("docsActivelyUsingAllTime"),
+                Self::WorkspacesActivelyUsing => f.write_str("workspacesActivelyUsing"),
+                Self::WorkspacesActivelyUsing7Day => f.write_str("workspacesActivelyUsing7Day"),
+                Self::WorkspacesActivelyUsing30Day => f.write_str("workspacesActivelyUsing30Day"),
+                Self::WorkspacesActivelyUsing90Day => f.write_str("workspacesActivelyUsing90Day"),
+                Self::WorkspacesActivelyUsingAllTime => f.write_str("workspacesActivelyUsingAllTime"),
+                Self::WorkspacesWithActiveSubscriptions => f.write_str("workspacesWithActiveSubscriptions"),
+                Self::WorkspacesWithSuccessfulTrials => f.write_str("workspacesWithSuccessfulTrials"),
+                Self::RevenueUsd => f.write_str("revenueUsd"),
             }
         }
     }
@@ -19648,13 +19585,15 @@ pub mod types {
     ///  "enum": [
     ///    "logo",
     ///    "cover",
-    ///    "exampleImage"
+    ///    "exampleImage",
+    ///    "agentImage"
     ///  ],
     ///  "x-schema-name": "PackAssetType",
     ///  "x-tsEnumNames": [
     ///    "Logo",
     ///    "Cover",
-    ///    "ExampleImage"
+    ///    "ExampleImage",
+    ///    "AgentImage"
     ///  ]
     ///}
     /// ```
@@ -19667,6 +19606,8 @@ pub mod types {
         Cover,
         #[serde(rename = "exampleImage")]
         ExampleImage,
+        #[serde(rename = "agentImage")]
+        AgentImage,
     }
 
     impl ::std::convert::From<&Self> for PackAssetType {
@@ -19678,9 +19619,10 @@ pub mod types {
     impl ::std::fmt::Display for PackAssetType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Logo => write!(f, "logo"),
-                Self::Cover => write!(f, "cover"),
-                Self::ExampleImage => write!(f, "exampleImage"),
+                Self::Logo => f.write_str("logo"),
+                Self::Cover => f.write_str("cover"),
+                Self::ExampleImage => f.write_str("exampleImage"),
+                Self::AgentImage => f.write_str("agentImage"),
             }
         }
     }
@@ -19692,6 +19634,7 @@ pub mod types {
                 "logo" => Ok(Self::Logo),
                 "cover" => Ok(Self::Cover),
                 "exampleImage" => Ok(Self::ExampleImage),
+                "agentImage" => Ok(Self::AgentImage),
                 _ => Err("invalid value".into()),
             }
         }
@@ -20005,7 +19948,7 @@ pub mod types {
     impl ::std::fmt::Display for PackAuthLogType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Auth => write!(f, "auth"),
+                Self::Auth => f.write_str("auth"),
             }
         }
     }
@@ -20170,7 +20113,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionAwsAccessKeyCredentialsType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::AwsAccessKey => write!(f, "awsAccessKey"),
+                Self::AwsAccessKey => f.write_str("awsAccessKey"),
             }
         }
     }
@@ -20289,7 +20232,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionAwsAccessKeyMetadataType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::AwsAccessKey => write!(f, "awsAccessKey"),
+                Self::AwsAccessKey => f.write_str("awsAccessKey"),
             }
         }
     }
@@ -20401,7 +20344,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionAwsAccessKeyPatchType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::AwsAccessKey => write!(f, "awsAccessKey"),
+                Self::AwsAccessKey => f.write_str("awsAccessKey"),
             }
         }
     }
@@ -20515,7 +20458,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionAwsAssumeRoleCredentialsType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::AwsAssumeRole => write!(f, "awsAssumeRole"),
+                Self::AwsAssumeRole => f.write_str("awsAssumeRole"),
             }
         }
     }
@@ -20634,7 +20577,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionAwsAssumeRoleMetadataType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::AwsAssumeRole => write!(f, "awsAssumeRole"),
+                Self::AwsAssumeRole => f.write_str("awsAssumeRole"),
             }
         }
     }
@@ -20746,7 +20689,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionAwsAssumeRolePatchType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::AwsAssumeRole => write!(f, "awsAssumeRole"),
+                Self::AwsAssumeRole => f.write_str("awsAssumeRole"),
             }
         }
     }
@@ -20905,7 +20848,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionCustomCredentialsType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Custom => write!(f, "custom"),
+                Self::Custom => f.write_str("custom"),
             }
         }
     }
@@ -21090,7 +21033,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionCustomMetadataType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Custom => write!(f, "custom"),
+                Self::Custom => f.write_str("custom"),
             }
         }
     }
@@ -21249,7 +21192,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionCustomPatchType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Custom => write!(f, "custom"),
+                Self::Custom => f.write_str("custom"),
             }
         }
     }
@@ -21357,7 +21300,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionGoogleServiceAccountCredentialsType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::GoogleServiceAccount => write!(f, "googleServiceAccount"),
+                Self::GoogleServiceAccount => f.write_str("googleServiceAccount"),
             }
         }
     }
@@ -21465,7 +21408,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionGoogleServiceAccountMetadataType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::GoogleServiceAccount => write!(f, "googleServiceAccount"),
+                Self::GoogleServiceAccount => f.write_str("googleServiceAccount"),
             }
         }
     }
@@ -21648,7 +21591,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionGoogleServiceAccountPatchType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::GoogleServiceAccount => write!(f, "googleServiceAccount"),
+                Self::GoogleServiceAccount => f.write_str("googleServiceAccount"),
             }
         }
     }
@@ -21755,7 +21698,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionHeaderCredentialsType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Header => write!(f, "header"),
+                Self::Header => f.write_str("header"),
             }
         }
     }
@@ -21874,7 +21817,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionHeaderMetadataType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Header => write!(f, "header"),
+                Self::Header => f.write_str("header"),
             }
         }
     }
@@ -21981,7 +21924,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionHeaderPatchType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Header => write!(f, "header"),
+                Self::Header => f.write_str("header"),
             }
         }
     }
@@ -22094,7 +22037,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionHttpBasicCredentialsType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::HttpBasic => write!(f, "httpBasic"),
+                Self::HttpBasic => f.write_str("httpBasic"),
             }
         }
     }
@@ -22206,7 +22149,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionHttpBasicMetadataType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::HttpBasic => write!(f, "httpBasic"),
+                Self::HttpBasic => f.write_str("httpBasic"),
             }
         }
     }
@@ -22319,7 +22262,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionHttpBasicPatchType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::HttpBasic => write!(f, "httpBasic"),
+                Self::HttpBasic => f.write_str("httpBasic"),
             }
         }
     }
@@ -22478,7 +22421,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionMultiHeaderCredentialsType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::MultiHeader => write!(f, "multiHeader"),
+                Self::MultiHeader => f.write_str("multiHeader"),
             }
         }
     }
@@ -22704,7 +22647,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionMultiHeaderMetadataType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::MultiHeader => write!(f, "multiHeader"),
+                Self::MultiHeader => f.write_str("multiHeader"),
             }
         }
     }
@@ -22863,7 +22806,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionMultiHeaderPatchType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::MultiHeader => write!(f, "multiHeader"),
+                Self::MultiHeader => f.write_str("multiHeader"),
             }
         }
     }
@@ -23183,7 +23126,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionOauth2ClientCredentialsMetadataType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Oauth2ClientCredentials => write!(f, "oauth2ClientCredentials"),
+                Self::Oauth2ClientCredentials => f.write_str("oauth2ClientCredentials"),
             }
         }
     }
@@ -23447,7 +23390,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionOauth2ClientCredentialsPatchType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Oauth2ClientCredentials => write!(f, "oauth2ClientCredentials"),
+                Self::Oauth2ClientCredentials => f.write_str("oauth2ClientCredentials"),
             }
         }
     }
@@ -23512,7 +23455,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionOauth2ClientCredentialsType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Oauth2ClientCredentials => write!(f, "oauth2ClientCredentials"),
+                Self::Oauth2ClientCredentials => f.write_str("oauth2ClientCredentials"),
             }
         }
     }
@@ -23613,15 +23556,15 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Header => write!(f, "header"),
-                Self::MultiHeader => write!(f, "multiHeader"),
-                Self::UrlParam => write!(f, "urlParam"),
-                Self::HttpBasic => write!(f, "httpBasic"),
-                Self::Custom => write!(f, "custom"),
-                Self::Oauth2ClientCredentials => write!(f, "oauth2ClientCredentials"),
-                Self::GoogleServiceAccount => write!(f, "googleServiceAccount"),
-                Self::AwsAssumeRole => write!(f, "awsAssumeRole"),
-                Self::AwsAccessKey => write!(f, "awsAccessKey"),
+                Self::Header => f.write_str("header"),
+                Self::MultiHeader => f.write_str("multiHeader"),
+                Self::UrlParam => f.write_str("urlParam"),
+                Self::HttpBasic => f.write_str("httpBasic"),
+                Self::Custom => f.write_str("custom"),
+                Self::Oauth2ClientCredentials => f.write_str("oauth2ClientCredentials"),
+                Self::GoogleServiceAccount => f.write_str("googleServiceAccount"),
+                Self::AwsAssumeRole => f.write_str("awsAssumeRole"),
+                Self::AwsAccessKey => f.write_str("awsAccessKey"),
             }
         }
     }
@@ -23788,7 +23731,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionUrlParamCredentialsType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::UrlParam => write!(f, "urlParam"),
+                Self::UrlParam => f.write_str("urlParam"),
             }
         }
     }
@@ -23962,7 +23905,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionUrlParamMetadataType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::UrlParam => write!(f, "urlParam"),
+                Self::UrlParam => f.write_str("urlParam"),
             }
         }
     }
@@ -24121,7 +24064,7 @@ pub mod types {
     impl ::std::fmt::Display for PackConnectionUrlParamPatchType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::UrlParam => write!(f, "urlParam"),
+                Self::UrlParam => f.write_str("urlParam"),
             }
         }
     }
@@ -24245,7 +24188,7 @@ pub mod types {
     impl ::std::fmt::Display for PackCustomLogType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Custom => write!(f, "custom"),
+                Self::Custom => f.write_str("custom"),
             }
         }
     }
@@ -24402,9 +24345,9 @@ pub mod types {
     impl ::std::fmt::Display for PackDiscoverability {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Public => write!(f, "public"),
-                Self::Workspace => write!(f, "workspace"),
-                Self::Private => write!(f, "private"),
+                Self::Public => f.write_str("public"),
+                Self::Workspace => f.write_str("workspace"),
+                Self::Private => f.write_str("private"),
             }
         }
     }
@@ -24755,7 +24698,7 @@ pub mod types {
     impl ::std::fmt::Display for PackFetcherLogDetailsType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Fetcher => write!(f, "fetcher"),
+                Self::Fetcher => f.write_str("fetcher"),
             }
         }
     }
@@ -24834,12 +24777,12 @@ pub mod types {
     impl ::std::fmt::Display for PackFetcherLogMethod {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Get => write!(f, "GET"),
-                Self::Post => write!(f, "POST"),
-                Self::Put => write!(f, "PUT"),
-                Self::Delete => write!(f, "DELETE"),
-                Self::Patch => write!(f, "PATCH"),
-                Self::Head => write!(f, "HEAD"),
+                Self::Get => f.write_str("GET"),
+                Self::Post => f.write_str("POST"),
+                Self::Put => f.write_str("PUT"),
+                Self::Delete => f.write_str("DELETE"),
+                Self::Patch => f.write_str("PATCH"),
+                Self::Head => f.write_str("HEAD"),
             }
         }
     }
@@ -24909,7 +24852,7 @@ pub mod types {
     impl ::std::fmt::Display for PackFetcherLogType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Fetcher => write!(f, "fetcher"),
+                Self::Fetcher => f.write_str("fetcher"),
             }
         }
     }
@@ -25432,23 +25375,23 @@ pub mod types {
     impl ::std::fmt::Display for PackFormulaAnalyticsOrderBy {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Date => write!(f, "date"),
-                Self::FormulaName => write!(f, "formulaName"),
-                Self::FormulaType => write!(f, "formulaType"),
-                Self::FormulaInvocations => write!(f, "formulaInvocations"),
-                Self::MedianLatencyMs => write!(f, "medianLatencyMs"),
-                Self::MedianResponseSizeBytes => write!(f, "medianResponseSizeBytes"),
-                Self::Errors => write!(f, "errors"),
-                Self::DocsActivelyUsing => write!(f, "docsActivelyUsing"),
-                Self::DocsActivelyUsing7Day => write!(f, "docsActivelyUsing7Day"),
-                Self::DocsActivelyUsing30Day => write!(f, "docsActivelyUsing30Day"),
-                Self::DocsActivelyUsing90Day => write!(f, "docsActivelyUsing90Day"),
-                Self::DocsActivelyUsingAllTime => write!(f, "docsActivelyUsingAllTime"),
-                Self::WorkspacesActivelyUsing => write!(f, "workspacesActivelyUsing"),
-                Self::WorkspacesActivelyUsing7Day => write!(f, "workspacesActivelyUsing7Day"),
-                Self::WorkspacesActivelyUsing30Day => write!(f, "workspacesActivelyUsing30Day"),
-                Self::WorkspacesActivelyUsing90Day => write!(f, "workspacesActivelyUsing90Day"),
-                Self::WorkspacesActivelyUsingAllTime => write!(f, "workspacesActivelyUsingAllTime"),
+                Self::Date => f.write_str("date"),
+                Self::FormulaName => f.write_str("formulaName"),
+                Self::FormulaType => f.write_str("formulaType"),
+                Self::FormulaInvocations => f.write_str("formulaInvocations"),
+                Self::MedianLatencyMs => f.write_str("medianLatencyMs"),
+                Self::MedianResponseSizeBytes => f.write_str("medianResponseSizeBytes"),
+                Self::Errors => f.write_str("errors"),
+                Self::DocsActivelyUsing => f.write_str("docsActivelyUsing"),
+                Self::DocsActivelyUsing7Day => f.write_str("docsActivelyUsing7Day"),
+                Self::DocsActivelyUsing30Day => f.write_str("docsActivelyUsing30Day"),
+                Self::DocsActivelyUsing90Day => f.write_str("docsActivelyUsing90Day"),
+                Self::DocsActivelyUsingAllTime => f.write_str("docsActivelyUsingAllTime"),
+                Self::WorkspacesActivelyUsing => f.write_str("workspacesActivelyUsing"),
+                Self::WorkspacesActivelyUsing7Day => f.write_str("workspacesActivelyUsing7Day"),
+                Self::WorkspacesActivelyUsing30Day => f.write_str("workspacesActivelyUsing30Day"),
+                Self::WorkspacesActivelyUsing90Day => f.write_str("workspacesActivelyUsing90Day"),
+                Self::WorkspacesActivelyUsingAllTime => f.write_str("workspacesActivelyUsingAllTime"),
             }
         }
     }
@@ -25587,10 +25530,10 @@ pub mod types {
     impl ::std::fmt::Display for PackFormulaType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Action => write!(f, "action"),
-                Self::Formula => write!(f, "formula"),
-                Self::Sync => write!(f, "sync"),
-                Self::Metadata => write!(f, "metadata"),
+                Self::Action => f.write_str("action"),
+                Self::Formula => f.write_str("formula"),
+                Self::Sync => f.write_str("sync"),
+                Self::Metadata => f.write_str("metadata"),
             }
         }
     }
@@ -25695,7 +25638,7 @@ pub mod types {
     impl ::std::fmt::Display for PackGlobalPrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Worldwide => write!(f, "worldwide"),
+                Self::Worldwide => f.write_str("worldwide"),
             }
         }
     }
@@ -25889,7 +25832,7 @@ pub mod types {
     impl ::std::fmt::Display for PackIngestionDebugLogType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::IngestionDebug => write!(f, "ingestionDebug"),
+                Self::IngestionDebug => f.write_str("ingestionDebug"),
             }
         }
     }
@@ -26012,7 +25955,7 @@ pub mod types {
     impl ::std::fmt::Display for PackIngestionLifecycleLogType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::IngestionLifecycle => write!(f, "ingestionLifecycle"),
+                Self::IngestionLifecycle => f.write_str("ingestionLifecycle"),
             }
         }
     }
@@ -26134,7 +26077,7 @@ pub mod types {
     impl ::std::fmt::Display for PackInternalLogType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Internal => write!(f, "internal"),
+                Self::Internal => f.write_str("internal"),
             }
         }
     }
@@ -26444,7 +26387,7 @@ pub mod types {
     impl ::std::fmt::Display for PackInvocationLogDetailsType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Invocation => write!(f, "invocation"),
+                Self::Invocation => f.write_str("invocation"),
             }
         }
     }
@@ -26546,7 +26489,7 @@ pub mod types {
     impl ::std::fmt::Display for PackInvocationLogType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Invocation => write!(f, "invocation"),
+                Self::Invocation => f.write_str("invocation"),
             }
         }
     }
@@ -26612,6 +26555,13 @@ pub mod types {
     /// explanations."
     ///      ],
     ///      "type": "string"
+    ///    },
+    ///    "agentImages": {
+    ///      "description": "The agent images for the Pack.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PackImageFile"
+    ///      }
     ///    },
     ///    "agentShortDescription": {
     ///      "description": "A short description for the pack as an agent.",
@@ -26773,6 +26723,9 @@ pub mod types {
         ///A full description for the pack as an agent.
         #[serde(rename = "agentDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_description: ::std::option::Option<::std::string::String>,
+        ///The agent images for the Pack.
+        #[serde(rename = "agentImages", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub agent_images: ::std::vec::Vec<PackImageFile>,
         ///A short description for the pack as an agent.
         #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_short_description: ::std::option::Option<::std::string::String>,
@@ -26960,6 +26913,13 @@ pub mod types {
     ///      ],
     ///      "type": "string"
     ///    },
+    ///    "agentImages": {
+    ///      "description": "The agent images for the Pack.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PackImageFile"
+    ///      }
+    ///    },
     ///    "agentShortDescription": {
     ///      "description": "A short description for the pack as an agent.",
     ///      "examples": [
@@ -27135,6 +27095,9 @@ pub mod types {
         ///A full description for the pack as an agent.
         #[serde(rename = "agentDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_description: ::std::option::Option<::std::string::String>,
+        ///The agent images for the Pack.
+        #[serde(rename = "agentImages", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub agent_images: ::std::vec::Vec<PackImageFile>,
         ///A short description for the pack as an agent.
         #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_short_description: ::std::option::Option<::std::string::String>,
@@ -27335,8 +27298,8 @@ pub mod types {
     impl ::std::fmt::Display for PackListingInstallContextType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Workspace => write!(f, "workspace"),
-                Self::Doc => write!(f, "doc"),
+                Self::Workspace => f.write_str("workspace"),
+                Self::Doc => f.write_str("doc"),
             }
         }
     }
@@ -27474,10 +27437,10 @@ pub mod types {
     impl ::std::fmt::Display for PackListingsSortBy {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::PackId => write!(f, "packId"),
-                Self::Name => write!(f, "name"),
-                Self::PackVersion => write!(f, "packVersion"),
-                Self::PackVersionModifiedAt => write!(f, "packVersionModifiedAt"),
+                Self::PackId => f.write_str("packId"),
+                Self::Name => f.write_str("name"),
+                Self::PackVersion => f.write_str("packVersion"),
+                Self::PackVersionModifiedAt => f.write_str("packVersionModifiedAt"),
             }
         }
     }
@@ -28001,40 +27964,22 @@ pub mod types {
     impl ::std::fmt::Display for PackLogRequestType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Unknown => write!(f, "unknown"),
-                Self::ConnectionNameMetadataRequest => write!(f, "connectionNameMetadataRequest"),
-                Self::ParameterAutocompleteMetadataRequest => {
-                    write!(f, "parameterAutocompleteMetadataRequest")
-                }
-                Self::PostAuthSetupMetadataRequest => write!(f, "postAuthSetupMetadataRequest"),
-                Self::PropertyOptionsMetadataRequest => write!(f, "propertyOptionsMetadataRequest"),
-                Self::GetSyncTableSchemaMetadataRequest => {
-                    write!(f, "getSyncTableSchemaMetadataRequest")
-                }
-                Self::GetDynamicSyncTableNameMetadataRequest => {
-                    write!(f, "getDynamicSyncTableNameMetadataRequest")
-                }
-                Self::ListSyncTableDynamicUrlsMetadataRequest => {
-                    write!(f, "listSyncTableDynamicUrlsMetadataRequest")
-                }
-                Self::SearchSyncTableDynamicUrlsMetadataRequest => {
-                    write!(f, "searchSyncTableDynamicUrlsMetadataRequest")
-                }
-                Self::GetDynamicSyncTableDisplayUrlMetadataRequest => {
-                    write!(f, "getDynamicSyncTableDisplayUrlMetadataRequest")
-                }
-                Self::GetIdentifiersForConnectionRequest => {
-                    write!(f, "getIdentifiersForConnectionRequest")
-                }
-                Self::InvokeFormulaRequest => write!(f, "invokeFormulaRequest"),
-                Self::InvokeSyncFormulaRequest => write!(f, "invokeSyncFormulaRequest"),
-                Self::InvokeSyncUpdateFormulaRequest => write!(f, "invokeSyncUpdateFormulaRequest"),
-                Self::InvokeExecuteGetPermissionsRequest => {
-                    write!(f, "invokeExecuteGetPermissionsRequest")
-                }
-                Self::ValidateParametersMetadataRequest => {
-                    write!(f, "validateParametersMetadataRequest")
-                }
+                Self::Unknown => f.write_str("unknown"),
+                Self::ConnectionNameMetadataRequest => f.write_str("connectionNameMetadataRequest"),
+                Self::ParameterAutocompleteMetadataRequest => f.write_str("parameterAutocompleteMetadataRequest"),
+                Self::PostAuthSetupMetadataRequest => f.write_str("postAuthSetupMetadataRequest"),
+                Self::PropertyOptionsMetadataRequest => f.write_str("propertyOptionsMetadataRequest"),
+                Self::GetSyncTableSchemaMetadataRequest => f.write_str("getSyncTableSchemaMetadataRequest"),
+                Self::GetDynamicSyncTableNameMetadataRequest => f.write_str("getDynamicSyncTableNameMetadataRequest"),
+                Self::ListSyncTableDynamicUrlsMetadataRequest => f.write_str("listSyncTableDynamicUrlsMetadataRequest"),
+                Self::SearchSyncTableDynamicUrlsMetadataRequest => f.write_str("searchSyncTableDynamicUrlsMetadataRequest"),
+                Self::GetDynamicSyncTableDisplayUrlMetadataRequest => f.write_str("getDynamicSyncTableDisplayUrlMetadataRequest"),
+                Self::GetIdentifiersForConnectionRequest => f.write_str("getIdentifiersForConnectionRequest"),
+                Self::InvokeFormulaRequest => f.write_str("invokeFormulaRequest"),
+                Self::InvokeSyncFormulaRequest => f.write_str("invokeSyncFormulaRequest"),
+                Self::InvokeSyncUpdateFormulaRequest => f.write_str("invokeSyncUpdateFormulaRequest"),
+                Self::InvokeExecuteGetPermissionsRequest => f.write_str("invokeExecuteGetPermissionsRequest"),
+                Self::ValidateParametersMetadataRequest => f.write_str("validateParametersMetadataRequest"),
             }
         }
     }
@@ -28141,13 +28086,13 @@ pub mod types {
     impl ::std::fmt::Display for PackLogType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Custom => write!(f, "custom"),
-                Self::Fetcher => write!(f, "fetcher"),
-                Self::Invocation => write!(f, "invocation"),
-                Self::Internal => write!(f, "internal"),
-                Self::Auth => write!(f, "auth"),
-                Self::IngestionLifecycle => write!(f, "ingestionLifecycle"),
-                Self::IngestionDebug => write!(f, "ingestionDebug"),
+                Self::Custom => f.write_str("custom"),
+                Self::Fetcher => f.write_str("fetcher"),
+                Self::Invocation => f.write_str("invocation"),
+                Self::Internal => f.write_str("internal"),
+                Self::Auth => f.write_str("auth"),
+                Self::IngestionLifecycle => f.write_str("ingestionLifecycle"),
+                Self::IngestionDebug => f.write_str("ingestionDebug"),
             }
         }
     }
@@ -28366,9 +28311,9 @@ pub mod types {
     impl ::std::fmt::Display for PackOAuth2ClientCredentialsLocation {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Automatic => write!(f, "automatic"),
-                Self::Body => write!(f, "body"),
-                Self::Header => write!(f, "header"),
+                Self::Automatic => f.write_str("automatic"),
+                Self::Body => f.write_str("body"),
+                Self::Header => f.write_str("header"),
             }
         }
     }
@@ -28765,7 +28710,7 @@ pub mod types {
     impl ::std::fmt::Display for PackPlanCurrency {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Usd => write!(f, "USD"),
+                Self::Usd => f.write_str("USD"),
             }
         }
     }
@@ -28839,9 +28784,9 @@ pub mod types {
     impl ::std::fmt::Display for PackPlanPricingType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Free => write!(f, "Free"),
-                Self::MonthlyDocMaker => write!(f, "MonthlyDocMaker"),
-                Self::BundledWithTier => write!(f, "BundledWithTier"),
+                Self::Free => f.write_str("Free"),
+                Self::MonthlyDocMaker => f.write_str("MonthlyDocMaker"),
+                Self::BundledWithTier => f.write_str("BundledWithTier"),
             }
         }
     }
@@ -28974,9 +28919,9 @@ pub mod types {
     impl ::std::fmt::Display for PackPrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::User => write!(f, "user"),
-                Self::Workspace => write!(f, "workspace"),
-                Self::Worldwide => write!(f, "worldwide"),
+                Self::User => f.write_str("user"),
+                Self::Workspace => f.write_str("workspace"),
+                Self::Worldwide => f.write_str("worldwide"),
             }
         }
     }
@@ -29334,8 +29279,8 @@ pub mod types {
     impl ::std::fmt::Display for PackSource {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Web => write!(f, "web"),
-                Self::Cli => write!(f, "cli"),
+                Self::Web => f.write_str("web"),
+                Self::Cli => f.write_str("cli"),
             }
         }
     }
@@ -29695,8 +29640,8 @@ pub mod types {
     impl ::std::fmt::Display for PackSourceCodeVisibility {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Private => write!(f, "private"),
-                Self::Shared => write!(f, "shared"),
+                Self::Private => f.write_str("private"),
+                Self::Shared => f.write_str("shared"),
             }
         }
     }
@@ -29760,6 +29705,13 @@ pub mod types {
     ///      ],
     ///      "type": "string",
     ///      "maxLength": 8192
+    ///    },
+    ///    "agentImages": {
+    ///      "description": "The agent images for the Pack.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PackImageFile"
+    ///      }
     ///    },
     ///    "agentShortDescription": {
     ///      "description": "A short description for the pack as an agent.",
@@ -29877,6 +29829,9 @@ pub mod types {
         ///A full description for the pack as an agent.
         #[serde(rename = "agentDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_description: ::std::option::Option<PackSummaryAgentDescription>,
+        ///The agent images for the Pack.
+        #[serde(rename = "agentImages", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub agent_images: ::std::vec::Vec<PackImageFile>,
         ///A short description for the pack as an agent.
         #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_short_description: ::std::option::Option<PackSummaryAgentShortDescription>,
@@ -30982,7 +30937,7 @@ pub mod types {
     impl ::std::fmt::Display for PackUserPrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::User => write!(f, "user"),
+                Self::User => f.write_str("user"),
             }
         }
     }
@@ -31533,7 +31488,7 @@ pub mod types {
     impl ::std::fmt::Display for PackWorkspacePrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Workspace => write!(f, "workspace"),
+                Self::Workspace => f.write_str("workspace"),
             }
         }
     }
@@ -31610,9 +31565,9 @@ pub mod types {
     impl ::std::fmt::Display for PacksSortBy {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Title => write!(f, "title"),
-                Self::CreatedAt => write!(f, "createdAt"),
-                Self::UpdatedAt => write!(f, "updatedAt"),
+                Self::Title => f.write_str("title"),
+                Self::CreatedAt => f.write_str("createdAt"),
+                Self::UpdatedAt => f.write_str("updatedAt"),
             }
         }
     }
@@ -32179,9 +32134,9 @@ pub mod types {
     impl ::std::fmt::Display for PageContentExportStatus {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::InProgress => write!(f, "inProgress"),
-                Self::Failed => write!(f, "failed"),
-                Self::Complete => write!(f, "complete"),
+                Self::InProgress => f.write_str("inProgress"),
+                Self::Failed => f.write_str("failed"),
+                Self::Complete => f.write_str("complete"),
             }
         }
     }
@@ -32337,8 +32292,8 @@ pub mod types {
     impl ::std::fmt::Display for PageContentFormat {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Html => write!(f, "html"),
-                Self::Markdown => write!(f, "markdown"),
+                Self::Html => f.write_str("html"),
+                Self::Markdown => f.write_str("markdown"),
             }
         }
     }
@@ -32412,8 +32367,8 @@ pub mod types {
     impl ::std::fmt::Display for PageContentInsertionMode {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Append => write!(f, "append"),
-                Self::Replace => write!(f, "replace"),
+                Self::Append => f.write_str("append"),
+                Self::Replace => f.write_str("replace"),
             }
         }
     }
@@ -32489,8 +32444,8 @@ pub mod types {
     impl ::std::fmt::Display for PageContentOutputFormat {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Html => write!(f, "html"),
-                Self::Markdown => write!(f, "markdown"),
+                Self::Html => f.write_str("html"),
+                Self::Markdown => f.write_str("markdown"),
             }
         }
     }
@@ -32893,7 +32848,7 @@ pub mod types {
     impl ::std::fmt::Display for PageCreateContentVariant0Type {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Canvas => write!(f, "canvas"),
+                Self::Canvas => f.write_str("canvas"),
             }
         }
     }
@@ -32959,7 +32914,7 @@ pub mod types {
     impl ::std::fmt::Display for PageCreateContentVariant1Type {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Embed => write!(f, "embed"),
+                Self::Embed => f.write_str("embed"),
             }
         }
     }
@@ -33025,7 +32980,7 @@ pub mod types {
     impl ::std::fmt::Display for PageCreateContentVariant2Mode {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Page => write!(f, "page"),
+                Self::Page => f.write_str("page"),
             }
         }
     }
@@ -33091,7 +33046,7 @@ pub mod types {
     impl ::std::fmt::Display for PageCreateContentVariant2Type {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::SyncPage => write!(f, "syncPage"),
+                Self::SyncPage => f.write_str("syncPage"),
             }
         }
     }
@@ -33157,7 +33112,7 @@ pub mod types {
     impl ::std::fmt::Display for PageCreateContentVariant3Mode {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Document => write!(f, "document"),
+                Self::Document => f.write_str("document"),
             }
         }
     }
@@ -33223,7 +33178,7 @@ pub mod types {
     impl ::std::fmt::Display for PageCreateContentVariant3Type {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::SyncPage => write!(f, "syncPage"),
+                Self::SyncPage => f.write_str("syncPage"),
             }
         }
     }
@@ -33378,8 +33333,8 @@ pub mod types {
     impl ::std::fmt::Display for PageEmbedRenderMethod {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Compatibility => write!(f, "compatibility"),
-                Self::Standard => write!(f, "standard"),
+                Self::Compatibility => f.write_str("compatibility"),
+                Self::Standard => f.write_str("standard"),
             }
         }
     }
@@ -33596,7 +33551,7 @@ pub mod types {
     impl ::std::fmt::Display for PageReferenceType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Page => write!(f, "page"),
+                Self::Page => f.write_str("page"),
             }
         }
     }
@@ -33662,7 +33617,7 @@ pub mod types {
     impl ::std::fmt::Display for PageType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Page => write!(f, "page"),
+                Self::Page => f.write_str("page"),
             }
         }
     }
@@ -33739,9 +33694,9 @@ pub mod types {
     impl ::std::fmt::Display for PageTypeEnum {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Canvas => write!(f, "canvas"),
-                Self::Embed => write!(f, "embed"),
-                Self::SyncPage => write!(f, "syncPage"),
+                Self::Canvas => f.write_str("canvas"),
+                Self::Embed => f.write_str("embed"),
+                Self::SyncPage => f.write_str("syncPage"),
             }
         }
     }
@@ -33994,9 +33949,9 @@ pub mod types {
     impl ::std::fmt::Display for PaidFeatureSet {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Pro => write!(f, "Pro"),
-                Self::Team => write!(f, "Team"),
-                Self::Enterprise => write!(f, "Enterprise"),
+                Self::Pro => f.write_str("Pro"),
+                Self::Team => f.write_str("Team"),
+                Self::Enterprise => f.write_str("Enterprise"),
             }
         }
     }
@@ -34534,11 +34489,11 @@ pub mod types {
     impl ::std::fmt::Display for PrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Email => write!(f, "email"),
-                Self::Group => write!(f, "group"),
-                Self::Domain => write!(f, "domain"),
-                Self::Workspace => write!(f, "workspace"),
-                Self::Anyone => write!(f, "anyone"),
+                Self::Email => f.write_str("email"),
+                Self::Group => f.write_str("group"),
+                Self::Domain => f.write_str("domain"),
+                Self::Workspace => f.write_str("workspace"),
+                Self::Anyone => f.write_str("anyone"),
             }
         }
     }
@@ -35579,7 +35534,7 @@ pub mod types {
     impl ::std::fmt::Display for RowDetailType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Row => write!(f, "row"),
+                Self::Row => f.write_str("row"),
             }
         }
     }
@@ -35753,7 +35708,7 @@ pub mod types {
     impl ::std::fmt::Display for RowType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Row => write!(f, "row"),
+                Self::Row => f.write_str("row"),
             }
         }
     }
@@ -36087,9 +36042,9 @@ pub mod types {
     impl ::std::fmt::Display for RowsSortBy {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::CreatedAt => write!(f, "createdAt"),
-                Self::Natural => write!(f, "natural"),
-                Self::UpdatedAt => write!(f, "updatedAt"),
+                Self::CreatedAt => f.write_str("createdAt"),
+                Self::Natural => f.write_str("natural"),
+                Self::UpdatedAt => f.write_str("updatedAt"),
             }
         }
     }
@@ -36268,42 +36223,6 @@ pub mod types {
     impl ::std::convert::From<&Self> for ScalarValue {
         fn from(value: &ScalarValue) -> Self {
             value.clone()
-        }
-    }
-
-    impl ::std::str::FromStr for ScalarValue {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if let Ok(v) = value.parse() {
-                Ok(Self::Variant0(v))
-            } else if let Ok(v) = value.parse() {
-                Ok(Self::Variant1(v))
-            } else if let Ok(v) = value.parse() {
-                Ok(Self::Variant2(v))
-            } else {
-                Err("string conversion failed for all variants".into())
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for ScalarValue {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for ScalarValue {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for ScalarValue {
-        type Error = self::error::ConversionError;
-        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
         }
     }
 
@@ -37002,8 +36921,8 @@ pub mod types {
     impl ::std::fmt::Display for SliderDisplayType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Slider => write!(f, "slider"),
-                Self::Progress => write!(f, "progress"),
+                Self::Slider => f.write_str("slider"),
+                Self::Progress => f.write_str("progress"),
             }
         }
     }
@@ -37111,7 +37030,7 @@ pub mod types {
     impl ::std::fmt::Display for SortBy {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Name => write!(f, "name"),
+                Self::Name => f.write_str("name"),
             }
         }
     }
@@ -37184,8 +37103,8 @@ pub mod types {
     impl ::std::fmt::Display for SortDirection {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Ascending => write!(f, "ascending"),
-                Self::Descending => write!(f, "descending"),
+                Self::Ascending => f.write_str("ascending"),
+                Self::Descending => f.write_str("descending"),
             }
         }
     }
@@ -37372,8 +37291,8 @@ pub mod types {
     impl ::std::fmt::Display for SyncPageTypeEnum {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Page => write!(f, "page"),
-                Self::Document => write!(f, "document"),
+                Self::Page => f.write_str("page"),
+                Self::Document => f.write_str("document"),
             }
         }
     }
@@ -37801,7 +37720,7 @@ pub mod types {
     impl ::std::fmt::Display for TableReferenceType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Table => write!(f, "table"),
+                Self::Table => f.write_str("table"),
             }
         }
     }
@@ -37867,7 +37786,7 @@ pub mod types {
     impl ::std::fmt::Display for TableType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Table => write!(f, "table"),
+                Self::Table => f.write_str("table"),
             }
         }
     }
@@ -37939,8 +37858,8 @@ pub mod types {
     impl ::std::fmt::Display for TableTypeEnum {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Table => write!(f, "table"),
-                Self::View => write!(f, "view"),
+                Self::Table => f.write_str("table"),
+                Self::View => f.write_str("view"),
             }
         }
     }
@@ -38291,53 +38210,53 @@ pub mod types {
     impl ::std::fmt::Display for Type {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::AclMetadata => write!(f, "aclMetadata"),
-                Self::AclPermissions => write!(f, "aclPermissions"),
-                Self::AclSettings => write!(f, "aclSettings"),
-                Self::AnalyticsLastUpdated => write!(f, "analyticsLastUpdated"),
-                Self::ApiLink => write!(f, "apiLink"),
-                Self::Automation => write!(f, "automation"),
-                Self::Column => write!(f, "column"),
-                Self::Control => write!(f, "control"),
-                Self::Doc => write!(f, "doc"),
-                Self::CustomDocDomain => write!(f, "customDocDomain"),
-                Self::CustomDocDomainProvider => write!(f, "customDocDomainProvider"),
-                Self::DocAnalytics => write!(f, "docAnalytics"),
-                Self::DocAnalyticsSummary => write!(f, "docAnalyticsSummary"),
-                Self::DocAnalyticsV2 => write!(f, "docAnalyticsV2"),
-                Self::Folder => write!(f, "folder"),
-                Self::Formula => write!(f, "formula"),
-                Self::GoLink => write!(f, "goLink"),
-                Self::IngestionBatchExecution => write!(f, "ingestionBatchExecution"),
-                Self::IngestionExecution => write!(f, "ingestionExecution"),
-                Self::IngestionExecutionAttempt => write!(f, "ingestionExecutionAttempt"),
-                Self::IngestionPackLog => write!(f, "ingestionPackLog"),
-                Self::IngestionParentItem => write!(f, "ingestionParentItem"),
-                Self::MutationStatus => write!(f, "mutationStatus"),
-                Self::Pack => write!(f, "pack"),
-                Self::PackAclPermissions => write!(f, "packAclPermissions"),
-                Self::PackAnalytics => write!(f, "packAnalytics"),
-                Self::PackAnalyticsSummary => write!(f, "packAnalyticsSummary"),
-                Self::PackAsset => write!(f, "packAsset"),
-                Self::PackCategory => write!(f, "packCategory"),
-                Self::PackConfigurationSchema => write!(f, "packConfigurationSchema"),
-                Self::PackFeaturedDocs => write!(f, "packFeaturedDocs"),
-                Self::PackFormulaAnalytics => write!(f, "packFormulaAnalytics"),
-                Self::PackLog => write!(f, "packLog"),
-                Self::PackMaker => write!(f, "packMaker"),
-                Self::PackOauthConfig => write!(f, "packOauthConfig"),
-                Self::PackRelease => write!(f, "packRelease"),
-                Self::PackSourceCode => write!(f, "packSourceCode"),
-                Self::PackSystemConnection => write!(f, "packSystemConnection"),
-                Self::PackVersion => write!(f, "packVersion"),
-                Self::Page => write!(f, "page"),
-                Self::PageContentExport => write!(f, "pageContentExport"),
-                Self::PageContentExportStatus => write!(f, "pageContentExportStatus"),
-                Self::Principal => write!(f, "principal"),
-                Self::Row => write!(f, "row"),
-                Self::Table => write!(f, "table"),
-                Self::User => write!(f, "user"),
-                Self::Workspace => write!(f, "workspace"),
+                Self::AclMetadata => f.write_str("aclMetadata"),
+                Self::AclPermissions => f.write_str("aclPermissions"),
+                Self::AclSettings => f.write_str("aclSettings"),
+                Self::AnalyticsLastUpdated => f.write_str("analyticsLastUpdated"),
+                Self::ApiLink => f.write_str("apiLink"),
+                Self::Automation => f.write_str("automation"),
+                Self::Column => f.write_str("column"),
+                Self::Control => f.write_str("control"),
+                Self::Doc => f.write_str("doc"),
+                Self::CustomDocDomain => f.write_str("customDocDomain"),
+                Self::CustomDocDomainProvider => f.write_str("customDocDomainProvider"),
+                Self::DocAnalytics => f.write_str("docAnalytics"),
+                Self::DocAnalyticsSummary => f.write_str("docAnalyticsSummary"),
+                Self::DocAnalyticsV2 => f.write_str("docAnalyticsV2"),
+                Self::Folder => f.write_str("folder"),
+                Self::Formula => f.write_str("formula"),
+                Self::GoLink => f.write_str("goLink"),
+                Self::IngestionBatchExecution => f.write_str("ingestionBatchExecution"),
+                Self::IngestionExecution => f.write_str("ingestionExecution"),
+                Self::IngestionExecutionAttempt => f.write_str("ingestionExecutionAttempt"),
+                Self::IngestionPackLog => f.write_str("ingestionPackLog"),
+                Self::IngestionParentItem => f.write_str("ingestionParentItem"),
+                Self::MutationStatus => f.write_str("mutationStatus"),
+                Self::Pack => f.write_str("pack"),
+                Self::PackAclPermissions => f.write_str("packAclPermissions"),
+                Self::PackAnalytics => f.write_str("packAnalytics"),
+                Self::PackAnalyticsSummary => f.write_str("packAnalyticsSummary"),
+                Self::PackAsset => f.write_str("packAsset"),
+                Self::PackCategory => f.write_str("packCategory"),
+                Self::PackConfigurationSchema => f.write_str("packConfigurationSchema"),
+                Self::PackFeaturedDocs => f.write_str("packFeaturedDocs"),
+                Self::PackFormulaAnalytics => f.write_str("packFormulaAnalytics"),
+                Self::PackLog => f.write_str("packLog"),
+                Self::PackMaker => f.write_str("packMaker"),
+                Self::PackOauthConfig => f.write_str("packOauthConfig"),
+                Self::PackRelease => f.write_str("packRelease"),
+                Self::PackSourceCode => f.write_str("packSourceCode"),
+                Self::PackSystemConnection => f.write_str("packSystemConnection"),
+                Self::PackVersion => f.write_str("packVersion"),
+                Self::Page => f.write_str("page"),
+                Self::PageContentExport => f.write_str("pageContentExport"),
+                Self::PageContentExportStatus => f.write_str("pageContentExportStatus"),
+                Self::Principal => f.write_str("principal"),
+                Self::Row => f.write_str("row"),
+                Self::Table => f.write_str("table"),
+                Self::User => f.write_str("user"),
+                Self::Workspace => f.write_str("workspace"),
             }
         }
     }
@@ -38991,6 +38910,41 @@ pub mod types {
     ///      "type": "string",
     ///      "maxLength": 8192
     ///    },
+    ///    "agentImages": {
+    ///      "description": "The agent images for the Pack.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "object",
+    ///        "required": [
+    ///          "assetId",
+    ///          "filename"
+    ///        ],
+    ///        "properties": {
+    ///          "assetId": {
+    ///            "description": "The asset id of the Pack's agent image,
+    /// returned by
+    /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
+    /// endpoint.",
+    ///            "type": "string"
+    ///          },
+    ///          "filename": {
+    ///            "description": "The filename for the image.",
+    ///            "type": "string"
+    ///          },
+    ///          "mimeType": {
+    ///            "description": "The media type of the image being sent.",
+    ///            "examples": [
+    ///              "image/jpeg"
+    ///            ],
+    ///            "type": "string"
+    ///          }
+    ///        },
+    ///        "additionalProperties": false
+    ///      }
+    ///    },
     ///    "agentShortDescription": {
     ///      "description": "A short description for the pack as an agent.",
     ///      "examples": [
@@ -39179,6 +39133,9 @@ pub mod types {
         ///A full description for the pack as an agent.
         #[serde(rename = "agentDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_description: ::std::option::Option<UpdatePackRequestAgentDescription>,
+        ///The agent images for the Pack.
+        #[serde(rename = "agentImages", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_images: ::std::option::Option<::std::vec::Vec<UpdatePackRequestAgentImagesItem>>,
         ///A short description for the pack as an agent.
         #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_short_description: ::std::option::Option<UpdatePackRequestAgentShortDescription>,
@@ -39233,6 +39190,7 @@ pub mod types {
         fn default() -> Self {
             Self {
                 agent_description: Default::default(),
+                agent_images: Default::default(),
                 agent_short_description: Default::default(),
                 cover_asset_id: Default::default(),
                 description: Default::default(),
@@ -39329,6 +39287,61 @@ pub mod types {
             ::std::string::String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///`UpdatePackRequestAgentImagesItem`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "assetId",
+    ///    "filename"
+    ///  ],
+    ///  "properties": {
+    ///    "assetId": {
+    ///      "description": "The asset id of the Pack's agent image, returned by
+    /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
+    /// endpoint.",
+    ///      "type": "string"
+    ///    },
+    ///    "filename": {
+    ///      "description": "The filename for the image.",
+    ///      "type": "string"
+    ///    },
+    ///    "mimeType": {
+    ///      "description": "The media type of the image being sent.",
+    ///      "examples": [
+    ///        "image/jpeg"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpdatePackRequestAgentImagesItem {
+        ///The asset id of the Pack's agent image, returned by
+        /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
+        /// endpoint.
+        #[serde(rename = "assetId")]
+        pub asset_id: ::std::string::String,
+        ///The filename for the image.
+        pub filename: ::std::string::String,
+        ///The media type of the image being sent.
+        #[serde(rename = "mimeType", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub mime_type: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&UpdatePackRequestAgentImagesItem> for UpdatePackRequestAgentImagesItem {
+        fn from(value: &UpdatePackRequestAgentImagesItem) -> Self {
+            value.clone()
         }
     }
 
@@ -40749,7 +40762,7 @@ pub mod types {
     impl ::std::fmt::Display for UserSummaryType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::User => write!(f, "user"),
+                Self::User => f.write_str("user"),
             }
         }
     }
@@ -40815,7 +40828,7 @@ pub mod types {
     impl ::std::fmt::Display for UserType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::User => write!(f, "user"),
+                Self::User => f.write_str("user"),
             }
         }
     }
@@ -41002,9 +41015,9 @@ pub mod types {
     impl ::std::fmt::Display for ValueFormat {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Simple => write!(f, "simple"),
-                Self::SimpleWithArrays => write!(f, "simpleWithArrays"),
-                Self::Rich => write!(f, "rich"),
+                Self::Simple => f.write_str("simple"),
+                Self::SimpleWithArrays => f.write_str("simpleWithArrays"),
+                Self::Rich => f.write_str("rich"),
             }
         }
     }
@@ -41089,42 +41102,6 @@ pub mod types {
     impl ::std::convert::From<&Self> for ValueVariant0 {
         fn from(value: &ValueVariant0) -> Self {
             value.clone()
-        }
-    }
-
-    impl ::std::str::FromStr for ValueVariant0 {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if let Ok(v) = value.parse() {
-                Ok(Self::Variant0(v))
-            } else if let Ok(v) = value.parse() {
-                Ok(Self::Variant1(v))
-            } else if let Ok(v) = value.parse() {
-                Ok(Self::Variant2(v))
-            } else {
-                Err("string conversion failed for all variants".into())
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for ValueVariant0 {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for ValueVariant0 {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for ValueVariant0 {
-        type Error = self::error::ConversionError;
-        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
         }
     }
 
@@ -41557,7 +41534,7 @@ pub mod types {
     impl ::std::fmt::Display for WorkspacePrincipalType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Workspace => write!(f, "workspace"),
+                Self::Workspace => f.write_str("workspace"),
             }
         }
     }
@@ -41708,7 +41685,7 @@ pub mod types {
     impl ::std::fmt::Display for WorkspaceReferenceType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Workspace => write!(f, "workspace"),
+                Self::Workspace => f.write_str("workspace"),
             }
         }
     }
@@ -41872,7 +41849,7 @@ pub mod types {
     impl ::std::fmt::Display for WorkspaceType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Workspace => write!(f, "workspace"),
+                Self::Workspace => f.write_str("workspace"),
             }
         }
     }
@@ -42111,9 +42088,9 @@ pub mod types {
     impl ::std::fmt::Display for WorkspaceUserRole {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
-                Self::Admin => write!(f, "Admin"),
-                Self::DocMaker => write!(f, "DocMaker"),
-                Self::Editor => write!(f, "Editor"),
+                Self::Admin => f.write_str("Admin"),
+                Self::DocMaker => f.write_str("DocMaker"),
+                Self::Editor => f.write_str("Editor"),
             }
         }
     }
@@ -42465,28 +42442,28 @@ impl Client {
             client,
         }
     }
+}
 
-    /// Get the base URL to which requests are made.
-    pub fn baseurl(&self) -> &String {
-        &self.baseurl
+impl ClientInfo<()> for Client {
+    fn api_version() -> &'static str {
+        "1.4.19"
     }
 
-    /// Get the internal `reqwest::Client` used to make requests.
-    pub fn client(&self) -> &reqwest::Client {
+    fn baseurl(&self) -> &str {
+        self.baseurl.as_str()
+    }
+
+    fn client(&self) -> &reqwest::Client {
         &self.client
     }
 
-    /// Get the version of this API.
-    ///
-    /// This string is pulled directly from the source OpenAPI
-    /// document and may be in any format the API selects.
-    pub fn api_version(&self) -> &'static str {
-        "1.4.19"
+    fn inner(&self) -> &() {
+        &()
     }
 }
 
+impl ClientHooks<()> for &Client {}
 #[allow(clippy::all)]
-#[allow(mismatched_lifetime_syntaxes)]
 impl Client {
     ///Get doc categories
     ///
@@ -42496,7 +42473,7 @@ impl Client {
     pub async fn list_categories<'a>(&'a self) -> Result<ResponseValue<types::DocCategoryList>, Error<types::ListCategoriesResponse>> {
         let url = format!("{}/categories", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42504,7 +42481,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_categories",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -42540,7 +42522,7 @@ impl Client {
     pub async fn list_docs<'a>(&'a self, folder_id: Option<&'a str>, in_gallery: Option<bool>, is_owner: Option<bool>, is_published: Option<bool>, is_starred: Option<bool>, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, query: Option<&'a str>, source_doc: Option<&'a str>, workspace_id: Option<&'a str>) -> Result<ResponseValue<types::DocList>, Error<types::ListDocsResponse>> {
         let url = format!("{}/docs", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42558,7 +42540,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("workspaceId", &workspace_id))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_docs",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -42584,7 +42571,7 @@ impl Client {
     pub async fn create_doc<'a>(&'a self, body: &'a types::DocCreate) -> Result<ResponseValue<types::DocumentCreationResult>, Error<types::CreateDocResponse>> {
         let url = format!("{}/docs", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42593,7 +42580,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "create_doc",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             201u16 => ResponseValue::from_response(response).await,
@@ -42616,7 +42608,7 @@ impl Client {
     pub async fn get_doc<'a>(&'a self, doc_id: &'a str) -> Result<ResponseValue<types::Doc>, Error<types::GetDocResponse>> {
         let url = format!("{}/docs/{}", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42624,7 +42616,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_doc",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -42647,7 +42644,7 @@ impl Client {
     pub async fn delete_doc<'a>(&'a self, doc_id: &'a str) -> Result<ResponseValue<types::DocDelete>, Error<types::DeleteDocResponse>> {
         let url = format!("{}/docs/{}", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42655,7 +42652,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "delete_doc",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             202u16 => ResponseValue::from_response(response).await,
@@ -42680,7 +42682,7 @@ impl Client {
     pub async fn update_doc<'a>(&'a self, doc_id: &'a str, body: &'a types::DocUpdate) -> Result<ResponseValue<types::DocUpdateResult>, Error<types::UpdateDocResponse>> {
         let url = format!("{}/docs/{}", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42689,7 +42691,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "update_doc",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -42713,7 +42720,7 @@ impl Client {
     pub async fn get_sharing_metadata<'a>(&'a self, doc_id: &'a str) -> Result<ResponseValue<types::AclMetadata>, Error<types::GetSharingMetadataResponse>> {
         let url = format!("{}/docs/{}/acl/metadata", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42721,7 +42728,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_sharing_metadata",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -42746,7 +42758,7 @@ impl Client {
     pub async fn get_permissions<'a>(&'a self, doc_id: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>) -> Result<ResponseValue<types::Acl>, Error<types::GetPermissionsResponse>> {
         let url = format!("{}/docs/{}/acl/permissions", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42756,7 +42768,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_permissions",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -42781,7 +42798,7 @@ impl Client {
     pub async fn add_permission<'a>(&'a self, doc_id: &'a str, body: &'a types::AddPermissionRequest) -> Result<ResponseValue<types::AddPermissionResult>, Error<types::AddPermissionResponse>> {
         let url = format!("{}/docs/{}/acl/permissions", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42790,7 +42807,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "add_permission",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -42817,7 +42839,7 @@ impl Client {
     pub async fn delete_permission<'a>(&'a self, doc_id: &'a str, permission_id: &'a str) -> Result<ResponseValue<types::DeletePermissionResult>, Error<types::DeletePermissionResponse>> {
         let url = format!("{}/docs/{}/acl/permissions/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&permission_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42825,7 +42847,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "delete_permission",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -42853,7 +42880,7 @@ impl Client {
     pub async fn search_principals<'a>(&'a self, doc_id: &'a str, query: Option<&'a str>) -> Result<ResponseValue<types::SearchPrincipalsResponse>, Error<types::SearchPrincipalsResponse>> {
         let url = format!("{}/docs/{}/acl/principals/search", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42862,7 +42889,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("query", &query))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "search_principals",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -42886,7 +42918,7 @@ impl Client {
     pub async fn get_acl_settings<'a>(&'a self, doc_id: &'a str) -> Result<ResponseValue<types::AclSettings>, Error<types::GetAclSettingsResponse>> {
         let url = format!("{}/docs/{}/acl/settings", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42894,7 +42926,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_acl_settings",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -42918,7 +42955,7 @@ impl Client {
     pub async fn update_acl_settings<'a>(&'a self, doc_id: &'a str, body: &'a types::UpdateAclSettingsRequest) -> Result<ResponseValue<types::AclSettings>, Error<types::UpdateAclSettingsResponse>> {
         let url = format!("{}/docs/{}/acl/settings", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42927,7 +42964,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "update_acl_settings",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -42951,7 +42993,7 @@ impl Client {
     pub async fn publish_doc<'a>(&'a self, doc_id: &'a str, body: &'a types::DocPublish) -> Result<ResponseValue<types::PublishResult>, Error<types::PublishDocResponse>> {
         let url = format!("{}/docs/{}/publish", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42960,7 +43002,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "publish_doc",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             202u16 => ResponseValue::from_response(response).await,
@@ -42984,7 +43031,7 @@ impl Client {
     pub async fn unpublish_doc<'a>(&'a self, doc_id: &'a str) -> Result<ResponseValue<types::UnpublishResult>, Error<types::UnpublishDocResponse>> {
         let url = format!("{}/docs/{}/publish", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -42992,7 +43039,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "unpublish_doc",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -43017,7 +43069,7 @@ impl Client {
     pub async fn list_pages<'a>(&'a self, doc_id: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>) -> Result<ResponseValue<types::PageList>, Error<types::ListPagesResponse>> {
         let url = format!("{}/docs/{}/pages", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43027,7 +43079,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_pages",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -43053,7 +43110,7 @@ impl Client {
     pub async fn create_page<'a>(&'a self, doc_id: &'a str, body: &'a types::PageCreate) -> Result<ResponseValue<types::PageCreateResult>, Error<types::CreatePageResponse>> {
         let url = format!("{}/docs/{}/pages", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43062,7 +43119,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "create_page",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             202u16 => ResponseValue::from_response(response).await,
@@ -43091,7 +43153,7 @@ impl Client {
     pub async fn get_page<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str) -> Result<ResponseValue<types::Page>, Error<types::GetPageResponse>> {
         let url = format!("{}/docs/{}/pages/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&page_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43099,7 +43161,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_page",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -43132,7 +43199,7 @@ impl Client {
     pub async fn update_page<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str, body: &'a types::PageUpdate) -> Result<ResponseValue<types::PageUpdateResult>, Error<types::UpdatePageResponse>> {
         let url = format!("{}/docs/{}/pages/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&page_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43141,7 +43208,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "update_page",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             202u16 => ResponseValue::from_response(response).await,
@@ -43170,7 +43242,7 @@ impl Client {
     pub async fn delete_page<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str) -> Result<ResponseValue<types::PageDeleteResult>, Error<types::DeletePageResponse>> {
         let url = format!("{}/docs/{}/pages/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&page_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43178,7 +43250,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "delete_page",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             202u16 => ResponseValue::from_response(response).await,
@@ -43209,7 +43286,7 @@ impl Client {
     pub async fn begin_page_content_export<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str, body: &'a types::BeginPageContentExportRequest) -> Result<ResponseValue<types::BeginPageContentExportResponse>, Error<types::BeginPageContentExportResponse>> {
         let url = format!("{}/docs/{}/pages/{}/export", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&page_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43218,7 +43295,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "begin_page_content_export",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             202u16 => ResponseValue::from_response(response).await,
@@ -43251,7 +43333,7 @@ impl Client {
     pub async fn get_page_content_export_status<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str, request_id: &'a str) -> Result<ResponseValue<types::PageContentExportStatusResponse>, Error<types::GetPageContentExportStatusResponse>> {
         let url = format!("{}/docs/{}/pages/{}/export/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&page_id_or_name.to_string()), encode_path(&request_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43259,7 +43341,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_page_content_export_status",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -43288,7 +43375,7 @@ impl Client {
     pub async fn list_tables<'a>(&'a self, doc_id: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, sort_by: Option<types::SortBy>, table_types: Option<&'a ::std::vec::Vec<types::TableTypeEnum>>) -> Result<ResponseValue<types::TableList>, Error<types::ListTablesResponse>> {
         let url = format!("{}/docs/{}/tables", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43300,7 +43387,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("tableTypes", &table_types))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_tables",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -43329,7 +43421,7 @@ impl Client {
     pub async fn get_table<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, use_updated_table_layouts: Option<bool>) -> Result<ResponseValue<types::Table>, Error<types::GetTableResponse>> {
         let url = format!("{}/docs/{}/tables/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&table_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43338,7 +43430,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("useUpdatedTableLayouts", &use_updated_table_layouts))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_table",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -43368,7 +43465,7 @@ impl Client {
     pub async fn list_columns<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, visible_only: Option<bool>) -> Result<ResponseValue<types::ColumnList>, Error<types::ListColumnsResponse>> {
         let url = format!("{}/docs/{}/tables/{}/columns", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&table_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43379,7 +43476,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("visibleOnly", &visible_only))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_columns",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -43500,7 +43602,7 @@ impl Client {
     pub async fn list_rows<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, query: Option<&'a str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&'a str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>, visible_only: Option<bool>) -> Result<ResponseValue<types::RowList>, Error<types::ListRowsResponse>> {
         let url = format!("{}/docs/{}/tables/{}/rows", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&table_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43516,7 +43618,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("visibleOnly", &visible_only))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_rows",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -43553,7 +43660,7 @@ impl Client {
     pub async fn upsert_rows<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowsUpsert) -> Result<ResponseValue<types::RowsUpsertResult>, Error<types::UpsertRowsResponse>> {
         let url = format!("{}/docs/{}/tables/{}/rows", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&table_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43563,7 +43670,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("disableParsing", &disable_parsing))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "upsert_rows",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             202u16 => ResponseValue::from_response(response).await,
@@ -43594,7 +43706,7 @@ impl Client {
     pub async fn delete_rows<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, body: &'a types::RowsDelete) -> Result<ResponseValue<types::RowsDeleteResult>, Error<types::DeleteRowsResponse>> {
         let url = format!("{}/docs/{}/tables/{}/rows", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&table_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43603,7 +43715,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "delete_rows",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             202u16 => ResponseValue::from_response(response).await,
@@ -43642,7 +43759,7 @@ impl Client {
     pub async fn get_row<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<ResponseValue<types::RowDetail>, Error<types::GetRowResponse>> {
         let url = format!("{}/docs/{}/tables/{}/rows/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&table_id_or_name.to_string()), encode_path(&row_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43652,7 +43769,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("valueFormat", &value_format))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_row",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -43693,7 +43815,7 @@ impl Client {
     pub async fn update_row<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowUpdate) -> Result<ResponseValue<types::RowUpdateResult>, Error<types::UpdateRowResponse>> {
         let url = format!("{}/docs/{}/tables/{}/rows/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&table_id_or_name.to_string()), encode_path(&row_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43703,7 +43825,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("disableParsing", &disable_parsing))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "update_row",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             202u16 => ResponseValue::from_response(response).await,
@@ -43741,7 +43868,7 @@ impl Client {
     pub async fn delete_row<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str) -> Result<ResponseValue<types::RowDeleteResult>, Error<types::DeleteRowResponse>> {
         let url = format!("{}/docs/{}/tables/{}/rows/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&table_id_or_name.to_string()), encode_path(&row_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43749,7 +43876,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "delete_row",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             202u16 => ResponseValue::from_response(response).await,
@@ -43791,7 +43923,7 @@ impl Client {
     pub async fn push_button<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, column_id_or_name: &'a str) -> Result<ResponseValue<types::PushButtonResult>, Error<types::PushButtonResponse>> {
         let url = format!("{}/docs/{}/tables/{}/rows/{}/buttons/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&table_id_or_name.to_string()), encode_path(&row_id_or_name.to_string()), encode_path(&column_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43799,7 +43931,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "push_button",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             202u16 => ResponseValue::from_response(response).await,
@@ -43830,7 +43967,7 @@ impl Client {
     pub async fn get_column<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, column_id_or_name: &'a str) -> Result<ResponseValue<types::ColumnDetail>, Error<types::GetColumnResponse>> {
         let url = format!("{}/docs/{}/tables/{}/columns/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&table_id_or_name.to_string()), encode_path(&column_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43838,7 +43975,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_column",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -43864,7 +44006,7 @@ impl Client {
     pub async fn list_formulas<'a>(&'a self, doc_id: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, sort_by: Option<types::SortBy>) -> Result<ResponseValue<types::FormulaList>, Error<types::ListFormulasResponse>> {
         let url = format!("{}/docs/{}/formulas", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43875,7 +44017,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("sortBy", &sort_by))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_formulas",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -43901,7 +44048,7 @@ impl Client {
     pub async fn get_formula<'a>(&'a self, doc_id: &'a str, formula_id_or_name: &'a str) -> Result<ResponseValue<types::Formula>, Error<types::GetFormulaResponse>> {
         let url = format!("{}/docs/{}/formulas/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&formula_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43909,7 +44056,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_formula",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -43935,7 +44087,7 @@ impl Client {
     pub async fn list_controls<'a>(&'a self, doc_id: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, sort_by: Option<types::SortBy>) -> Result<ResponseValue<types::ControlList>, Error<types::ListControlsResponse>> {
         let url = format!("{}/docs/{}/controls", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43946,7 +44098,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("sortBy", &sort_by))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_controls",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -43972,7 +44129,7 @@ impl Client {
     pub async fn get_control<'a>(&'a self, doc_id: &'a str, control_id_or_name: &'a str) -> Result<ResponseValue<types::Control>, Error<types::GetControlResponse>> {
         let url = format!("{}/docs/{}/controls/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&control_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -43980,7 +44137,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_control",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44003,7 +44165,7 @@ impl Client {
     pub async fn list_custom_doc_domains<'a>(&'a self, doc_id: &'a str) -> Result<ResponseValue<types::CustomDocDomainList>, Error<types::ListCustomDocDomainsResponse>> {
         let url = format!("{}/docs/${}/domains", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44011,7 +44173,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_custom_doc_domains",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44035,7 +44202,7 @@ impl Client {
     pub async fn add_custom_doc_domain<'a>(&'a self, doc_id: &'a str, body: &'a types::AddCustomDocDomainRequest) -> Result<ResponseValue<types::AddCustomDocDomainResponse>, Error<types::AddCustomDocDomainResponse>> {
         let url = format!("{}/docs/${}/domains", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44044,7 +44211,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "add_custom_doc_domain",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             202u16 => ResponseValue::from_response(response).await,
@@ -44068,7 +44240,7 @@ impl Client {
     pub async fn delete_custom_doc_domain<'a>(&'a self, doc_id: &'a str, custom_doc_domain: &'a str) -> Result<ResponseValue<types::DeleteCustomDocDomainResponse>, Error<types::DeleteCustomDocDomainResponse>> {
         let url = format!("{}/docs/{}/domains/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&custom_doc_domain.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44076,7 +44248,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "delete_custom_doc_domain",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44101,7 +44278,7 @@ impl Client {
     pub async fn update_custom_doc_domain<'a>(&'a self, doc_id: &'a str, custom_doc_domain: &'a str, body: &'a types::UpdateCustomDocDomainRequest) -> Result<ResponseValue<types::UpdateCustomDocDomainResponse>, Error<types::UpdateCustomDocDomainResponse>> {
         let url = format!("{}/docs/{}/domains/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&custom_doc_domain.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44110,7 +44287,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "update_custom_doc_domain",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44133,7 +44315,7 @@ impl Client {
     pub async fn get_custom_doc_domain_provider<'a>(&'a self, custom_doc_domain: &'a str) -> Result<ResponseValue<types::CustomDocDomainProviderResponse>, Error<types::GetCustomDocDomainProviderResponse>> {
         let url = format!("{}/domains/provider/{}", self.baseurl, encode_path(&custom_doc_domain.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44141,7 +44323,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_custom_doc_domain_provider",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44165,7 +44352,7 @@ impl Client {
     pub async fn get_folder<'a>(&'a self, folder_id: &'a str) -> Result<ResponseValue<types::Folder>, Error<types::GetFolderResponse>> {
         let url = format!("{}/folders/{}", self.baseurl, encode_path(&folder_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44173,7 +44360,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_folder",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44194,7 +44386,7 @@ impl Client {
     pub async fn whoami<'a>(&'a self) -> Result<ResponseValue<types::User>, Error<types::WhoamiResponse>> {
         let url = format!("{}/whoami", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44202,7 +44394,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "whoami",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44232,7 +44429,7 @@ impl Client {
     pub async fn resolve_browser_link<'a>(&'a self, degrade_gracefully: Option<bool>, url: &'a str) -> Result<ResponseValue<types::ApiLink>, Error<types::ResolveBrowserLinkResponse>> {
         let _url = format!("{}/resolveBrowserLink", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44242,7 +44439,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("url", &url))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "resolve_browser_link",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44272,7 +44474,7 @@ impl Client {
     pub async fn get_mutation_status<'a>(&'a self, request_id: &'a str) -> Result<ResponseValue<types::MutationStatus>, Error<types::GetMutationStatusResponse>> {
         let url = format!("{}/mutationStatus/{}", self.baseurl, encode_path(&request_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44280,7 +44482,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_mutation_status",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44304,7 +44511,7 @@ impl Client {
     pub async fn trigger_webhook_automation<'a>(&'a self, doc_id: &'a str, rule_id: &'a str, body: &'a types::WebhookTriggerPayload) -> Result<ResponseValue<types::WebhookTriggerResult>, Error<types::TriggerWebhookAutomationResponse>> {
         let url = format!("{}/docs/{}/hooks/automation/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&rule_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44313,7 +44520,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "trigger_webhook_automation",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             202u16 => ResponseValue::from_response(response).await,
@@ -44350,7 +44562,7 @@ impl Client {
     pub async fn list_doc_analytics<'a>(&'a self, direction: Option<types::SortDirection>, doc_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, is_published: Option<bool>, limit: Option<::std::num::NonZeroU64>, order_by: Option<types::DocAnalyticsOrderBy>, page_token: Option<&'a str>, query: Option<&'a str>, scale: Option<types::AnalyticsScale>, since_date: Option<&'a ::chrono::naive::NaiveDate>, until_date: Option<&'a ::chrono::naive::NaiveDate>, workspace_id: Option<&'a str>) -> Result<ResponseValue<types::DocAnalyticsCollection>, Error<types::ListDocAnalyticsResponse>> {
         let url = format!("{}/analytics/docs", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44369,7 +44581,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("workspaceId", &workspace_id))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_doc_analytics",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44397,7 +44614,7 @@ impl Client {
     pub async fn list_page_analytics<'a>(&'a self, doc_id: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, since_date: Option<&'a ::chrono::naive::NaiveDate>, until_date: Option<&'a ::chrono::naive::NaiveDate>) -> Result<ResponseValue<types::PageAnalyticsCollection>, Error<types::ListPageAnalyticsResponse>> {
         let url = format!("{}/analytics/docs/{}/pages", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44409,7 +44626,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("untilDate", &until_date))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_page_analytics",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44434,7 +44656,7 @@ impl Client {
     pub async fn list_doc_analytics_summary<'a>(&'a self, is_published: Option<bool>, since_date: Option<&'a ::chrono::naive::NaiveDate>, until_date: Option<&'a ::chrono::naive::NaiveDate>, workspace_id: Option<&'a str>) -> Result<ResponseValue<types::DocAnalyticsSummary>, Error<types::ListDocAnalyticsSummaryResponse>> {
         let url = format!("{}/analytics/docs/summary", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44446,7 +44668,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("workspaceId", &workspace_id))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_doc_analytics_summary",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44481,7 +44708,7 @@ impl Client {
     pub async fn list_pack_analytics<'a>(&'a self, direction: Option<types::SortDirection>, is_published: Option<bool>, limit: Option<::std::num::NonZeroU64>, order_by: Option<types::PackAnalyticsOrderBy>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, page_token: Option<&'a str>, query: Option<&'a str>, scale: Option<types::AnalyticsScale>, since_date: Option<&'a ::chrono::naive::NaiveDate>, until_date: Option<&'a ::chrono::naive::NaiveDate>, workspace_id: Option<&'a str>) -> Result<ResponseValue<types::PackAnalyticsCollection>, Error<types::ListPackAnalyticsResponse>> {
         let url = format!("{}/analytics/packs", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44500,7 +44727,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("workspaceId", &workspace_id))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_pack_analytics",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44528,7 +44760,7 @@ impl Client {
     pub async fn list_pack_analytics_summary<'a>(&'a self, is_published: Option<bool>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, since_date: Option<&'a ::chrono::naive::NaiveDate>, until_date: Option<&'a ::chrono::naive::NaiveDate>, workspace_id: Option<&'a str>) -> Result<ResponseValue<types::PackAnalyticsSummary>, Error<types::ListPackAnalyticsSummaryResponse>> {
         let url = format!("{}/analytics/packs/summary", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44541,7 +44773,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("workspaceId", &workspace_id))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_pack_analytics_summary",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44577,7 +44814,7 @@ impl Client {
     pub async fn list_pack_formula_analytics<'a>(&'a self, pack_id: ::std::num::NonZeroU64, direction: Option<types::SortDirection>, limit: Option<::std::num::NonZeroU64>, order_by: Option<types::PackFormulaAnalyticsOrderBy>, pack_formula_names: Option<&'a ::std::vec::Vec<::std::string::String>>, pack_formula_types: Option<&'a ::std::vec::Vec<types::PackFormulaType>>, page_token: Option<&'a str>, scale: Option<types::AnalyticsScale>, since_date: Option<&'a ::chrono::naive::NaiveDate>, until_date: Option<&'a ::chrono::naive::NaiveDate>) -> Result<ResponseValue<types::PackFormulaAnalyticsCollection>, Error<types::ListPackFormulaAnalyticsResponse>> {
         let url = format!("{}/analytics/packs/{}/formulas", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44594,7 +44831,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("untilDate", &until_date))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_pack_formula_analytics",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44614,7 +44856,7 @@ impl Client {
     pub async fn get_analytics_last_updated<'a>(&'a self) -> Result<ResponseValue<types::AnalyticsLastUpdatedResponse>, Error<types::GetAnalyticsLastUpdatedResponse>> {
         let url = format!("{}/analytics/updated", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44622,7 +44864,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_analytics_last_updated",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44647,7 +44894,7 @@ impl Client {
     pub async fn list_workspace_members<'a>(&'a self, workspace_id: &'a str, included_roles: Option<&'a ::std::vec::Vec<types::WorkspaceUserRole>>, page_token: Option<&'a str>) -> Result<ResponseValue<types::WorkspaceMembersList>, Error<types::ListWorkspaceMembersResponse>> {
         let url = format!("{}/workspaces/{}/users", self.baseurl, encode_path(&workspace_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44657,7 +44904,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_workspace_members",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44684,7 +44936,7 @@ impl Client {
     pub async fn change_user_role<'a>(&'a self, workspace_id: &'a str, body: &'a types::ChangeRole) -> Result<ResponseValue<types::ChangeRoleResult>, Error<types::ChangeUserRoleResponse>> {
         let url = format!("{}/workspaces/{}/users/role", self.baseurl, encode_path(&workspace_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44693,7 +44945,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "change_user_role",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44718,7 +44975,7 @@ impl Client {
     pub async fn list_workspace_role_activity<'a>(&'a self, workspace_id: &'a str) -> Result<ResponseValue<types::GetWorkspaceRoleActivity>, Error<types::ListWorkspaceRoleActivityResponse>> {
         let url = format!("{}/workspaces/{}/roles", self.baseurl, encode_path(&workspace_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44726,7 +44983,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_workspace_role_activity",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44769,7 +45031,7 @@ impl Client {
     pub async fn list_packs<'a>(&'a self, access_type: Option<types::PackAccessType>, access_types: Option<&'a ::std::vec::Vec<types::PackAccessType>>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, include_brain_only_packs: Option<bool>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PacksSortBy>) -> Result<ResponseValue<types::PackSummaryList>, Error<types::ListPacksResponse>> {
         let url = format!("{}/packs", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44789,7 +45051,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("sortBy", &sort_by))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_packs",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44813,7 +45080,7 @@ impl Client {
     pub async fn create_pack<'a>(&'a self, body: &'a types::CreatePackRequest) -> Result<ResponseValue<types::CreatePackResponse>, Error<types::CreatePackResponse>> {
         let url = format!("{}/packs", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44822,7 +45089,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "create_pack",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44846,7 +45118,7 @@ impl Client {
     pub async fn get_pack<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::Pack>, Error<types::GetPackResponse>> {
         let url = format!("{}/packs/{}", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44854,7 +45126,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_pack",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44879,7 +45156,7 @@ impl Client {
     pub async fn delete_pack<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::DeletePackResponse>, Error<types::DeletePackResponse>> {
         let url = format!("{}/packs/{}", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44887,7 +45164,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "delete_pack",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44913,7 +45195,7 @@ impl Client {
     pub async fn update_pack<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::UpdatePackRequest) -> Result<ResponseValue<types::Pack>, Error<types::UpdatePackResponse>> {
         let url = format!("{}/packs/{}", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44922,7 +45204,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "update_pack",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44948,7 +45235,7 @@ impl Client {
     pub async fn get_pack_configuration_schema<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::GetPackConfigurationJsonSchemaResponse>, Error<types::GetPackConfigurationSchemaResponse>> {
         let url = format!("{}/packs/{}/configurations/schema", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44956,7 +45243,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_pack_configuration_schema",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -44983,7 +45275,7 @@ impl Client {
     pub async fn list_pack_versions<'a>(&'a self, pack_id: ::std::num::NonZeroU64, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>) -> Result<ResponseValue<types::PackVersionList>, Error<types::ListPackVersionsResponse>> {
         let url = format!("{}/packs/{}/versions", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -44993,7 +45285,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_pack_versions",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45019,7 +45316,7 @@ impl Client {
     pub async fn get_next_pack_version<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::GetNextPackVersionRequest) -> Result<ResponseValue<types::NextPackVersionInfo>, Error<types::GetNextPackVersionResponse>> {
         let url = format!("{}/packs/{}/nextVersion", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45028,7 +45325,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_next_pack_version",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45057,7 +45359,7 @@ impl Client {
     pub async fn get_pack_version_diffs<'a>(&'a self, pack_id: ::std::num::NonZeroU64, base_pack_version: &'a str, target_pack_version: &'a str) -> Result<ResponseValue<types::PackVersionDiffs>, Error<types::GetPackVersionDiffsResponse>> {
         let url = format!("{}/packs/{}/versions/{}/diff/{}", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&base_pack_version.to_string()), encode_path(&target_pack_version.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45065,7 +45367,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_pack_version_diffs",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45096,7 +45403,7 @@ impl Client {
     pub async fn register_pack_version<'a>(&'a self, pack_id: ::std::num::NonZeroU64, pack_version: &'a str, body: &'a types::RegisterPackVersionRequest) -> Result<ResponseValue<types::PackVersionUploadInfo>, Error<types::RegisterPackVersionResponse>> {
         let url = format!("{}/packs/{}/versions/{}/register", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&pack_version.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45105,7 +45412,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "register_pack_version",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45134,7 +45446,7 @@ impl Client {
     pub async fn pack_version_upload_complete<'a>(&'a self, pack_id: ::std::num::NonZeroU64, pack_version: &'a str, body: &'a types::CreatePackVersionRequest) -> Result<ResponseValue<types::CreatePackVersionResponse>, Error<types::PackVersionUploadCompleteResponse>> {
         let url = format!("{}/packs/{}/versions/{}/uploadComplete", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&pack_version.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45143,7 +45455,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "pack_version_upload_complete",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45170,7 +45487,7 @@ impl Client {
     pub async fn list_pack_releases<'a>(&'a self, pack_id: ::std::num::NonZeroU64, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>) -> Result<ResponseValue<types::PackReleaseList>, Error<types::ListPackReleasesResponse>> {
         let url = format!("{}/packs/{}/releases", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45180,7 +45497,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_pack_releases",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45206,7 +45528,7 @@ impl Client {
     pub async fn create_pack_release<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::CreatePackReleaseRequest) -> Result<ResponseValue<types::PackRelease>, Error<types::CreatePackReleaseResponse>> {
         let url = format!("{}/packs/{}/releases", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45215,7 +45537,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "create_pack_release",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45242,7 +45569,7 @@ impl Client {
     pub async fn update_pack_release<'a>(&'a self, pack_id: ::std::num::NonZeroU64, pack_release_id: ::std::num::NonZeroU64, body: &'a types::UpdatePackReleaseRequest) -> Result<ResponseValue<types::PackRelease>, Error<types::UpdatePackReleaseResponse>> {
         let url = format!("{}/packs/{}/releases/{}", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&pack_release_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45251,7 +45578,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "update_pack_release",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45277,7 +45609,7 @@ impl Client {
     pub async fn get_pack_oauth_config<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::PackOauthConfigMetadata>, Error<types::GetPackOauthConfigResponse>> {
         let url = format!("{}/packs/{}/oauthConfig", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45285,7 +45617,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_pack_oauth_config",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45312,7 +45649,7 @@ impl Client {
     pub async fn set_pack_oauth_config<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::SetPackOauthConfigRequest) -> Result<ResponseValue<types::PackOauthConfigMetadata>, Error<types::SetPackOauthConfigResponse>> {
         let url = format!("{}/packs/{}/oauthConfig", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45321,7 +45658,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "set_pack_oauth_config",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45346,7 +45688,7 @@ impl Client {
     pub async fn get_pack_system_connection<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::PackSystemConnectionMetadata>, Error<types::GetPackSystemConnectionResponse>> {
         let url = format!("{}/packs/{}/systemConnection", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45354,7 +45696,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_pack_system_connection",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45380,7 +45727,7 @@ impl Client {
     pub async fn set_pack_system_connection<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::SetPackSystemConnectionRequest) -> Result<ResponseValue<types::PackSystemConnectionMetadata>, Error<types::SetPackSystemConnectionResponse>> {
         let url = format!("{}/packs/{}/systemConnection", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45389,7 +45736,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "set_pack_system_connection",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45415,7 +45767,7 @@ impl Client {
     pub async fn patch_pack_system_connection<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::PatchPackSystemConnectionRequest) -> Result<ResponseValue<types::PackSystemConnectionMetadata>, Error<types::PatchPackSystemConnectionResponse>> {
         let url = format!("{}/packs/{}/systemConnection", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45424,7 +45776,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "patch_pack_system_connection",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45449,7 +45806,7 @@ impl Client {
     pub async fn get_pack_permissions<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::PackPermissionList>, Error<types::GetPackPermissionsResponse>> {
         let url = format!("{}/packs/{}/permissions", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45457,7 +45814,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_pack_permissions",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45484,7 +45846,7 @@ impl Client {
     pub async fn add_pack_permission<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::AddPackPermissionRequest) -> Result<ResponseValue<types::AddPackPermissionResponse>, Error<types::AddPackPermissionResponse>> {
         let url = format!("{}/packs/{}/permissions", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45493,7 +45855,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "add_pack_permission",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45519,7 +45886,7 @@ impl Client {
     pub async fn delete_pack_permission<'a>(&'a self, pack_id: ::std::num::NonZeroU64, permission_id: &'a str) -> Result<ResponseValue<types::DeletePackPermissionResponse>, Error<types::DeletePackPermissionResponse>> {
         let url = format!("{}/packs/{}/permissions/{}", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&permission_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45527,7 +45894,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "delete_pack_permission",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45552,7 +45924,7 @@ impl Client {
     pub async fn list_pack_makers<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::ListPackMakersResponse>, Error<types::ListPackMakersResponse>> {
         let url = format!("{}/packs/{}/makers", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45560,7 +45932,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_pack_makers",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45587,7 +45964,7 @@ impl Client {
     pub async fn add_pack_maker<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::AddPackMakerRequest) -> Result<ResponseValue<types::AddPackMakerResponse>, Error<types::AddPackMakerResponse>> {
         let url = format!("{}/packs/{}/maker", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45596,7 +45973,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "add_pack_maker",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45623,7 +46005,7 @@ impl Client {
     pub async fn delete_pack_maker<'a>(&'a self, pack_id: ::std::num::NonZeroU64, login_id: &'a str) -> Result<ResponseValue<types::DeletePackMakerResponse>, Error<types::DeletePackMakerResponse>> {
         let url = format!("{}/packs/{}/maker/{}", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&login_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45631,7 +46013,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "delete_pack_maker",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45656,7 +46043,7 @@ impl Client {
     pub async fn list_pack_categories<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::ListPackCategoriesResponse>, Error<types::ListPackCategoriesResponse>> {
         let url = format!("{}/packs/{}/categories", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45664,7 +46051,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_pack_categories",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45690,7 +46082,7 @@ impl Client {
     pub async fn add_pack_category<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::AddPackCategoryRequest) -> Result<ResponseValue<types::AddPackCategoryResponse>, Error<types::AddPackCategoryResponse>> {
         let url = format!("{}/packs/{}/category", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45699,7 +46091,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "add_pack_category",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45725,7 +46122,7 @@ impl Client {
     pub async fn delete_pack_category<'a>(&'a self, pack_id: ::std::num::NonZeroU64, category_name: &'a str) -> Result<ResponseValue<types::DeletePackCategoryResponse>, Error<types::DeletePackCategoryResponse>> {
         let url = format!("{}/packs/{}/category/{}", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&category_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45733,7 +46130,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "delete_pack_category",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45759,7 +46161,7 @@ impl Client {
     pub async fn upload_pack_asset<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::UploadPackAssetRequest) -> Result<ResponseValue<types::PackAssetUploadInfo>, Error<types::UploadPackAssetResponse>> {
         let url = format!("{}/packs/{}/uploadAsset", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45768,7 +46170,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "upload_pack_asset",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45794,7 +46201,7 @@ impl Client {
     pub async fn upload_pack_source_code<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::UploadPackSourceCodeRequest) -> Result<ResponseValue<types::PackSourceCodeUploadInfo>, Error<types::UploadPackSourceCodeResponse>> {
         let url = format!("{}/packs/{}/uploadSourceCode", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45803,7 +46210,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "upload_pack_source_code",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45832,7 +46244,7 @@ impl Client {
     pub async fn pack_asset_upload_complete<'a>(&'a self, pack_id: ::std::num::NonZeroU64, pack_asset_id: &'a str, pack_asset_type: types::PackAssetType) -> Result<ResponseValue<types::PackAssetUploadCompleteResponse>, Error<types::PackAssetUploadCompleteResponse>> {
         let url = format!("{}/packs/{}/assets/{}/assetType/{}/uploadComplete", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&pack_asset_id.to_string()), encode_path(&pack_asset_type.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45840,7 +46252,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "pack_asset_upload_complete",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45868,7 +46285,7 @@ impl Client {
     pub async fn pack_source_code_upload_complete<'a>(&'a self, pack_id: ::std::num::NonZeroU64, pack_version: &'a str, body: &'a types::PackSourceCodeUploadCompleteRequest) -> Result<ResponseValue<types::PackSourceCodeUploadCompleteResponse>, Error<types::PackSourceCodeUploadCompleteResponse>> {
         let url = format!("{}/packs/{}/versions/{}/sourceCode/uploadComplete", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&pack_version.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45877,7 +46294,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "pack_source_code_upload_complete",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45905,7 +46327,7 @@ impl Client {
     pub async fn get_pack_source_code<'a>(&'a self, pack_id: ::std::num::NonZeroU64, pack_version: &'a str) -> Result<ResponseValue<types::PackSourceCodeInfo>, Error<types::GetPackSourceCodeResponse>> {
         let url = format!("{}/packs/{}/versions/{}/sourceCode", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&pack_version.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45913,7 +46335,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_pack_source_code",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -45959,7 +46386,7 @@ impl Client {
     pub async fn list_pack_listings<'a>(&'a self, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, include_brain_only_packs: Option<bool>, install_context: Option<types::PackListingInstallContextType>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, order_by: Option<types::PackListingsSortBy>, pack_access_types: Option<&'a types::PackAccessTypes>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PackListingsSortBy>) -> Result<ResponseValue<types::PackListingList>, Error<types::ListPackListingsResponse>> {
         let url = format!("{}/packs/listings", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -45981,7 +46408,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("sortBy", &sort_by))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_pack_listings",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -46015,7 +46447,7 @@ impl Client {
     pub async fn get_pack_listing<'a>(&'a self, pack_id: ::std::num::NonZeroU64, doc_id: Option<&'a str>, ingestion_id: Option<&'a str>, install_context: Option<types::PackListingInstallContextType>, release_channel: Option<types::IngestionPackReleaseChannel>, workspace_id: Option<&'a str>) -> Result<ResponseValue<types::PackListingDetail>, Error<types::GetPackListingResponse>> {
         let url = format!("{}/packs/{}/listing", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -46028,7 +46460,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("workspaceId", &workspace_id))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_pack_listing",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -46069,7 +46506,7 @@ impl Client {
     pub async fn list_pack_logs<'a>(&'a self, pack_id: ::std::num::NonZeroU64, doc_id: &'a str, after_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, before_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, limit: Option<::std::num::NonZeroU64>, log_types: Option<&'a ::std::vec::Vec<types::PackLogType>>, order: Option<types::ListPackLogsOrder>, page_token: Option<&'a str>, q: Option<&'a str>, request_ids: Option<&'a ::std::vec::Vec<::std::string::String>>) -> Result<ResponseValue<types::PackLogsList>, Error<types::ListPackLogsResponse>> {
         let url = format!("{}/packs/{}/docs/{}/logs", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -46085,7 +46522,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("requestIds", &request_ids))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_pack_logs",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -46135,7 +46577,7 @@ impl Client {
     pub async fn list_ingestion_logs<'a>(&'a self, pack_id: ::std::num::NonZeroU64, tenant_id: &'a str, root_ingestion_id: &'a ::uuid::Uuid, after_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, before_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, ingestion_execution_id: Option<&'a ::uuid::Uuid>, ingestion_status: Option<types::IngestionStatus>, limit: Option<::std::num::NonZeroU64>, log_types: Option<&'a ::std::vec::Vec<types::PackLogType>>, only_execution_completions: Option<bool>, order: Option<types::ListIngestionLogsOrder>, page_token: Option<&'a str>, q: Option<&'a str>, request_ids: Option<&'a ::std::vec::Vec<::std::string::String>>) -> Result<ResponseValue<types::PackLogsList>, Error<types::ListIngestionLogsResponse>> {
         let url = format!("{}/packs/{}/tenantId/{}/rootIngestionId/{}/logs", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&tenant_id.to_string()), encode_path(&root_ingestion_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -46154,7 +46596,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("requestIds", &request_ids))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_ingestion_logs",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -46192,7 +46639,7 @@ impl Client {
     pub async fn list_grouped_pack_logs<'a>(&'a self, pack_id: ::std::num::NonZeroU64, doc_id: &'a str, after_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, before_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, limit: Option<::std::num::NonZeroU64>, order: Option<types::ListGroupedPackLogsOrder>, page_token: Option<&'a str>, q: Option<&'a str>) -> Result<ResponseValue<types::GroupedPackLogsList>, Error<types::ListGroupedPackLogsResponse>> {
         let url = format!("{}/packs/{}/docs/{}/groupedLogs", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -46206,7 +46653,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("q", &q))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_grouped_pack_logs",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -46248,7 +46700,7 @@ impl Client {
     pub async fn list_grouped_ingestion_logs<'a>(&'a self, pack_id: ::std::num::NonZeroU64, tenant_id: &'a str, root_ingestion_id: &'a ::uuid::Uuid, after_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, before_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, ingestion_execution_id: Option<&'a ::uuid::Uuid>, limit: Option<::std::num::NonZeroU64>, order: Option<types::ListGroupedIngestionLogsOrder>, page_token: Option<&'a str>, q: Option<&'a str>) -> Result<ResponseValue<types::GroupedPackLogsList>, Error<types::ListGroupedIngestionLogsResponse>> {
         let url = format!("{}/packs/{}/tenantId/{}/rootIngestionId/{}/groupedLogs", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&tenant_id.to_string()), encode_path(&root_ingestion_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -46263,7 +46715,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("q", &q))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_grouped_ingestion_logs",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -46305,7 +46762,7 @@ impl Client {
     pub async fn list_ingestion_batch_executions<'a>(&'a self, pack_id: ::std::num::NonZeroU64, tenant_id: &'a str, root_ingestion_id: &'a ::uuid::Uuid, datasource: Option<&'a str>, execution_type: Option<types::IngestionExecutionType>, include_deleted_ingestions: Option<bool>, ingestion_execution_id: Option<&'a str>, ingestion_id: Option<&'a str>, ingestion_status: Option<types::IngestionStatus>, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>) -> Result<ResponseValue<types::IngestionBatchExecutionsList>, Error<types::ListIngestionBatchExecutionsResponse>> {
         let url = format!("{}/packs/{}/tenantId/{}/rootIngestionId/{}/ingestionBatchExecutions", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&tenant_id.to_string()), encode_path(&root_ingestion_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -46321,7 +46778,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_ingestion_batch_executions",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -46359,7 +46821,7 @@ impl Client {
     pub async fn list_ingestion_parent_items<'a>(&'a self, pack_id: ::std::num::NonZeroU64, tenant_id: &'a str, root_ingestion_id: &'a ::uuid::Uuid, ingestion_execution_id: &'a ::uuid::Uuid, ingestion_id: &'a ::uuid::Uuid, ingestion_status: Option<types::IngestionStatus>, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>) -> Result<ResponseValue<types::IngestionParentItemsList>, Error<types::ListIngestionParentItemsResponse>> {
         let url = format!("{}/packs/{}/tenantId/{}/rootIngestionId/{}/ingestionBatchExecutions/{}/parentItems", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&tenant_id.to_string()), encode_path(&root_ingestion_id.to_string()), encode_path(&ingestion_execution_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -46371,7 +46833,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_ingestion_parent_items",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -46404,7 +46871,7 @@ impl Client {
     pub async fn get_pack_log_details<'a>(&'a self, pack_id: ::std::num::NonZeroU64, tenant_id: &'a str, root_ingestion_id: &'a ::uuid::Uuid, log_id: &'a str, details_key: &'a str) -> Result<ResponseValue<types::PackLogDetails>, Error<types::GetPackLogDetailsResponse>> {
         let url = format!("{}/packs/{}/tenantId/{}/rootIngestionId/{}/logs/{}", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&tenant_id.to_string()), encode_path(&root_ingestion_id.to_string()), encode_path(&log_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -46413,7 +46880,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("detailsKey", &details_key))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "get_pack_log_details",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -46438,7 +46910,7 @@ impl Client {
     pub async fn list_pack_featured_docs<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::PackFeaturedDocsResponse>, Error<types::ListPackFeaturedDocsResponse>> {
         let url = format!("{}/packs/{}/featuredDocs", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -46446,7 +46918,12 @@ impl Client {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "list_pack_featured_docs",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -46472,7 +46949,7 @@ impl Client {
     pub async fn update_pack_featured_docs<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::UpdatePackFeaturedDocsRequest) -> Result<ResponseValue<types::UpdatePackFeaturedDocsResponse>, Error<types::UpdatePackFeaturedDocsResponse>> {
         let url = format!("{}/packs/{}/featuredDocs", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -46481,7 +46958,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "update_pack_featured_docs",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
@@ -46506,7 +46988,7 @@ impl Client {
     pub async fn add_go_link<'a>(&'a self, organization_id: &'a str, body: &'a types::AddGoLinkRequest) -> Result<ResponseValue<types::AddGoLinkResult>, Error<types::AddGoLinkResponse>> {
         let url = format!("{}/organizations/{}/goLinks", self.baseurl, encode_path(&organization_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
-        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(self.api_version()));
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -46515,7 +46997,12 @@ impl Client {
             .json(&body)
             .headers(header_map)
             .build()?;
-        let result = self.client.execute(request).await;
+        let info = OperationInfo {
+            operation_id: "add_go_link",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
         let response = result?;
         match response.status().as_u16() {
             200u16 => ResponseValue::from_response(response).await,
