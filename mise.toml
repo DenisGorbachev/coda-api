@@ -12,14 +12,16 @@ cargo-binstall = "1.10.15"
 "npm:remark-cli" = "12.0.1"
 "npm:remark-validate-links" = "8.0.0"
 "npm:remark-lint-no-dead-urls" = "1.1.0"
+"npm:repomix" = "1.5.0"
 "cargo:https://github.com/DenisGorbachev/cargo-doc2readme" = "branch:dev"
 "cargo:cargo-sort" = "1.0.9"
 "cargo:cargo-hack" = "0.6.33"
 "cargo:cargo-machete" = "0.7.0"
 "cargo:cargo-nextest" = "0.9.102"
+"cargo:cargo-expand" = "1.0.114"
 "cargo:sd" = "1.0.0"
-jq = "1.8.1"
 "cargo:cargo-progenitor" = "0.10.0"
+jq = "1.8.1"
 
 [tasks."build"]
 run = "cargo build"
@@ -84,7 +86,7 @@ run = """
 set -euo pipefail
 REMARK_VALIDATE_LINKS="$(mise where npm:remark-validate-links)/lib/node_modules/remark-validate-links/index.js"
 REMARK_LINT_NO_DEAD_URLS="$(mise where npm:remark-lint-no-dead-urls)/lib/node_modules/remark-lint-no-dead-urls/index.js"
-remark --ignore-path .gitignore --ignore-pattern CHANGELOG.md --quiet --frail --no-stdout --use "$REMARK_VALIDATE_LINKS" --use "$REMARK_LINT_NO_DEAD_URLS" "$@"
+remark --ignore-path .gitignore --ignore-pattern CHANGELOG.md --quiet --frail --no-stdout --use "$REMARK_VALIDATE_LINKS" --use "$REMARK_LINT_NO_DEAD_URLS=skipOffline:true" "$@"
 """
 
 [tasks."commitlint"]
@@ -133,6 +135,27 @@ echo "#[cfg(test)] pub mod test;" >> $LIB
 
 mise run fmt
 mise run test
+"""
+[tasks."repomix"]
+usage = """
+arg "<file>"
+arg "[rest]" var=#true
+"""
+run = """
+#!/usr/bin/env bash
+set -xeuo pipefail
+dir=$MISE_PROJECT_ROOT
+file=$usage_file
+header=$(taplo get -f "$dir/Cargo.toml" "package.description")
+repomix \
+    --include src,tests,examples \
+    --no-file-summary \
+    --no-directory-structure \
+    --header-text "$header" \
+    --output "$file" \
+    {{arg(name="rest")}} \
+    "$@" \
+    $dir
 """
 
 [tasks."agent:on:stop"]
