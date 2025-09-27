@@ -269,6 +269,16 @@ impl Client {
     }
 
     #[allow(clippy::too_many_arguments)]
+    pub async fn rows_rich(&self, doc_id: &str, table_id: &str, query: Option<&str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&str>, use_column_names: Option<bool>, visible_only: Option<bool>) -> Result<Vec<RichRow>, Error<types::ListRowsResponse>> {
+        self.paginate_all(move |page_token| async move {
+            self.list_rows_rich(doc_id, table_id, None, page_token.as_deref(), query, sort_by, sync_token, use_column_names, visible_only)
+                .await
+                .map(|response| response.into_inner())
+        })
+        .await
+    }
+
+    #[allow(clippy::too_many_arguments)]
     pub async fn rows_map(&self, doc_id: &str, table_ids: impl IntoIterator<Item = TableId>, query: Option<&str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<HashMap<TableId, Vec<Row>>, Error<types::ListRowsResponse>> {
         let rows_futures = table_ids.into_iter().map(|table_id| async {
             let rows = self
