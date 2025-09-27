@@ -3,8 +3,12 @@ use crate::{Client, Error, types};
 use derive_more::Error;
 use error_handling::handle;
 use fmt_derive::Display;
-use progenitor_client::{ClientInfo, ResponseValue, encode_path};
+use progenitor_client::{ClientHooks, ClientInfo, OperationInfo, ResponseValue, encode_path};
 use std::collections::HashMap;
+use std::future::Future;
+
+mod rich_rows;
+pub use rich_rows::*;
 
 pub type DocId = String;
 
@@ -107,6 +111,20 @@ impl PaginatedResponse<Row> for RowList {
     }
 }
 
+impl PaginatedResponse<RichRow> for RichRowList {
+    fn items(&self) -> &Vec<RichRow> {
+        &self.items
+    }
+
+    fn next_page_token(&self) -> Option<&NextPageToken> {
+        self.next_page_token.as_ref()
+    }
+
+    fn into_items(self) -> Vec<RichRow> {
+        self.items
+    }
+}
+
 impl Client {
     pub const BASE_URL: &'static str = "https://coda.io/apis/v1";
 
@@ -200,6 +218,7 @@ impl Client {
         Ok(columns_map)
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub async fn rows(&self, doc_id: &str, table_id: &str, query: Option<&str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<Vec<Row>, Error<types::ListRowsResponse>> {
         // Use the generic pagination helper to get all rows
         self.paginate_all(move |page_token| async move {
@@ -210,6 +229,46 @@ impl Client {
         .await
     }
 
+    #[allow(clippy::too_many_arguments)]
+    pub async fn list_rows_rich<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, query: Option<&'a str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&'a str>, use_column_names: Option<bool>, visible_only: Option<bool>) -> Result<ResponseValue<RichRowList>, Error<types::ListRowsResponse>> {
+        let url = format!("{}/docs/{}/tables/{}/rows", self.baseurl, encode_path(doc_id), encode_path(table_id_or_name),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        let value_format = Some(types::ValueFormat::Rich);
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
+            .query(&progenitor_client::QueryParam::new("query", &query))
+            .query(&progenitor_client::QueryParam::new("sortBy", &sort_by))
+            .query(&progenitor_client::QueryParam::new("syncToken", &sync_token))
+            .query(&progenitor_client::QueryParam::new("useColumnNames", &use_column_names))
+            .query(&progenitor_client::QueryParam::new("valueFormat", &value_format))
+            .query(&progenitor_client::QueryParam::new("visibleOnly", &visible_only))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "list_rows_rich",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    #[allow(clippy::too_many_arguments)]
     pub async fn rows_map(&self, doc_id: &str, table_ids: impl IntoIterator<Item = TableId>, query: Option<&str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<HashMap<TableId, Vec<Row>>, Error<types::ListRowsResponse>> {
         let rows_futures = table_ids.into_iter().map(|table_id| async {
             let rows = self
@@ -255,7 +314,7 @@ impl Client {
     ///   in any way.
     /// - `body`: Row update.
     pub async fn update_row_correct<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowUpdate) -> Result<ResponseValue<RowUpdateResultCorrect>, Error<types::UpdateRowResponse>> {
-        let url = format!("{}/docs/{}/tables/{}/rows/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&table_id_or_name.to_string()), encode_path(&row_id_or_name.to_string()),);
+        let url = format!("{}/docs/{}/tables/{}/rows/{}", self.baseurl, encode_path(doc_id), encode_path(table_id_or_name), encode_path(row_id_or_name),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
         #[allow(unused_mut)]

@@ -168,3 +168,6 @@ depends = ["agent:test:code", "test:docs"]
 # don't include `--fail-fast` because it's better to let the agent see all failures
 # reduce output to save tokens
 run = "mise run test:code -- --cargo-quiet --hide-progress-bar --status-level fail --final-status-level flaky"
+
+[tasks."codex"]
+run = "codex --config 'shell_environment_policy.ignore_default_excludes = true' --config 'sandbox_workspace_write.network_access = true'"
