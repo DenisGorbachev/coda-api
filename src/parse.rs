@@ -32,14 +32,16 @@ impl TryFrom<CellValue> for f64 {
     }
 }
 
-impl TryFrom<CellValue> for bool {
+/// Coda allows to "unset" the boolean value by hitting Delete while the cell is focused (the checkbox becomes greyed out). For ValueFormat != Rich, such "unset" values are returned as empty strings. During parsing, such values will be converted to `None`.
+impl TryFrom<CellValue> for Option<bool> {
     type Error = ConvertCellValueToBoolError;
 
     fn try_from(cell_value: CellValue) -> Result<Self, Self::Error> {
         use ConvertCellValueToBoolError::*;
         match cell_value {
-            CellValue::Value(Value::Variant0(ValueVariant0::Variant2(value))) => Ok(value),
-            CellValue::RichValue(RichValue::Variant0(RichSingleValue::ScalarValue(ScalarValue::Variant2(value)))) => Ok(value),
+            CellValue::Value(Value::Variant0(ValueVariant0::Variant0(value))) if value.is_empty() => Ok(None),
+            CellValue::Value(Value::Variant0(ValueVariant0::Variant2(value))) => Ok(Some(value)),
+            CellValue::RichValue(RichValue::Variant0(RichSingleValue::ScalarValue(ScalarValue::Variant2(value)))) => Ok(Some(value)),
             cell_value => Err(InvalidCellValue {
                 cell_value,
             }),
