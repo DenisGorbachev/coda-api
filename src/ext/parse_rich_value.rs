@@ -30,12 +30,6 @@ impl TryFrom<&RichValue> for String {
     }
 }
 
-impl From<&RichValue> for Result<String, ConvertRichValueToStringError> {
-    fn from(value: &RichValue) -> Self {
-        String::try_from(value)
-    }
-}
-
 impl TryFrom<&RichValue> for Option<bool> {
     type Error = ConvertRichValueToOptionBoolError;
 
@@ -61,12 +55,6 @@ impl TryFrom<&RichValue> for Option<bool> {
                 rich_value: value.clone(),
             }),
         }
-    }
-}
-
-impl From<&RichValue> for Result<Option<bool>, ConvertRichValueToOptionBoolError> {
-    fn from(value: &RichValue) -> Self {
-        Option::<bool>::try_from(value)
     }
 }
 

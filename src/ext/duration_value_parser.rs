@@ -1,26 +1,20 @@
+use error_handling::{handle, handle_opt};
 use std::num::ParseIntError;
 use thiserror::Error;
 use time::Duration;
 
 pub fn parse_duration_value(source: &impl AsRef<str>) -> Result<Option<Duration>, DurationValueParserError> {
+    use DurationValueParserError::*;
     let trimmed = source.as_ref().trim();
     if trimmed.is_empty() {
         return Ok(None);
     }
 
     let mut tokens = trimmed.split_whitespace();
-    let number_str = tokens
-        .next()
-        .ok_or(DurationValueParserError::NumberNotFound)?;
-    let unit_str = tokens
-        .next()
-        .ok_or(DurationValueParserError::UnitNotFound)?;
+    let number_str = handle_opt!(tokens.next(), NumberNotFound);
+    let unit_str = handle_opt!(tokens.next(), UnitNotFound);
 
-    let number = number_str
-        .parse::<i64>()
-        .map_err(|source| DurationValueParserError::NumberParseFailed {
-            source,
-        })?;
+    let number = handle!(number_str.parse::<i64>(), NumberParseFailed);
 
     let duration = match unit_str.to_ascii_lowercase().as_str() {
         "second" | "seconds" => Duration::seconds(number),
@@ -28,7 +22,7 @@ pub fn parse_duration_value(source: &impl AsRef<str>) -> Result<Option<Duration>
         "hour" | "hours" => Duration::hours(number),
         "day" | "days" => Duration::days(number),
         _ => {
-            return Err(DurationValueParserError::UnitUnexpected {
+            return Err(UnitUnexpected {
                 unit: unit_str.to_owned(),
             });
         }
