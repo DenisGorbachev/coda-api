@@ -51,7 +51,7 @@ impl TryFrom<CellValue> for Option<bool> {
 #[cfg(feature = "time")]
 mod time_impls {
     use super::*;
-    use crate::types::CellValue;
+    use crate::{DurationValueParserError, parse_duration_value};
     use error_handling::handle;
     use thiserror::Error;
     use time::format_description::well_known::Rfc3339;
@@ -76,23 +76,10 @@ mod time_impls {
         type Error = ConvertCellValueToOptionDurationError;
 
         fn try_from(value: CellValue) -> Result<Self, Self::Error> {
-            use ConvertCellValueToOptionDurationError::*;
+            use ConvertCellValueToOptionDurationError::{ConvertCellValueToStringFailed, DurationParseFailed};
+
             let string = handle!(String::try_from(value), ConvertCellValueToStringFailed);
-            if string.is_empty() {
-                Ok(None)
-            } else {
-                let mut splinters = string.split(' ');
-                let number_str = splinters.next().ok_or(NumberNotFound)?;
-                let unit_str = splinters.next().ok_or(UnitNotFound)?;
-                let number = handle!(number_str.parse::<i64>(), NumberParseFailed);
-                match unit_str {
-                    "second" | "seconds" => Ok(Some(Duration::seconds(number))),
-                    "minute" | "minutes" => Ok(Some(Duration::minutes(number))),
-                    "hour" | "hours" => Ok(Some(Duration::hours(number))),
-                    "day" | "days" => Ok(Some(Duration::days(number))),
-                    _ => Err(UnitUnexpected),
-                }
-            }
+            Ok(handle!(parse_duration_value(&string), DurationParseFailed))
         }
     }
 
@@ -103,17 +90,11 @@ mod time_impls {
             #[source]
             source: ConvertCellValueToStringError,
         },
-        #[error("duration value does not contain a number")]
-        NumberNotFound,
-        #[error("failed to parse duration number: {source}")]
-        NumberParseFailed {
+        #[error("failed to parse duration value: {source}")]
+        DurationParseFailed {
             #[source]
-            source: std::num::ParseIntError,
+            source: DurationValueParserError,
         },
-        #[error("duration value does not contain a unit")]
-        UnitNotFound,
-        #[error("unexpected duration unit")]
-        UnitUnexpected,
     }
 
     #[derive(Debug, Error)]

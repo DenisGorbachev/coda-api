@@ -6,10 +6,14 @@ use std::collections::HashMap;
 use std::future::Future;
 use thiserror::Error;
 
+#[cfg(feature = "time")]
+mod duration_value_parser;
 mod parse_cell_value;
 mod parse_rich_value;
 mod rich_rows;
 
+#[cfg(feature = "time")]
+pub use duration_value_parser::*;
 pub use parse_cell_value::*;
 pub use parse_rich_value::*;
 pub use rich_rows::*;

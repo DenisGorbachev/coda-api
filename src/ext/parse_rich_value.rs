@@ -73,8 +73,8 @@ impl From<&RichValue> for Result<Option<bool>, ConvertRichValueToOptionBoolError
 #[cfg(feature = "time")]
 mod time_impls {
     use super::*;
+    use crate::{DurationValueParserError, parse_duration_value};
     use error_handling::handle;
-    use std::num::ParseIntError;
     use thiserror::Error;
     use time::format_description::well_known::Rfc3339;
     use time::{Duration, OffsetDateTime};
@@ -83,37 +83,10 @@ mod time_impls {
         type Error = ConvertRichValueToOptionDurationError;
 
         fn try_from(value: &RichValue) -> Result<Self, Self::Error> {
-            use ConvertRichValueToOptionDurationError::*;
+            use ConvertRichValueToOptionDurationError::{ConvertStringFailed, DurationParseFailed};
+
             let string = handle!(String::try_from(value), ConvertStringFailed);
-            let trimmed = string.trim();
-            if trimmed.is_empty() {
-                return Ok(None);
-            }
-
-            let mut splinters = trimmed.split_whitespace();
-            let number_str = splinters.next().ok_or(NumberNotFound)?;
-            let unit_str = splinters.next().ok_or(UnitNotFound)?;
-            let number = handle!(number_str.parse::<i64>(), NumberParseFailed);
-
-            let duration = match unit_str.to_ascii_lowercase().as_str() {
-                "second" | "seconds" => Duration::seconds(number),
-                "minute" | "minutes" => Duration::minutes(number),
-                "hour" | "hours" => Duration::hours(number),
-                "day" | "days" => Duration::days(number),
-                _ => {
-                    return Err(UnitUnexpected {
-                        unit: unit_str.to_owned(),
-                    });
-                }
-            };
-
-            Ok(Some(duration))
-        }
-    }
-
-    impl From<&RichValue> for Result<Option<Duration>, ConvertRichValueToOptionDurationError> {
-        fn from(value: &RichValue) -> Self {
-            Option::<Duration>::try_from(value)
+            Ok(handle!(parse_duration_value(&string), DurationParseFailed))
         }
     }
 
@@ -133,12 +106,6 @@ mod time_impls {
         }
     }
 
-    impl From<&RichValue> for Result<Option<OffsetDateTime>, ConvertRichValueToOptionOffsetDateTimeError> {
-        fn from(value: &RichValue) -> Self {
-            Option::<OffsetDateTime>::try_from(value)
-        }
-    }
-
     #[derive(Debug, Error)]
     pub enum ConvertRichValueToOptionDurationError {
         #[error("failed to convert rich value to string: {source}")]
@@ -146,17 +113,11 @@ mod time_impls {
             #[source]
             source: ConvertRichValueToStringError,
         },
-        #[error("duration value does not contain a number")]
-        NumberNotFound,
-        #[error("duration value does not contain a unit")]
-        UnitNotFound,
-        #[error("failed to parse duration number: {source}")]
-        NumberParseFailed {
+        #[error("failed to parse duration value: {source}")]
+        DurationParseFailed {
             #[source]
-            source: ParseIntError,
+            source: DurationValueParserError,
         },
-        #[error("unexpected duration unit: {unit}")]
-        UnitUnexpected { unit: String },
     }
 
     #[derive(Debug, Error)]
