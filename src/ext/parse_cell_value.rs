@@ -1,6 +1,5 @@
 use crate::types::{CellValue, RichSingleValue, RichValue, ScalarValue, Value, ValueVariant0};
-use derive_more::Error;
-use fmt_derive::Display;
+use thiserror::Error;
 
 impl TryFrom<CellValue> for String {
     type Error = ConvertCellValueToStringError;
@@ -53,9 +52,8 @@ impl TryFrom<CellValue> for Option<bool> {
 mod time_impls {
     use super::*;
     use crate::types::CellValue;
-    use derive_more::Error;
     use error_handling::handle;
-    use fmt_derive::Display;
+    use thiserror::Error;
     use time::format_description::well_known::Rfc3339;
     use time::{Duration, OffsetDateTime};
 
@@ -98,53 +96,83 @@ mod time_impls {
         }
     }
 
-    #[derive(Error, Display, Debug)]
+    #[derive(Debug, Error)]
     pub enum ConvertCellValueToOptionDurationError {
-        ConvertCellValueToStringFailed { source: ConvertCellValueToStringError },
+        #[error("failed to convert cell value to duration string: {source}")]
+        ConvertCellValueToStringFailed {
+            #[source]
+            source: ConvertCellValueToStringError,
+        },
+        #[error("duration value does not contain a number")]
         NumberNotFound,
-        NumberParseFailed { source: std::num::ParseIntError },
+        #[error("failed to parse duration number: {source}")]
+        NumberParseFailed {
+            #[source]
+            source: std::num::ParseIntError,
+        },
+        #[error("duration value does not contain a unit")]
         UnitNotFound,
+        #[error("unexpected duration unit")]
         UnitUnexpected,
     }
 
-    #[derive(Error, Display, Debug)]
+    #[derive(Debug, Error)]
     pub enum ConvertCellValueToOptionOffsetDateTimeError {
-        ConvertCellValueToStringFailed { source: ConvertCellValueToStringError },
-        OffsetDateTimeParseFailed { source: time::Error },
+        #[error("failed to convert cell value to timestamp string: {source}")]
+        ConvertCellValueToStringFailed {
+            #[source]
+            source: ConvertCellValueToStringError,
+        },
+        #[error("failed to parse RFC3339 timestamp: {source}")]
+        OffsetDateTimeParseFailed {
+            #[source]
+            source: time::Error,
+        },
     }
 }
 
 #[cfg(feature = "time")]
 pub use time_impls::*;
 
-#[derive(Error, Display, Debug)]
+#[derive(Debug, Error)]
 pub enum ConvertCellValueToStringError {
+    #[error("cell value is not a string: {cell_value:?}")]
     InvalidCellValue { cell_value: CellValue },
 }
 
-#[derive(Error, Display, Debug)]
+#[derive(Debug, Error)]
 pub enum ConvertCellValueToF64Error {
+    #[error("cell value is not a number: {cell_value:?}")]
     InvalidCellValue { cell_value: CellValue },
 }
 
-#[derive(Error, Display, Debug)]
+#[derive(Debug, Error)]
 pub enum ConvertCellValueToBoolError {
+    #[error("cell value is not a boolean: {cell_value:?}")]
     InvalidCellValue { cell_value: CellValue },
 }
 
-#[derive(Error, Display, Debug)]
+#[derive(Debug, Error)]
 pub enum ConvertCellValueError {
+    #[error("failed to convert cell value to string: {source}")]
     ConvertCellValueToStringFailed {
+        #[source]
         source: ConvertCellValueToStringError,
     },
+    #[error("failed to convert cell value to number: {source}")]
     ConvertCellValueToF64Failed {
+        #[source]
         source: ConvertCellValueToF64Error,
     },
+    #[error("failed to convert cell value to boolean: {source}")]
     ConvertCellValueToBoolFailed {
+        #[source]
         source: ConvertCellValueToBoolError,
     },
     #[cfg(feature = "time")]
+    #[error("failed to convert cell value to timestamp: {source}")]
     ConvertCellValueToOffsetDateTimeFailed {
+        #[source]
         source: ConvertCellValueToOptionOffsetDateTimeError,
     },
 }

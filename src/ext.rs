@@ -1,11 +1,10 @@
 use crate::types::{Column, ColumnList, Doc, DocList, GetTableResponse, ListTablesResponse, NextPageToken, Row, RowList, Table, TableList, TableReference};
 use crate::{Client, Error, types};
-use derive_more::Error;
 use error_handling::handle;
-use fmt_derive::Display;
 use progenitor_client::{ClientHooks, ClientInfo, OperationInfo, ResponseValue, encode_path};
 use std::collections::HashMap;
 use std::future::Future;
+use thiserror::Error;
 
 mod parse_cell_value;
 mod parse_rich_value;
@@ -355,10 +354,18 @@ impl Client {
     }
 }
 
-#[derive(Error, Display, Debug)]
+#[derive(Debug, Error)]
 pub enum ClientTablesError {
-    ListTablesFailed { source: Error<ListTablesResponse> },
-    GetTableFailed { source: Error<GetTableResponse> },
+    #[error("list tables request failed: {source}")]
+    ListTablesFailed {
+        #[source]
+        source: Error<ListTablesResponse>,
+    },
+    #[error("get table request failed: {source}")]
+    GetTableFailed {
+        #[source]
+        source: Error<GetTableResponse>,
+    },
 }
 
 ///`RowUpdateResult`

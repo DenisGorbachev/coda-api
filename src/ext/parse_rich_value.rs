@@ -1,7 +1,6 @@
 use crate::ext::rich_rows::{RichSingleValue, RichValue};
 use crate::types::ScalarValue;
-use derive_more::Error;
-use fmt_derive::Display;
+use thiserror::Error;
 
 use RichSingleValue::*;
 use RichValue::*;
@@ -74,10 +73,9 @@ impl From<&RichValue> for Result<Option<bool>, ConvertRichValueToOptionBoolError
 #[cfg(feature = "time")]
 mod time_impls {
     use super::*;
-    use derive_more::Error;
     use error_handling::handle;
-    use fmt_derive::Display;
     use std::num::ParseIntError;
+    use thiserror::Error;
     use time::format_description::well_known::Rfc3339;
     use time::{Duration, OffsetDateTime};
 
@@ -141,37 +139,64 @@ mod time_impls {
         }
     }
 
-    #[derive(Error, Display, Debug)]
+    #[derive(Debug, Error)]
     pub enum ConvertRichValueToOptionDurationError {
-        ConvertStringFailed { source: ConvertRichValueToStringError },
+        #[error("failed to convert rich value to string: {source}")]
+        ConvertStringFailed {
+            #[source]
+            source: ConvertRichValueToStringError,
+        },
+        #[error("duration value does not contain a number")]
         NumberNotFound,
+        #[error("duration value does not contain a unit")]
         UnitNotFound,
-        NumberParseFailed { source: ParseIntError },
+        #[error("failed to parse duration number: {source}")]
+        NumberParseFailed {
+            #[source]
+            source: ParseIntError,
+        },
+        #[error("unexpected duration unit: {unit}")]
         UnitUnexpected { unit: String },
     }
 
-    #[derive(Error, Display, Debug)]
+    #[derive(Debug, Error)]
     pub enum ConvertRichValueToOptionOffsetDateTimeError {
-        ConvertStringFailed { source: ConvertRichValueToStringError },
-        OffsetDateTimeParseFailed { source: time::error::Parse, value: String },
+        #[error("failed to convert rich value to string: {source}")]
+        ConvertStringFailed {
+            #[source]
+            source: ConvertRichValueToStringError,
+        },
+        #[error("failed to parse RFC3339 timestamp '{value}': {source}")]
+        OffsetDateTimeParseFailed {
+            #[source]
+            source: time::error::Parse,
+            value: String,
+        },
     }
 }
 
 #[cfg(feature = "time")]
 pub use time_impls::*;
 
-#[derive(Error, Display, Debug)]
+#[derive(Debug, Error)]
 pub enum ConvertRichValueToStringError {
+    #[error("rich value is a collection: {rich_value:?}")]
     RichValueCollection { rich_value: RichValue },
+    #[error("rich single value is not scalar: {rich_single_value:?}")]
     RichSingleValueNotScalar { rich_single_value: RichSingleValue },
+    #[error("scalar value is not a string: {scalar_value:?}")]
     ScalarNotString { scalar_value: ScalarValue },
 }
 
-#[derive(Error, Display, Debug)]
+#[derive(Debug, Error)]
 pub enum ConvertRichValueToOptionBoolError {
+    #[error("rich value is a collection: {rich_value:?}")]
     RichValueCollection { rich_value: RichValue },
+    #[error("rich single value is not scalar: {rich_single_value:?}")]
     RichSingleValueNotScalar { rich_single_value: RichSingleValue },
+    #[error("scalar value is not a boolean: {scalar_value:?}")]
     ScalarNotBoolean { scalar_value: ScalarValue },
+    #[error("string scalar is not empty: {scalar_value:?}")]
     StringScalarNotEmpty { scalar_value: ScalarValue },
 }
 
