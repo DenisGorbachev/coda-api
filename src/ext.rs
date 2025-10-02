@@ -8,9 +8,11 @@ use std::collections::HashMap;
 use std::future::Future;
 
 mod parse_cell_value;
+mod parse_rich_value;
 mod rich_rows;
 
 pub use parse_cell_value::*;
+pub use parse_rich_value::*;
 pub use rich_rows::*;
 
 pub type DocId = String;
