@@ -7,7 +7,10 @@ use progenitor_client::{ClientHooks, ClientInfo, OperationInfo, ResponseValue, e
 use std::collections::HashMap;
 use std::future::Future;
 
+mod parse_cell_value;
 mod rich_rows;
+
+pub use parse_cell_value::*;
 pub use rich_rows::*;
 
 pub type DocId = String;
