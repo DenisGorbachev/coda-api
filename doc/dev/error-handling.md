@@ -142,32 +142,6 @@ impl<T: Display + Debug> From<T> for DisplayDebugPair<T> {
 }
 ```
 
-## File: src/functions/eprintln_error.rs
-```rust
-use crate::functions::write_to_named_temp_file;
-use std::error::Error;
-
-pub fn eprintln_error(error: &dyn Error) {
-    eprintln!("- {}", error);
-    let mut source = error;
-    while let Some(source_new) = source.source() {
-        eprintln!("- {}", source_new);
-        source = source_new;
-    }
-    eprintln!();
-    let error_debug = format!("{:#?}", error);
-    let result = write_to_named_temp_file::write_to_named_temp_file(error_debug.as_bytes());
-    match result {
-        Ok((_file, path_buf)) => {
-            eprintln!("Full error written to file:\n{}", path_buf.display());
-        }
-        Err(other_error) => {
-            eprintln!("{other_error:#?}");
-        }
-    }
-}
-```
-
 ## File: src/functions.rs
 ```rust
 mod get_root_error;
@@ -185,6 +159,32 @@ pub use write_to_named_temp_file::*;
 mod exit_result;
 
 pub use exit_result::*;
+```
+
+## File: src/functions/eprintln_error.rs
+```rust
+use crate::functions::write_to_named_temp_file;
+use std::error::Error;
+
+pub fn eprintln_error(error: &dyn Error) {
+    eprintln!("- {}", error);
+    let mut source = error;
+    while let Some(source_new) = source.source() {
+        eprintln!("- {}", source_new);
+        source = source_new;
+    }
+    eprintln!();
+    let error_debug = format!("{:#?}", error);
+    let result = write_to_named_temp_file::write_to_named_temp_file(error_debug.as_bytes());
+    match result {
+        Ok((_file, path_buf)) => {
+            eprintln!("See the full error report:\nless {}", path_buf.display());
+        }
+        Err(other_error) => {
+            eprintln!("{other_error:#?}");
+        }
+    }
+}
 ```
 
 ## File: src/types/item_error.rs

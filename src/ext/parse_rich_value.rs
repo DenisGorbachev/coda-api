@@ -6,6 +6,18 @@ use RichSingleValue::*;
 use RichValue::*;
 use ScalarValue::*;
 
+impl TryFrom<&RichValue> for RichRowReference {
+    type Error = ConvertRichValueToRichRowReferenceError;
+
+    fn try_from(value: &RichValue) -> Result<Self, Self::Error> {
+        use ConvertRichValueToRichRowReferenceError::*;
+        match value {
+            Single(Row(reference)) => Ok(reference.clone()),
+            _ => Err(RichValueIsNotRichRowReference),
+        }
+    }
+}
+
 impl TryFrom<&RichValue> for String {
     type Error = ConvertRichValueToStringError;
 
@@ -124,8 +136,15 @@ mod time_impls {
     }
 }
 
+use crate::RichRowReference;
 #[cfg(feature = "time")]
 pub use time_impls::*;
+
+#[derive(Debug, Error)]
+pub enum ConvertRichValueToRichRowReferenceError {
+    #[error("rich value is not a rich row reference")]
+    RichValueIsNotRichRowReference,
+}
 
 #[derive(Debug, Error)]
 pub enum ConvertRichValueToStringError {
