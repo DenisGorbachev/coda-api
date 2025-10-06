@@ -20,6 +20,7 @@ readme = { }
 
 [dependencies]
 chrono = { version = "0.4", default-features = false, features = ["serde"] }
+derive_more = { version = "2.0", features = ["display"] }
 error-handling = { git = "https://github.com/DenisGorbachev/error-handling-rs" }
 progenitor-client = { version = "0.11.1" }
 regress = "0.10"

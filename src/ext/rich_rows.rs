@@ -1,5 +1,6 @@
 use crate::types::{CurrencyAmount, ImageStatus, LinkedDataType, NextPageLink, NextPageToken, NextSyncToken, RowType, ScalarValue, TableReference};
 use chrono::{DateTime, Utc};
+use derive_more::Display;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -17,8 +18,9 @@ pub struct RichRowList {
     pub next_sync_token: Option<NextSyncToken>,
 }
 
-#[derive(Deserialize, Serialize, Clone, Debug)]
+#[derive(Display, Deserialize, Serialize, Clone, Debug)]
 #[serde(deny_unknown_fields)]
+#[display("{name}")]
 pub struct RichRow {
     #[serde(rename = "browserLink")]
     pub browser_link: String,
