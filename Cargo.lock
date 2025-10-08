@@ -278,13 +278,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "778e2ac28f6c47af28e4907f13ffd1e1ddbd400980a9abd7c8df189bf578a5ad"
 dependencies = [
  "libc",
- "windows-sys 0.60.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
 name = "error-handling"
 version = "0.1.0"
-source = "git+https://github.com/DenisGorbachev/error-handling-rs#62a3dbb6e3a892d5b6dd068eafebfc0794aa65cd"
+source = "git+https://github.com/DenisGorbachev/error-handling-rs#34c2fae19cadc953f353abdf0c6eb805b31d2afa"
 dependencies = [
  "tempfile",
  "thiserror",
@@ -973,7 +973,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys",
- "windows-sys 0.60.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -1165,7 +1165,7 @@ dependencies = [
  "getrandom",
  "once_cell",
  "rustix",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
