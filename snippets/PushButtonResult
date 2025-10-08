@@ -1,0 +1,7 @@
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[serde(deny_unknown_fields)]
+pub struct PushButtonResult {
+    row_id: String,
+    column_id: String,
+    request_id: String,
+}
