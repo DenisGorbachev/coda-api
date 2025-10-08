@@ -2,7 +2,6 @@
 pub use progenitor_client::{ByteStream, ClientInfo, Error, ResponseValue};
 #[allow(unused_imports)]
 use progenitor_client::{ClientHooks, OperationInfo, RequestBuilderExt, encode_path};
-
 /// Types used as operation parameters and responses.
 #[allow(clippy::all)]
 pub mod types {
@@ -13742,7 +13741,6 @@ pub mod types {
     ///    "creationTimestamp",
     ///    "csbIngestionExecutionId",
     ///    "csbIngestionId",
-    ///    "dynamicDisplayName",
     ///    "errorMessage",
     ///    "executionType",
     ///    "ingestionName",
@@ -13775,12 +13773,6 @@ pub mod types {
     ///    },
     ///    "csbIngestionId": {
     ///      "type": "string"
-    ///    },
-    ///    "dynamicDisplayName": {
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
     ///    },
     ///    "errorMessage": {
     ///      "type": [
@@ -13860,8 +13852,6 @@ pub mod types {
         pub csb_ingestion_execution_id: ::std::string::String,
         #[serde(rename = "csbIngestionId")]
         pub csb_ingestion_id: ::std::string::String,
-        #[serde(rename = "dynamicDisplayName")]
-        pub dynamic_display_name: ::std::option::Option<::std::string::String>,
         #[serde(rename = "errorMessage")]
         pub error_message: ::std::option::Option<::std::string::String>,
         #[serde(rename = "executionType")]
@@ -26538,6 +26528,7 @@ pub mod types {
     ///    "categories",
     ///    "description",
     ///    "externalMetadataUrl",
+    ///    "logo",
     ///    "logoUrl",
     ///    "makers",
     ///    "name",
@@ -26591,8 +26582,12 @@ pub mod types {
     /// optimized for agent usage.",
     ///      "type": "boolean"
     ///    },
+    ///    "cover": {
+    ///      "$ref": "#/components/schemas/PackImageFile"
+    ///    },
     ///    "coverUrl": {
     ///      "description": "The link to the cover photo of the Pack.",
+    ///      "deprecated": true,
     ///      "type": "string",
     ///      "format": "url"
     ///    },
@@ -26628,8 +26623,12 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
+    ///    "logo": {
+    ///      "$ref": "#/components/schemas/PackImageFile"
+    ///    },
     ///    "logoUrl": {
     ///      "description": "The link to the logo of the Pack.",
+    ///      "deprecated": true,
     ///      "type": "string",
     ///      "format": "url"
     ///    },
@@ -26741,6 +26740,8 @@ pub mod types {
         /// agent usage.
         #[serde(rename = "certifiedAgent", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub certified_agent: ::std::option::Option<bool>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cover: ::std::option::Option<PackImageFile>,
         ///The link to the cover photo of the Pack.
         #[serde(rename = "coverUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub cover_url: ::std::option::Option<::std::string::String>,
@@ -26756,6 +26757,7 @@ pub mod types {
         ///The timestamp of the latest release of this Pack.
         #[serde(rename = "lastReleasedAt", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub last_released_at: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+        pub logo: PackImageFile,
         ///The link to the logo of the Pack.
         #[serde(rename = "logoUrl")]
         pub logo_url: ::std::string::String,
@@ -26894,6 +26896,7 @@ pub mod types {
     ///    "description",
     ///    "discoverability",
     ///    "externalMetadataUrl",
+    ///    "logo",
     ///    "logoUrl",
     ///    "makers",
     ///    "name",
@@ -26957,8 +26960,12 @@ pub mod types {
     ///    "configuration": {
     ///      "$ref": "#/components/schemas/PackConfigurationEntry"
     ///    },
+    ///    "cover": {
+    ///      "$ref": "#/components/schemas/PackImageFile"
+    ///    },
     ///    "coverUrl": {
     ///      "description": "The link to the cover photo of the Pack.",
+    ///      "deprecated": true,
     ///      "type": "string",
     ///      "format": "url"
     ///    },
@@ -26997,8 +27004,12 @@ pub mod types {
     ///      "type": "string",
     ///      "format": "date-time"
     ///    },
+    ///    "logo": {
+    ///      "$ref": "#/components/schemas/PackImageFile"
+    ///    },
     ///    "logoUrl": {
     ///      "description": "The link to the logo of the Pack.",
+    ///      "deprecated": true,
     ///      "type": "string",
     ///      "format": "url"
     ///    },
@@ -27119,6 +27130,8 @@ pub mod types {
         pub coda_help_center_url: ::std::option::Option<::std::string::String>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub configuration: ::std::option::Option<PackConfigurationEntry>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cover: ::std::option::Option<PackImageFile>,
         ///The link to the cover photo of the Pack.
         #[serde(rename = "coverUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub cover_url: ::std::option::Option<::std::string::String>,
@@ -27135,6 +27148,7 @@ pub mod types {
         ///The timestamp of the latest release of this Pack.
         #[serde(rename = "lastReleasedAt", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub last_released_at: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+        pub logo: PackImageFile,
         ///The link to the logo of the Pack.
         #[serde(rename = "logoUrl")]
         pub logo_url: ::std::string::String,
@@ -34784,8 +34798,11 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub struct PushButtonResult {
+        #[serde(rename = "rowId")]
         row_id: String,
+        #[serde(rename = "columnId")]
         column_id: String,
+        #[serde(rename = "requestId")]
         request_id: String,
     }
     impl ::std::convert::From<&Self> for PushButtonResult {
@@ -46366,6 +46383,8 @@ impl Client {
     ///Sends a `GET` request to `/packs/listings`
     ///
     ///Arguments:
+    /// - `certified_agents_only`: Only include Packs that are certified for
+    ///   agent use, or Packs that the user is an admin of.
     /// - `direction`: Direction to sort results in.
     /// - `exclude_individual_acls`: Do not include Packs that are only shared
     ///   with the user individually.
@@ -46388,7 +46407,7 @@ impl Client {
     ///   one of the given IDs.
     /// - `sort_by`: Specify a sort order for the returned Pack listings
     ///   returned.
-    pub async fn list_pack_listings<'a>(&'a self, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, include_brain_only_packs: Option<bool>, install_context: Option<types::PackListingInstallContextType>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, order_by: Option<types::PackListingsSortBy>, pack_access_types: Option<&'a types::PackAccessTypes>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PackListingsSortBy>) -> Result<ResponseValue<types::PackListingList>, Error<types::ListPackListingsResponse>> {
+    pub async fn list_pack_listings<'a>(&'a self, certified_agents_only: Option<bool>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, include_brain_only_packs: Option<bool>, install_context: Option<types::PackListingInstallContextType>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, order_by: Option<types::PackListingsSortBy>, pack_access_types: Option<&'a types::PackAccessTypes>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PackListingsSortBy>) -> Result<ResponseValue<types::PackListingList>, Error<types::ListPackListingsResponse>> {
         let url = format!("{}/packs/listings", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -46397,6 +46416,7 @@ impl Client {
             .client
             .get(url)
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .query(&progenitor_client::QueryParam::new("certifiedAgentsOnly", &certified_agents_only))
             .query(&progenitor_client::QueryParam::new("direction", &direction))
             .query(&progenitor_client::QueryParam::new("excludeIndividualAcls", &exclude_individual_acls))
             .query(&progenitor_client::QueryParam::new("excludePublicPacks", &exclude_public_packs))
@@ -47023,10 +47043,7 @@ pub mod prelude {
     #[allow(unused_imports)]
     pub use super::Client;
 }
-
 mod ext;
-
 pub use ext::*;
-
 #[cfg(test)]
 pub mod test;

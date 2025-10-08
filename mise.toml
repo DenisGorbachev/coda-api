@@ -131,7 +131,9 @@ echo "mod ext;" >> $LIB
 echo "pub use ext::*;" >> $LIB
 echo "#[cfg(test)] pub mod test;" >> $LIB
 
+# `fmt` must be run before `fix:type`
 mise run fmt
+mise run fix:type "pub enum PushButtonResult" snippets/PushButtonResult src/lib.rs
 mise run test
 """
 [tasks."repomix"]

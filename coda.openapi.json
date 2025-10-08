@@ -5395,6 +5395,9 @@
             "$ref": "#/components/parameters/includeBrainOnlyPacks"
           },
           {
+            "$ref": "#/components/parameters/certifiedAgentsOnly"
+          },
+          {
             "name": "sortBy",
             "in": "query",
             "description": "Specify a sort order for the returned Pack listings returned.",
@@ -13785,6 +13788,7 @@
           "shortDescription",
           "description",
           "logoUrl",
+          "logo",
           "externalMetadataUrl",
           "categories",
           "makers",
@@ -13815,12 +13819,20 @@
           "logoUrl": {
             "type": "string",
             "format": "url",
-            "description": "The link to the logo of the Pack."
+            "description": "The link to the logo of the Pack.",
+            "deprecated": true
+          },
+          "logo": {
+            "$ref": "#/components/schemas/PackImageFile"
           },
           "coverUrl": {
             "type": "string",
             "format": "url",
-            "description": "The link to the cover photo of the Pack."
+            "description": "The link to the cover photo of the Pack.",
+            "deprecated": true
+          },
+          "cover": {
+            "$ref": "#/components/schemas/PackImageFile"
           },
           "exampleImages": {
             "type": "array",
@@ -13938,6 +13950,7 @@
           "shortDescription",
           "description",
           "logoUrl",
+          "logo",
           "discoverability",
           "categories",
           "makers",
@@ -13970,12 +13983,20 @@
           "logoUrl": {
             "type": "string",
             "format": "url",
-            "description": "The link to the logo of the Pack."
+            "description": "The link to the logo of the Pack.",
+            "deprecated": true
+          },
+          "logo": {
+            "$ref": "#/components/schemas/PackImageFile"
           },
           "coverUrl": {
             "type": "string",
             "format": "url",
-            "description": "The link to the cover photo of the Pack."
+            "description": "The link to the cover photo of the Pack.",
+            "deprecated": true
+          },
+          "cover": {
+            "$ref": "#/components/schemas/PackImageFile"
           },
           "exampleImages": {
             "type": "array",
@@ -17318,7 +17339,6 @@
           "ingestionName",
           "creationTimestamp",
           "parentItemId",
-          "dynamicDisplayName",
           "startTimestamp",
           "completionTimestamp",
           "nextEligibleTimestamp",
@@ -17345,10 +17365,6 @@
             "description": "Creation time of the ingestion execution in seconds since epoch."
           },
           "parentItemId": {
-            "type": "string",
-            "nullable": true
-          },
-          "dynamicDisplayName": {
             "type": "string",
             "nullable": true
           },
@@ -18048,6 +18064,15 @@
         "schema": {
           "type": "boolean",
           "x-no-default": true
+        }
+      },
+      "certifiedAgentsOnly": {
+        "name": "certifiedAgentsOnly",
+        "description": "Only include Packs that are certified for agent use, or Packs that the user is an admin of.",
+        "in": "query",
+        "schema": {
+          "type": "boolean",
+          "default": false
         }
       },
       "onlyWorkspaceId": {
