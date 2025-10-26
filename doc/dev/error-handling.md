@@ -355,7 +355,7 @@ macro_rules! map_err {
     ($result:expr, $variant:ident$(,)? $($arg:ident$(: $value:expr)?),*) => {
         $result.map_err(|source| $variant {
             source: source.into(),
-            $($arg: $crate::into!($arg$(: $value)?)),*
+            $($arg: $crate::_into!($arg$(: $value)?)),*
         })
     };
 }

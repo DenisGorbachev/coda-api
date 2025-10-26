@@ -22,6 +22,7 @@ cargo-binstall = "1.10.15"
 "cargo:sd" = "1.0.0"
 "cargo:cargo-progenitor" = "0.11.1"
 jq = "1.8.1"
+codex = "latest"
 
 [tasks."build"]
 run = "cargo build"
