@@ -11,12 +11,14 @@ mod duration_value_parser;
 mod parse_cell_value;
 mod parse_rich_value;
 mod rich_rows;
+mod string_or_f64;
 
 #[cfg(feature = "time")]
 pub use duration_value_parser::*;
 pub use parse_cell_value::*;
 pub use parse_rich_value::*;
 pub use rich_rows::*;
+pub(crate) use string_or_f64::*;
 
 pub type DocId = String;
 
@@ -412,8 +414,3 @@ pub struct RowUpdateResultCorrect {
     #[serde(rename = "requestId")]
     pub request_id: String,
 }
-// impl ::std::convert::From<&Self> for crate::types::RowUpdateResult {
-//     fn from(value: &crate::types::RowUpdateResult) -> Self {
-//         value.clone()
-//     }
-// }

@@ -1,3 +1,4 @@
+use crate::opt_f64_from_string_or_f64;
 use crate::types::{CurrencyAmount, ImageStatus, LinkedDataType, NextPageLink, NextPageToken, NextSyncToken, RowType, ScalarValue, TableReference};
 use chrono::{DateTime, Utc};
 use derive_more::Display;
@@ -90,11 +91,10 @@ pub struct RichImageValue {
     pub name: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub url: Option<String>,
-    // TODO: width and height may be empty strings, as actually seen in the Coda API response
-    // #[serde(default, skip_serializing_if = "Option::is_none")]
-    // pub width: Option<f64>,
-    // #[serde(default, skip_serializing_if = "Option::is_none")]
-    // pub height: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none", deserialize_with = "opt_f64_from_string_or_f64")]
+    pub width: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none", deserialize_with = "opt_f64_from_string_or_f64")]
+    pub height: Option<f64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub status: Option<ImageStatus>,
 }
