@@ -31,19 +31,69 @@
 
 # Files
 
-## File: src/functions/exit_result.rs
+## File: src/drafts/err_vec_display.rs
 ```rust
-use crate::eprintln_error;
 use std::error::Error;
-use std::process::ExitCode;
+use std::fmt::{Display, Formatter};
+use thiserror::Error;
 
-pub fn exit_result<E: Error>(result: Result<(), E>) -> ExitCode {
-    match result {
-        Ok(()) => ExitCode::SUCCESS,
-        Err(err) => {
-            eprintln_error(&err);
-            ExitCode::FAILURE
+/// This type is an attempt to implement error display for multiple errors through [`Display`] trait
+#[derive(Error, Debug)]
+pub struct ErrVecDisplay<T> {
+    inner: Vec<T>,
+}
+
+impl<T: Error + 'static> Display for ErrVecDisplay<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.write_fmt(format_args!("encountered {len} errors\n", len = self.inner.len()))?;
+        for err in &self.inner {
+            print_error(err, "  * ".to_string());
         }
+        Ok(())
+    }
+}
+
+pub fn print_error(error: &(dyn Error + 'static), prefix: String) {
+    println!("{prefix}{error}");
+    if let Some(source) = error.source() {
+        print_error(source, prefix);
+    }
+}
+
+#[derive(Error, Debug)]
+pub enum FooError {
+    #[error("bar failed")]
+    BarFailed { source: BarError },
+}
+
+#[derive(Error, Debug)]
+pub enum BarError {
+    #[error("zeds failed")]
+    ZedsFailed { source: ErrVecDisplay<ZedError> },
+}
+
+#[derive(Error, Debug)]
+pub enum ZedError {
+    #[error("ksa failed")]
+    KsaFailed,
+    #[error("pry failed")]
+    PryFailed,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn must_err_vec_try() {
+        let error = FooError::BarFailed {
+            source: BarError::ZedsFailed {
+                source: ErrVecDisplay {
+                    inner: vec![ZedError::KsaFailed, ZedError::PryFailed],
+                },
+            },
+        };
+        print_error(&error, "- ".to_string());
     }
 }
 ```
@@ -156,47 +206,243 @@ impl<T: Display + Debug> From<T> for DisplayDebugPair<T> {
 }
 ```
 
-## File: src/functions.rs
+## File: src/types/path_buf_display.rs
 ```rust
-mod get_root_error;
+use crate::DisplayAsDebug;
+use std::path::PathBuf;
 
-pub use get_root_error::*;
-
-mod eprintln_error;
-
-pub use eprintln_error::*;
-
-mod write_to_named_temp_file;
-
-pub use write_to_named_temp_file::*;
-
-mod exit_result;
-
-pub use exit_result::*;
+pub type PathBufDisplay = DisplayAsDebug<PathBuf>;
 ```
 
-## File: src/functions/eprintln_error.rs
+## File: src/drafts.rs
+```rust
+pub mod err_vec_display;
+```
+
+## File: src/functions/writeln_error/must_write_error.txt
+```
+- failed to run CLI command
+- failed to run i18n update command
+- failed to update 2 rows
+  * - failed to send an i18n request for row 'Foo'
+    - failed to construct a JSON schema
+    - input must be an object
+  * - failed to send an i18n request for row 'Bar'
+    - failed to send a request
+    - address 239.143.73.1 is not available
+```
+
+## File: src/functions/exit_result.rs
+```rust
+use crate::eprintln_error;
+use std::error::Error;
+use std::process::ExitCode;
+
+pub fn exit_result<E: Error + 'static>(result: Result<(), E>) -> ExitCode {
+    match result {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(err) => {
+            eprintln_error(&err);
+            ExitCode::FAILURE
+        }
+    }
+}
+```
+
+## File: src/functions/writeln_error.rs
 ```rust
 use crate::functions::write_to_named_temp_file;
+use crate::{ErrVec, Prefixer};
 use std::error::Error;
+use std::io;
+use std::io::{Write, stderr};
 
-pub fn eprintln_error(error: &dyn Error) {
-    eprintln!("- {}", error);
-    let mut source = error;
-    while let Some(source_new) = source.source() {
-        eprintln!("- {}", source_new);
-        source = source_new;
-    }
-    eprintln!();
-    let error_debug = format!("{:#?}", error);
-    let result = write_to_named_temp_file::write_to_named_temp_file(error_debug.as_bytes());
+pub fn writeln_error_to_writer_and_file(error: &(dyn Error + 'static), writer: &mut dyn Write) -> Result<(), io::Error> {
+    writeln_error_to_writer(error, writer, true)?;
+    writeln!(writer)?;
+    let error_debug = format!("{error:#?}");
+    let result = write_to_named_temp_file(error_debug.as_bytes());
     match result {
         Ok((_file, path_buf)) => {
-            eprintln!("See the full error report:\nless {}", path_buf.display());
+            writeln!(writer, "See the full error report:\nless {}", path_buf.display())
         }
         Err(other_error) => {
-            eprintln!("{other_error:#?}");
+            writeln!(writer, "{other_error:#?}")
         }
+    }
+}
+
+pub fn writeln_error_to_writer(error: &(dyn Error + 'static), writer: &mut dyn Write, is_top_level: bool) -> Result<(), io::Error> {
+    let source = error;
+    if let Some(err_vec) = source.downcast_ref::<ErrVec>() {
+        if is_top_level {
+            writeln!(writer, "- {error}")?;
+        }
+        for err in &err_vec.inner {
+            let mut prefixer = error_prefixer(writer);
+            writeln_error_to_writer(err.as_ref(), &mut prefixer, false)?;
+        }
+        Ok(())
+    } else {
+        writeln!(writer, "- {error}")?;
+        if let Some(source_new) = source.source() {
+            writeln_error_to_writer(source_new, writer, false)
+        } else {
+            Ok(())
+        }
+    }
+}
+
+pub fn eprintln_error(error: &(dyn Error + 'static)) {
+    let mut stderr = stderr().lock();
+    let result = writeln_error_to_writer_and_file(error, &mut stderr);
+    match result {
+        Ok(()) => (),
+        Err(err) => eprintln!("failed to write to stderr: {err:#?}"),
+    }
+}
+
+pub fn error_prefixer(writer: &mut dyn Write) -> Prefixer<'_> {
+    Prefixer::new("  * ", "    ", writer)
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::functions::writeln_error::tests::JsonSchemaNewError::InputMustBeObject;
+    use crate::{ErrVec, writeln_error_to_writer};
+    use thiserror::Error;
+
+    #[test]
+    fn must_write_error() {
+        let error = CliRunError::CommandRunFailed {
+            source: CommandRunError::I18nUpdateRunFailed {
+                source: I18nUpdateRunError::UpdateRowsFailed {
+                    source: vec![
+                        UpdateRowError::I18nRequestFailed {
+                            source: I18nRequestError::JsonSchemaNewFailed {
+                                source: InputMustBeObject {
+                                    input: "foo".to_string(),
+                                },
+                            },
+                            row: Row::new("Foo"),
+                        },
+                        UpdateRowError::I18nRequestFailed {
+                            source: I18nRequestError::RequestSendFailed {
+                                source: tokio::io::Error::new(tokio::io::ErrorKind::AddrNotAvailable, "address 239.143.73.1 is not available"),
+                            },
+                            row: Row::new("Bar"),
+                        },
+                    ]
+                    .into(),
+                },
+            },
+        };
+        let mut output = Vec::new();
+        writeln_error_to_writer(&error, &mut output, true).unwrap();
+        let string = String::from_utf8(output).unwrap();
+        assert_eq!(string, include_str!("writeln_error/must_write_error.txt"))
+    }
+
+    #[derive(Error, Debug)]
+    pub enum CliRunError {
+        #[error("failed to run CLI command")]
+        CommandRunFailed { source: CommandRunError },
+    }
+
+    #[derive(Error, Debug)]
+    pub enum CommandRunError {
+        #[error("failed to run i18n update command")]
+        I18nUpdateRunFailed { source: I18nUpdateRunError },
+    }
+
+    #[derive(Error, Debug)]
+    pub enum I18nUpdateRunError {
+        #[error("failed to update {len} rows", len = source.len())]
+        UpdateRowsFailed { source: ErrVec },
+    }
+
+    #[derive(Error, Debug)]
+    pub enum UpdateRowError {
+        #[error("failed to send an i18n request for row '{row}'", row = row.name)]
+        I18nRequestFailed { source: I18nRequestError, row: Row },
+    }
+
+    #[derive(Error, Debug)]
+    pub enum I18nRequestError {
+        #[error("failed to construct a JSON schema")]
+        JsonSchemaNewFailed { source: JsonSchemaNewError },
+        #[error("failed to send a request")]
+        RequestSendFailed { source: tokio::io::Error },
+    }
+
+    #[derive(Error, Debug)]
+    pub enum JsonSchemaNewError {
+        #[error("input must be an object")]
+        InputMustBeObject { input: String },
+    }
+
+    #[derive(Debug)]
+    pub struct Row {
+        name: String,
+    }
+
+    impl Row {
+        pub fn new(name: impl Into<String>) -> Self {
+            Self {
+                name: name.into(),
+            }
+        }
+    }
+}
+```
+
+## File: src/types/err_vec.rs
+```rust
+use std::error::Error;
+use std::fmt::{Display, Formatter};
+use std::ops::{Deref, DerefMut};
+
+#[derive(Default, Debug)]
+pub struct ErrVec {
+    pub inner: Vec<Box<dyn Error + 'static>>,
+}
+
+impl Display for ErrVec {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.write_fmt(format_args!("encountered {len} errors", len = self.inner.len()))
+    }
+}
+
+impl Error for ErrVec {}
+
+impl Deref for ErrVec {
+    type Target = Vec<Box<dyn Error + 'static>>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.inner
+    }
+}
+
+impl DerefMut for ErrVec {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.inner
+    }
+}
+
+impl ErrVec {
+    pub fn new<E: Error + 'static>(iter: impl IntoIterator<Item = E>) -> Self {
+        Self {
+            inner: iter
+                .into_iter()
+                .map(|err| Box::new(err) as Box<dyn Error + 'static>)
+                .collect(),
+        }
+    }
+}
+
+impl<E: Error + 'static> From<Vec<E>> for ErrVec {
+    fn from(value: Vec<E>) -> Self {
+        Self::new(value)
     }
 }
 ```
@@ -213,21 +459,117 @@ pub struct ItemError<T, E> {
 }
 ```
 
+## File: src/types/prefixer.rs
+```rust
+use std::fmt;
+use std::io::{self, Write};
+
+/// This type uses a `dyn Write` instead of `impl Write` to avoid a trait-recursion explosion in [`crate::writeln_error_to_writer`]
+pub struct Prefixer<'w> {
+    pub first_line_prefix: String,
+    pub next_line_prefix: String,
+    pub writer: &'w mut dyn Write,
+    pub is_first_line: bool,
+    pub needs_prefix: bool,
+}
+
+impl<'w> fmt::Debug for Prefixer<'w> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Prefixer")
+            .field("first_line_prefix", &self.first_line_prefix)
+            .field("next_line_prefix", &self.next_line_prefix)
+            .field("is_first_line", &self.is_first_line)
+            .field("needs_prefix", &self.needs_prefix)
+            .finish()
+    }
+}
+
+impl<'w> Prefixer<'w> {
+    pub fn new(first_line_prefix: impl Into<String>, next_line_prefix: impl Into<String>, writer: &'w mut dyn Write) -> Self {
+        Self {
+            first_line_prefix: first_line_prefix.into(),
+            next_line_prefix: next_line_prefix.into(),
+            writer,
+            is_first_line: true,
+            needs_prefix: true,
+        }
+    }
+}
+
+impl<'w> Write for Prefixer<'w> {
+    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+        if buf.is_empty() {
+            return Ok(0);
+        }
+
+        let mut start = 0;
+        while start < buf.len() {
+            if self.needs_prefix {
+                let prefix = if self.is_first_line { &self.first_line_prefix } else { &self.next_line_prefix };
+                self.writer.write_all(prefix.as_bytes())?;
+                self.is_first_line = false;
+                self.needs_prefix = false;
+            }
+
+            match buf[start..].iter().position(|&b| b == b'\n') {
+                Some(relative_idx) => {
+                    let end = start + relative_idx + 1;
+                    self.writer.write_all(&buf[start..end])?;
+                    start = end;
+                    self.needs_prefix = true;
+                }
+                None => {
+                    self.writer.write_all(&buf[start..])?;
+                    start = buf.len();
+                }
+            }
+        }
+
+        Ok(buf.len())
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        self.writer.flush()
+    }
+}
+```
+
+## File: src/functions.rs
+```rust
+mod get_root_error;
+
+pub use get_root_error::*;
+
+mod writeln_error;
+
+pub use writeln_error::*;
+
+mod write_to_named_temp_file;
+
+pub use write_to_named_temp_file::*;
+
+mod exit_result;
+
+pub use exit_result::*;
+```
+
 ## File: src/types.rs
 ```rust
 mod debug_as_display;
 mod display_as_debug;
 mod display_debug_pair;
+mod err_vec;
 mod item_error;
+mod path_buf_display;
+mod prefixer;
 
 pub use debug_as_display::*;
 pub use display_as_debug::*;
 pub use display_debug_pair::*;
+pub use err_vec::*;
 pub use item_error::*;
-
-use std::path::PathBuf;
-
-pub type PathBufDisplay = DisplayAsDebug<PathBuf>;
+pub use path_buf_display::*;
+pub use prefixer::*;
 ```
 
 ## File: src/macros.rs
@@ -251,6 +593,7 @@ macro_rules! handle {
     };
 }
 
+/// See also: [`handle_opt_take!`](crate::handle_opt_take)
 #[macro_export]
 macro_rules! handle_opt {
     ($option:expr, $variant:ident$(,)? $($arg:ident$(: $value:expr)?),*) => {
@@ -259,6 +602,22 @@ macro_rules! handle_opt {
             None => return Err($variant {
                 $($arg: $crate::_into!($arg$(: $value)?)),*
             }),
+        }
+    };
+}
+
+/// This macro is an opposite of [`handle_opt!`](crate::handle_opt) - it returns an error if the option contains a `Some` variant.
+///
+/// Note that this macro calls [`Option::take`], which will leave a `None` if the option was `Some(value)`.
+/// Note that this macro has a mandatory argument `$some_value` (used in `if let Some($some_value) = $option.take()`), which will also be passed to the error enum variant.
+#[macro_export]
+macro_rules! handle_opt_take {
+    ($option:expr, $variant:ident, $some_value:ident$(,)? $($arg:ident$(: $value:expr)?),*) => {
+        if let Some($some_value) = $option.take() {
+            return Err($variant {
+                $some_value: $some_value.into(),
+                $($arg: $crate::_into!($arg$(: $value)?)),*
+            })
         }
     };
 }
@@ -284,7 +643,7 @@ macro_rules! handle_iter {
                 oks
             } else {
                 return Err($variant {
-                    sources: errors.into(),
+                    source: errors.into(),
                     $($arg: $crate::_into!($arg$(: $value)?)),*
                 });
             }
@@ -320,7 +679,7 @@ macro_rules! handle_iter_of_refs {
                 (outputs, items)
             } else {
                 return Err($variant {
-                    sources: errors.into(),
+                    source: errors.into(),
                     $($arg: $crate::_into!($arg$(: $value)?)),*
                 });
             }
@@ -389,7 +748,7 @@ macro_rules! _index_err_async {
 
 #[cfg(test)]
 mod tests {
-    use crate::ItemError;
+    use crate::{ErrVec, PathBufDisplay};
     use futures::future::join_all;
     use serde::{Deserialize, Serialize};
     use std::io;
@@ -482,7 +841,8 @@ mod tests {
         use ReadFilesRefError::*;
         let iter = paths.iter().map(check_file_ref);
         let results = join_all(iter).await;
-        let (outputs, _paths) = handle_iter_of_refs!(results.into_iter(), paths, CheckFileRefFailed);
+        let items = paths.into_iter().map(PathBufDisplay::from);
+        let (outputs, _items) = handle_iter_of_refs!(results.into_iter(), items, CheckFileRefFailed);
         Ok(outputs)
     }
 
@@ -502,7 +862,6 @@ mod tests {
 
     /// Variants don't have the `format` field because every variant already corresponds to a single specific format
     /// Some variants have the `path` field because the `contents` depends on `path`
-    /// `path` has type `PathBufDisplay` because `PathBuf` doesn't implement `Display`
     /// Some `source` field types are wrapped in `Box` according to suggestion from `result_large_err` lint
     #[derive(Error, Debug)]
     enum ParseConfigError {
@@ -556,20 +915,20 @@ mod tests {
 
     #[derive(Error, Debug)]
     enum MultiplyEvensError {
-        #[error("failed to check {len} numbers", len = .sources.len())]
-        CheckEvensFailed { sources: Vec<CheckEvenError> },
+        #[error("failed to check {len} numbers", len = source.len())]
+        CheckEvensFailed { source: ErrVec },
     }
 
     #[derive(Error, Debug)]
     enum ReadFilesError {
-        #[error("failed to check {len} files", len = .sources.len())]
-        CheckFileFailed { sources: Vec<CheckFileError> },
+        #[error("failed to check {len} files", len = source.len())]
+        CheckFileFailed { source: ErrVec },
     }
 
     #[derive(Error, Debug)]
     enum ReadFilesRefError {
-        #[error("failed to check {len} files", len = .sources.len())]
-        CheckFileRefFailed { sources: Vec<ItemError<PathBuf, CheckFileRefError>> },
+        #[error("failed to check {len} files", len = source.len())]
+        CheckFileRefFailed { source: ErrVec },
     }
 
     #[derive(Error, Debug)]
@@ -633,6 +992,41 @@ mod tests {
     pub enum GetUsernameError {
         #[error("failed to acquire read lock")]
         AcquireReadLockFailed,
+    }
+
+    #[allow(dead_code)]
+    fn get_answer(prompt: String, get_response: &mut impl FnMut(String) -> Result<WeirdResponse, io::Error>) -> Result<String, GetAnswerError> {
+        use GetAnswerError::*;
+        // Since the `get_response` external API doesn't return the `prompt` in its error, we have to clone `prompt` before passing it as argument, so that we could pass it to the error enum variant
+        // Cloning may be necessary with external APIs that don't return arguments in errors, but it must not be necessary in our code
+        let mut response = handle!(get_response(prompt.clone()), GetResponseFailed, prompt);
+        handle_opt_take!(response.error, ResponseContainsError, error);
+        Ok(response.answer)
+    }
+
+    /// OpenAI Responses API returns a response with `error: Option<WeirdResponseError>` field, which is weird, but must still be handled
+    #[derive(Debug)]
+    pub struct WeirdResponse {
+        answer: String,
+        error: Option<WeirdResponseError>,
+    }
+
+    #[allow(dead_code)]
+    #[derive(Error, Debug)]
+    pub enum WeirdResponseError {
+        #[error("prompt is empty")]
+        PromptIsEmpty,
+        #[error("context limit reached")]
+        ContextLimitReached,
+    }
+
+    /// [`GetAnswerError::GetResponseFailed`] `error` attribute doesn't contain a reference to `{prompt}` because the prompt can be very long, so it would make the error message very long, which is undesirable
+    #[derive(Error, Debug)]
+    pub enum GetAnswerError {
+        #[error("failed to get response")]
+        GetResponseFailed { source: io::Error, prompt: String },
+        #[error("response contains an error")]
+        ResponseContainsError { error: WeirdResponseError },
     }
 }
 ```
@@ -724,6 +1118,8 @@ mod tests {
 //! * `RestClient` doesn't point to the actual data, it only allows querying it.
 //! * `DatabaseConnection` doesn't hold the actual data, it only allows querying it.
 
+extern crate core;
+
 mod macros;
 
 mod types;
@@ -733,4 +1129,7 @@ pub use types::*;
 mod functions;
 
 pub use functions::*;
+
+#[cfg(test)]
+mod drafts;
 ```

@@ -2,7 +2,6 @@ name: CI
 on: [ push, pull_request ]
 
 env:
-  RUSTFLAGS: ""
   RUST_BACKTRACE: 1
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -21,6 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
+        with:
+          version: 2025.10.11
       - name: Remove rust from mise
         run: |
           # a different rust version will be installed in the next step

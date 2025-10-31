@@ -42325,12 +42325,12 @@ pub mod types {
 ///
 /// - For the [`#createDoc`](#operation/createDoc) endpoint specifically, the
 ///   owner of the API token must be a Doc
-///  Maker (or Admin) in the workspace. If the "Any member can create docs"
-/// option in enabled in the workspace  settings, they can be an Editor and will
-/// get auto-promoted to Doc Maker upon using this endpoint. Lastly, if in
-///  addition, the API key owner matches the "Auto-join email domains" setting,
-/// they will be auto-added to the  workspace and promoted to Doc Maker upon
-/// using this endpoint
+///   Maker (or Admin) in the workspace. If the "Any member can create docs"
+///   option in enabled in the workspace  settings, they can be an Editor and will
+///   get auto-promoted to Doc Maker upon using this endpoint. Lastly, if in
+///   addition, the API key owner matches the "Auto-join email domains" setting,
+///   they will be auto-added to the  workspace and promoted to Doc Maker upon
+///   using this endpoint
 ///
 ///This behavior applies to the API as well as any integrations that may use
 /// it, such as Zapier.
