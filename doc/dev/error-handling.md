@@ -16,12 +16,12 @@
   * The `#[error]` attribute should contain only those fields that can be displayed on one line
   * If the `#[error]` attribute contains fields that implement `Display`, then those fields must be output using `Display` formatting (not `Debug` formatting)
     * Good:
-      ```
+      ```rust
       #[error("task not found for query '{query}'")]
       TaskNotFound { query: String }
       ```
     * Bad:
-      ```
+      ```rust
       #[error("task not found for query '{query:?}'")]
       TaskNotFound { query: String }
       ```
@@ -30,6 +30,73 @@
     * Bad: `#[error("user {name} not found")]`
 
 # Files
+
+## File: src/types/debug_as_display.rs
+```rust
+use std::fmt::{Debug, Display, Formatter};
+
+/// This wrapper is needed for types that have an easy-to-understand `Display` impl but hard-to-understand `Debug` impl
+#[derive(Ord, PartialOrd, Eq, PartialEq, Copy, Clone)]
+pub struct DebugAsDisplay<T: Display>(pub T);
+
+impl<T: Display> Debug for DebugAsDisplay<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(&self.0, f)
+    }
+}
+
+impl<T: Display> Display for DebugAsDisplay<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Display::fmt(&self.0, f)
+    }
+}
+
+impl<T: Display> From<T> for DebugAsDisplay<T> {
+    fn from(value: T) -> Self {
+        Self(value)
+    }
+}
+```
+
+## File: src/types/display_as_debug.rs
+```rust
+use std::fmt::{Debug, Display, Formatter};
+
+#[derive(Ord, PartialOrd, Eq, PartialEq, Copy, Clone, Debug)]
+pub struct DisplayAsDebug<T: Debug>(pub T);
+
+impl<T: Debug> Display for DisplayAsDebug<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        Debug::fmt(&self.0, f)
+    }
+}
+
+impl<T: Debug> From<T> for DisplayAsDebug<T> {
+    fn from(value: T) -> Self {
+        Self(value)
+    }
+}
+```
+
+## File: src/types/display_debug_pair.rs
+```rust
+use std::fmt::{Debug, Display};
+
+#[derive(Clone, Debug)]
+pub struct DisplayDebugPair<T: Display + Debug> {
+    pub display: String,
+    pub debug: T,
+}
+
+impl<T: Display + Debug> From<T> for DisplayDebugPair<T> {
+    fn from(value: T) -> Self {
+        Self {
+            display: value.to_string(),
+            debug: value,
+        }
+    }
+}
+```
 
 ## File: src/drafts/err_vec_display.rs
 ```rust
@@ -136,73 +203,6 @@ pub enum WriteErrorDebugToTempFileError {
     WriteFailed { source: io::Error },
     #[error("failed to persist the temporary file")]
     KeepFailed { source: PersistError },
-}
-```
-
-## File: src/types/debug_as_display.rs
-```rust
-use std::fmt::{Debug, Display, Formatter};
-
-/// This wrapper is needed for types that have an easy-to-understand `Display` impl but hard-to-understand `Debug` impl
-#[derive(Ord, PartialOrd, Eq, PartialEq, Copy, Clone)]
-pub struct DebugAsDisplay<T: Display>(pub T);
-
-impl<T: Display> Debug for DebugAsDisplay<T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        Display::fmt(&self.0, f)
-    }
-}
-
-impl<T: Display> Display for DebugAsDisplay<T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        Display::fmt(&self.0, f)
-    }
-}
-
-impl<T: Display> From<T> for DebugAsDisplay<T> {
-    fn from(value: T) -> Self {
-        Self(value)
-    }
-}
-```
-
-## File: src/types/display_as_debug.rs
-```rust
-use std::fmt::{Debug, Display, Formatter};
-
-#[derive(Ord, PartialOrd, Eq, PartialEq, Copy, Clone, Debug)]
-pub struct DisplayAsDebug<T: Debug>(pub T);
-
-impl<T: Debug> Display for DisplayAsDebug<T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        Debug::fmt(&self.0, f)
-    }
-}
-
-impl<T: Debug> From<T> for DisplayAsDebug<T> {
-    fn from(value: T) -> Self {
-        Self(value)
-    }
-}
-```
-
-## File: src/types/display_debug_pair.rs
-```rust
-use std::fmt::{Debug, Display};
-
-#[derive(Clone, Debug)]
-pub struct DisplayDebugPair<T: Display + Debug> {
-    pub display: String,
-    pub debug: T,
-}
-
-impl<T: Display + Debug> From<T> for DisplayDebugPair<T> {
-    fn from(value: T) -> Self {
-        Self {
-            display: value.to_string(),
-            debug: value,
-        }
-    }
 }
 ```
 
@@ -396,6 +396,18 @@ mod tests {
 }
 ```
 
+## File: src/types/item_error.rs
+```rust
+use thiserror::Error;
+
+#[derive(Error, Debug)]
+#[error("error occurred for item {item}: {source}")]
+pub struct ItemError<T, E> {
+    pub item: T,
+    pub source: E,
+}
+```
+
 ## File: src/types/err_vec.rs
 ```rust
 use std::error::Error;
@@ -447,16 +459,23 @@ impl<E: Error + 'static> From<Vec<E>> for ErrVec {
 }
 ```
 
-## File: src/types/item_error.rs
+## File: src/types.rs
 ```rust
-use thiserror::Error;
+mod debug_as_display;
+mod display_as_debug;
+mod display_debug_pair;
+mod err_vec;
+mod item_error;
+mod path_buf_display;
+mod prefixer;
 
-#[derive(Error, Debug)]
-#[error("error occurred for item {item}: {source}")]
-pub struct ItemError<T, E> {
-    pub item: T,
-    pub source: E,
-}
+pub use debug_as_display::*;
+pub use display_as_debug::*;
+pub use display_debug_pair::*;
+pub use err_vec::*;
+pub use item_error::*;
+pub use path_buf_display::*;
+pub use prefixer::*;
 ```
 
 ## File: src/types/prefixer.rs
@@ -551,25 +570,6 @@ pub use write_to_named_temp_file::*;
 mod exit_result;
 
 pub use exit_result::*;
-```
-
-## File: src/types.rs
-```rust
-mod debug_as_display;
-mod display_as_debug;
-mod display_debug_pair;
-mod err_vec;
-mod item_error;
-mod path_buf_display;
-mod prefixer;
-
-pub use debug_as_display::*;
-pub use display_as_debug::*;
-pub use display_debug_pair::*;
-pub use err_vec::*;
-pub use item_error::*;
-pub use path_buf_display::*;
-pub use prefixer::*;
 ```
 
 ## File: src/macros.rs

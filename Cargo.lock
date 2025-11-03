@@ -284,7 +284,7 @@ dependencies = [
 [[package]]
 name = "error-handling"
 version = "0.1.0"
-source = "git+https://github.com/DenisGorbachev/error-handling-rs#57a8f4cabec952549797f31a155f8a731123cb6f"
+source = "git+https://github.com/DenisGorbachev/error-handling-rs#b29f565cc170c2d0424cdcb67129577258e17e6f"
 dependencies = [
  "tempfile",
  "thiserror",
