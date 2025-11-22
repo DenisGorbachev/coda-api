@@ -414,3 +414,7 @@ pub struct RowUpdateResultCorrect {
     #[serde(rename = "requestId")]
     pub request_id: String,
 }
+
+pub fn format_row_url(doc_id: &str, table_id: &str, row_id: &str) -> String {
+    format!("https://coda.io/d/_d{doc_id}#_tu{table_id}/_ru{row_id}")
+}
