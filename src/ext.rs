@@ -307,6 +307,58 @@ impl Client {
         Ok(rows_map)
     }
 
+    ///Insert/upsert rows
+    ///
+    ///Inserts rows into a table, optionally updating existing rows if any
+    /// upsert key columns are provided. This endpoint will always return a 202,
+    /// so long as the doc and table exist and are accessible (and the update is
+    /// structurally valid). Row inserts/upserts are generally processed within
+    /// several seconds. Note: this endpoint only works for base tables, not
+    /// views. When upserting, if multiple rows match the specified key
+    /// column(s), they will all be updated with the specified value.
+    ///
+    ///
+    ///Sends a `POST` request to `/docs/{docId}/tables/{tableIdOrName}/rows`
+    ///
+    ///Arguments:
+    /// - `doc_id`: ID of the doc.
+    /// - `table_id_or_name`: ID or name of the table. Names are discouraged
+    ///   because they're easily prone to being changed by users. If you're
+    ///   using a name, be sure to URI-encode it.
+    /// - `disable_parsing`: If true, the API will not attempt to parse the data
+    ///   in any way.
+    /// - `body`: Rows to insert or upsert.
+    pub async fn upsert_rows_correct<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowsUpsert) -> Result<ResponseValue<RowsUpsertResultCorrect>, Error<types::UpsertRowsResponse>> {
+        let url = format!("{}/docs/{}/tables/{}/rows", self.baseurl, encode_path(doc_id), encode_path(table_id_or_name),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .post(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .json(&body)
+            .query(&progenitor_client::QueryParam::new("disableParsing", &disable_parsing))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "upsert_rows",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            202u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
     ///Update row
     ///
     ///Updates the specified row in the table. This endpoint will always return
@@ -413,6 +465,51 @@ pub struct RowUpdateResultCorrect {
     id: RowId,
     #[serde(rename = "requestId")]
     pub request_id: String,
+}
+
+///`RowsUpsertResult`
+///
+/// <details><summary>JSON schema</summary>
+///
+/// ```json
+///{
+///  "description": "The result of a rows insert/upsert operation.",
+///  "allOf": [
+///    {
+///      "$ref": "#/components/schemas/DocumentMutateResponse"
+///    },
+///    {
+///      "type": "object",
+///      "properties": {
+///        "addedRowIds": {
+///          "description": "Row IDs for rows that will be added. Only
+/// applicable when keyColumns is not set or empty.",
+///          "examples": [
+///            [
+///              "i-bCdeFgh",
+///              "i-CdEfgHi"
+///            ]
+///          ],
+///          "type": "array",
+///          "items": {
+///            "type": "string"
+///          }
+///        }
+///      },
+///      "additionalProperties": false
+///    }
+///  ],
+///  "x-schema-name": "RowsUpsertResult"
+///}
+/// ```
+/// </details>
+#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[serde(deny_unknown_fields)]
+pub struct RowsUpsertResultCorrect {
+    #[serde(rename = "addedRowIds", default)]
+    added_row_ids: Vec<String>,
+    #[serde(rename = "requestId")]
+    request_id: String,
 }
 
 pub fn format_row_url(doc_id: &str, table_id: &str, row_id: &str) -> String {
