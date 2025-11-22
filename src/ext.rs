@@ -462,7 +462,7 @@ pub enum ClientTablesError {
 #[serde(deny_unknown_fields)]
 pub struct RowUpdateResultCorrect {
     #[serde(rename = "id")]
-    id: RowId,
+    pub id: RowId,
     #[serde(rename = "requestId")]
     pub request_id: String,
 }
@@ -507,9 +507,9 @@ pub struct RowUpdateResultCorrect {
 #[serde(deny_unknown_fields)]
 pub struct RowsUpsertResultCorrect {
     #[serde(rename = "addedRowIds", default)]
-    added_row_ids: Vec<String>,
+    pub added_row_ids: Vec<String>,
     #[serde(rename = "requestId")]
-    request_id: String,
+    pub request_id: String,
 }
 
 pub fn format_row_url(doc_id: &str, table_id: &str, row_id: &str) -> String {
