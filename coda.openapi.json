@@ -3779,7 +3779,7 @@
             "$ref": "#/components/parameters/excludeWorkspaceAcls"
           },
           {
-            "$ref": "#/components/parameters/includeBrainOnlyPacks"
+            "$ref": "#/components/parameters/packEntrypoint"
           }
         ],
         "responses": {
@@ -4829,6 +4829,296 @@
         }
       }
     },
+    "/packs/invitations": {
+      "get": {
+        "summary": "List pending Pack invitations for the current user",
+        "description": "Get pending Pack invitations for the authenticated user.\n",
+        "operationId": "listUserPackInvitations",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/pageToken"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Pack invitations for the user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackInvitationList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestWithValidationErrors"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      }
+    },
+    "/packs/{packId}/invitations": {
+      "get": {
+        "summary": "List invitations for a Pack",
+        "description": "Get pending invitations for a given Pack.\n",
+        "operationId": "listPackInvitations",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/packId"
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/pageToken"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Pack invitations.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackInvitationList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestWithValidationErrors"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an invitation for Pack",
+        "description": "Create an invitation for a user to access a Pack.\n",
+        "operationId": "createPackInvitation",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/packId"
+          }
+        ],
+        "requestBody": {
+          "description": "Parameters for creating Pack invitation.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePackInvitationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Confirmation of successfully creating a Pack invitation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePackInvitationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestWithValidationErrors"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      }
+    },
+    "/packs/{packId}/invitations/{invitationId}": {
+      "put": {
+        "summary": "Update an invitation for Pack",
+        "description": "Update the access level of an existing Pack invitation.\n",
+        "operationId": "updatePackInvitation",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/packId"
+          },
+          {
+            "$ref": "#/components/parameters/invitationId"
+          }
+        ],
+        "requestBody": {
+          "description": "Parameters for updating Pack invitation.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePackInvitationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Confirmation of successfully updating a Pack invitation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdatePackInvitationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestWithValidationErrors"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Revoke an invitation for Pack",
+        "description": "Revoke a pending Pack invitation.\n",
+        "operationId": "deletePackInvitation",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/packId"
+          },
+          {
+            "$ref": "#/components/parameters/invitationId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Confirmation of successfully revoking a Pack invitation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletePackInvitationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestWithValidationErrors"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      }
+    },
+    "/packs/invitations/{invitationId}/reply": {
+      "post": {
+        "summary": "Reply to a Pack invitation",
+        "description": "Reply to a Pack invitation (accept or reject). Requires authentication as the invited user.\n",
+        "operationId": "replyToPackInvitation",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/invitationId"
+          }
+        ],
+        "requestBody": {
+          "description": "Parameters for replying to Pack invitation.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HandlePackInvitationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Confirmation of successfully replying to a Pack invitation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HandlePackInvitationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestWithValidationErrors"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      }
+    },
     "/packs/{packId}/makers": {
       "get": {
         "summary": "List makers for Pack",
@@ -5392,7 +5682,7 @@
             "$ref": "#/components/parameters/excludeIndividualAcls"
           },
           {
-            "$ref": "#/components/parameters/includeBrainOnlyPacks"
+            "$ref": "#/components/parameters/packEntrypoint"
           },
           {
             "$ref": "#/components/parameters/certifiedAgentsOnly"
@@ -6480,6 +6770,357 @@
           }
         }
       }
+    },
+    "/go/tenants/{tenantId}/agentInstances/{agentInstanceId}/agentSessionIds": {
+      "get": {
+        "summary": "Retrieve the chat sessions of an agent instance.",
+        "description": "Retrieve the chat sessions of an agent instance for debugging purpose.",
+        "operationId": "listAgentSessionIds",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "description": "Maximum number of results to return in this query.",
+            "in": "query",
+            "example": 10,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 25,
+              "maximum": 100
+            }
+          },
+          {
+            "$ref": "#/components/parameters/pageToken"
+          },
+          {
+            "$ref": "#/components/parameters/tenantId"
+          },
+          {
+            "$ref": "#/components/parameters/agentInstanceId"
+          },
+          {
+            "name": "agentSessionId",
+            "description": "ID of the agent chat session.",
+            "in": "query",
+            "required": false,
+            "example": "a4e293c4-4a85-45a4-b2ba-7f305cba2703",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "logTypes",
+            "description": "Only return logs of the given types.",
+            "in": "query",
+            "explode": false,
+            "example": "fetcher,custom",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PackLogType"
+              }
+            }
+          },
+          {
+            "name": "beforeTimestamp",
+            "description": "Only return logs before the given time (non-inclusive).\n",
+            "in": "query",
+            "required": false,
+            "example": "2018-04-11T00:18:57.946Z",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "afterTimestamp",
+            "description": "Only return logs after the given time (non-inclusive).\n",
+            "in": "query",
+            "required": false,
+            "example": "2018-04-11T00:18:57.946Z",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "order",
+            "description": "Specifies if the logs will be returned in time desc or asc. Default is desc.\n",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "description": "A search query that follows Lucene syntax.\n",
+            "in": "query",
+            "required": false,
+            "example": "trace.id:\"a4e293c4-4a85-45a4-b2ba-7f305cba2703\" AND event.action:\"FormulaRequest\"",
+            "schema": {
+              "type": "string",
+              "x-allow-empty": true
+            }
+          },
+          {
+            "name": "requestIds",
+            "description": "Only return logs matching provided request IDs.",
+            "in": "query",
+            "explode": false,
+            "example": "416faabf,4127faag",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pack logs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackLogsList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestWithValidationErrors"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      }
+    },
+    "/go/tenants/{tenantId}/agentInstances/{agentInstanceId}/logs": {
+      "get": {
+        "summary": "Retrieve the logs of an agent instance.",
+        "description": "Retrieve the logs of an agent instance for debugging purpose.",
+        "operationId": "listAgentLogs",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "description": "Maximum number of results to return in this query.",
+            "in": "query",
+            "example": 10,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 25,
+              "maximum": 100
+            }
+          },
+          {
+            "$ref": "#/components/parameters/pageToken"
+          },
+          {
+            "$ref": "#/components/parameters/tenantId"
+          },
+          {
+            "$ref": "#/components/parameters/agentInstanceId"
+          },
+          {
+            "name": "logTypes",
+            "description": "Only return logs of the given types.",
+            "in": "query",
+            "explode": false,
+            "example": "fetcher,custom",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PackLogType"
+              }
+            }
+          },
+          {
+            "name": "agentSessionId",
+            "description": "ID of the agent chat session.",
+            "in": "query",
+            "required": false,
+            "example": "a4e293c4-4a85-45a4-b2ba-7f305cba2703",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "beforeTimestamp",
+            "description": "Only return logs before the given time (non-inclusive).\n",
+            "in": "query",
+            "required": false,
+            "example": "2018-04-11T00:18:57.946Z",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "afterTimestamp",
+            "description": "Only return logs after the given time (non-inclusive).\n",
+            "in": "query",
+            "required": false,
+            "example": "2018-04-11T00:18:57.946Z",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "order",
+            "description": "Specifies if the logs will be returned in time desc or asc. Default is desc.\n",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "description": "A search query that follows Lucene syntax.\n",
+            "in": "query",
+            "required": false,
+            "example": "trace.id:\"a4e293c4-4a85-45a4-b2ba-7f305cba2703\" AND event.action:\"FormulaRequest\"",
+            "schema": {
+              "type": "string",
+              "x-allow-empty": true
+            }
+          },
+          {
+            "name": "requestIds",
+            "description": "Only return logs matching provided request IDs.",
+            "in": "query",
+            "explode": false,
+            "example": "416faabf,4127faag",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pack logs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackLogsList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestWithValidationErrors"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      }
+    },
+    "/go/tenants/{tenantId}/agentInstances/{agentInstanceId}/logs/{logId}": {
+      "get": {
+        "summary": "Retrieve the information for a specific log.",
+        "description": "Retrieve the log details of given logId.\n",
+        "operationId": "getAgentPackLogDetails",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/tenantId"
+          },
+          {
+            "$ref": "#/components/parameters/agentInstanceId"
+          },
+          {
+            "name": "logId",
+            "in": "path",
+            "description": "The id of the log to retrieve.\n",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-allow-empty": false
+            }
+          },
+          {
+            "name": "detailsKey",
+            "in": "query",
+            "description": "The key of the details to retrieve.\n",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "x-allow-empty": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pack log details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackLogDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestWithValidationErrors"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -6492,6 +7133,7 @@
           "aclMetadata",
           "aclPermissions",
           "aclSettings",
+          "agentPackLog",
           "analyticsLastUpdated",
           "apiLink",
           "automation",
@@ -6521,6 +7163,7 @@
           "packConfigurationSchema",
           "packFeaturedDocs",
           "packFormulaAnalytics",
+          "packInvitation",
           "packLog",
           "packMaker",
           "packOauthConfig",
@@ -6541,6 +7184,7 @@
           "AclMetadata",
           "AclPermissions",
           "AclSettings",
+          "AgentPackLog",
           "AnalyticsLastUpdated",
           "ApiLink",
           "Automation",
@@ -6570,6 +7214,7 @@
           "PackConfigurationSchema",
           "PackFeaturedDocs",
           "PackFormulaAnalytics",
+          "PackInvitation",
           "PackLog",
           "PackMaker",
           "PackOauthConfig",
@@ -12893,6 +13538,13 @@
           "sourceCodeVisibility": {
             "$ref": "#/components/schemas/PackSourceCodeVisibility"
           },
+          "packEntrypoints": {
+            "type": "array",
+            "description": "Pack entrypoints where this pack is available",
+            "items": {
+              "$ref": "#/components/schemas/PackEntrypoint"
+            }
+          },
           "name": {
             "type": "string",
             "description": "The name of the Pack.",
@@ -12921,6 +13573,7 @@
             "type": "string",
             "description": "A full description for the pack as an agent.",
             "example": "Chat with a comprehensive tool that can calculate cool geometric formulas like surface area, volume, and other mathematical operations. This agent can help with complex calculations and provide detailed explanations.",
+            "x-allow-empty": true,
             "maxLength": 8192
           },
           "supportEmail": {
@@ -13018,6 +13671,13 @@
           "sourceCodeVisibility": {
             "$ref": "#/components/schemas/PackSourceCodeVisibility"
           },
+          "packEntrypoints": {
+            "type": "array",
+            "description": "Pack entrypoints where this pack is available",
+            "items": {
+              "$ref": "#/components/schemas/PackEntrypoint"
+            }
+          },
           "name": {
             "type": "string",
             "description": "The name of the Pack.",
@@ -13046,6 +13706,7 @@
             "type": "string",
             "description": "A full description for the pack as an agent.",
             "example": "Chat with a comprehensive tool that can calculate cool geometric formulas like surface area, volume, and other mathematical operations. This agent can help with complex calculations and provide detailed explanations.",
+            "x-allow-empty": true,
             "maxLength": 8192
           },
           "supportEmail": {
@@ -13147,13 +13808,15 @@
           "packId",
           "name",
           "packVersion",
-          "packVersionModifiedAt"
+          "packVersionModifiedAt",
+          "agentDirectorySort"
         ],
         "x-tsEnumNames": [
           "PackId",
           "Name",
           "PackVersion",
-          "PackVersionModifiedAt"
+          "PackVersionModifiedAt",
+          "AgentDirectorySort"
         ]
       },
       "PackVersionUploadInfo": {
@@ -13245,6 +13908,18 @@
         "items": {
           "$ref": "#/components/schemas/PackAccessType"
         }
+      },
+      "PackEntrypoint": {
+        "x-schema-name": "PackEntrypoint",
+        "type": "string",
+        "enum": [
+          "go",
+          "docs"
+        ],
+        "x-tsEnumNames": [
+          "Go",
+          "Docs"
+        ]
       },
       "PackUserPrincipal": {
         "x-schema-name": "PackUserPrincipal",
@@ -13349,6 +14024,84 @@
           },
           "access": {
             "$ref": "#/components/schemas/PackAccessType"
+          }
+        }
+      },
+      "PackInvitation": {
+        "x-schema-name": "PackInvitation",
+        "description": "Metadata about a Pack invitation.",
+        "type": "object",
+        "required": [
+          "invitationId",
+          "packId",
+          "inviteeEmail",
+          "inviterUserId",
+          "access",
+          "createdAt",
+          "expiresAt"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "invitationId": {
+            "type": "string",
+            "description": "ID of the invitation",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          },
+          "packId": {
+            "type": "number",
+            "description": "ID of the Pack",
+            "example": 123
+          },
+          "inviteeEmail": {
+            "type": "string",
+            "description": "Email address of the invited user",
+            "example": "user@example.com"
+          },
+          "inviterUserId": {
+            "type": "integer",
+            "description": "User ID of the user who created this invitation",
+            "example": 456
+          },
+          "access": {
+            "$ref": "#/components/schemas/PackAccessType"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the invitation was created"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the invitation expires"
+          }
+        }
+      },
+      "PackInvitationList": {
+        "x-schema-name": "PackInvitationList",
+        "description": "List of Pack invitations.",
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PackInvitation"
+            }
+          },
+          "nextPageToken": {
+            "type": "string",
+            "nullable": true,
+            "description": "Token for fetching the next page of results"
+          },
+          "nextPageLink": {
+            "type": "string",
+            "format": "url",
+            "nullable": true,
+            "description": "URL for fetching the next page of results"
           }
         }
       },
@@ -15307,6 +16060,32 @@
           }
         }
       },
+      "PackAgentRuntimeLogDetails": {
+        "x-schema-name": "PackAgentRuntimeLogDetails",
+        "description": "Details for pack agent runtime logs",
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "agentRuntime"
+            ],
+            "x-tsType": "PackLogType.AgentRuntime"
+          },
+          "input": {
+            "type": "string",
+            "description": "The input to the turn."
+          },
+          "output": {
+            "type": "string",
+            "description": "The output from the turn."
+          }
+        }
+      },
       "PackFetcherLogDetails": {
         "x-schema-name": "PackFetcherLogDetails",
         "description": "Details for pack fetcher logs",
@@ -15411,13 +16190,17 @@
           },
           {
             "$ref": "#/components/schemas/PackInvocationLogDetails"
+          },
+          {
+            "$ref": "#/components/schemas/PackAgentRuntimeLogDetails"
           }
         ],
         "discriminator": {
           "propertyName": "type",
           "mapping": {
             "invocation": "#/components/schemas/PackInvocationLogDetails",
-            "fetcher": "#/components/schemas/PackFetcherLogDetails"
+            "fetcher": "#/components/schemas/PackFetcherLogDetails",
+            "agentRuntime": "#/components/schemas/PackAgentRuntimeLogDetails"
           }
         }
       },
@@ -15623,6 +16406,12 @@
           },
           {
             "$ref": "#/components/schemas/PackIngestionDebugLog"
+          },
+          {
+            "$ref": "#/components/schemas/PackAgentRuntimeLog"
+          },
+          {
+            "$ref": "#/components/schemas/PackMcpLog"
           }
         ],
         "discriminator": {
@@ -15634,7 +16423,9 @@
             "internal": "#/components/schemas/PackInternalLog",
             "auth": "#/components/schemas/PackAuthLog",
             "ingestionLifecycle": "#/components/schemas/PackIngestionLifecycleLog",
-            "ingestionDebug": "#/components/schemas/PackIngestionDebugLog"
+            "ingestionDebug": "#/components/schemas/PackIngestionDebugLog",
+            "agentRuntime": "#/components/schemas/PackAgentRuntimeLog",
+            "mcp": "#/components/schemas/PackMcpLog"
           }
         }
       },
@@ -15766,6 +16557,18 @@
           "additionalMetadata": {
             "type": "object",
             "description": "Additional metadata for the ingestion log."
+          },
+          "agentSessionId": {
+            "type": "string",
+            "description": "Agent chat session id."
+          },
+          "agentInstanceId": {
+            "type": "string",
+            "description": "Agent instance id."
+          },
+          "executingAgentInstanceId": {
+            "type": "string",
+            "description": "Executing agent instance id."
           }
         }
       },
@@ -15901,6 +16704,103 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/PackLog"
+            }
+          }
+        }
+      },
+      "PackAgentRuntimeLog": {
+        "x-schema-name": "PackAgentRuntimeLog",
+        "description": "Pack log generated by an executing agent runtime.",
+        "type": "object",
+        "required": [
+          "type",
+          "context",
+          "turnType"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "agentRuntime"
+            ],
+            "x-tsType": "PackLogType.AgentRuntime"
+          },
+          "context": {
+            "$ref": "#/components/schemas/PackLogContext"
+          },
+          "turnType": {
+            "type": "string",
+            "description": "The type of LLM agent turn that this log is for."
+          },
+          "durationMs": {
+            "type": "number",
+            "description": "The duration of the turn in milliseconds."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the turn target."
+          },
+          "model": {
+            "type": "string",
+            "description": "The model used for the turn."
+          },
+          "tokenUsage": {
+            "type": "string",
+            "description": "The token usage for the turn."
+          },
+          "instructions": {
+            "type": "string",
+            "description": "The instructions for the turn."
+          },
+          "fromAgent": {
+            "type": "string",
+            "description": "The name of the agent that initiated the turn."
+          },
+          "toAgent": {
+            "type": "string",
+            "description": "The name of the agent that received the turn."
+          }
+        }
+      },
+      "PackMcpLog": {
+        "x-schema-name": "PackMcpLog",
+        "description": "Pack log generated by an MCP (Model Context Protocol) operation.",
+        "type": "object",
+        "required": [
+          "type",
+          "context"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "mcp"
+            ],
+            "x-tsType": "PackLogType.Mcp"
+          },
+          "context": {
+            "$ref": "#/components/schemas/PackLogContext"
+          },
+          "message": {
+            "type": "string",
+            "description": "A descriptive message about the MCP operation."
+          },
+          "error": {
+            "description": "Error info if this invocation resulted in an error.",
+            "type": "object",
+            "required": [
+              "message"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "stack": {
+                "type": "string"
+              }
             }
           }
         }
@@ -16112,7 +17012,8 @@
           "invokeSyncFormulaRequest",
           "invokeSyncUpdateFormulaRequest",
           "invokeExecuteGetPermissionsRequest",
-          "validateParametersMetadataRequest"
+          "validateParametersMetadataRequest",
+          "mcp"
         ],
         "x-tsEnumNames": [
           "Unknown",
@@ -16130,7 +17031,8 @@
           "InvokeFormulaRequest",
           "InvokeSyncFormulaRequest",
           "InvokeSyncUpdateFormulaRequest",
-          "InvokeExecuteGetPermissionsRequest"
+          "InvokeExecuteGetPermissionsRequest",
+          "Mcp"
         ]
       },
       "PackLogType": {
@@ -16143,7 +17045,9 @@
           "internal",
           "auth",
           "ingestionLifecycle",
-          "ingestionDebug"
+          "ingestionDebug",
+          "agentRuntime",
+          "mcp"
         ],
         "x-tsEnumNames": [
           "Custom",
@@ -16152,7 +17056,9 @@
           "Internal",
           "Auth",
           "IngestionLifecycle",
-          "IngestionDebug"
+          "IngestionDebug",
+          "AgentRuntime",
+          "Mcp"
         ]
       },
       "LogLevel": {
@@ -16580,75 +17486,86 @@
             },
             "nullable": true
           },
-          "logoAssetId": {
-            "type": "string",
-            "description": "The asset id of the Pack's logo, returned by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint.",
+          "logo": {
+            "x-schema-name": "ImageFileForUpdatePackRequest",
+            "description": "Information about an image file for an update Pack request.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "assetId",
+              "filename"
+            ],
+            "properties": {
+              "assetId": {
+                "type": "string",
+                "description": "The asset id of the Pack's image, returned by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint."
+              },
+              "filename": {
+                "type": "string",
+                "description": "The filename for the image."
+              },
+              "mimeType": {
+                "type": "string",
+                "description": "The media type of the image being sent.",
+                "example": "image/jpeg"
+              }
+            },
             "nullable": true
           },
-          "coverAssetId": {
-            "type": "string",
-            "description": "The asset id of the Pack's cover image, returned by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint.",
+          "cover": {
+            "x-schema-name": "ImageFileForUpdatePackRequest",
+            "description": "Information about an image file for an update Pack request.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "assetId",
+              "filename"
+            ],
+            "properties": {
+              "assetId": {
+                "type": "string",
+                "description": "The asset id of the Pack's image, returned by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint."
+              },
+              "filename": {
+                "type": "string",
+                "description": "The filename for the image."
+              },
+              "mimeType": {
+                "type": "string",
+                "description": "The media type of the image being sent.",
+                "example": "image/jpeg"
+              }
+            },
             "nullable": true
           },
           "exampleImages": {
             "type": "array",
             "description": "The example images for the Pack.",
+            "nullable": true,
             "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "assetId",
-                "filename"
-              ],
-              "properties": {
-                "assetId": {
-                  "type": "string",
-                  "description": "The asset id of the Pack's example image, returned by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint."
-                },
-                "filename": {
-                  "type": "string",
-                  "description": "The filename for the image."
-                },
-                "mimeType": {
-                  "type": "string",
-                  "description": "The media type of the image being sent.",
-                  "example": "image/jpeg"
-                }
-              }
-            },
-            "nullable": true
+              "$ref": "#/components/schemas/ImageFileForUpdatePackRequest"
+            }
           },
           "agentImages": {
             "type": "array",
             "description": "The agent images for the Pack.",
+            "nullable": true,
             "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "assetId",
-                "filename"
-              ],
-              "properties": {
-                "assetId": {
-                  "type": "string",
-                  "description": "The asset id of the Pack's agent image, returned by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint."
-                },
-                "filename": {
-                  "type": "string",
-                  "description": "The filename for the image."
-                },
-                "mimeType": {
-                  "type": "string",
-                  "description": "The media type of the image being sent.",
-                  "example": "image/jpeg"
-                }
-              }
-            },
-            "nullable": true
+              "$ref": "#/components/schemas/ImageFileForUpdatePackRequest"
+            }
           },
           "sourceCodeVisibility": {
             "$ref": "#/components/schemas/PackSourceCodeVisibility",
             "nullable": true
+          },
+          "packEntrypoints": {
+            "type": "array",
+            "description": "Pack entrypoints where this pack is available",
+            "nullable": true,
+            "minItems": 1,
+            "items": {
+              "$ref": "#/components/schemas/PackEntrypoint"
+            }
           },
           "name": {
             "type": "string",
@@ -16678,6 +17595,7 @@
             "type": "string",
             "description": "A full description for the pack as an agent.",
             "example": "Chat with a comprehensive tool that can calculate cool geometric formulas like surface area, volume, and other mathematical operations. This agent can help with complex calculations and provide detailed explanations.",
+            "x-allow-empty": true,
             "maxLength": 8192
           },
           "supportEmail": {
@@ -16697,6 +17615,31 @@
             "format": "url",
             "description": "A Privacy Policy URL for the Pack.",
             "maxLength": 512
+          }
+        }
+      },
+      "ImageFileForUpdatePackRequest": {
+        "x-schema-name": "ImageFileForUpdatePackRequest",
+        "description": "Information about an image file for an update Pack request.",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "assetId",
+          "filename"
+        ],
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "description": "The asset id of the Pack's image, returned by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete) endpoint."
+          },
+          "filename": {
+            "type": "string",
+            "description": "The filename for the image."
+          },
+          "mimeType": {
+            "type": "string",
+            "description": "The media type of the image being sent.",
+            "example": "image/jpeg"
           }
         }
       },
@@ -16852,6 +17795,97 @@
       "DeletePackPermissionResponse": {
         "x-schema-name": "DeletePackPermissionResponse",
         "description": "Confirmation of successfully deleting a Pack permission.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "CreatePackInvitationRequest": {
+        "x-schema-name": "CreatePackInvitationRequest",
+        "description": "Payload for creating a Pack invitation.",
+        "type": "object",
+        "required": [
+          "access",
+          "email"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email address of the user to invite",
+            "example": "user@example.com"
+          },
+          "access": {
+            "$ref": "#/components/schemas/PackAccessType"
+          }
+        }
+      },
+      "CreatePackInvitationResponse": {
+        "x-schema-name": "CreatePackInvitationResponse",
+        "description": "Confirmation of successfully creating a Pack invitation.",
+        "type": "object",
+        "required": [
+          "invitationId"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "invitationId": {
+            "type": "string",
+            "description": "The ID of the invitation created.",
+            "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        }
+      },
+      "HandlePackInvitationRequest": {
+        "x-schema-name": "HandlePackInvitationRequest",
+        "description": "Payload for handling a Pack invitation (accept or reject).",
+        "type": "object",
+        "required": [
+          "accept"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "accept": {
+            "type": "boolean",
+            "description": "True to accept the invitation, false to reject it"
+          }
+        }
+      },
+      "HandlePackInvitationResponse": {
+        "x-schema-name": "HandlePackInvitationResponse",
+        "description": "Confirmation of successfully handling a Pack invitation.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "permissionId": {
+            "type": "string",
+            "description": "The ID of the permission that was created. Only returned when accepting the invitation."
+          }
+        }
+      },
+      "UpdatePackInvitationRequest": {
+        "x-schema-name": "UpdatePackInvitationRequest",
+        "description": "Payload for updating a Pack invitation.",
+        "type": "object",
+        "required": [
+          "access"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "access": {
+            "$ref": "#/components/schemas/PackAccessType"
+          }
+        }
+      },
+      "UpdatePackInvitationResponse": {
+        "x-schema-name": "UpdatePackInvitationResponse",
+        "description": "Confirmation of successfully updating a Pack invitation.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "DeletePackInvitationResponse": {
+        "x-schema-name": "DeletePackInvitationResponse",
+        "description": "Confirmation of successfully deleting a Pack invitation.",
         "type": "object",
         "additionalProperties": false,
         "properties": {}
@@ -17944,6 +18978,17 @@
           "minimum": 1
         }
       },
+      "invitationId": {
+        "name": "invitationId",
+        "description": "ID of a Pack invitation",
+        "in": "path",
+        "required": true,
+        "example": "550e8400-e29b-41d4-a716-446655440000",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
       "loginId": {
         "name": "loginId",
         "description": "Email of a Coda user.",
@@ -18057,18 +19102,17 @@
           "type": "boolean"
         }
       },
-      "includeBrainOnlyPacks": {
-        "name": "includeBrainOnlyPacks",
-        "description": "Include Packs that only support Coda Brain.",
+      "packEntrypoint": {
+        "name": "packEntrypoint",
+        "description": "Entrypoint for which this pack call is being made. Used to filter non relevant packs",
         "in": "query",
         "schema": {
-          "type": "boolean",
-          "x-no-default": true
+          "$ref": "#/components/schemas/PackEntrypoint"
         }
       },
       "certifiedAgentsOnly": {
         "name": "certifiedAgentsOnly",
-        "description": "Only include Packs that are certified for agent use, or Packs that the user is an admin of.",
+        "description": "Only include Packs that are certified for agent use. Depending on server configuration, may also include Packs that the user is an admin of.\n",
         "in": "query",
         "schema": {
           "type": "boolean",
@@ -18251,6 +19295,28 @@
         "example": "fl-1Ab234",
         "schema": {
           "type": "string"
+        }
+      },
+      "agentInstanceId": {
+        "name": "agentInstanceId",
+        "description": "ID of the agent instance.",
+        "in": "path",
+        "required": true,
+        "example": "a4e293c4-4a85-45a4-b2ba-7f305cba2703",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "agentSessionId": {
+        "name": "agentSessionId",
+        "description": "ID of the agent chat session.",
+        "in": "query",
+        "required": false,
+        "example": "a4e293c4-4a85-45a4-b2ba-7f305cba2703",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
         }
       }
     },

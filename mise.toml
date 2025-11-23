@@ -125,6 +125,7 @@ $SDF "pub struct Client {" "pub struct RawClient {" $LIB
 $SDF "impl Client {" "impl RawClient {" $LIB
 $SDF "for Client {" "for RawClient {" $LIB
 $SDF "for &Client {" "for &RawClient {" $LIB
+$SDF "pub use super::Client;" "pub use super::RawClient;" $LIB
 # echo "mod metadata;" >> $LIB
 # echo "pub use metadata::*;" >> $LIB
 echo "mod ext;" >> $LIB

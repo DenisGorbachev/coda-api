@@ -1,5 +1,5 @@
 use crate::types::{Column, ColumnList, Doc, DocList, GetTableResponse, ListTablesResponse, NextPageToken, Row, RowList, Table, TableList, TableReference};
-use crate::{Client, Error, types};
+use crate::{Error, RawClient, types};
 use error_handling::handle;
 use progenitor_client::{ClientHooks, ClientInfo, OperationInfo, ResponseValue, encode_path};
 use std::collections::HashMap;
@@ -25,6 +25,8 @@ pub type DocId = String;
 pub type TableId = String;
 
 pub type RowId = String;
+
+pub type Client = RawClient;
 
 // Generic pagination trait for Coda API responses
 pub trait PaginatedResponse<T> {

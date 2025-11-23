@@ -2,6 +2,7 @@
 pub use progenitor_client::{ByteStream, ClientInfo, Error, ResponseValue};
 #[allow(unused_imports)]
 use progenitor_client::{ClientHooks, OperationInfo, RequestBuilderExt, encode_path};
+
 /// Types used as operation parameters and responses.
 #[allow(clippy::all)]
 pub mod types {
@@ -4758,6 +4759,130 @@ pub mod types {
         }
     }
 
+    ///Payload for creating a Pack invitation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Payload for creating a Pack invitation.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "access",
+    ///    "email"
+    ///  ],
+    ///  "properties": {
+    ///    "access": {
+    ///      "$ref": "#/components/schemas/PackAccessType"
+    ///    },
+    ///    "email": {
+    ///      "description": "Email address of the user to invite",
+    ///      "examples": [
+    ///        "user@example.com"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "CreatePackInvitationRequest"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct CreatePackInvitationRequest {
+        pub access: PackAccessType,
+        ///Email address of the user to invite
+        pub email: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&CreatePackInvitationRequest> for CreatePackInvitationRequest {
+        fn from(value: &CreatePackInvitationRequest) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Confirmation of successfully creating a Pack invitation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully creating a Pack
+    /// invitation.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "invitationId"
+    ///  ],
+    ///  "properties": {
+    ///    "invitationId": {
+    ///      "description": "The ID of the invitation created.",
+    ///      "examples": [
+    ///        "550e8400-e29b-41d4-a716-446655440000"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "CreatePackInvitationResponse"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct CreatePackInvitationResponse {
+        ///The ID of the invitation created.
+        #[serde(rename = "invitationId")]
+        pub invitation_id: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&CreatePackInvitationResponse> for CreatePackInvitationResponse {
+        fn from(value: &CreatePackInvitationResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Detail about why this request was rejected.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Detail about why this request was rejected.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "validationErrors": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ValidationError"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct CreatePackInvitationResponseCodaDetail {
+        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub validation_errors: ::std::vec::Vec<ValidationError>,
+    }
+
+    impl ::std::convert::From<&CreatePackInvitationResponseCodaDetail> for CreatePackInvitationResponseCodaDetail {
+        fn from(value: &CreatePackInvitationResponseCodaDetail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for CreatePackInvitationResponseCodaDetail {
+        fn default() -> Self {
+            Self {
+                validation_errors: Default::default(),
+            }
+        }
+    }
+
     ///Payload for creating a new Pack release.
     ///
     /// <details><summary>JSON schema</summary>
@@ -6104,6 +6229,76 @@ pub mod types {
     }
 
     impl ::std::default::Default for DeletePackCategoryResponseCodaDetail {
+        fn default() -> Self {
+            Self {
+                validation_errors: Default::default(),
+            }
+        }
+    }
+
+    ///Confirmation of successfully deleting a Pack invitation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully deleting a Pack
+    /// invitation.",
+    ///  "type": "object",
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "DeletePackInvitationResponse"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeletePackInvitationResponse {}
+    impl ::std::convert::From<&DeletePackInvitationResponse> for DeletePackInvitationResponse {
+        fn from(value: &DeletePackInvitationResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for DeletePackInvitationResponse {
+        fn default() -> Self {
+            Self {}
+        }
+    }
+
+    ///Detail about why this request was rejected.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Detail about why this request was rejected.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "validationErrors": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ValidationError"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeletePackInvitationResponseCodaDetail {
+        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub validation_errors: ::std::vec::Vec<ValidationError>,
+    }
+
+    impl ::std::convert::From<&DeletePackInvitationResponseCodaDetail> for DeletePackInvitationResponseCodaDetail {
+        fn from(value: &DeletePackInvitationResponseCodaDetail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for DeletePackInvitationResponseCodaDetail {
         fn default() -> Self {
             Self {
                 validation_errors: Default::default(),
@@ -10157,6 +10352,121 @@ pub mod types {
     ///    "statusMessage"
     ///  ],
     ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct GetAgentPackLogDetailsResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<GetAgentPackLogDetailsResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&GetAgentPackLogDetailsResponse> for GetAgentPackLogDetailsResponse {
+        fn from(value: &GetAgentPackLogDetailsResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Detail about why this request was rejected.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Detail about why this request was rejected.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "validationErrors": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ValidationError"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct GetAgentPackLogDetailsResponseCodaDetail {
+        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub validation_errors: ::std::vec::Vec<ValidationError>,
+    }
+
+    impl ::std::convert::From<&GetAgentPackLogDetailsResponseCodaDetail> for GetAgentPackLogDetailsResponseCodaDetail {
+        fn from(value: &GetAgentPackLogDetailsResponseCodaDetail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for GetAgentPackLogDetailsResponseCodaDetail {
+        fn default() -> Self {
+            Self {
+                validation_errors: Default::default(),
+            }
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
     ///    "message": {
     ///      "description": "Any additional context on the error, or the same as
     /// `statusMessage` otherwise.",
@@ -12663,6 +12973,86 @@ pub mod types {
         }
     }
 
+    ///Payload for handling a Pack invitation (accept or reject).
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Payload for handling a Pack invitation (accept or
+    /// reject).",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "accept"
+    ///  ],
+    ///  "properties": {
+    ///    "accept": {
+    ///      "description": "True to accept the invitation, false to reject it",
+    ///      "type": "boolean"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "HandlePackInvitationRequest"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct HandlePackInvitationRequest {
+        ///True to accept the invitation, false to reject it
+        pub accept: bool,
+    }
+
+    impl ::std::convert::From<&HandlePackInvitationRequest> for HandlePackInvitationRequest {
+        fn from(value: &HandlePackInvitationRequest) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Confirmation of successfully handling a Pack invitation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully handling a Pack
+    /// invitation.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "permissionId": {
+    ///      "description": "The ID of the permission that was created. Only
+    /// returned when accepting the invitation.",
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "HandlePackInvitationResponse"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct HandlePackInvitationResponse {
+        ///The ID of the permission that was created. Only returned when
+        /// accepting the invitation.
+        #[serde(rename = "permissionId", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub permission_id: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&HandlePackInvitationResponse> for HandlePackInvitationResponse {
+        fn from(value: &HandlePackInvitationResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for HandlePackInvitationResponse {
+        fn default() -> Self {
+            Self {
+                permission_id: Default::default(),
+            }
+        }
+    }
+
     ///Info about the icon.
     ///
     /// <details><summary>JSON schema</summary>
@@ -12962,6 +13352,64 @@ pub mod types {
 
     impl ::std::convert::From<&Image> for Image {
         fn from(value: &Image) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Information about an image file for an update Pack request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Information about an image file for an update Pack
+    /// request.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "assetId",
+    ///    "filename"
+    ///  ],
+    ///  "properties": {
+    ///    "assetId": {
+    ///      "description": "The asset id of the Pack's image, returned by
+    /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
+    /// endpoint.",
+    ///      "type": "string"
+    ///    },
+    ///    "filename": {
+    ///      "description": "The filename for the image.",
+    ///      "type": "string"
+    ///    },
+    ///    "mimeType": {
+    ///      "description": "The media type of the image being sent.",
+    ///      "examples": [
+    ///        "image/jpeg"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "ImageFileForUpdatePackRequest"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ImageFileForUpdatePackRequest {
+        ///The asset id of the Pack's image, returned by
+        /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
+        /// endpoint.
+        #[serde(rename = "assetId")]
+        pub asset_id: ::std::string::String,
+        ///The filename for the image.
+        pub filename: ::std::string::String,
+        ///The media type of the image being sent.
+        #[serde(rename = "mimeType", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub mime_type: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&ImageFileForUpdatePackRequest> for ImageFileForUpdatePackRequest {
+        fn from(value: &ImageFileForUpdatePackRequest) -> Self {
             value.clone()
         }
     }
@@ -14900,6 +15348,374 @@ pub mod types {
         }
     }
 
+    ///`ListAgentLogsOrder`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "asc",
+    ///    "desc"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum ListAgentLogsOrder {
+        #[serde(rename = "asc")]
+        Asc,
+        #[serde(rename = "desc")]
+        Desc,
+    }
+
+    impl ::std::convert::From<&Self> for ListAgentLogsOrder {
+        fn from(value: &ListAgentLogsOrder) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for ListAgentLogsOrder {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Asc => f.write_str("asc"),
+                Self::Desc => f.write_str("desc"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for ListAgentLogsOrder {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "asc" => Ok(Self::Asc),
+                "desc" => Ok(Self::Desc),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for ListAgentLogsOrder {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for ListAgentLogsOrder {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for ListAgentLogsOrder {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ListAgentLogsResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<ListAgentLogsResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&ListAgentLogsResponse> for ListAgentLogsResponse {
+        fn from(value: &ListAgentLogsResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Detail about why this request was rejected.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Detail about why this request was rejected.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "validationErrors": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ValidationError"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ListAgentLogsResponseCodaDetail {
+        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub validation_errors: ::std::vec::Vec<ValidationError>,
+    }
+
+    impl ::std::convert::From<&ListAgentLogsResponseCodaDetail> for ListAgentLogsResponseCodaDetail {
+        fn from(value: &ListAgentLogsResponseCodaDetail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for ListAgentLogsResponseCodaDetail {
+        fn default() -> Self {
+            Self {
+                validation_errors: Default::default(),
+            }
+        }
+    }
+
+    ///`ListAgentSessionIdsOrder`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "asc",
+    ///    "desc"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum ListAgentSessionIdsOrder {
+        #[serde(rename = "asc")]
+        Asc,
+        #[serde(rename = "desc")]
+        Desc,
+    }
+
+    impl ::std::convert::From<&Self> for ListAgentSessionIdsOrder {
+        fn from(value: &ListAgentSessionIdsOrder) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for ListAgentSessionIdsOrder {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Asc => f.write_str("asc"),
+                Self::Desc => f.write_str("desc"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for ListAgentSessionIdsOrder {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "asc" => Ok(Self::Asc),
+                "desc" => Ok(Self::Desc),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for ListAgentSessionIdsOrder {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for ListAgentSessionIdsOrder {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for ListAgentSessionIdsOrder {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ListAgentSessionIdsResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<ListAgentSessionIdsResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&ListAgentSessionIdsResponse> for ListAgentSessionIdsResponse {
+        fn from(value: &ListAgentSessionIdsResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Detail about why this request was rejected.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Detail about why this request was rejected.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "validationErrors": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ValidationError"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ListAgentSessionIdsResponseCodaDetail {
+        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub validation_errors: ::std::vec::Vec<ValidationError>,
+    }
+
+    impl ::std::convert::From<&ListAgentSessionIdsResponseCodaDetail> for ListAgentSessionIdsResponseCodaDetail {
+        fn from(value: &ListAgentSessionIdsResponseCodaDetail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for ListAgentSessionIdsResponseCodaDetail {
+        fn default() -> Self {
+            Self {
+                validation_errors: Default::default(),
+            }
+        }
+    }
+
     ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
@@ -16525,6 +17341,121 @@ pub mod types {
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
+    pub struct ListPackInvitationsResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<ListPackInvitationsResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&ListPackInvitationsResponse> for ListPackInvitationsResponse {
+        fn from(value: &ListPackInvitationsResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Detail about why this request was rejected.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Detail about why this request was rejected.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "validationErrors": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ValidationError"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ListPackInvitationsResponseCodaDetail {
+        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub validation_errors: ::std::vec::Vec<ValidationError>,
+    }
+
+    impl ::std::convert::From<&ListPackInvitationsResponseCodaDetail> for ListPackInvitationsResponseCodaDetail {
+        fn from(value: &ListPackInvitationsResponseCodaDetail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for ListPackInvitationsResponseCodaDetail {
+        fn default() -> Self {
+            Self {
+                validation_errors: Default::default(),
+            }
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
     pub struct ListPackListingsResponse {
         #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub coda_detail: ::std::option::Option<ListPackListingsResponseCodaDetail>,
@@ -17368,6 +18299,121 @@ pub mod types {
     impl ::std::convert::From<&ListTablesResponse> for ListTablesResponse {
         fn from(value: &ListTablesResponse) -> Self {
             value.clone()
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ListUserPackInvitationsResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<ListUserPackInvitationsResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&ListUserPackInvitationsResponse> for ListUserPackInvitationsResponse {
+        fn from(value: &ListUserPackInvitationsResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Detail about why this request was rejected.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Detail about why this request was rejected.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "validationErrors": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ValidationError"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ListUserPackInvitationsResponseCodaDetail {
+        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub validation_errors: ::std::vec::Vec<ValidationError>,
+    }
+
+    impl ::std::convert::From<&ListUserPackInvitationsResponseCodaDetail> for ListUserPackInvitationsResponseCodaDetail {
+        fn from(value: &ListUserPackInvitationsResponseCodaDetail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for ListUserPackInvitationsResponseCodaDetail {
+        fn default() -> Self {
+            Self {
+                validation_errors: Default::default(),
+            }
         }
     }
 
@@ -18326,7 +19372,8 @@ pub mod types {
     /// explanations."
     ///      ],
     ///      "type": "string",
-    ///      "maxLength": 8192
+    ///      "maxLength": 8192,
+    ///      "x-allow-empty": true
     ///    },
     ///    "agentImages": {
     ///      "description": "The agent images for the Pack.",
@@ -18406,6 +19453,13 @@ pub mod types {
     ///    },
     ///    "overallRateLimit": {
     ///      "$ref": "#/components/schemas/PackRateLimit"
+    ///    },
+    ///    "packEntrypoints": {
+    ///      "description": "Pack entrypoints where this pack is available",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PackEntrypoint"
+    ///      }
     ///    },
     ///    "perConnectionRateLimit": {
     ///      "$ref": "#/components/schemas/PackRateLimit"
@@ -18493,6 +19547,9 @@ pub mod types {
         pub name: PackName,
         #[serde(rename = "overallRateLimit", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub overall_rate_limit: ::std::option::Option<PackRateLimit>,
+        ///Pack entrypoints where this pack is available
+        #[serde(rename = "packEntrypoints", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub pack_entrypoints: ::std::vec::Vec<PackEntrypoint>,
         #[serde(rename = "perConnectionRateLimit", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub per_connection_rate_limit: ::std::option::Option<PackRateLimit>,
         ///A Privacy Policy URL for the Pack.
@@ -18670,7 +19727,8 @@ pub mod types {
     /// explanations."
     ///  ],
     ///  "type": "string",
-    ///  "maxLength": 8192
+    ///  "maxLength": 8192,
+    ///  "x-allow-empty": true
     ///}
     /// ```
     /// </details>
@@ -18735,6 +19793,287 @@ pub mod types {
             ::std::string::String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///Pack log generated by an executing agent runtime.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Pack log generated by an executing agent runtime.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "context",
+    ///    "turnType",
+    ///    "type"
+    ///  ],
+    ///  "properties": {
+    ///    "context": {
+    ///      "$ref": "#/components/schemas/PackLogContext"
+    ///    },
+    ///    "durationMs": {
+    ///      "description": "The duration of the turn in milliseconds.",
+    ///      "type": "number"
+    ///    },
+    ///    "fromAgent": {
+    ///      "description": "The name of the agent that initiated the turn.",
+    ///      "type": "string"
+    ///    },
+    ///    "instructions": {
+    ///      "description": "The instructions for the turn.",
+    ///      "type": "string"
+    ///    },
+    ///    "model": {
+    ///      "description": "The model used for the turn.",
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "description": "The name of the turn target.",
+    ///      "type": "string"
+    ///    },
+    ///    "toAgent": {
+    ///      "description": "The name of the agent that received the turn.",
+    ///      "type": "string"
+    ///    },
+    ///    "tokenUsage": {
+    ///      "description": "The token usage for the turn.",
+    ///      "type": "string"
+    ///    },
+    ///    "turnType": {
+    ///      "description": "The type of LLM agent turn that this log is for.",
+    ///      "type": "string"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "agentRuntime"
+    ///      ],
+    ///      "x-tsType": "PackLogType.AgentRuntime"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackAgentRuntimeLog"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackAgentRuntimeLog {
+        pub context: PackLogContext,
+        #[serde(rename = "durationMs", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub duration_ms: ::std::option::Option<f64>,
+        ///The name of the agent that initiated the turn.
+        #[serde(rename = "fromAgent", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub from_agent: ::std::option::Option<::std::string::String>,
+        ///The instructions for the turn.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub instructions: ::std::option::Option<::std::string::String>,
+        ///The model used for the turn.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub model: ::std::option::Option<::std::string::String>,
+        ///The name of the turn target.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<::std::string::String>,
+        ///The name of the agent that received the turn.
+        #[serde(rename = "toAgent", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub to_agent: ::std::option::Option<::std::string::String>,
+        ///The token usage for the turn.
+        #[serde(rename = "tokenUsage", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub token_usage: ::std::option::Option<::std::string::String>,
+        ///The type of LLM agent turn that this log is for.
+        #[serde(rename = "turnType")]
+        pub turn_type: ::std::string::String,
+        #[serde(rename = "type")]
+        pub type_: PackAgentRuntimeLogType,
+    }
+
+    impl ::std::convert::From<&PackAgentRuntimeLog> for PackAgentRuntimeLog {
+        fn from(value: &PackAgentRuntimeLog) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Details for pack agent runtime logs
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Details for pack agent runtime logs",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "type"
+    ///  ],
+    ///  "properties": {
+    ///    "input": {
+    ///      "description": "The input to the turn.",
+    ///      "type": "string"
+    ///    },
+    ///    "output": {
+    ///      "description": "The output from the turn.",
+    ///      "type": "string"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "agentRuntime"
+    ///      ],
+    ///      "x-tsType": "PackLogType.AgentRuntime"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackAgentRuntimeLogDetails"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackAgentRuntimeLogDetails {
+        ///The input to the turn.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub input: ::std::option::Option<::std::string::String>,
+        ///The output from the turn.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub output: ::std::option::Option<::std::string::String>,
+        #[serde(rename = "type")]
+        pub type_: PackAgentRuntimeLogDetailsType,
+    }
+
+    impl ::std::convert::From<&PackAgentRuntimeLogDetails> for PackAgentRuntimeLogDetails {
+        fn from(value: &PackAgentRuntimeLogDetails) -> Self {
+            value.clone()
+        }
+    }
+
+    ///`PackAgentRuntimeLogDetailsType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "agentRuntime"
+    ///  ],
+    ///  "x-tsType": "PackLogType.AgentRuntime"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum PackAgentRuntimeLogDetailsType {
+        #[serde(rename = "agentRuntime")]
+        AgentRuntime,
+    }
+
+    impl ::std::convert::From<&Self> for PackAgentRuntimeLogDetailsType {
+        fn from(value: &PackAgentRuntimeLogDetailsType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for PackAgentRuntimeLogDetailsType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::AgentRuntime => f.write_str("agentRuntime"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for PackAgentRuntimeLogDetailsType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "agentRuntime" => Ok(Self::AgentRuntime),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackAgentRuntimeLogDetailsType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackAgentRuntimeLogDetailsType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackAgentRuntimeLogDetailsType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    ///`PackAgentRuntimeLogType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "agentRuntime"
+    ///  ],
+    ///  "x-tsType": "PackLogType.AgentRuntime"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum PackAgentRuntimeLogType {
+        #[serde(rename = "agentRuntime")]
+        AgentRuntime,
+    }
+
+    impl ::std::convert::From<&Self> for PackAgentRuntimeLogType {
+        fn from(value: &PackAgentRuntimeLogType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for PackAgentRuntimeLogType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::AgentRuntime => f.write_str("agentRuntime"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for PackAgentRuntimeLogType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "agentRuntime" => Ok(Self::AgentRuntime),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackAgentRuntimeLogType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackAgentRuntimeLogType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackAgentRuntimeLogType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -24376,6 +25715,80 @@ pub mod types {
         }
     }
 
+    ///`PackEntrypoint`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "go",
+    ///    "docs"
+    ///  ],
+    ///  "x-schema-name": "PackEntrypoint",
+    ///  "x-tsEnumNames": [
+    ///    "Go",
+    ///    "Docs"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum PackEntrypoint {
+        #[serde(rename = "go")]
+        Go,
+        #[serde(rename = "docs")]
+        Docs,
+    }
+
+    impl ::std::convert::From<&Self> for PackEntrypoint {
+        fn from(value: &PackEntrypoint) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for PackEntrypoint {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Go => f.write_str("go"),
+                Self::Docs => f.write_str("docs"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for PackEntrypoint {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "go" => Ok(Self::Go),
+                "docs" => Ok(Self::Docs),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackEntrypoint {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackEntrypoint {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackEntrypoint {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     ///A Pack's featured doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -26104,6 +27517,157 @@ pub mod types {
         }
     }
 
+    ///Metadata about a Pack invitation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Metadata about a Pack invitation.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "access",
+    ///    "createdAt",
+    ///    "expiresAt",
+    ///    "invitationId",
+    ///    "inviteeEmail",
+    ///    "inviterUserId",
+    ///    "packId"
+    ///  ],
+    ///  "properties": {
+    ///    "access": {
+    ///      "$ref": "#/components/schemas/PackAccessType"
+    ///    },
+    ///    "createdAt": {
+    ///      "description": "Timestamp when the invitation was created",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "expiresAt": {
+    ///      "description": "Timestamp when the invitation expires",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "invitationId": {
+    ///      "description": "ID of the invitation",
+    ///      "examples": [
+    ///        "550e8400-e29b-41d4-a716-446655440000"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "inviteeEmail": {
+    ///      "description": "Email address of the invited user",
+    ///      "examples": [
+    ///        "user@example.com"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "inviterUserId": {
+    ///      "description": "User ID of the user who created this invitation",
+    ///      "examples": [
+    ///        456
+    ///      ],
+    ///      "type": "integer"
+    ///    },
+    ///    "packId": {
+    ///      "description": "ID of the Pack",
+    ///      "examples": [
+    ///        123
+    ///      ],
+    ///      "type": "number"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackInvitation"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackInvitation {
+        pub access: PackAccessType,
+        ///Timestamp when the invitation was created
+        #[serde(rename = "createdAt")]
+        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///Timestamp when the invitation expires
+        #[serde(rename = "expiresAt")]
+        pub expires_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///ID of the invitation
+        #[serde(rename = "invitationId")]
+        pub invitation_id: ::std::string::String,
+        ///Email address of the invited user
+        #[serde(rename = "inviteeEmail")]
+        pub invitee_email: ::std::string::String,
+        ///User ID of the user who created this invitation
+        #[serde(rename = "inviterUserId")]
+        pub inviter_user_id: i64,
+        #[serde(rename = "packId")]
+        pub pack_id: f64,
+    }
+
+    impl ::std::convert::From<&PackInvitation> for PackInvitation {
+        fn from(value: &PackInvitation) -> Self {
+            value.clone()
+        }
+    }
+
+    ///List of Pack invitations.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "List of Pack invitations.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PackInvitation"
+    ///      }
+    ///    },
+    ///    "nextPageLink": {
+    ///      "description": "URL for fetching the next page of results",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "url"
+    ///    },
+    ///    "nextPageToken": {
+    ///      "description": "Token for fetching the next page of results",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackInvitationList"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackInvitationList {
+        pub items: ::std::vec::Vec<PackInvitation>,
+        ///URL for fetching the next page of results
+        #[serde(rename = "nextPageLink", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page_link: ::std::option::Option<::std::string::String>,
+        ///Token for fetching the next page of results
+        #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page_token: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&PackInvitationList> for PackInvitationList {
+        fn from(value: &PackInvitationList) -> Self {
+            value.clone()
+        }
+    }
+
     ///System logs of the invocations of the Pack.
     ///
     /// <details><summary>JSON schema</summary>
@@ -27419,14 +28983,16 @@ pub mod types {
     ///    "packId",
     ///    "name",
     ///    "packVersion",
-    ///    "packVersionModifiedAt"
+    ///    "packVersionModifiedAt",
+    ///    "agentDirectorySort"
     ///  ],
     ///  "x-schema-name": "PackListingsSortBy",
     ///  "x-tsEnumNames": [
     ///    "PackId",
     ///    "Name",
     ///    "PackVersion",
-    ///    "PackVersionModifiedAt"
+    ///    "PackVersionModifiedAt",
+    ///    "AgentDirectorySort"
     ///  ]
     ///}
     /// ```
@@ -27441,6 +29007,8 @@ pub mod types {
         PackVersion,
         #[serde(rename = "packVersionModifiedAt")]
         PackVersionModifiedAt,
+        #[serde(rename = "agentDirectorySort")]
+        AgentDirectorySort,
     }
 
     impl ::std::convert::From<&Self> for PackListingsSortBy {
@@ -27456,6 +29024,7 @@ pub mod types {
                 Self::Name => f.write_str("name"),
                 Self::PackVersion => f.write_str("packVersion"),
                 Self::PackVersionModifiedAt => f.write_str("packVersionModifiedAt"),
+                Self::AgentDirectorySort => f.write_str("agentDirectorySort"),
             }
         }
     }
@@ -27468,6 +29037,7 @@ pub mod types {
                 "name" => Ok(Self::Name),
                 "packVersion" => Ok(Self::PackVersion),
                 "packVersionModifiedAt" => Ok(Self::PackVersionModifiedAt),
+                "agentDirectorySort" => Ok(Self::AgentDirectorySort),
                 _ => Err("invalid value".into()),
             }
         }
@@ -27522,6 +29092,12 @@ pub mod types {
     ///    },
     ///    {
     ///      "$ref": "#/components/schemas/PackIngestionDebugLog"
+    ///    },
+    ///    {
+    ///      "$ref": "#/components/schemas/PackAgentRuntimeLog"
+    ///    },
+    ///    {
+    ///      "$ref": "#/components/schemas/PackMcpLog"
     ///    }
     ///  ],
     ///  "x-schema-name": "PackLog"
@@ -27538,6 +29114,8 @@ pub mod types {
         AuthLog(PackAuthLog),
         IngestionLifecycleLog(PackIngestionLifecycleLog),
         IngestionDebugLog(PackIngestionDebugLog),
+        AgentRuntimeLog(PackAgentRuntimeLog),
+        McpLog(PackMcpLog),
     }
 
     impl ::std::convert::From<&Self> for PackLog {
@@ -27588,6 +29166,18 @@ pub mod types {
         }
     }
 
+    impl ::std::convert::From<PackAgentRuntimeLog> for PackLog {
+        fn from(value: PackAgentRuntimeLog) -> Self {
+            Self::AgentRuntimeLog(value)
+        }
+    }
+
+    impl ::std::convert::From<PackMcpLog> for PackLog {
+        fn from(value: PackMcpLog) -> Self {
+            Self::McpLog(value)
+        }
+    }
+
     ///Logging context that comes with a Pack log.
     ///
     /// <details><summary>JSON schema</summary>
@@ -27613,6 +29203,14 @@ pub mod types {
     ///    "additionalMetadata": {
     ///      "description": "Additional metadata for the ingestion log.",
     ///      "type": "object"
+    ///    },
+    ///    "agentInstanceId": {
+    ///      "description": "Agent instance id.",
+    ///      "type": "string"
+    ///    },
+    ///    "agentSessionId": {
+    ///      "description": "Agent chat session id.",
+    ///      "type": "string"
     ///    },
     ///    "autocompleteParameterName": {
     ///      "description": "If this formula invocation was for a parameter
@@ -27653,6 +29251,10 @@ pub mod types {
     ///    "docRowId": {
     ///      "description": "Doc canvas row id where the formula was fired
     /// from.",
+    ///      "type": "string"
+    ///    },
+    ///    "executingAgentInstanceId": {
+    ///      "description": "Executing agent instance id.",
     ///      "type": "string"
     ///    },
     ///    "formulaName": {
@@ -27750,6 +29352,12 @@ pub mod types {
         ///Additional metadata for the ingestion log.
         #[serde(rename = "additionalMetadata", default, skip_serializing_if = "::serde_json::Map::is_empty")]
         pub additional_metadata: ::serde_json::Map<::std::string::String, ::serde_json::Value>,
+        ///Agent instance id.
+        #[serde(rename = "agentInstanceId", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_instance_id: ::std::option::Option<::std::string::String>,
+        ///Agent chat session id.
+        #[serde(rename = "agentSessionId", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_session_id: ::std::option::Option<::std::string::String>,
         ///If this formula invocation was for a parameter auto-complete, this
         /// names the parameter.
         #[serde(rename = "autocompleteParameterName", default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -27775,6 +29383,9 @@ pub mod types {
         ///Doc canvas row id where the formula was fired from.
         #[serde(rename = "docRowId", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub doc_row_id: ::std::option::Option<::std::string::String>,
+        ///Executing agent instance id.
+        #[serde(rename = "executingAgentInstanceId", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub executing_agent_instance_id: ::std::option::Option<::std::string::String>,
         #[serde(rename = "formulaName")]
         pub formula_name: ::std::string::String,
         #[serde(rename = "ingestionChildExecutionIndex", default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -27854,6 +29465,9 @@ pub mod types {
     ///    },
     ///    {
     ///      "$ref": "#/components/schemas/PackInvocationLogDetails"
+    ///    },
+    ///    {
+    ///      "$ref": "#/components/schemas/PackAgentRuntimeLogDetails"
     ///    }
     ///  ],
     ///  "x-schema-name": "PackLogDetails"
@@ -27865,6 +29479,7 @@ pub mod types {
     pub enum PackLogDetails {
         FetcherLogDetails(PackFetcherLogDetails),
         InvocationLogDetails(PackInvocationLogDetails),
+        AgentRuntimeLogDetails(PackAgentRuntimeLogDetails),
     }
 
     impl ::std::convert::From<&Self> for PackLogDetails {
@@ -27882,6 +29497,12 @@ pub mod types {
     impl ::std::convert::From<PackInvocationLogDetails> for PackLogDetails {
         fn from(value: PackInvocationLogDetails) -> Self {
             Self::InvocationLogDetails(value)
+        }
+    }
+
+    impl ::std::convert::From<PackAgentRuntimeLogDetails> for PackLogDetails {
+        fn from(value: PackAgentRuntimeLogDetails) -> Self {
+            Self::AgentRuntimeLogDetails(value)
         }
     }
 
@@ -27910,7 +29531,8 @@ pub mod types {
     ///    "invokeSyncFormulaRequest",
     ///    "invokeSyncUpdateFormulaRequest",
     ///    "invokeExecuteGetPermissionsRequest",
-    ///    "validateParametersMetadataRequest"
+    ///    "validateParametersMetadataRequest",
+    ///    "mcp"
     ///  ],
     ///  "x-schema-name": "PackLogRequestType",
     ///  "x-tsEnumNames": [
@@ -27929,7 +29551,8 @@ pub mod types {
     ///    "InvokeFormulaRequest",
     ///    "InvokeSyncFormulaRequest",
     ///    "InvokeSyncUpdateFormulaRequest",
-    ///    "InvokeExecuteGetPermissionsRequest"
+    ///    "InvokeExecuteGetPermissionsRequest",
+    ///    "Mcp"
     ///  ]
     ///}
     /// ```
@@ -27968,6 +29591,8 @@ pub mod types {
         InvokeExecuteGetPermissionsRequest,
         #[serde(rename = "validateParametersMetadataRequest")]
         ValidateParametersMetadataRequest,
+        #[serde(rename = "mcp")]
+        Mcp,
     }
 
     impl ::std::convert::From<&Self> for PackLogRequestType {
@@ -27995,6 +29620,7 @@ pub mod types {
                 Self::InvokeSyncUpdateFormulaRequest => f.write_str("invokeSyncUpdateFormulaRequest"),
                 Self::InvokeExecuteGetPermissionsRequest => f.write_str("invokeExecuteGetPermissionsRequest"),
                 Self::ValidateParametersMetadataRequest => f.write_str("validateParametersMetadataRequest"),
+                Self::Mcp => f.write_str("mcp"),
             }
         }
     }
@@ -28019,6 +29645,7 @@ pub mod types {
                 "invokeSyncUpdateFormulaRequest" => Ok(Self::InvokeSyncUpdateFormulaRequest),
                 "invokeExecuteGetPermissionsRequest" => Ok(Self::InvokeExecuteGetPermissionsRequest),
                 "validateParametersMetadataRequest" => Ok(Self::ValidateParametersMetadataRequest),
+                "mcp" => Ok(Self::Mcp),
                 _ => Err("invalid value".into()),
             }
         }
@@ -28059,7 +29686,9 @@ pub mod types {
     ///    "internal",
     ///    "auth",
     ///    "ingestionLifecycle",
-    ///    "ingestionDebug"
+    ///    "ingestionDebug",
+    ///    "agentRuntime",
+    ///    "mcp"
     ///  ],
     ///  "x-schema-name": "PackLogType",
     ///  "x-tsEnumNames": [
@@ -28069,7 +29698,9 @@ pub mod types {
     ///    "Internal",
     ///    "Auth",
     ///    "IngestionLifecycle",
-    ///    "IngestionDebug"
+    ///    "IngestionDebug",
+    ///    "AgentRuntime",
+    ///    "Mcp"
     ///  ]
     ///}
     /// ```
@@ -28090,6 +29721,10 @@ pub mod types {
         IngestionLifecycle,
         #[serde(rename = "ingestionDebug")]
         IngestionDebug,
+        #[serde(rename = "agentRuntime")]
+        AgentRuntime,
+        #[serde(rename = "mcp")]
+        Mcp,
     }
 
     impl ::std::convert::From<&Self> for PackLogType {
@@ -28108,6 +29743,8 @@ pub mod types {
                 Self::Auth => f.write_str("auth"),
                 Self::IngestionLifecycle => f.write_str("ingestionLifecycle"),
                 Self::IngestionDebug => f.write_str("ingestionDebug"),
+                Self::AgentRuntime => f.write_str("agentRuntime"),
+                Self::Mcp => f.write_str("mcp"),
             }
         }
     }
@@ -28123,6 +29760,8 @@ pub mod types {
                 "auth" => Ok(Self::Auth),
                 "ingestionLifecycle" => Ok(Self::IngestionLifecycle),
                 "ingestionDebug" => Ok(Self::IngestionDebug),
+                "agentRuntime" => Ok(Self::AgentRuntime),
+                "mcp" => Ok(Self::Mcp),
                 _ => Err("invalid value".into()),
             }
         }
@@ -28202,6 +29841,178 @@ pub mod types {
     impl ::std::convert::From<&PackLogsList> for PackLogsList {
         fn from(value: &PackLogsList) -> Self {
             value.clone()
+        }
+    }
+
+    ///Pack log generated by an MCP (Model Context Protocol) operation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Pack log generated by an MCP (Model Context Protocol)
+    /// operation.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "context",
+    ///    "type"
+    ///  ],
+    ///  "properties": {
+    ///    "context": {
+    ///      "$ref": "#/components/schemas/PackLogContext"
+    ///    },
+    ///    "error": {
+    ///      "description": "Error info if this invocation resulted in an
+    /// error.",
+    ///      "type": "object",
+    ///      "required": [
+    ///        "message"
+    ///      ],
+    ///      "properties": {
+    ///        "message": {
+    ///          "type": "string"
+    ///        },
+    ///        "stack": {
+    ///          "type": "string"
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "A descriptive message about the MCP operation.",
+    ///      "type": "string"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "mcp"
+    ///      ],
+    ///      "x-tsType": "PackLogType.Mcp"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackMcpLog"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackMcpLog {
+        pub context: PackLogContext,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub error: ::std::option::Option<PackMcpLogError>,
+        ///A descriptive message about the MCP operation.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub message: ::std::option::Option<::std::string::String>,
+        #[serde(rename = "type")]
+        pub type_: PackMcpLogType,
+    }
+
+    impl ::std::convert::From<&PackMcpLog> for PackMcpLog {
+        fn from(value: &PackMcpLog) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Error info if this invocation resulted in an error.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Error info if this invocation resulted in an error.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "message"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "type": "string"
+    ///    },
+    ///    "stack": {
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackMcpLogError {
+        pub message: ::std::string::String,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub stack: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&PackMcpLogError> for PackMcpLogError {
+        fn from(value: &PackMcpLogError) -> Self {
+            value.clone()
+        }
+    }
+
+    ///`PackMcpLogType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "mcp"
+    ///  ],
+    ///  "x-tsType": "PackLogType.Mcp"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum PackMcpLogType {
+        #[serde(rename = "mcp")]
+        Mcp,
+    }
+
+    impl ::std::convert::From<&Self> for PackMcpLogType {
+        fn from(value: &PackMcpLogType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for PackMcpLogType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Mcp => f.write_str("mcp"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for PackMcpLogType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "mcp" => Ok(Self::Mcp),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackMcpLogType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackMcpLogType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackMcpLogType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -29719,7 +31530,8 @@ pub mod types {
     /// explanations."
     ///      ],
     ///      "type": "string",
-    ///      "maxLength": 8192
+    ///      "maxLength": 8192,
+    ///      "x-allow-empty": true
     ///    },
     ///    "agentImages": {
     ///      "description": "The agent images for the Pack.",
@@ -29793,6 +31605,13 @@ pub mod types {
     ///      ],
     ///      "type": "string",
     ///      "maxLength": 128
+    ///    },
+    ///    "packEntrypoints": {
+    ///      "description": "Pack entrypoints where this pack is available",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PackEntrypoint"
+    ///      }
     ///    },
     ///    "privacyPolicyUrl": {
     ///      "description": "A Privacy Policy URL for the Pack.",
@@ -29873,6 +31692,9 @@ pub mod types {
         pub logo_url: ::std::option::Option<::std::string::String>,
         ///The name of the Pack.
         pub name: PackSummaryName,
+        ///Pack entrypoints where this pack is available
+        #[serde(rename = "packEntrypoints", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub pack_entrypoints: ::std::vec::Vec<PackEntrypoint>,
         ///A Privacy Policy URL for the Pack.
         #[serde(rename = "privacyPolicyUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub privacy_policy_url: ::std::option::Option<::std::string::String>,
@@ -29912,7 +31734,8 @@ pub mod types {
     /// explanations."
     ///  ],
     ///  "type": "string",
-    ///  "maxLength": 8192
+    ///  "maxLength": 8192,
+    ///  "x-allow-empty": true
     ///}
     /// ```
     /// </details>
@@ -34968,6 +36791,121 @@ pub mod types {
     ///    "statusMessage"
     ///  ],
     ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ReplyToPackInvitationResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<ReplyToPackInvitationResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&ReplyToPackInvitationResponse> for ReplyToPackInvitationResponse {
+        fn from(value: &ReplyToPackInvitationResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Detail about why this request was rejected.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Detail about why this request was rejected.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "validationErrors": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ValidationError"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ReplyToPackInvitationResponseCodaDetail {
+        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub validation_errors: ::std::vec::Vec<ValidationError>,
+    }
+
+    impl ::std::convert::From<&ReplyToPackInvitationResponseCodaDetail> for ReplyToPackInvitationResponseCodaDetail {
+        fn from(value: &ReplyToPackInvitationResponseCodaDetail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for ReplyToPackInvitationResponseCodaDetail {
+        fn default() -> Self {
+            Self {
+                validation_errors: Default::default(),
+            }
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
     ///    "message": {
     ///      "description": "Any additional context on the error, or the same as
     /// `statusMessage` otherwise.",
@@ -38027,6 +39965,7 @@ pub mod types {
     ///    "aclMetadata",
     ///    "aclPermissions",
     ///    "aclSettings",
+    ///    "agentPackLog",
     ///    "analyticsLastUpdated",
     ///    "apiLink",
     ///    "automation",
@@ -38056,6 +39995,7 @@ pub mod types {
     ///    "packConfigurationSchema",
     ///    "packFeaturedDocs",
     ///    "packFormulaAnalytics",
+    ///    "packInvitation",
     ///    "packLog",
     ///    "packMaker",
     ///    "packOauthConfig",
@@ -38077,6 +40017,7 @@ pub mod types {
     ///    "AclMetadata",
     ///    "AclPermissions",
     ///    "AclSettings",
+    ///    "AgentPackLog",
     ///    "AnalyticsLastUpdated",
     ///    "ApiLink",
     ///    "Automation",
@@ -38106,6 +40047,7 @@ pub mod types {
     ///    "PackConfigurationSchema",
     ///    "PackFeaturedDocs",
     ///    "PackFormulaAnalytics",
+    ///    "PackInvitation",
     ///    "PackLog",
     ///    "PackMaker",
     ///    "PackOauthConfig",
@@ -38133,6 +40075,8 @@ pub mod types {
         AclPermissions,
         #[serde(rename = "aclSettings")]
         AclSettings,
+        #[serde(rename = "agentPackLog")]
+        AgentPackLog,
         #[serde(rename = "analyticsLastUpdated")]
         AnalyticsLastUpdated,
         #[serde(rename = "apiLink")]
@@ -38191,6 +40135,8 @@ pub mod types {
         PackFeaturedDocs,
         #[serde(rename = "packFormulaAnalytics")]
         PackFormulaAnalytics,
+        #[serde(rename = "packInvitation")]
+        PackInvitation,
         #[serde(rename = "packLog")]
         PackLog,
         #[serde(rename = "packMaker")]
@@ -38235,6 +40181,7 @@ pub mod types {
                 Self::AclMetadata => f.write_str("aclMetadata"),
                 Self::AclPermissions => f.write_str("aclPermissions"),
                 Self::AclSettings => f.write_str("aclSettings"),
+                Self::AgentPackLog => f.write_str("agentPackLog"),
                 Self::AnalyticsLastUpdated => f.write_str("analyticsLastUpdated"),
                 Self::ApiLink => f.write_str("apiLink"),
                 Self::Automation => f.write_str("automation"),
@@ -38264,6 +40211,7 @@ pub mod types {
                 Self::PackConfigurationSchema => f.write_str("packConfigurationSchema"),
                 Self::PackFeaturedDocs => f.write_str("packFeaturedDocs"),
                 Self::PackFormulaAnalytics => f.write_str("packFormulaAnalytics"),
+                Self::PackInvitation => f.write_str("packInvitation"),
                 Self::PackLog => f.write_str("packLog"),
                 Self::PackMaker => f.write_str("packMaker"),
                 Self::PackOauthConfig => f.write_str("packOauthConfig"),
@@ -38290,6 +40238,7 @@ pub mod types {
                 "aclMetadata" => Ok(Self::AclMetadata),
                 "aclPermissions" => Ok(Self::AclPermissions),
                 "aclSettings" => Ok(Self::AclSettings),
+                "agentPackLog" => Ok(Self::AgentPackLog),
                 "analyticsLastUpdated" => Ok(Self::AnalyticsLastUpdated),
                 "apiLink" => Ok(Self::ApiLink),
                 "automation" => Ok(Self::Automation),
@@ -38319,6 +40268,7 @@ pub mod types {
                 "packConfigurationSchema" => Ok(Self::PackConfigurationSchema),
                 "packFeaturedDocs" => Ok(Self::PackFeaturedDocs),
                 "packFormulaAnalytics" => Ok(Self::PackFormulaAnalytics),
+                "packInvitation" => Ok(Self::PackInvitation),
                 "packLog" => Ok(Self::PackLog),
                 "packMaker" => Ok(Self::PackMaker),
                 "packOauthConfig" => Ok(Self::PackOauthConfig),
@@ -38751,6 +40701,109 @@ pub mod types {
         }
     }
 
+    ///Payload for updating a Pack invitation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Payload for updating a Pack invitation.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "access"
+    ///  ],
+    ///  "properties": {
+    ///    "access": {
+    ///      "$ref": "#/components/schemas/PackAccessType"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "UpdatePackInvitationRequest"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpdatePackInvitationRequest {
+        pub access: PackAccessType,
+    }
+
+    impl ::std::convert::From<&UpdatePackInvitationRequest> for UpdatePackInvitationRequest {
+        fn from(value: &UpdatePackInvitationRequest) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Confirmation of successfully updating a Pack invitation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully updating a Pack
+    /// invitation.",
+    ///  "type": "object",
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "UpdatePackInvitationResponse"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpdatePackInvitationResponse {}
+    impl ::std::convert::From<&UpdatePackInvitationResponse> for UpdatePackInvitationResponse {
+        fn from(value: &UpdatePackInvitationResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for UpdatePackInvitationResponse {
+        fn default() -> Self {
+            Self {}
+        }
+    }
+
+    ///Detail about why this request was rejected.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Detail about why this request was rejected.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "validationErrors": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ValidationError"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpdatePackInvitationResponseCodaDetail {
+        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub validation_errors: ::std::vec::Vec<ValidationError>,
+    }
+
+    impl ::std::convert::From<&UpdatePackInvitationResponseCodaDetail> for UpdatePackInvitationResponseCodaDetail {
+        fn from(value: &UpdatePackInvitationResponseCodaDetail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for UpdatePackInvitationResponseCodaDetail {
+        fn default() -> Self {
+            Self {
+                validation_errors: Default::default(),
+            }
+        }
+    }
+
     ///Payload for updating a new Pack release.
     ///
     /// <details><summary>JSON schema</summary>
@@ -38930,7 +40983,8 @@ pub mod types {
     /// explanations."
     ///      ],
     ///      "type": "string",
-    ///      "maxLength": 8192
+    ///      "maxLength": 8192,
+    ///      "x-allow-empty": true
     ///    },
     ///    "agentImages": {
     ///      "description": "The agent images for the Pack.",
@@ -38939,32 +40993,7 @@ pub mod types {
     ///        "null"
     ///      ],
     ///      "items": {
-    ///        "type": "object",
-    ///        "required": [
-    ///          "assetId",
-    ///          "filename"
-    ///        ],
-    ///        "properties": {
-    ///          "assetId": {
-    ///            "description": "The asset id of the Pack's agent image,
-    /// returned by
-    /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
-    /// endpoint.",
-    ///            "type": "string"
-    ///          },
-    ///          "filename": {
-    ///            "description": "The filename for the image.",
-    ///            "type": "string"
-    ///          },
-    ///          "mimeType": {
-    ///            "description": "The media type of the image being sent.",
-    ///            "examples": [
-    ///              "image/jpeg"
-    ///            ],
-    ///            "type": "string"
-    ///          }
-    ///        },
-    ///        "additionalProperties": false
+    ///        "$ref": "#/components/schemas/ImageFileForUpdatePackRequest"
     ///      }
     ///    },
     ///    "agentShortDescription": {
@@ -38976,14 +41005,38 @@ pub mod types {
     ///      "type": "string",
     ///      "maxLength": 256
     ///    },
-    ///    "coverAssetId": {
-    ///      "description": "The asset id of the Pack's cover image, returned by
+    ///    "cover": {
+    ///      "description": "Information about an image file for an update Pack
+    /// request.",
+    ///      "type": [
+    ///        "object",
+    ///        "null"
+    ///      ],
+    ///      "required": [
+    ///        "assetId",
+    ///        "filename"
+    ///      ],
+    ///      "properties": {
+    ///        "assetId": {
+    ///          "description": "The asset id of the Pack's image, returned by
     /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
     /// endpoint.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
+    ///          "type": "string"
+    ///        },
+    ///        "filename": {
+    ///          "description": "The filename for the image.",
+    ///          "type": "string"
+    ///        },
+    ///        "mimeType": {
+    ///          "description": "The media type of the image being sent.",
+    ///          "examples": [
+    ///            "image/jpeg"
+    ///          ],
+    ///          "type": "string"
+    ///        }
+    ///      },
+    ///      "additionalProperties": false,
+    ///      "x-schema-name": "ImageFileForUpdatePackRequest"
     ///    },
     ///    "description": {
     ///      "description": "The full description of the Pack.",
@@ -39001,42 +41054,41 @@ pub mod types {
     ///        "null"
     ///      ],
     ///      "items": {
-    ///        "type": "object",
-    ///        "required": [
-    ///          "assetId",
-    ///          "filename"
-    ///        ],
-    ///        "properties": {
-    ///          "assetId": {
-    ///            "description": "The asset id of the Pack's example image,
-    /// returned by
-    /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
-    /// endpoint.",
-    ///            "type": "string"
-    ///          },
-    ///          "filename": {
-    ///            "description": "The filename for the image.",
-    ///            "type": "string"
-    ///          },
-    ///          "mimeType": {
-    ///            "description": "The media type of the image being sent.",
-    ///            "examples": [
-    ///              "image/jpeg"
-    ///            ],
-    ///            "type": "string"
-    ///          }
-    ///        },
-    ///        "additionalProperties": false
+    ///        "$ref": "#/components/schemas/ImageFileForUpdatePackRequest"
     ///      }
     ///    },
-    ///    "logoAssetId": {
-    ///      "description": "The asset id of the Pack's logo, returned by
+    ///    "logo": {
+    ///      "description": "Information about an image file for an update Pack
+    /// request.",
+    ///      "type": [
+    ///        "object",
+    ///        "null"
+    ///      ],
+    ///      "required": [
+    ///        "assetId",
+    ///        "filename"
+    ///      ],
+    ///      "properties": {
+    ///        "assetId": {
+    ///          "description": "The asset id of the Pack's image, returned by
     /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
     /// endpoint.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ]
+    ///          "type": "string"
+    ///        },
+    ///        "filename": {
+    ///          "description": "The filename for the image.",
+    ///          "type": "string"
+    ///        },
+    ///        "mimeType": {
+    ///          "description": "The media type of the image being sent.",
+    ///          "examples": [
+    ///            "image/jpeg"
+    ///          ],
+    ///          "type": "string"
+    ///        }
+    ///      },
+    ///      "additionalProperties": false,
+    ///      "x-schema-name": "ImageFileForUpdatePackRequest"
     ///    },
     ///    "name": {
     ///      "description": "The name of the Pack.",
@@ -39078,6 +41130,17 @@ pub mod types {
     ///      },
     ///      "additionalProperties": false,
     ///      "x-schema-name": "PackRateLimit"
+    ///    },
+    ///    "packEntrypoints": {
+    ///      "description": "Pack entrypoints where this pack is available",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PackEntrypoint"
+    ///      },
+    ///      "minItems": 1
     ///    },
     ///    "perConnectionRateLimit": {
     ///      "description": "Rate limit in Pack settings.",
@@ -39157,32 +41220,31 @@ pub mod types {
         pub agent_description: ::std::option::Option<UpdatePackRequestAgentDescription>,
         ///The agent images for the Pack.
         #[serde(rename = "agentImages", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub agent_images: ::std::option::Option<::std::vec::Vec<UpdatePackRequestAgentImagesItem>>,
+        pub agent_images: ::std::option::Option<::std::vec::Vec<ImageFileForUpdatePackRequest>>,
         ///A short description for the pack as an agent.
         #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_short_description: ::std::option::Option<UpdatePackRequestAgentShortDescription>,
-        ///The asset id of the Pack's cover image, returned by
-        /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
-        /// endpoint.
-        #[serde(rename = "coverAssetId", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub cover_asset_id: ::std::option::Option<::std::string::String>,
+        ///Information about an image file for an update Pack request.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cover: ::std::option::Option<UpdatePackRequestCover>,
         ///The full description of the Pack.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<UpdatePackRequestDescription>,
         ///The example images for the Pack.
         #[serde(rename = "exampleImages", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub example_images: ::std::option::Option<::std::vec::Vec<UpdatePackRequestExampleImagesItem>>,
-        ///The asset id of the Pack's logo, returned by
-        /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
-        /// endpoint.
-        #[serde(rename = "logoAssetId", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub logo_asset_id: ::std::option::Option<::std::string::String>,
+        pub example_images: ::std::option::Option<::std::vec::Vec<ImageFileForUpdatePackRequest>>,
+        ///Information about an image file for an update Pack request.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub logo: ::std::option::Option<UpdatePackRequestLogo>,
         ///The name of the Pack.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<UpdatePackRequestName>,
         ///Rate limit in Pack settings.
         #[serde(rename = "overallRateLimit", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub overall_rate_limit: ::std::option::Option<UpdatePackRequestOverallRateLimit>,
+        ///Pack entrypoints where this pack is available
+        #[serde(rename = "packEntrypoints", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub pack_entrypoints: ::std::option::Option<::std::vec::Vec<PackEntrypoint>>,
         ///Rate limit in Pack settings.
         #[serde(rename = "perConnectionRateLimit", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub per_connection_rate_limit: ::std::option::Option<UpdatePackRequestPerConnectionRateLimit>,
@@ -39214,12 +41276,13 @@ pub mod types {
                 agent_description: Default::default(),
                 agent_images: Default::default(),
                 agent_short_description: Default::default(),
-                cover_asset_id: Default::default(),
+                cover: Default::default(),
                 description: Default::default(),
                 example_images: Default::default(),
-                logo_asset_id: Default::default(),
+                logo: Default::default(),
                 name: Default::default(),
                 overall_rate_limit: Default::default(),
+                pack_entrypoints: Default::default(),
                 per_connection_rate_limit: Default::default(),
                 privacy_policy_url: Default::default(),
                 short_description: Default::default(),
@@ -39244,7 +41307,8 @@ pub mod types {
     /// explanations."
     ///  ],
     ///  "type": "string",
-    ///  "maxLength": 8192
+    ///  "maxLength": 8192,
+    ///  "x-allow-empty": true
     ///}
     /// ```
     /// </details>
@@ -39309,61 +41373,6 @@ pub mod types {
             ::std::string::String::deserialize(deserializer)?
                 .parse()
                 .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
-        }
-    }
-
-    ///`UpdatePackRequestAgentImagesItem`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "type": "object",
-    ///  "required": [
-    ///    "assetId",
-    ///    "filename"
-    ///  ],
-    ///  "properties": {
-    ///    "assetId": {
-    ///      "description": "The asset id of the Pack's agent image, returned by
-    /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
-    /// endpoint.",
-    ///      "type": "string"
-    ///    },
-    ///    "filename": {
-    ///      "description": "The filename for the image.",
-    ///      "type": "string"
-    ///    },
-    ///    "mimeType": {
-    ///      "description": "The media type of the image being sent.",
-    ///      "examples": [
-    ///        "image/jpeg"
-    ///      ],
-    ///      "type": "string"
-    ///    }
-    ///  },
-    ///  "additionalProperties": false
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
-    #[serde(deny_unknown_fields)]
-    pub struct UpdatePackRequestAgentImagesItem {
-        ///The asset id of the Pack's agent image, returned by
-        /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
-        /// endpoint.
-        #[serde(rename = "assetId")]
-        pub asset_id: ::std::string::String,
-        ///The filename for the image.
-        pub filename: ::std::string::String,
-        ///The media type of the image being sent.
-        #[serde(rename = "mimeType", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub mime_type: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&UpdatePackRequestAgentImagesItem> for UpdatePackRequestAgentImagesItem {
-        fn from(value: &UpdatePackRequestAgentImagesItem) -> Self {
-            value.clone()
         }
     }
 
@@ -39447,6 +41456,64 @@ pub mod types {
         }
     }
 
+    ///Information about an image file for an update Pack request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Information about an image file for an update Pack
+    /// request.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "assetId",
+    ///    "filename"
+    ///  ],
+    ///  "properties": {
+    ///    "assetId": {
+    ///      "description": "The asset id of the Pack's image, returned by
+    /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
+    /// endpoint.",
+    ///      "type": "string"
+    ///    },
+    ///    "filename": {
+    ///      "description": "The filename for the image.",
+    ///      "type": "string"
+    ///    },
+    ///    "mimeType": {
+    ///      "description": "The media type of the image being sent.",
+    ///      "examples": [
+    ///        "image/jpeg"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "ImageFileForUpdatePackRequest"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpdatePackRequestCover {
+        ///The asset id of the Pack's image, returned by
+        /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
+        /// endpoint.
+        #[serde(rename = "assetId")]
+        pub asset_id: ::std::string::String,
+        ///The filename for the image.
+        pub filename: ::std::string::String,
+        ///The media type of the image being sent.
+        #[serde(rename = "mimeType", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub mime_type: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&UpdatePackRequestCover> for UpdatePackRequestCover {
+        fn from(value: &UpdatePackRequestCover) -> Self {
+            value.clone()
+        }
+    }
+
     ///The full description of the Pack.
     ///
     /// <details><summary>JSON schema</summary>
@@ -39527,12 +41594,14 @@ pub mod types {
         }
     }
 
-    ///`UpdatePackRequestExampleImagesItem`
+    ///Information about an image file for an update Pack request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
+    ///  "description": "Information about an image file for an update Pack
+    /// request.",
     ///  "type": "object",
     ///  "required": [
     ///    "assetId",
@@ -39540,8 +41609,8 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "assetId": {
-    ///      "description": "The asset id of the Pack's example image, returned
-    /// by [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
+    ///      "description": "The asset id of the Pack's image, returned by
+    /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
     /// endpoint.",
     ///      "type": "string"
     ///    },
@@ -39557,14 +41626,15 @@ pub mod types {
     ///      "type": "string"
     ///    }
     ///  },
-    ///  "additionalProperties": false
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "ImageFileForUpdatePackRequest"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct UpdatePackRequestExampleImagesItem {
-        ///The asset id of the Pack's example image, returned by
+    pub struct UpdatePackRequestLogo {
+        ///The asset id of the Pack's image, returned by
         /// [`#PackAssetUploadComplete`](#operation/packAssetUploadComplete)
         /// endpoint.
         #[serde(rename = "assetId")]
@@ -39576,8 +41646,8 @@ pub mod types {
         pub mime_type: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&UpdatePackRequestExampleImagesItem> for UpdatePackRequestExampleImagesItem {
-        fn from(value: &UpdatePackRequestExampleImagesItem) -> Self {
+    impl ::std::convert::From<&UpdatePackRequestLogo> for UpdatePackRequestLogo {
+        fn from(value: &UpdatePackRequestLogo) -> Self {
             value.clone()
         }
     }
@@ -42428,12 +44498,12 @@ pub mod types {
 ///https://coda.io/trust/tos
 ///
 ///Version: 1.4.19
-pub struct Client {
+pub struct RawClient {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
 }
 
-impl Client {
+impl RawClient {
     /// Create a new client.
     ///
     /// `baseurl` is the base URL provided to the internal
@@ -42466,7 +44536,7 @@ impl Client {
     }
 }
 
-impl ClientInfo<()> for Client {
+impl ClientInfo<()> for RawClient {
     fn api_version() -> &'static str {
         "1.4.19"
     }
@@ -42484,9 +44554,9 @@ impl ClientInfo<()> for Client {
     }
 }
 
-impl ClientHooks<()> for &Client {}
+impl ClientHooks<()> for &RawClient {}
 #[allow(clippy::all)]
-impl Client {
+impl RawClient {
     ///Get doc categories
     ///
     ///Gets all available doc categories.
@@ -45041,16 +47111,16 @@ impl Client {
     ///   not publicly.
     /// - `exclude_workspace_acls`: Do not include Packs that are only shared
     ///   with workspaces.
-    /// - `include_brain_only_packs`: Include Packs that only support Coda
-    ///   Brain.
     /// - `limit`: Maximum number of results to return in this query.
     /// - `only_workspace_id`: Use only this workspace (not all of a user's
     ///   workspaces) to check for Packs shared via workspace ACL.
+    /// - `pack_entrypoint`: Entrypoint for which this pack call is being made.
+    ///   Used to filter non relevant packs
     /// - `page_token`: An opaque token used to fetch the next page of results.
     /// - `parent_workspace_ids`: Filter to only Packs whose parent workspace is
     ///   one of the given IDs.
     /// - `sort_by`: The sort order of the Packs returned.
-    pub async fn list_packs<'a>(&'a self, access_type: Option<types::PackAccessType>, access_types: Option<&'a ::std::vec::Vec<types::PackAccessType>>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, include_brain_only_packs: Option<bool>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PacksSortBy>) -> Result<ResponseValue<types::PackSummaryList>, Error<types::ListPacksResponse>> {
+    pub async fn list_packs<'a>(&'a self, access_type: Option<types::PackAccessType>, access_types: Option<&'a ::std::vec::Vec<types::PackAccessType>>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, pack_entrypoint: Option<types::PackEntrypoint>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PacksSortBy>) -> Result<ResponseValue<types::PackSummaryList>, Error<types::ListPacksResponse>> {
         let url = format!("{}/packs", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -45065,9 +47135,9 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("excludeIndividualAcls", &exclude_individual_acls))
             .query(&progenitor_client::QueryParam::new("excludePublicPacks", &exclude_public_packs))
             .query(&progenitor_client::QueryParam::new("excludeWorkspaceAcls", &exclude_workspace_acls))
-            .query(&progenitor_client::QueryParam::new("includeBrainOnlyPacks", &include_brain_only_packs))
             .query(&progenitor_client::QueryParam::new("limit", &limit))
             .query(&progenitor_client::QueryParam::new("onlyWorkspaceId", &only_workspace_id))
+            .query(&progenitor_client::QueryParam::new("packEntrypoint", &pack_entrypoint))
             .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
             .query(&progenitor_client::QueryParam::new("parentWorkspaceIds", &parent_workspace_ids))
             .query(&progenitor_client::QueryParam::new("sortBy", &sort_by))
@@ -45934,6 +48004,248 @@ impl Client {
         }
     }
 
+    ///List pending Pack invitations for the current user
+    ///
+    ///Get pending Pack invitations for the authenticated user.
+    ///
+    ///
+    ///Sends a `GET` request to `/packs/invitations`
+    ///
+    ///Arguments:
+    /// - `limit`: Maximum number of results to return in this query.
+    /// - `page_token`: An opaque token used to fetch the next page of results.
+    pub async fn list_user_pack_invitations<'a>(&'a self, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>) -> Result<ResponseValue<types::PackInvitationList>, Error<types::ListUserPackInvitationsResponse>> {
+        let url = format!("{}/packs/invitations", self.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "list_user_pack_invitations",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///List invitations for a Pack
+    ///
+    ///Get pending invitations for a given Pack.
+    ///
+    ///
+    ///Sends a `GET` request to `/packs/{packId}/invitations`
+    ///
+    ///Arguments:
+    /// - `pack_id`: ID of a Pack
+    /// - `limit`: Maximum number of results to return in this query.
+    /// - `page_token`: An opaque token used to fetch the next page of results.
+    pub async fn list_pack_invitations<'a>(&'a self, pack_id: ::std::num::NonZeroU64, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>) -> Result<ResponseValue<types::PackInvitationList>, Error<types::ListPackInvitationsResponse>> {
+        let url = format!("{}/packs/{}/invitations", self.baseurl, encode_path(&pack_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "list_pack_invitations",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Create an invitation for Pack
+    ///
+    ///Create an invitation for a user to access a Pack.
+    ///
+    ///
+    ///Sends a `POST` request to `/packs/{packId}/invitations`
+    ///
+    ///Arguments:
+    /// - `pack_id`: ID of a Pack
+    /// - `body`: Parameters for creating Pack invitation.
+    pub async fn create_pack_invitation<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::CreatePackInvitationRequest) -> Result<ResponseValue<types::CreatePackInvitationResponse>, Error<types::CreatePackInvitationResponse>> {
+        let url = format!("{}/packs/{}/invitations", self.baseurl, encode_path(&pack_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .post(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "create_pack_invitation",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Update an invitation for Pack
+    ///
+    ///Update the access level of an existing Pack invitation.
+    ///
+    ///
+    ///Sends a `PUT` request to `/packs/{packId}/invitations/{invitationId}`
+    ///
+    ///Arguments:
+    /// - `pack_id`: ID of a Pack
+    /// - `invitation_id`: ID of a Pack invitation
+    /// - `body`: Parameters for updating Pack invitation.
+    pub async fn update_pack_invitation<'a>(&'a self, pack_id: ::std::num::NonZeroU64, invitation_id: &'a ::uuid::Uuid, body: &'a types::UpdatePackInvitationRequest) -> Result<ResponseValue<types::UpdatePackInvitationResponse>, Error<types::UpdatePackInvitationResponse>> {
+        let url = format!("{}/packs/{}/invitations/{}", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&invitation_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .put(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "update_pack_invitation",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Revoke an invitation for Pack
+    ///
+    ///Revoke a pending Pack invitation.
+    ///
+    ///
+    ///Sends a `DELETE` request to `/packs/{packId}/invitations/{invitationId}`
+    ///
+    ///Arguments:
+    /// - `pack_id`: ID of a Pack
+    /// - `invitation_id`: ID of a Pack invitation
+    pub async fn delete_pack_invitation<'a>(&'a self, pack_id: ::std::num::NonZeroU64, invitation_id: &'a ::uuid::Uuid) -> Result<ResponseValue<types::DeletePackInvitationResponse>, Error<types::DeletePackInvitationResponse>> {
+        let url = format!("{}/packs/{}/invitations/{}", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&invitation_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .delete(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "delete_pack_invitation",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Reply to a Pack invitation
+    ///
+    ///Reply to a Pack invitation (accept or reject). Requires authentication
+    /// as the invited user.
+    ///
+    ///
+    ///Sends a `POST` request to `/packs/invitations/{invitationId}/reply`
+    ///
+    ///Arguments:
+    /// - `invitation_id`: ID of a Pack invitation
+    /// - `body`: Parameters for replying to Pack invitation.
+    pub async fn reply_to_pack_invitation<'a>(&'a self, invitation_id: &'a ::uuid::Uuid, body: &'a types::HandlePackInvitationRequest) -> Result<ResponseValue<types::HandlePackInvitationResponse>, Error<types::ReplyToPackInvitationResponse>> {
+        let url = format!("{}/packs/invitations/{}/reply", self.baseurl, encode_path(&invitation_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .post(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "reply_to_pack_invitation",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
     ///List makers for Pack
     ///
     ///List makers for a given pack.
@@ -46384,7 +48696,9 @@ impl Client {
     ///
     ///Arguments:
     /// - `certified_agents_only`: Only include Packs that are certified for
-    ///   agent use, or Packs that the user is an admin of.
+    ///   agent use. Depending on server configuration, may also include Packs
+    ///   that the user is an admin of.
+    ///
     /// - `direction`: Direction to sort results in.
     /// - `exclude_individual_acls`: Do not include Packs that are only shared
     ///   with the user individually.
@@ -46392,8 +48706,6 @@ impl Client {
     ///   not publicly.
     /// - `exclude_workspace_acls`: Do not include Packs that are only shared
     ///   with workspaces.
-    /// - `include_brain_only_packs`: Include Packs that only support Coda
-    ///   Brain.
     /// - `install_context`: Type of installation context for which Pack
     ///   information is being requested.
     /// - `limit`: Maximum number of results to return in this query.
@@ -46401,13 +48713,15 @@ impl Client {
     ///   workspaces) to check for Packs shared via workspace ACL.
     /// - `order_by`: Deprecated: use sortBy instead.
     /// - `pack_access_types`: Pack access types.
+    /// - `pack_entrypoint`: Entrypoint for which this pack call is being made.
+    ///   Used to filter non relevant packs
     /// - `pack_ids`: Which Pack IDs to fetch.
     /// - `page_token`: An opaque token used to fetch the next page of results.
     /// - `parent_workspace_ids`: Filter to only Packs whose parent workspace is
     ///   one of the given IDs.
     /// - `sort_by`: Specify a sort order for the returned Pack listings
     ///   returned.
-    pub async fn list_pack_listings<'a>(&'a self, certified_agents_only: Option<bool>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, include_brain_only_packs: Option<bool>, install_context: Option<types::PackListingInstallContextType>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, order_by: Option<types::PackListingsSortBy>, pack_access_types: Option<&'a types::PackAccessTypes>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PackListingsSortBy>) -> Result<ResponseValue<types::PackListingList>, Error<types::ListPackListingsResponse>> {
+    pub async fn list_pack_listings<'a>(&'a self, certified_agents_only: Option<bool>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, install_context: Option<types::PackListingInstallContextType>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, order_by: Option<types::PackListingsSortBy>, pack_access_types: Option<&'a types::PackAccessTypes>, pack_entrypoint: Option<types::PackEntrypoint>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PackListingsSortBy>) -> Result<ResponseValue<types::PackListingList>, Error<types::ListPackListingsResponse>> {
         let url = format!("{}/packs/listings", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -46421,12 +48735,12 @@ impl Client {
             .query(&progenitor_client::QueryParam::new("excludeIndividualAcls", &exclude_individual_acls))
             .query(&progenitor_client::QueryParam::new("excludePublicPacks", &exclude_public_packs))
             .query(&progenitor_client::QueryParam::new("excludeWorkspaceAcls", &exclude_workspace_acls))
-            .query(&progenitor_client::QueryParam::new("includeBrainOnlyPacks", &include_brain_only_packs))
             .query(&progenitor_client::QueryParam::new("installContext", &install_context))
             .query(&progenitor_client::QueryParam::new("limit", &limit))
             .query(&progenitor_client::QueryParam::new("onlyWorkspaceId", &only_workspace_id))
             .query(&progenitor_client::QueryParam::new("orderBy", &order_by))
             .query(&progenitor_client::QueryParam::new("packAccessTypes", &pack_access_types))
+            .query(&progenitor_client::QueryParam::new("packEntrypoint", &pack_entrypoint))
             .query(&progenitor_client::QueryParam::new("packIds", &pack_ids))
             .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
             .query(&progenitor_client::QueryParam::new("parentWorkspaceIds", &parent_workspace_ids))
@@ -47036,14 +49350,189 @@ impl Client {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
+
+    ///Retrieve the chat sessions of an agent instance
+    ///
+    ///Retrieve the chat sessions of an agent instance for debugging purpose.
+    ///
+    ///Sends a `GET` request to
+    /// `/go/tenants/{tenantId}/agentInstances/{agentInstanceId}/
+    /// agentSessionIds`
+    ///
+    ///Arguments:
+    /// - `tenant_id`: ID of the tenant.
+    /// - `agent_instance_id`: ID of the agent instance.
+    /// - `after_timestamp`: Only return logs after the given time
+    ///   (non-inclusive).
+    ///
+    /// - `agent_session_id`: ID of the agent chat session.
+    /// - `before_timestamp`: Only return logs before the given time
+    ///   (non-inclusive).
+    ///
+    /// - `limit`: Maximum number of results to return in this query.
+    /// - `log_types`: Only return logs of the given types.
+    /// - `order`: Specifies if the logs will be returned in time desc or asc.
+    ///   Default is desc.
+    ///
+    /// - `page_token`: An opaque token used to fetch the next page of results.
+    /// - `q`: A search query that follows Lucene syntax.
+    ///
+    /// - `request_ids`: Only return logs matching provided request IDs.
+    pub async fn list_agent_session_ids<'a>(&'a self, tenant_id: &'a str, agent_instance_id: &'a ::uuid::Uuid, after_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, agent_session_id: Option<&'a ::uuid::Uuid>, before_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, limit: Option<::std::num::NonZeroU64>, log_types: Option<&'a ::std::vec::Vec<types::PackLogType>>, order: Option<types::ListAgentSessionIdsOrder>, page_token: Option<&'a str>, q: Option<&'a str>, request_ids: Option<&'a ::std::vec::Vec<::std::string::String>>) -> Result<ResponseValue<types::PackLogsList>, Error<types::ListAgentSessionIdsResponse>> {
+        let url = format!("{}/go/tenants/{}/agentInstances/{}/agentSessionIds", self.baseurl, encode_path(&tenant_id.to_string()), encode_path(&agent_instance_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .query(&progenitor_client::QueryParam::new("afterTimestamp", &after_timestamp))
+            .query(&progenitor_client::QueryParam::new("agentSessionId", &agent_session_id))
+            .query(&progenitor_client::QueryParam::new("beforeTimestamp", &before_timestamp))
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new("logTypes", &log_types))
+            .query(&progenitor_client::QueryParam::new("order", &order))
+            .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
+            .query(&progenitor_client::QueryParam::new("q", &q))
+            .query(&progenitor_client::QueryParam::new("requestIds", &request_ids))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "list_agent_session_ids",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Retrieve the logs of an agent instance
+    ///
+    ///Retrieve the logs of an agent instance for debugging purpose.
+    ///
+    ///Sends a `GET` request to
+    /// `/go/tenants/{tenantId}/agentInstances/{agentInstanceId}/logs`
+    ///
+    ///Arguments:
+    /// - `tenant_id`: ID of the tenant.
+    /// - `agent_instance_id`: ID of the agent instance.
+    /// - `after_timestamp`: Only return logs after the given time
+    ///   (non-inclusive).
+    ///
+    /// - `agent_session_id`: ID of the agent chat session.
+    /// - `before_timestamp`: Only return logs before the given time
+    ///   (non-inclusive).
+    ///
+    /// - `limit`: Maximum number of results to return in this query.
+    /// - `log_types`: Only return logs of the given types.
+    /// - `order`: Specifies if the logs will be returned in time desc or asc.
+    ///   Default is desc.
+    ///
+    /// - `page_token`: An opaque token used to fetch the next page of results.
+    /// - `q`: A search query that follows Lucene syntax.
+    ///
+    /// - `request_ids`: Only return logs matching provided request IDs.
+    pub async fn list_agent_logs<'a>(&'a self, tenant_id: &'a str, agent_instance_id: &'a ::uuid::Uuid, after_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, agent_session_id: Option<&'a ::uuid::Uuid>, before_timestamp: Option<&'a ::chrono::DateTime<::chrono::offset::Utc>>, limit: Option<::std::num::NonZeroU64>, log_types: Option<&'a ::std::vec::Vec<types::PackLogType>>, order: Option<types::ListAgentLogsOrder>, page_token: Option<&'a str>, q: Option<&'a str>, request_ids: Option<&'a ::std::vec::Vec<::std::string::String>>) -> Result<ResponseValue<types::PackLogsList>, Error<types::ListAgentLogsResponse>> {
+        let url = format!("{}/go/tenants/{}/agentInstances/{}/logs", self.baseurl, encode_path(&tenant_id.to_string()), encode_path(&agent_instance_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .query(&progenitor_client::QueryParam::new("afterTimestamp", &after_timestamp))
+            .query(&progenitor_client::QueryParam::new("agentSessionId", &agent_session_id))
+            .query(&progenitor_client::QueryParam::new("beforeTimestamp", &before_timestamp))
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new("logTypes", &log_types))
+            .query(&progenitor_client::QueryParam::new("order", &order))
+            .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
+            .query(&progenitor_client::QueryParam::new("q", &q))
+            .query(&progenitor_client::QueryParam::new("requestIds", &request_ids))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "list_agent_logs",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Retrieve the information for a specific log
+    ///
+    ///Retrieve the log details of given logId.
+    ///
+    ///
+    ///Sends a `GET` request to
+    /// `/go/tenants/{tenantId}/agentInstances/{agentInstanceId}/logs/{logId}`
+    ///
+    ///Arguments:
+    /// - `tenant_id`: ID of the tenant.
+    /// - `agent_instance_id`: ID of the agent instance.
+    /// - `log_id`: The id of the log to retrieve.
+    ///
+    /// - `details_key`: The key of the details to retrieve.
+    pub async fn get_agent_pack_log_details<'a>(&'a self, tenant_id: &'a str, agent_instance_id: &'a ::uuid::Uuid, log_id: &'a str, details_key: &'a str) -> Result<ResponseValue<types::PackLogDetails>, Error<types::GetAgentPackLogDetailsResponse>> {
+        let url = format!("{}/go/tenants/{}/agentInstances/{}/logs/{}", self.baseurl, encode_path(&tenant_id.to_string()), encode_path(&agent_instance_id.to_string()), encode_path(&log_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .query(&progenitor_client::QueryParam::new("detailsKey", &details_key))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "get_agent_pack_log_details",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
 }
 
 /// Items consumers will typically use such as the Client.
 pub mod prelude {
     #[allow(unused_imports)]
-    pub use super::Client;
+    pub use super::RawClient;
 }
 mod ext;
+
 pub use ext::*;
+
 #[cfg(test)]
 pub mod test;
