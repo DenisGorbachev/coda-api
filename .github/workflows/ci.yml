@@ -15,7 +15,6 @@ jobs:
         rust:
           - stable
           - beta
-          - nightly
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
