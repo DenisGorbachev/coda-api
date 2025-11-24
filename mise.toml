@@ -129,6 +129,10 @@ $SDF "pub use super::Client;" "pub use super::RawClient;" $LIB
 # echo "pub use metadata::*;" >> $LIB
 echo "mod ext;" >> $LIB
 echo "pub use ext::*;" >> $LIB
+echo "mod client;" >> $LIB
+echo "pub use client::*;" >> $LIB
+echo "mod limiter;" >> $LIB
+echo "pub use limiter::*;" >> $LIB
 echo "#[cfg(test)] pub mod test;" >> $LIB
 
 # `fmt` must be run before `fix:type`

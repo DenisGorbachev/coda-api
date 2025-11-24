@@ -22,6 +22,7 @@ readme = { }
 chrono = { version = "0.4", default-features = false, features = ["serde"] }
 derive_more = { version = "2.0", features = ["display"] }
 error-handling = { git = "https://github.com/DenisGorbachev/error-handling-rs" }
+governor = { version = "0.10.2" }
 progenitor-client = { version = "0.11.1" }
 regress = "0.10"
 reqwest = { version = "0.12", default-features = false, features = ["json", "stream", "default-tls"] }

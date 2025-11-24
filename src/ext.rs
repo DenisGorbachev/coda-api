@@ -26,8 +26,6 @@ pub type TableId = String;
 
 pub type RowId = String;
 
-pub type Client = RawClient;
-
 // Generic pagination trait for Coda API responses
 pub trait PaginatedResponse<T> {
     fn items(&self) -> &Vec<T>;
@@ -137,7 +135,7 @@ impl PaginatedResponse<RichRow> for RichRowList {
     }
 }
 
-impl Client {
+impl RawClient {
     pub const BASE_URL: &'static str = "https://coda.io/apis/v1";
 
     // Generic pagination helper that collects all pages into a Vec
@@ -169,7 +167,7 @@ impl Client {
         Ok(all_items)
     }
 
-    pub fn new_with_key(api_key: &str) -> reqwest::Result<Client> {
+    pub fn new_with_key(api_key: &str) -> reqwest::Result<Self> {
         let authorization_header = format!("Bearer {api_key}")
             .parse()
             .expect("API key should be valid");
