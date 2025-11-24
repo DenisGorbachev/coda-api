@@ -1,40 +1,12 @@
+use crate::paginate_all;
 use crate::types::{Column, Row, Table, TableReference};
-use crate::{ClientTablesError, Error, Limiter, PaginatedResponse, PaginationState, RawClient, ResponseValue, RichRow, RichRowList, RowUpdateResultCorrect, RowsUpsertResultCorrect, TableId, types};
+use crate::{ClientTablesError, Error, Limiter, RawClient, ResponseValue, RichRow, RichRowList, RowUpdateResultCorrect, RowsUpsertResultCorrect, TableId, types};
 use error_handling::handle;
 use std::collections::HashMap;
-use std::future::Future;
 
 pub struct Client {
     pub raw: RawClient,
     pub limiter: Limiter,
-}
-
-pub async fn paginate_all<T, R, F, Fut, E>(mut request_fn: F) -> Result<Vec<T>, E>
-where
-    T: Clone,
-    R: PaginatedResponse<T>,
-    F: FnMut(Option<String>) -> Fut,
-    Fut: Future<Output = Result<R, E>>,
-{
-    let mut all_items = Vec::new();
-    let mut pagination_state = PaginationState::new();
-
-    loop {
-        match request_fn(pagination_state.next_page_token.clone()).await {
-            Ok(response) => {
-                all_items.extend(response.items().iter().cloned());
-
-                if let Some(next_token) = response.next_page_token() {
-                    pagination_state.next_page_token = Some(next_token.clone().into());
-                } else {
-                    break;
-                }
-            }
-            Err(err) => return Err(err),
-        }
-    }
-
-    Ok(all_items)
 }
 
 impl Client {

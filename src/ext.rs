@@ -1,9 +1,6 @@
-use crate::types::{Column, ColumnList, Doc, DocList, GetTableResponse, ListTablesResponse, NextPageToken, Row, RowList, Table, TableList, TableReference};
+use crate::types::{Column, ColumnList, Doc, DocList, GetTableResponse, ListTablesResponse, NextPageToken, Row, RowList, TableList, TableReference};
 use crate::{Error, RawClient, types};
-use error_handling::handle;
 use progenitor_client::{ClientHooks, ClientInfo, OperationInfo, ResponseValue, encode_path};
-use std::collections::HashMap;
-use std::future::Future;
 use thiserror::Error;
 
 #[cfg(feature = "time")]
@@ -138,35 +135,6 @@ impl PaginatedResponse<RichRow> for RichRowList {
 impl RawClient {
     pub const BASE_URL: &'static str = "https://coda.io/apis/v1";
 
-    // Generic pagination helper that collects all pages into a Vec
-    pub async fn paginate_all<T, R, F, Fut, E>(&self, mut request_fn: F) -> Result<Vec<T>, E>
-    where
-        T: Clone,
-        R: PaginatedResponse<T>,
-        F: FnMut(Option<String>) -> Fut,
-        Fut: Future<Output = Result<R, E>>,
-    {
-        let mut all_items = Vec::new();
-        let mut pagination_state = PaginationState::new();
-
-        loop {
-            match request_fn(pagination_state.next_page_token.clone()).await {
-                Ok(response) => {
-                    all_items.extend(response.items().iter().cloned());
-
-                    if let Some(next_token) = response.next_page_token() {
-                        pagination_state.next_page_token = Some(next_token.clone().into());
-                    } else {
-                        break;
-                    }
-                }
-                Err(e) => return Err(e),
-            }
-        }
-
-        Ok(all_items)
-    }
-
     pub fn new_with_key(api_key: &str) -> reqwest::Result<Self> {
         let authorization_header = format!("Bearer {api_key}")
             .parse()
@@ -182,61 +150,6 @@ impl RawClient {
         let client = Self::new_with_client(Self::BASE_URL, client_with_custom_defaults);
 
         Ok(client)
-    }
-
-    pub async fn table_refs(&self, doc_id: &str) -> Result<Vec<TableReference>, Error<ListTablesResponse>> {
-        self.paginate_all(move |page_token| async move {
-            self.list_tables(doc_id, None, page_token.as_deref(), None, None)
-                .await
-                .map(|response| response.into_inner())
-        })
-        .await
-    }
-
-    pub async fn tables(&self, doc_id: &str) -> Result<Vec<Table>, ClientTablesError> {
-        use ClientTablesError::*;
-        // Use the generic pagination helper to get all table references
-        let table_refs = handle!(self.table_refs(doc_id).await, ListTablesFailed);
-
-        // Get full table details for each table reference
-        let mut all_tables = Vec::new();
-        for table_ref in table_refs {
-            let table_response = handle!(self.get_table(doc_id, &table_ref.id, None).await, GetTableFailed);
-            all_tables.push(table_response.into_inner());
-        }
-
-        Ok(all_tables)
-    }
-
-    pub async fn columns_map(&self, doc_id: &str, table_ids: impl IntoIterator<Item = TableId>) -> Result<HashMap<TableId, Vec<Column>>, Error<types::ListColumnsResponse>> {
-        let mut columns_map = HashMap::new();
-
-        // Now get columns for each requested table
-        for table_id in table_ids {
-            let table_id_ref = table_id.as_ref();
-            let columns = self
-                .paginate_all(move |page_token| async move {
-                    self.list_columns(doc_id, table_id_ref, None, page_token.as_deref(), None)
-                        .await
-                        .map(|response| response.into_inner())
-                })
-                .await?;
-
-            columns_map.insert(table_id, columns);
-        }
-
-        Ok(columns_map)
-    }
-
-    #[allow(clippy::too_many_arguments)]
-    pub async fn rows(&self, doc_id: &str, table_id: &str, query: Option<&str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<Vec<Row>, Error<types::ListRowsResponse>> {
-        // Use the generic pagination helper to get all rows
-        self.paginate_all(move |page_token| async move {
-            self.list_rows(doc_id, table_id, None, page_token.as_deref(), query, sort_by, sync_token, use_column_names, value_format, None)
-                .await
-                .map(|response| response.into_inner())
-        })
-        .await
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -276,35 +189,6 @@ impl RawClient {
             429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
             _ => Err(Error::UnexpectedResponse(response)),
         }
-    }
-
-    #[allow(clippy::too_many_arguments)]
-    pub async fn rows_rich(&self, doc_id: &str, table_id: &str, query: Option<&str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&str>, use_column_names: Option<bool>, visible_only: Option<bool>) -> Result<Vec<RichRow>, Error<types::ListRowsResponse>> {
-        self.paginate_all(move |page_token| async move {
-            self.list_rows_rich(doc_id, table_id, None, page_token.as_deref(), query, sort_by, sync_token, use_column_names, visible_only)
-                .await
-                .map(|response| response.into_inner())
-        })
-        .await
-    }
-
-    #[allow(clippy::too_many_arguments)]
-    pub async fn rows_map(&self, doc_id: &str, table_ids: impl IntoIterator<Item = TableId>, query: Option<&str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&str>, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<HashMap<TableId, Vec<Row>>, Error<types::ListRowsResponse>> {
-        let rows_futures = table_ids.into_iter().map(|table_id| async {
-            let rows = self
-                .rows(doc_id, &table_id, query, sort_by, sync_token, use_column_names, value_format)
-                .await?;
-            Ok::<(TableId, Vec<Row>), Error<types::ListRowsResponse>>((table_id, rows))
-        });
-
-        let mut rows_map = HashMap::new();
-
-        for future in rows_futures {
-            let (table_id, rows) = future.await?;
-            rows_map.insert(table_id, rows);
-        }
-
-        Ok(rows_map)
     }
 
     ///Insert/upsert rows
@@ -514,4 +398,32 @@ pub struct RowsUpsertResultCorrect {
 
 pub fn format_row_url(doc_id: &str, table_id: &str, row_id: &str) -> String {
     format!("https://coda.io/d/_d{doc_id}#_tu{table_id}/_ru{row_id}")
+}
+
+pub async fn paginate_all<T, R, F, Fut, E>(mut request_fn: F) -> Result<Vec<T>, E>
+where
+    T: Clone,
+    R: PaginatedResponse<T>,
+    F: FnMut(Option<String>) -> Fut,
+    Fut: Future<Output = Result<R, E>>,
+{
+    let mut all_items = Vec::new();
+    let mut pagination_state = PaginationState::new();
+
+    loop {
+        match request_fn(pagination_state.next_page_token.clone()).await {
+            Ok(response) => {
+                all_items.extend(response.items().iter().cloned());
+
+                if let Some(next_token) = response.next_page_token() {
+                    pagination_state.next_page_token = Some(next_token.clone().into());
+                } else {
+                    break;
+                }
+            }
+            Err(err) => return Err(err),
+        }
+    }
+
+    Ok(all_items)
 }
