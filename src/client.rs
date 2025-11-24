@@ -53,7 +53,7 @@ impl Client {
     }
 
     pub async fn create_doc<'a>(&'a self, body: &'a types::DocCreate) -> Result<ResponseValue<types::DocumentCreationResult>, Error<types::CreateDocResponse>> {
-        self.limiter.doc_content_write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw.create_doc(body).await
     }
 
@@ -63,12 +63,12 @@ impl Client {
     }
 
     pub async fn delete_doc<'a>(&'a self, doc_id: &'a str) -> Result<ResponseValue<types::DocDelete>, Error<types::DeleteDocResponse>> {
-        self.limiter.doc_content_write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw.delete_doc(doc_id).await
     }
 
     pub async fn update_doc<'a>(&'a self, doc_id: &'a str, body: &'a types::DocUpdate) -> Result<ResponseValue<types::DocUpdateResult>, Error<types::UpdateDocResponse>> {
-        self.limiter.doc_content_write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw.update_doc(doc_id, body).await
     }
 
@@ -108,12 +108,12 @@ impl Client {
     }
 
     pub async fn publish_doc<'a>(&'a self, doc_id: &'a str, body: &'a types::DocPublish) -> Result<ResponseValue<types::PublishResult>, Error<types::PublishDocResponse>> {
-        self.limiter.doc_content_write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw.publish_doc(doc_id, body).await
     }
 
     pub async fn unpublish_doc<'a>(&'a self, doc_id: &'a str) -> Result<ResponseValue<types::UnpublishResult>, Error<types::UnpublishDocResponse>> {
-        self.limiter.doc_content_write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw.unpublish_doc(doc_id).await
     }
 
@@ -123,7 +123,7 @@ impl Client {
     }
 
     pub async fn create_page<'a>(&'a self, doc_id: &'a str, body: &'a types::PageCreate) -> Result<ResponseValue<types::PageCreateResult>, Error<types::CreatePageResponse>> {
-        self.limiter.doc_content_write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw.create_page(doc_id, body).await
     }
 
@@ -133,17 +133,17 @@ impl Client {
     }
 
     pub async fn update_page<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str, body: &'a types::PageUpdate) -> Result<ResponseValue<types::PageUpdateResult>, Error<types::UpdatePageResponse>> {
-        self.limiter.doc_content_write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw.update_page(doc_id, page_id_or_name, body).await
     }
 
     pub async fn delete_page<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str) -> Result<ResponseValue<types::PageDeleteResult>, Error<types::DeletePageResponse>> {
-        self.limiter.doc_content_write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw.delete_page(doc_id, page_id_or_name).await
     }
 
     pub async fn begin_page_content_export<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str, body: &'a types::BeginPageContentExportRequest) -> Result<ResponseValue<types::BeginPageContentExportResponse>, Error<types::BeginPageContentExportResponse>> {
-        self.limiter.doc_content_write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw
             .begin_page_content_export(doc_id, page_id_or_name, body)
             .await
@@ -314,49 +314,49 @@ impl Client {
     }
 
     pub async fn list_doc_analytics<'a>(&'a self, direction: Option<types::SortDirection>, doc_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, is_published: Option<bool>, limit: Option<::std::num::NonZeroU64>, order_by: Option<types::DocAnalyticsOrderBy>, page_token: Option<&'a str>, query: Option<&'a str>, scale: Option<types::AnalyticsScale>, since_date: Option<&'a ::chrono::naive::NaiveDate>, until_date: Option<&'a ::chrono::naive::NaiveDate>, workspace_id: Option<&'a str>) -> Result<ResponseValue<types::DocAnalyticsCollection>, Error<types::ListDocAnalyticsResponse>> {
-        self.limiter.analytics.until_ready().await;
+        self.limiter.read_analytics.until_ready().await;
         self.raw
             .list_doc_analytics(direction, doc_ids, is_published, limit, order_by, page_token, query, scale, since_date, until_date, workspace_id)
             .await
     }
 
     pub async fn list_page_analytics<'a>(&'a self, doc_id: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, since_date: Option<&'a ::chrono::naive::NaiveDate>, until_date: Option<&'a ::chrono::naive::NaiveDate>) -> Result<ResponseValue<types::PageAnalyticsCollection>, Error<types::ListPageAnalyticsResponse>> {
-        self.limiter.analytics.until_ready().await;
+        self.limiter.read_analytics.until_ready().await;
         self.raw
             .list_page_analytics(doc_id, limit, page_token, since_date, until_date)
             .await
     }
 
     pub async fn list_doc_analytics_summary<'a>(&'a self, is_published: Option<bool>, since_date: Option<&'a ::chrono::naive::NaiveDate>, until_date: Option<&'a ::chrono::naive::NaiveDate>, workspace_id: Option<&'a str>) -> Result<ResponseValue<types::DocAnalyticsSummary>, Error<types::ListDocAnalyticsSummaryResponse>> {
-        self.limiter.analytics.until_ready().await;
+        self.limiter.read_analytics.until_ready().await;
         self.raw
             .list_doc_analytics_summary(is_published, since_date, until_date, workspace_id)
             .await
     }
 
     pub async fn list_pack_analytics<'a>(&'a self, direction: Option<types::SortDirection>, is_published: Option<bool>, limit: Option<::std::num::NonZeroU64>, order_by: Option<types::PackAnalyticsOrderBy>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, page_token: Option<&'a str>, query: Option<&'a str>, scale: Option<types::AnalyticsScale>, since_date: Option<&'a ::chrono::naive::NaiveDate>, until_date: Option<&'a ::chrono::naive::NaiveDate>, workspace_id: Option<&'a str>) -> Result<ResponseValue<types::PackAnalyticsCollection>, Error<types::ListPackAnalyticsResponse>> {
-        self.limiter.analytics.until_ready().await;
+        self.limiter.read_analytics.until_ready().await;
         self.raw
             .list_pack_analytics(direction, is_published, limit, order_by, pack_ids, page_token, query, scale, since_date, until_date, workspace_id)
             .await
     }
 
     pub async fn list_pack_analytics_summary<'a>(&'a self, is_published: Option<bool>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, since_date: Option<&'a ::chrono::naive::NaiveDate>, until_date: Option<&'a ::chrono::naive::NaiveDate>, workspace_id: Option<&'a str>) -> Result<ResponseValue<types::PackAnalyticsSummary>, Error<types::ListPackAnalyticsSummaryResponse>> {
-        self.limiter.analytics.until_ready().await;
+        self.limiter.read_analytics.until_ready().await;
         self.raw
             .list_pack_analytics_summary(is_published, pack_ids, since_date, until_date, workspace_id)
             .await
     }
 
     pub async fn list_pack_formula_analytics<'a>(&'a self, pack_id: ::std::num::NonZeroU64, direction: Option<types::SortDirection>, limit: Option<::std::num::NonZeroU64>, order_by: Option<types::PackFormulaAnalyticsOrderBy>, pack_formula_names: Option<&'a ::std::vec::Vec<::std::string::String>>, pack_formula_types: Option<&'a ::std::vec::Vec<types::PackFormulaType>>, page_token: Option<&'a str>, scale: Option<types::AnalyticsScale>, since_date: Option<&'a ::chrono::naive::NaiveDate>, until_date: Option<&'a ::chrono::naive::NaiveDate>) -> Result<ResponseValue<types::PackFormulaAnalyticsCollection>, Error<types::ListPackFormulaAnalyticsResponse>> {
-        self.limiter.analytics.until_ready().await;
+        self.limiter.read_analytics.until_ready().await;
         self.raw
             .list_pack_formula_analytics(pack_id, direction, limit, order_by, pack_formula_names, pack_formula_types, page_token, scale, since_date, until_date)
             .await
     }
 
     pub async fn get_analytics_last_updated<'a>(&'a self) -> Result<ResponseValue<types::AnalyticsLastUpdatedResponse>, Error<types::GetAnalyticsLastUpdatedResponse>> {
-        self.limiter.analytics.until_ready().await;
+        self.limiter.read_analytics.until_ready().await;
         self.raw.get_analytics_last_updated().await
     }
 

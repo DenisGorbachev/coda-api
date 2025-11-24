@@ -6,24 +6,24 @@ use std::time::Duration;
 pub struct Limiter {
     pub read: DefaultDirectRateLimiter,
     pub write: DefaultDirectRateLimiter,
-    pub doc_content_write: DefaultDirectRateLimiter,
+    pub write_doc_content: DefaultDirectRateLimiter,
     pub list_docs: DefaultDirectRateLimiter,
-    pub analytics: DefaultDirectRateLimiter,
+    pub read_analytics: DefaultDirectRateLimiter,
 }
 
 impl Default for Limiter {
     fn default() -> Self {
         let read = make_burst_limiter(100, Duration::from_secs(6));
         let write = make_burst_limiter(10, Duration::from_secs(6));
-        let doc_content_write = make_burst_limiter(5, Duration::from_secs(10));
+        let write_doc_content = make_burst_limiter(5, Duration::from_secs(10));
         let list_docs = make_burst_limiter(4, Duration::from_secs(6));
-        let analytics = make_burst_limiter(100, Duration::from_secs(6));
+        let read_analytics = make_burst_limiter(100, Duration::from_secs(6));
         Self {
             read,
             write,
-            doc_content_write,
+            write_doc_content,
             list_docs,
-            analytics,
+            read_analytics,
         }
     }
 }
