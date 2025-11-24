@@ -93,7 +93,7 @@ impl Client {
     }
 
     pub async fn search_principals<'a>(&'a self, doc_id: &'a str, query: Option<&'a str>) -> Result<ResponseValue<types::SearchPrincipalsResponse>, Error<types::SearchPrincipalsResponse>> {
-        self.limiter.write.until_ready().await;
+        self.limiter.read.until_ready().await;
         self.raw.search_principals(doc_id, query).await
     }
 
@@ -185,14 +185,14 @@ impl Client {
     }
 
     pub async fn upsert_rows<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowsUpsert) -> Result<ResponseValue<types::RowsUpsertResult>, Error<types::UpsertRowsResponse>> {
-        self.limiter.write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw
             .upsert_rows(doc_id, table_id_or_name, disable_parsing, body)
             .await
     }
 
     pub async fn delete_rows<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, body: &'a types::RowsDelete) -> Result<ResponseValue<types::RowsDeleteResult>, Error<types::DeleteRowsResponse>> {
-        self.limiter.write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw.delete_rows(doc_id, table_id_or_name, body).await
     }
 
@@ -204,21 +204,21 @@ impl Client {
     }
 
     pub async fn update_row<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowUpdate) -> Result<ResponseValue<types::RowUpdateResult>, Error<types::UpdateRowResponse>> {
-        self.limiter.write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw
             .update_row(doc_id, table_id_or_name, row_id_or_name, disable_parsing, body)
             .await
     }
 
     pub async fn delete_row<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str) -> Result<ResponseValue<types::RowDeleteResult>, Error<types::DeleteRowResponse>> {
-        self.limiter.write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw
             .delete_row(doc_id, table_id_or_name, row_id_or_name)
             .await
     }
 
     pub async fn push_button<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, column_id_or_name: &'a str) -> Result<ResponseValue<types::PushButtonResult>, Error<types::PushButtonResponse>> {
-        self.limiter.write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw
             .push_button(doc_id, table_id_or_name, row_id_or_name, column_id_or_name)
             .await
@@ -417,7 +417,7 @@ impl Client {
     }
 
     pub async fn get_next_pack_version<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::GetNextPackVersionRequest) -> Result<ResponseValue<types::NextPackVersionInfo>, Error<types::GetNextPackVersionResponse>> {
-        self.limiter.read.until_ready().await;
+        self.limiter.write.until_ready().await;
         self.raw.get_next_pack_version(pack_id, body).await
     }
 
@@ -782,14 +782,14 @@ impl Client {
     }
 
     pub async fn upsert_rows_correct<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowsUpsert) -> Result<ResponseValue<RowsUpsertResultCorrect>, Error<types::UpsertRowsResponse>> {
-        self.limiter.write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw
             .upsert_rows_correct(doc_id, table_id_or_name, disable_parsing, body)
             .await
     }
 
     pub async fn update_row_correct<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowUpdate) -> Result<ResponseValue<RowUpdateResultCorrect>, Error<types::UpdateRowResponse>> {
-        self.limiter.write.until_ready().await;
+        self.limiter.write_doc_content.until_ready().await;
         self.raw
             .update_row_correct(doc_id, table_id_or_name, row_id_or_name, disable_parsing, body)
             .await
