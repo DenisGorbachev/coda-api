@@ -1,12 +1,6 @@
 use clap::{Parser, builder::BoolishValueParser};
 use coda_api::{Client, types::RowsSortBy};
 use serde_json::json;
-use std::num::NonZeroU64;
-
-fn parse_non_zero_u64(input: &str) -> Result<NonZeroU64, String> {
-    let value = input.parse::<u64>().map_err(|error| format!("{error}"))?;
-    NonZeroU64::new(value).ok_or_else(|| "value must be non-zero".to_owned())
-}
 
 #[derive(Clone, Debug, Parser)]
 pub struct ListRowsRichCli {
@@ -21,14 +15,6 @@ pub struct ListRowsRichCli {
     /// Identifier or name of the table to list rows from.
     #[arg(long, short = 't', env = "CODA_TABLE_ID")]
     pub table_id: String,
-
-    /// Maximum number of rows to fetch in a single page.
-    #[arg(long, value_parser = parse_non_zero_u64, value_name = "COUNT")]
-    pub limit: Option<NonZeroU64>,
-
-    /// Opaque token indicating the next page to fetch.
-    #[arg(long, value_name = "TOKEN")]
-    pub page_token: Option<String>,
 
     /// Filter expression in the form <column>:<value>.
     #[arg(long, value_name = "EXPRESSION")]
@@ -55,9 +41,8 @@ impl ListRowsRichCli {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         let client = Client::new_with_key(&self.api_key)?;
         let rows = client
-            .list_rows_rich(&self.doc_id, &self.table_id, self.limit, self.page_token.as_deref(), self.query.as_deref(), self.sort_by, self.sync_token.as_deref(), self.use_column_names, self.visible_only)
-            .await?
-            .into_inner();
+            .rows_rich(&self.doc_id, &self.table_id, self.query.as_deref(), self.sort_by, self.sync_token.as_deref(), self.use_column_names, self.visible_only)
+            .await?;
         let output = json!({ "rows": rows });
         println!("{output}");
         Ok(())
