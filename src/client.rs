@@ -3,6 +3,9 @@ use crate::types::{Column, Row, Table, TableReference};
 use crate::{ClientTablesError, Error, Limiter, RawClient, ResponseValue, RichRow, RichRowList, RowUpdateResultCorrect, RowsUpsertResultCorrect, TableId, types};
 use error_handling::handle;
 use std::collections::HashMap;
+use std::time::Duration;
+use thiserror::Error;
+use tokio::time::sleep;
 
 pub struct Client {
     pub raw: RawClient,
@@ -788,10 +791,118 @@ impl Client {
             .await
     }
 
+    #[allow(clippy::too_many_arguments)]
+    pub async fn upsert_rows_conclusively<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowsUpsert, max_attempts: usize, delay_secs: u64) -> Result<UpsertRowsConclusivelyResult, UpsertRowsConclusivelyError> {
+        use UpsertRowsConclusivelyError::*;
+
+        let upsert_result = handle!(
+            self.upsert_rows_correct(doc_id, table_id_or_name, disable_parsing, body)
+                .await,
+            UpsertFailed
+        )
+        .into_inner();
+
+        let row_ids = upsert_result.added_row_ids.clone();
+        let row_details = handle!(
+            self.wait_for_upserted_rows(doc_id, table_id_or_name, &row_ids, max_attempts, delay_secs)
+                .await,
+            EnsureRowsVisibleFailed,
+            request_id: upsert_result.request_id.clone(),
+            row_ids
+        );
+
+        Ok(UpsertRowsConclusivelyResult {
+            upsert_result,
+            row_details,
+        })
+    }
+
+    /// NOTE: This function works only for inserted rows, not for updated rows (it will always return after the first request for them)
+    pub async fn wait_for_upserted_rows(&self, doc_id: &str, table_id: &str, row_ids: &[String], max_attempts: usize, delay_secs: u64) -> Result<Vec<types::RowDetail>, WaitForRowsError> {
+        use WaitForRowsError::*;
+
+        if row_ids.is_empty() {
+            return Ok(Vec::new());
+        }
+
+        let mut rows: Vec<Option<types::RowDetail>> = vec![None; row_ids.len()];
+        let delay = Duration::from_secs(delay_secs);
+        let mut attempt = 0;
+
+        while attempt < max_attempts {
+            attempt += 1;
+
+            for (index, row_id) in row_ids.iter().enumerate() {
+                if rows[index].is_some() {
+                    continue;
+                }
+
+                let row_result = self.get_row(doc_id, table_id, row_id, None, None).await;
+                match row_result {
+                    Ok(row) => rows[index] = Some(row.into_inner()),
+                    Err(error) => {
+                        let status = error.status().map(|code| code.as_u16());
+                        if matches!(status, Some(404)) {
+                            continue;
+                        }
+                        return Err(RequestFailed {
+                            attempt,
+                            row_id: row_id.clone(),
+                            source: Box::new(error),
+                        });
+                    }
+                }
+            }
+
+            if rows.iter().all(Option::is_some) {
+                break;
+            }
+
+            sleep(delay).await;
+        }
+
+        if rows.iter().any(Option::is_none) {
+            let missing_row_ids = row_ids
+                .iter()
+                .enumerate()
+                .filter(|(index, _)| rows[*index].is_none())
+                .map(|(_, row_id)| row_id.clone())
+                .collect();
+            return Err(RowsMissing {
+                attempts: max_attempts,
+                missing_row_ids,
+            });
+        }
+
+        Ok(rows.into_iter().flatten().collect())
+    }
+
     pub async fn update_row_correct<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowUpdate) -> Result<ResponseValue<RowUpdateResultCorrect>, Error<types::UpdateRowResponse>> {
         self.limiter.write.until_ready().await;
         self.raw
             .update_row_correct(doc_id, table_id_or_name, row_id_or_name, disable_parsing, body)
             .await
     }
+}
+
+#[derive(Debug)]
+pub struct UpsertRowsConclusivelyResult {
+    pub upsert_result: RowsUpsertResultCorrect,
+    pub row_details: Vec<types::RowDetail>,
+}
+
+#[derive(Error, Debug)]
+pub enum UpsertRowsConclusivelyError {
+    #[error("failed to upsert rows")]
+    UpsertFailed { source: Error<types::UpsertRowsResponse> },
+    #[error("failed to ensure rows '{row_ids:?}' are visible for request '{request_id}'")]
+    EnsureRowsVisibleFailed { request_id: String, row_ids: Vec<String>, source: WaitForRowsError },
+}
+
+#[derive(Error, Debug)]
+pub enum WaitForRowsError {
+    #[error("get row '{row_id}' attempt {attempt} failed")]
+    RequestFailed { attempt: usize, row_id: String, source: Box<Error<types::GetRowResponse>> },
+    #[error("rows '{missing_row_ids:?}' did not appear after {attempts} attempts")]
+    RowsMissing { attempts: usize, missing_row_ids: Vec<String> },
 }
