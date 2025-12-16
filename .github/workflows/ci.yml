@@ -18,17 +18,17 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ matrix.rust }}
+          components: clippy, rustfmt
       - uses: jdx/mise-action@v2
         with:
           version: 2025.10.11
       - name: Remove rust from mise
         run: |
-          # a different rust version will be installed in the next step
+          # use the rust version that was installed in the previous step
           mise rm rust
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: ${{ matrix.rust }}
-          components: clippy, rustfmt
       - uses: Swatinem/rust-cache@v2.8.0
       - run: lefthook run --force pre-commit
       - run: cargo hack test --feature-powerset
