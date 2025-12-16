@@ -6,17 +6,23 @@ use thiserror::Error;
 
 #[cfg(feature = "time")]
 mod duration_value_parser;
+mod impl_from_for_value;
+mod items_list;
 mod parse_cell_value;
 mod parse_rich_value;
 mod rich_rows;
+mod row;
 mod string_or_f64;
+mod value_format_provider;
 
 #[cfg(feature = "time")]
 pub use duration_value_parser::*;
+pub use items_list::*;
 pub use parse_cell_value::*;
 pub use parse_rich_value::*;
 pub use rich_rows::*;
 pub(crate) use string_or_f64::*;
+pub use value_format_provider::*;
 
 pub type DocId = String;
 
@@ -483,11 +489,3 @@ where
 
     Ok(all_items)
 }
-mod value_format_provider;
-
-pub use value_format_provider::*;
-
-mod items_list;
-mod row;
-
-pub use items_list::*;
