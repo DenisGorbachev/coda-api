@@ -192,6 +192,60 @@ impl RawClient {
         }
     }
 
+    ///Get a row
+    ///
+    ///Returns details about a row in a table.
+    ///
+    ///Sends a `GET` request to
+    /// `/docs/{docId}/tables/{tableIdOrName}/rows/{rowIdOrName}`
+    ///
+    ///Arguments:
+    /// - `doc_id`: ID of the doc.
+    /// - `table_id_or_name`: ID or name of the table. Names are discouraged
+    ///   because they're easily prone to being changed by users. If you're
+    ///   using a name, be sure to URI-encode it.
+    /// - `row_id_or_name`: ID or name of the row. Names are discouraged because
+    ///   they're easily prone to being changed by users. If you're using a
+    ///   name, be sure to URI-encode it. If there are multiple rows with the
+    ///   same value in the identifying column, an arbitrary one will be
+    ///   selected.
+    ///
+    /// - `use_column_names`: Use column names instead of column IDs in the
+    ///   returned output. This is generally discouraged as it is fragile. If
+    ///   columns are renamed, code using original names may throw errors.
+    ///
+    /// - `value_format`: The format that cell values are returned as.
+    pub async fn get_row_correct<'a, T: DeserializeOwned + ValueFormatProvider>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, use_column_names: Option<bool>) -> Result<ResponseValue<T>, Error<types::GetRowResponse>> {
+        let url = format!("{}/docs/{}/tables/{}/rows/{}", self.baseurl, encode_path(doc_id), encode_path(table_id_or_name), encode_path(row_id_or_name),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        let value_format = Some(T::value_format());
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .query(&progenitor_client::QueryParam::new("useColumnNames", &use_column_names))
+            .query(&progenitor_client::QueryParam::new("valueFormat", &value_format))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "get_row",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
     ///Insert/upsert rows
     ///
     ///Inserts rows into a table, optionally updating existing rows if any
@@ -435,4 +489,5 @@ pub use value_format_provider::*;
 
 mod items_list;
 mod row;
+
 pub use items_list::*;

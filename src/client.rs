@@ -209,6 +209,13 @@ impl Client {
             .await
     }
 
+    pub async fn get_row_correct<'a, T: DeserializeOwned + ValueFormatProvider>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, use_column_names: Option<bool>) -> Result<ResponseValue<T>, Error<types::GetRowResponse>> {
+        self.limiter.read.until_ready().await;
+        self.raw
+            .get_row_correct(doc_id, table_id_or_name, row_id_or_name, use_column_names)
+            .await
+    }
+
     pub async fn update_row<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowUpdate) -> Result<ResponseValue<types::RowUpdateResult>, Error<types::UpdateRowResponse>> {
         self.limiter.write_doc_content.until_ready().await;
         self.raw
@@ -794,8 +801,7 @@ impl Client {
             .await
     }
 
-    #[allow(clippy::too_many_arguments)]
-    pub async fn upsert_rows_conclusively<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowsUpsert, max_attempts: usize, delay_secs: u64) -> Result<UpsertRowsConclusivelyResult, UpsertRowsConclusivelyError> {
+    pub async fn upsert_rows_conclusively<'a, T: DeserializeOwned + ValueFormatProvider>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowsUpsert, max_attempts: usize, delay_secs: u64) -> Result<UpsertRowsConclusivelyResult<T>, UpsertRowsConclusivelyError> {
         use UpsertRowsConclusivelyError::*;
 
         let upsert_result = handle!(
@@ -826,14 +832,14 @@ impl Client {
     }
 
     /// NOTE: This function works only for inserted rows, not for updated rows (it will always return after the first request for them)
-    pub async fn wait_for_upserted_rows(&self, doc_id: &str, table_id: &str, row_ids: &[String], max_attempts: usize, delay_secs: u64) -> Result<Vec<types::RowDetail>, WaitForRowsError> {
+    pub async fn wait_for_upserted_rows<T: DeserializeOwned + ValueFormatProvider>(&self, doc_id: &str, table_id: &str, row_ids: &[String], max_attempts: usize, delay_secs: u64) -> Result<Vec<T>, WaitForRowsError> {
         use WaitForRowsError::*;
 
         if row_ids.is_empty() {
             return Ok(Vec::new());
         }
 
-        let mut rows: Vec<Option<types::RowDetail>> = vec![None; row_ids.len()];
+        let mut rows: Vec<Option<T>> = Vec::with_capacity(row_ids.len());
         let delay = Duration::from_secs(delay_secs);
         let mut attempt = 0;
 
@@ -845,7 +851,9 @@ impl Client {
                     continue;
                 }
 
-                let row_result = self.get_row(doc_id, table_id, row_id, None, None).await;
+                let row_result = self
+                    .get_row_correct::<T>(doc_id, table_id, row_id, None)
+                    .await;
                 match row_result {
                     Ok(row) => rows[index] = Some(row.into_inner()),
                     Err(error) => {
@@ -894,9 +902,9 @@ impl Client {
 }
 
 #[derive(Debug)]
-pub struct UpsertRowsConclusivelyResult {
+pub struct UpsertRowsConclusivelyResult<T> {
     pub upsert_result: RowsUpsertResultCorrect,
-    pub row_details: Vec<types::RowDetail>,
+    pub row_details: Vec<T>,
 }
 
 #[derive(Error, Debug)]
