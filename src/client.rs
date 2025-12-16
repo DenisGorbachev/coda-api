@@ -190,6 +190,7 @@ impl Client {
             .await
     }
 
+    #[deprecated = "use upsert_rows_correct"]
     pub async fn upsert_rows<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, disable_parsing: Option<bool>, body: &'a types::RowsUpsert) -> Result<ResponseValue<types::RowsUpsertResult>, Error<types::UpsertRowsResponse>> {
         self.limiter.write_doc_content.until_ready().await;
         self.raw
@@ -202,6 +203,7 @@ impl Client {
         self.raw.delete_rows(doc_id, table_id_or_name, body).await
     }
 
+    #[deprecated = "use get_row_correct"]
     pub async fn get_row<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, row_id_or_name: &'a str, use_column_names: Option<bool>, value_format: Option<types::ValueFormat>) -> Result<ResponseValue<types::RowDetail>, Error<types::GetRowResponse>> {
         self.limiter.read.until_ready().await;
         self.raw
@@ -812,7 +814,7 @@ impl Client {
         .into_inner();
 
         let row_ids = upsert_result.added_row_ids.clone();
-        let row_details = handle!(
+        let items = handle!(
             self.wait_for_upserted_rows(doc_id, table_id_or_name, &row_ids, max_attempts, delay_secs)
                 .await,
             EnsureRowsVisibleFailed,
@@ -822,7 +824,7 @@ impl Client {
 
         Ok(UpsertRowsConclusivelyResult {
             upsert_result,
-            row_details,
+            items,
         })
     }
 
@@ -904,7 +906,7 @@ impl Client {
 #[derive(Debug)]
 pub struct UpsertRowsConclusivelyResult<T> {
     pub upsert_result: RowsUpsertResultCorrect,
-    pub row_details: Vec<T>,
+    pub items: Vec<T>,
 }
 
 #[derive(Error, Debug)]
