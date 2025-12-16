@@ -1,7 +1,8 @@
-use crate::paginate_all;
 use crate::types::{Column, Row, Table, TableReference};
-use crate::{ClientTablesError, Error, Limiter, RawClient, ResponseValue, RichRow, RichRowList, RowUpdateResultCorrect, RowsUpsertResultCorrect, TableId, types};
+use crate::{ClientTablesError, Error, Limiter, RawClient, ResponseValue, RichRow, RowUpdateResultCorrect, RowsUpsertResultCorrect, TableId, types};
+use crate::{ItemsList, ValueFormatProvider, paginate_all};
 use error_handling::handle;
+use serde::de::DeserializeOwned;
 use std::collections::HashMap;
 use std::time::Duration;
 use thiserror::Error;
@@ -12,6 +13,8 @@ pub struct Client {
     pub limiter: Limiter,
 }
 
+#[allow(clippy::too_many_arguments)]
+#[allow(clippy::needless_lifetimes)]
 impl Client {
     pub const BASE_URL: &'static str = RawClient::BASE_URL;
 
@@ -748,17 +751,17 @@ impl Client {
     }
 
     #[allow(clippy::too_many_arguments)]
-    pub async fn list_rows_rich<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, query: Option<&'a str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&'a str>, use_column_names: Option<bool>, visible_only: Option<bool>) -> Result<ResponseValue<RichRowList>, Error<types::ListRowsResponse>> {
+    pub async fn list_rows_correct<'a, T: DeserializeOwned + ValueFormatProvider>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, query: Option<&'a str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&'a str>, use_column_names: Option<bool>, visible_only: Option<bool>) -> Result<ResponseValue<ItemsList<T>>, Error<types::ListRowsResponse>> {
         self.limiter.read.until_ready().await;
         self.raw
-            .list_rows_rich(doc_id, table_id_or_name, limit, page_token, query, sort_by, sync_token, use_column_names, visible_only)
+            .list_rows_correct(doc_id, table_id_or_name, limit, page_token, query, sort_by, sync_token, use_column_names, visible_only)
             .await
     }
 
     #[allow(clippy::too_many_arguments)]
-    pub async fn rows_rich(&self, doc_id: &str, table_id: &str, query: Option<&str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&str>, use_column_names: Option<bool>, visible_only: Option<bool>) -> Result<Vec<RichRow>, Error<types::ListRowsResponse>> {
+    pub async fn rows_correct<T: DeserializeOwned + ValueFormatProvider + Clone>(&self, doc_id: &str, table_id: &str, query: Option<&str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&str>, use_column_names: Option<bool>, visible_only: Option<bool>) -> Result<Vec<T>, Error<types::ListRowsResponse>> {
         paginate_all(move |page_token| async move {
-            self.list_rows_rich(doc_id, table_id, None, page_token.as_deref(), query, sort_by, sync_token, use_column_names, visible_only)
+            self.list_rows_correct(doc_id, table_id, None, page_token.as_deref(), query, sort_by, sync_token, use_column_names, visible_only)
                 .await
                 .map(|response| response.into_inner())
         })
@@ -815,6 +818,11 @@ impl Client {
             upsert_result,
             row_details,
         })
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub async fn upsert_rows_conclusively_rich<'a>(&'a self, _doc_id: &'a str, _table_id_or_name: &'a str, _disable_parsing: Option<bool>, _body: &'a types::RowsUpsert, _max_attempts: usize, _delay_secs: u64) -> Result<UpsertRowsConclusivelyRichResult, UpsertRowsConclusivelyRichError> {
+        todo!()
     }
 
     /// NOTE: This function works only for inserted rows, not for updated rows (it will always return after the first request for them)
@@ -897,6 +905,21 @@ pub enum UpsertRowsConclusivelyError {
     UpsertFailed { source: Error<types::UpsertRowsResponse> },
     #[error("failed to ensure rows '{row_ids:?}' are visible for request '{request_id}'")]
     EnsureRowsVisibleFailed { request_id: String, row_ids: Vec<String>, source: WaitForRowsError },
+}
+
+#[derive(Debug)]
+pub struct UpsertRowsConclusivelyRichResult {
+    pub upsert_result: RowsUpsertResultCorrect,
+    pub rows: Vec<RichRow>,
+}
+
+#[derive(Error, Debug)]
+pub enum UpsertRowsConclusivelyRichError {
+    #[error("failed to upsert rows")]
+    UpsertRowsConclusivelyFailed { source: UpsertRowsConclusivelyError },
+    // TODO: Failed to list rich rows
+    // #[error("failed to ensure rows '{row_ids:?}' are visible for request '{request_id}'")]
+    // EnsureRowsVisibleFailed { request_id: String, row_ids: Vec<String>, source: WaitForRowsError },
 }
 
 #[derive(Error, Debug)]

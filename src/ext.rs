@@ -1,6 +1,7 @@
 use crate::types::{Column, ColumnList, Doc, DocList, GetTableResponse, ListTablesResponse, NextPageToken, Row, RowList, TableList, TableReference};
 use crate::{Error, RawClient, types};
 use progenitor_client::{ClientHooks, ClientInfo, OperationInfo, ResponseValue, encode_path};
+use serde::de::DeserializeOwned;
 use thiserror::Error;
 
 #[cfg(feature = "time")]
@@ -118,8 +119,8 @@ impl PaginatedResponse<Row> for RowList {
     }
 }
 
-impl PaginatedResponse<RichRow> for RichRowList {
-    fn items(&self) -> &Vec<RichRow> {
+impl<T> PaginatedResponse<T> for ItemsList<T> {
+    fn items(&self) -> &Vec<T> {
         &self.items
     }
 
@@ -127,7 +128,7 @@ impl PaginatedResponse<RichRow> for RichRowList {
         self.next_page_token.as_ref()
     }
 
-    fn into_items(self) -> Vec<RichRow> {
+    fn into_items(self) -> Vec<T> {
         self.items
     }
 }
@@ -153,11 +154,11 @@ impl RawClient {
     }
 
     #[allow(clippy::too_many_arguments)]
-    pub async fn list_rows_rich<'a>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, query: Option<&'a str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&'a str>, use_column_names: Option<bool>, visible_only: Option<bool>) -> Result<ResponseValue<RichRowList>, Error<types::ListRowsResponse>> {
+    pub async fn list_rows_correct<'a, T: DeserializeOwned + ValueFormatProvider>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, query: Option<&'a str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&'a str>, use_column_names: Option<bool>, visible_only: Option<bool>) -> Result<ResponseValue<ItemsList<T>>, Error<types::ListRowsResponse>> {
         let url = format!("{}/docs/{}/tables/{}/rows", self.baseurl, encode_path(doc_id), encode_path(table_id_or_name),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
-        let value_format = Some(types::ValueFormat::Rich);
+        let value_format = Some(T::value_format());
         #[allow(unused_mut)]
         let mut request = self
             .client
@@ -402,6 +403,7 @@ pub fn format_row_url(doc_id: &str, table_id: &str, row_id: &str) -> String {
 
 pub async fn paginate_all<T, R, F, Fut, E>(mut request_fn: F) -> Result<Vec<T>, E>
 where
+    // TODO: Remove the `T: Clone` requirement
     T: Clone,
     R: PaginatedResponse<T>,
     F: FnMut(Option<String>) -> Fut,
@@ -427,3 +429,10 @@ where
 
     Ok(all_items)
 }
+mod value_format_provider;
+
+pub use value_format_provider::*;
+
+mod items_list;
+mod row;
+pub use items_list::*;

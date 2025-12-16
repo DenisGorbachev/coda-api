@@ -1,23 +1,9 @@
-use crate::opt_f64_from_string_or_f64;
-use crate::types::{CurrencyAmount, ImageStatus, LinkedDataType, NextPageLink, NextPageToken, NextSyncToken, RowType, ScalarValue, TableReference};
+use crate::types::{CurrencyAmount, ImageStatus, LinkedDataType, RowType, ScalarValue, TableReference, ValueFormat};
+use crate::{ValueFormatProvider, opt_f64_from_string_or_f64};
 use chrono::{DateTime, Utc};
 use derive_more::Display;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-
-#[derive(Deserialize, Serialize, Clone, Debug)]
-#[serde(deny_unknown_fields)]
-pub struct RichRowList {
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub href: Option<String>,
-    pub items: Vec<RichRow>,
-    #[serde(rename = "nextPageLink", default, skip_serializing_if = "Option::is_none")]
-    pub next_page_link: Option<NextPageLink>,
-    #[serde(rename = "nextPageToken", default, skip_serializing_if = "Option::is_none")]
-    pub next_page_token: Option<NextPageToken>,
-    #[serde(rename = "nextSyncToken", default, skip_serializing_if = "Option::is_none")]
-    pub next_sync_token: Option<NextSyncToken>,
-}
 
 #[derive(Display, Deserialize, Serialize, Clone, Debug)]
 #[serde(deny_unknown_fields)]
@@ -38,6 +24,12 @@ pub struct RichRow {
     #[serde(rename = "updatedAt")]
     pub updated_at: DateTime<Utc>,
     pub values: HashMap<String, RichValue>,
+}
+
+impl ValueFormatProvider for RichRow {
+    fn value_format() -> ValueFormat {
+        ValueFormat::Rich
+    }
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
