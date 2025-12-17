@@ -518,7 +518,7 @@ impl Client {
             .await
     }
 
-    pub async fn list_user_pack_invitations<'a>(&'a self, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>) -> Result<ResponseValue<types::PackInvitationList>, Error<types::ListUserPackInvitationsResponse>> {
+    pub async fn list_user_pack_invitations<'a>(&'a self, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>) -> Result<ResponseValue<types::PackInvitationWithPackList>, Error<types::ListUserPackInvitationsResponse>> {
         self.limiter.read.until_ready().await;
         self.raw.list_user_pack_invitations(limit, page_token).await
     }

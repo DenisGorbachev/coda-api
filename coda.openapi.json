@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "version": "1.4.19",
+    "version": "1.5.0",
     "title": "Coda API",
     "license": {
       "name": "Coda Developer Terms",
@@ -1391,6 +1391,148 @@
             "label": "Google Apps Script",
             "lang": "javascript",
             "source": "// Import the CodaAPI library via Resource->Libraries...:\n// 15IQuWOk8MqT50FDWomh57UqWGH23gjsWVWYFms3ton6L-UHmefYHS9Vl\nCodaAPI.authenticate('<your API token>');\nCodaAPI.deleteRows('<doc ID>', '<page ID>');\nLogger.log('Deleted 2 rows');\n// => Deleted page\n"
+          }
+        ]
+      }
+    },
+    "/docs/{docId}/pages/{pageIdOrName}/content": {
+      "get": {
+        "summary": "List page content",
+        "description": "Returns a list of content elements in a page.",
+        "operationId": "listPageContent",
+        "tags": [
+          "Pages"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/docId"
+          },
+          {
+            "$ref": "#/components/parameters/pageIdOrName"
+          },
+          {
+            "$ref": "#/components/parameters/pageContentLimit"
+          },
+          {
+            "$ref": "#/components/parameters/pageToken"
+          },
+          {
+            "$ref": "#/components/parameters/contentFormat"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of page content elements.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageContentList"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "410": {
+            "$ref": "#/components/responses/GoneError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        },
+        "x-codeSamples": [
+          {
+            "label": "Python 3.13",
+            "lang": "python",
+            "source": "import requests\n\nheaders = {'Authorization': 'Bearer <your API token>'}\nuri = f'https://coda.io/apis/v1/docs/<doc ID>/pages/<page ID>/content'\nres = requests.get(uri, headers=headers).json()\n\nprint(f'The page has {len(res[\"items\"])} content elements')\n# => The page has 10 content elements\n"
+          },
+          {
+            "label": "Shell",
+            "lang": "shell",
+            "source": "curl -s -H 'Authorization: Bearer <your API token>' \\\n  'https://coda.io/apis/v1/docs/<doc ID>/pages/<page ID>/content' |\n  jq '.items | length'\n# => 10\n"
+          },
+          {
+            "label": "Google Apps Script",
+            "lang": "javascript",
+            "source": "// Import the CodaAPI library via Resource->Libraries...:\n// 15IQuWOk8MqT50FDWomh57UqWGH23gjsWVWYFms3ton6L-UHmefYHS9Vl\nCodaAPI.authenticate('<your API token>');\nvar content = CodaAPI.listPageContent('<doc ID>', '<page ID>');\nLogger.log('The page has ' + content.items.length + ' content elements');\n// => The page has 10 content elements\n"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete page content",
+        "description": "Delete content from a page. You can delete specific elements by providing their IDs, or delete all content from the page.\n",
+        "operationId": "deletePageContent",
+        "tags": [
+          "Pages"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/docId"
+          },
+          {
+            "$ref": "#/components/parameters/pageIdOrName"
+          }
+        ],
+        "requestBody": {
+          "description": "Parameters for deleting page content.",
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PageContentDelete"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "A result indicating that the deletion was queued for processing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageContentDeleteResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        },
+        "x-codeSamples": [
+          {
+            "label": "Python 3.13",
+            "lang": "python",
+            "source": "import requests\n\nheaders = {'Authorization': 'Bearer <your API token>'}\n\n# Delete all content from the page\nuri = f'https://coda.io/apis/v1/docs/<doc ID>/pages/<page ID>/content'\nreq = requests.delete(uri, headers=headers)\nreq.raise_for_status()\nres = req.json()\nprint(f'Deleted all content from page {res[\"id\"]}')\n# => Deleted all content from page <page ID>\n\n# Delete specific elements\npayload = {'elementIds': ['cl-abc123', 'cl-def456']}\nreq = requests.delete(uri, headers=headers, json=payload)\nreq.raise_for_status()\nres = req.json()\nprint(f'Deleted {len(payload[\"elementIds\"])} elements from page {res[\"id\"]}')\n# => Deleted 2 elements from page <page ID>\n"
+          },
+          {
+            "label": "Shell",
+            "lang": "shell",
+            "source": "# Delete specific elements\ncurl -s -H 'Authorization: Bearer <your API token>' -X DELETE \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"elementIds\": [\"cl-abc123\", \"cl-def456\"]}' \\\n  'https://coda.io/apis/v1/docs/<doc ID>/pages/<page ID>/content' |\n  jq '\"Deleted elements from page \" + .id'\n# => \"Deleted elements from page <page ID>\"\n"
+          },
+          {
+            "label": "Google Apps Script",
+            "lang": "javascript",
+            "source": "// Import the CodaAPI library via Resource->Libraries...:\n// 15IQuWOk8MqT50FDWomh57UqWGH23gjsWVWYFms3ton6L-UHmefYHS9Vl\nCodaAPI.authenticate('<your API token>');\n\n// Delete all content\nvar res = CodaAPI.deletePageContent('<doc ID>', '<page ID>');\nLogger.log('Deleted all content from page ' + res.id);\n// => Deleted all content from page <page ID>\n"
           }
         ]
       }
@@ -4851,7 +4993,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PackInvitationList"
+                  "$ref": "#/components/schemas/PackInvitationWithPackList"
                 }
               }
             }
@@ -7241,14 +7383,16 @@
           "group",
           "domain",
           "workspace",
-          "anyone"
+          "anyone",
+          "internalAccess"
         ],
         "x-tsEnumNames": [
           "Email",
           "Group",
           "Domain",
           "Workspace",
-          "Anyone"
+          "Anyone",
+          "InternalAccess"
         ]
       },
       "AddedPrincipal": {
@@ -7409,6 +7553,9 @@
           },
           {
             "$ref": "#/components/schemas/AnyonePrincipal"
+          },
+          {
+            "$ref": "#/components/schemas/InternalAccessPrincipal"
           }
         ],
         "discriminator": {
@@ -7418,7 +7565,8 @@
             "group": "#/components/schemas/GroupPrincipal",
             "domain": "#/components/schemas/DomainPrincipal",
             "workspace": "#/components/schemas/WorkspacePrincipal",
-            "anyone": "#/components/schemas/AnyonePrincipal"
+            "anyone": "#/components/schemas/AnyonePrincipal",
+            "internalAccess": "#/components/schemas/InternalAccessPrincipal"
           }
         }
       },
@@ -7534,6 +7682,29 @@
               "anyone"
             ],
             "x-tsType": "PrincipalType.Anyone"
+          }
+        }
+      },
+      "InternalAccessPrincipal": {
+        "type": "object",
+        "required": [
+          "type",
+          "internalAccessType"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "The type of this principal.",
+            "enum": [
+              "internalAccess"
+            ],
+            "x-tsType": "PrincipalType.InternalAccess"
+          },
+          "internalAccessType": {
+            "type": "string",
+            "description": "The type of internal access (e.g., support).",
+            "example": "support"
           }
         }
       },
@@ -8615,6 +8786,118 @@
           }
         }
       },
+      "PageContentItemType": {
+        "x-schema-name": "PageContentItemType",
+        "description": "The type of content item in a page.",
+        "type": "string",
+        "enum": [
+          "line"
+        ],
+        "x-tsEnumNames": [
+          "Line"
+        ]
+      },
+      "PageContentItemContentFormat": {
+        "x-schema-name": "PageContentItemContentFormat",
+        "description": "Content format for the item.",
+        "type": "string",
+        "enum": [
+          "plainText"
+        ],
+        "x-tsEnumNames": [
+          "PlainText"
+        ]
+      },
+      "PageContentItemContent": {
+        "x-schema-name": "PageContentItemContent",
+        "description": "Content details of the item.",
+        "type": "object",
+        "required": [
+          "style",
+          "format",
+          "content"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "style": {
+            "$ref": "#/components/schemas/PageLineStyle"
+          },
+          "format": {
+            "$ref": "#/components/schemas/PageContentItemContentFormat"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content of the item in the specified format.",
+            "example": "This is a paragraph of text."
+          },
+          "lineLevel": {
+            "type": "integer",
+            "description": "Indentation level of the element. Present for indentable elements (paragraphs, blockquotes, and list items).\n",
+            "example": 0
+          }
+        }
+      },
+      "PageContentItem": {
+        "x-schema-name": "PageContentItem",
+        "description": "Content item in a page (canvas).",
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "ID of the content item.",
+            "example": "cl-2ZUJuRhNuN"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PageContentItemType"
+          },
+          "itemContent": {
+            "$ref": "#/components/schemas/PageContentItemContent"
+          }
+        }
+      },
+      "PageContentList": {
+        "x-schema-name": "PageContentList",
+        "description": "List of page content elements.",
+        "type": "object",
+        "required": [
+          "items",
+          "href"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PageContentItem"
+            }
+          },
+          "href": {
+            "type": "string",
+            "format": "url",
+            "description": "API link to these results",
+            "example": "https://coda.io/apis/v1/docs/AbCDeFGH/pages/canvas-IjkLmnO/content?limit=20"
+          },
+          "nextPageToken": {
+            "$ref": "#/components/schemas/nextPageToken"
+          },
+          "nextPageLink": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nextPageLink"
+              },
+              {
+                "type": "string",
+                "example": "https://coda.io/apis/v1/docs/AbCDeFGH/pages/canvas-IjkLmnO/content?pageToken=eyJsaW1pd"
+              }
+            ]
+          }
+        }
+      },
       "Page": {
         "x-schema-name": "Page",
         "description": "Metadata about a page.",
@@ -8798,6 +9081,9 @@
       "PageCreateContent": {
         "x-schema-name": "PageCreateContent",
         "description": "Content that can be added to a page at creation time, either text (or rich text) or a URL to create a full-page embed.",
+        "discriminator": {
+          "propertyName": "type"
+        },
         "oneOf": [
           {
             "type": "object",
@@ -8847,79 +9133,86 @@
             }
           },
           {
-            "type": "object",
-            "required": [
-              "type",
-              "mode",
-              "sourcePageId",
-              "includeSubpages",
-              "sourceDocId"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "type": {
-                "type": "string",
-                "description": "Indicates a page that embeds other Coda content.",
-                "enum": [
-                  "syncPage"
+            "discriminator": {
+              "propertyName": "mode"
+            },
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "type",
+                  "mode",
+                  "sourcePageId",
+                  "includeSubpages",
+                  "sourceDocId"
                 ],
-                "x-tsType": "PageTypeEnum.SyncPage"
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "Indicates a page that embeds other Coda content.",
+                    "enum": [
+                      "syncPage"
+                    ],
+                    "x-tsType": "PageTypeEnum.SyncPage"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "description": "Indicates a single-page sync page.",
+                    "enum": [
+                      "page"
+                    ],
+                    "x-tsType": "SyncPageTypeEnum.Page"
+                  },
+                  "includeSubpages": {
+                    "type": "boolean",
+                    "description": "Include subpages in the sync page."
+                  },
+                  "sourcePageId": {
+                    "type": "string",
+                    "description": "The page id to insert as a sync page.",
+                    "example": "canvas-IjkLmnO"
+                  },
+                  "sourceDocId": {
+                    "type": "string",
+                    "description": "The id of the document to insert as a sync page.",
+                    "example": "sHbI4uIwiK"
+                  }
+                }
               },
-              "mode": {
-                "type": "string",
-                "description": "Indicates a single-page sync page.",
-                "enum": [
-                  "page"
+              {
+                "type": "object",
+                "required": [
+                  "type",
+                  "mode",
+                  "sourceDocId"
                 ],
-                "x-tsType": "SyncPageTypeEnum.Page"
-              },
-              "includeSubpages": {
-                "type": "boolean",
-                "description": "Include subpages in the sync page."
-              },
-              "sourcePageId": {
-                "type": "string",
-                "description": "The page id to insert as a sync page.",
-                "example": "canvas-IjkLmnO"
-              },
-              "sourceDocId": {
-                "type": "string",
-                "description": "The id of the document to insert as a sync page.",
-                "example": "sHbI4uIwiK"
+                "additionalProperties": false,
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "Indicates a page that embeds other content.",
+                    "enum": [
+                      "syncPage"
+                    ],
+                    "x-tsType": "PageTypeEnum.SyncPage"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "description": "Indicates a full doc sync page.",
+                    "enum": [
+                      "document"
+                    ],
+                    "x-tsType": "SyncPageTypeEnum.Document"
+                  },
+                  "sourceDocId": {
+                    "type": "string",
+                    "description": "The id of the document to insert as a sync page.",
+                    "example": "sHbI4uIwiK"
+                  }
+                }
               }
-            }
-          },
-          {
-            "type": "object",
-            "required": [
-              "type",
-              "mode",
-              "sourceDocId"
-            ],
-            "additionalProperties": false,
-            "properties": {
-              "type": {
-                "type": "string",
-                "description": "Indicates a page that embeds other content.",
-                "enum": [
-                  "syncPage"
-                ],
-                "x-tsType": "PageTypeEnum.SyncPage"
-              },
-              "mode": {
-                "type": "string",
-                "description": "Indicates a full doc sync page.",
-                "enum": [
-                  "document"
-                ],
-                "x-tsType": "SyncPageTypeEnum.Document"
-              },
-              "sourceDocId": {
-                "type": "string",
-                "description": "The id of the document to insert as a sync page.",
-                "example": "sHbI4uIwiK"
-              }
-            }
+            ]
           }
         ]
       },
@@ -9037,16 +9330,60 @@
           }
         ]
       },
+      "PageContentDelete": {
+        "x-schema-name": "PageContentDelete",
+        "description": "Payload for deleting content from a page.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "elementIds": {
+            "type": "array",
+            "description": "IDs of the elements to delete from the page. If omitted or empty, all content will be deleted.\n",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "cl-lzqh0Q0poT",
+              "cl-abc123def"
+            ]
+          }
+        }
+      },
+      "PageContentDeleteResult": {
+        "x-schema-name": "PageContentDeleteResult",
+        "description": "The result of a page content deletion.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DocumentMutateResponse"
+          },
+          {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "ID of the page whose content was deleted.",
+                "example": "canvas-tuVwxYz"
+              }
+            }
+          }
+        ]
+      },
       "PageContentInsertionMode": {
         "x-schema-name": "PageContentInsertionMode",
-        "description": "Mode for inserting content into an existing page.",
+        "description": "Mode for updating the content on an existing page.",
         "type": "string",
         "enum": [
           "append",
+          "prepend",
           "replace"
         ],
         "x-tsEnumNames": [
           "Append",
+          "Prepend",
           "Replace"
         ]
       },
@@ -9062,6 +9399,11 @@
         "properties": {
           "insertionMode": {
             "$ref": "#/components/schemas/PageContentInsertionMode"
+          },
+          "elementId": {
+            "type": "string",
+            "example": "cl-lzqh0Q0poT",
+            "description": "ID of the element on the page to use as a reference point for editing content. If provided, the operation will be relative to this element (e.g., append after it, prepend before it, replace it). If omitted, the operation will be performed on the entire page (e.g., append to end, prepend to beginning, replace all).\n"
           },
           "canvasContent": {
             "$ref": "#/components/schemas/PageContent"
@@ -9229,7 +9571,7 @@
       },
       "PageContent": {
         "x-schema-name": "PageContent",
-        "description": "Content for a page (canvas).",
+        "description": "Content to be added or replaced with in a page (canvas).\n",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -9273,6 +9615,37 @@
           "Canvas",
           "Embed",
           "SyncPage"
+        ]
+      },
+      "PageLineStyle": {
+        "x-schema-name": "PageLineStyle",
+        "description": "The style of a line element in a canvas page.",
+        "type": "string",
+        "enum": [
+          "blockQuote",
+          "bulletedList",
+          "checkboxList",
+          "code",
+          "collapsibleList",
+          "h1",
+          "h2",
+          "h3",
+          "numberedList",
+          "paragraph",
+          "pullQuote"
+        ],
+        "x-tsEnumNames": [
+          "BlockQuote",
+          "BulletedList",
+          "CheckboxList",
+          "Code",
+          "CollapsibleList",
+          "H1",
+          "H2",
+          "H3",
+          "NumberedList",
+          "Paragraph",
+          "PullQuote"
         ]
       },
       "Sort": {
@@ -14105,6 +14478,67 @@
           }
         }
       },
+      "PackInvitationWithPack": {
+        "x-schema-name": "PackInvitationWithPack",
+        "description": "Pack invitation with Pack metadata.",
+        "type": "object",
+        "required": [
+          "invitation",
+          "pack",
+          "makers",
+          "networkDomains"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "invitation": {
+            "$ref": "#/components/schemas/PackInvitation"
+          },
+          "pack": {
+            "$ref": "#/components/schemas/PackSummary"
+          },
+          "makers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Maker"
+            }
+          },
+          "networkDomains": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Network domain of the Pack"
+          }
+        }
+      },
+      "PackInvitationWithPackList": {
+        "x-schema-name": "PackInvitationWithPackList",
+        "description": "List of Pack invitations with Pack metadata.",
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PackInvitationWithPack"
+            }
+          },
+          "nextPageToken": {
+            "type": "string",
+            "nullable": true,
+            "description": "Token for fetching the next page of results"
+          },
+          "nextPageLink": {
+            "type": "string",
+            "format": "url",
+            "nullable": true,
+            "description": "URL for fetching the next page of results"
+          }
+        }
+      },
       "PackImageFile": {
         "x-schema-name": "PackImageFile",
         "description": "A Pack image file.",
@@ -18747,6 +19181,18 @@
           "default": 25
         }
       },
+      "pageContentLimit": {
+        "name": "limit",
+        "description": "Maximum number of content items to return in this query.",
+        "in": "query",
+        "example": 50,
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500,
+          "default": 50
+        }
+      },
       "pageToken": {
         "name": "pageToken",
         "description": "An opaque token used to fetch the next page of results.",
@@ -18754,6 +19200,19 @@
         "example": "eyJsaW1pd",
         "schema": {
           "type": "string"
+        }
+      },
+      "contentFormat": {
+        "name": "contentFormat",
+        "description": "The format to return content in. Defaults to plainText.",
+        "in": "query",
+        "example": "plainText",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "plainText"
+          ],
+          "default": "plainText"
         }
       },
       "syncToken": {

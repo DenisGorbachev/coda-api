@@ -1,7 +1,7 @@
 min_version = "2025.10.11"
 
 [tools]
-rust = "1.89.0"
+rust = "1.92.0"
 node = "22.12.0"
 deno = "1.46.1"
 cargo-binstall = "1.10.15"
@@ -123,7 +123,11 @@ cat $SPEC \
 
 cargo progenitor -i $SPEC -o $TEMP -n coda_api -v 0.1.0
 mkdir -p src
-mv $TEMP/$LIB $LIB
+rm -f "$LIB"
+# #![allow(unreachable_code)] is needed to work around .clone() calls on empty enums
+# this line must be at the top of the file
+echo "#![allow(unreachable_code)]" >> $LIB
+cat $TEMP/$LIB >> $LIB
 $SDF '///!' '/// !' $LIB
 $SDF "elided_named_lifetimes" "mismatched_lifetime_syntaxes" $LIB
 $SDF "pub struct Client {" "pub struct RawClient {" $LIB
@@ -141,8 +145,8 @@ echo "mod limiter;" >> $LIB
 echo "pub use limiter::*;" >> $LIB
 echo "#[cfg(test)] pub mod test;" >> $LIB
 
-# `fmt` must be run before `fix:type`
-mise run fmt
+# `fix` must be executed before `fix:type`
+mise run fix
 mise run fix:type "pub enum PushButtonResult" snippets/PushButtonResult src/lib.rs
 mise run test
 """

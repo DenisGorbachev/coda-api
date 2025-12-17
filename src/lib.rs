@@ -1,8 +1,8 @@
+#![allow(unreachable_code)]
 #[allow(unused_imports)]
 pub use progenitor_client::{ByteStream, ClientInfo, Error, ResponseValue};
 #[allow(unused_imports)]
 use progenitor_client::{ClientHooks, OperationInfo, RequestBuilderExt, encode_path};
-
 /// Types used as operation parameters and responses.
 #[allow(clippy::all)]
 pub mod types {
@@ -6470,6 +6470,65 @@ pub mod types {
     impl ::std::default::Default for DeletePackResponse {
         fn default() -> Self {
             Self {}
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeletePageContentResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&DeletePageContentResponse> for DeletePageContentResponse {
+        fn from(value: &DeletePageContentResponse) -> Self {
+            value.clone()
         }
     }
 
@@ -14918,6 +14977,121 @@ pub mod types {
         }
     }
 
+    ///`InternalAccessPrincipal`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "internalAccessType",
+    ///    "type"
+    ///  ],
+    ///  "properties": {
+    ///    "internalAccessType": {
+    ///      "description": "The type of internal access (e.g., support).",
+    ///      "examples": [
+    ///        "support"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "type": {
+    ///      "description": "The type of this principal.",
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "internalAccess"
+    ///      ],
+    ///      "x-tsType": "PrincipalType.InternalAccess"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct InternalAccessPrincipal {
+        ///The type of internal access (e.g., support).
+        #[serde(rename = "internalAccessType")]
+        pub internal_access_type: ::std::string::String,
+        ///The type of this principal.
+        #[serde(rename = "type")]
+        pub type_: InternalAccessPrincipalType,
+    }
+
+    impl ::std::convert::From<&InternalAccessPrincipal> for InternalAccessPrincipal {
+        fn from(value: &InternalAccessPrincipal) -> Self {
+            value.clone()
+        }
+    }
+
+    ///The type of this principal.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The type of this principal.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "internalAccess"
+    ///  ],
+    ///  "x-tsType": "PrincipalType.InternalAccess"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum InternalAccessPrincipalType {
+        #[serde(rename = "internalAccess")]
+        InternalAccess,
+    }
+
+    impl ::std::convert::From<&Self> for InternalAccessPrincipalType {
+        fn from(value: &InternalAccessPrincipalType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for InternalAccessPrincipalType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::InternalAccess => f.write_str("internalAccess"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for InternalAccessPrincipalType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "internalAccess" => Ok(Self::InternalAccess),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for InternalAccessPrincipalType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for InternalAccessPrincipalType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for InternalAccessPrincipalType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     ///Layout type of the table or view.
     ///
     /// <details><summary>JSON schema</summary>
@@ -18121,6 +18295,136 @@ pub mod types {
 
     impl ::std::convert::From<&ListPageAnalyticsResponse> for ListPageAnalyticsResponse {
         fn from(value: &ListPageAnalyticsResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///`ListPageContentContentFormat`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "default": "plainText",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "plainText"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum ListPageContentContentFormat {
+        #[serde(rename = "plainText")]
+        PlainText,
+    }
+
+    impl ::std::convert::From<&Self> for ListPageContentContentFormat {
+        fn from(value: &ListPageContentContentFormat) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for ListPageContentContentFormat {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::PlainText => f.write_str("plainText"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for ListPageContentContentFormat {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "plainText" => Ok(Self::PlainText),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for ListPageContentContentFormat {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for ListPageContentContentFormat {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for ListPageContentContentFormat {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::default::Default for ListPageContentContentFormat {
+        fn default() -> Self {
+            ListPageContentContentFormat::PlainText
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Unauthorized"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        401
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Unauthorized"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ListPageContentResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&ListPageContentResponse> for ListPageContentResponse {
+        fn from(value: &ListPageContentResponse) -> Self {
             value.clone()
         }
     }
@@ -27668,6 +27972,120 @@ pub mod types {
         }
     }
 
+    ///Pack invitation with Pack metadata.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Pack invitation with Pack metadata.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "invitation",
+    ///    "makers",
+    ///    "networkDomains",
+    ///    "pack"
+    ///  ],
+    ///  "properties": {
+    ///    "invitation": {
+    ///      "$ref": "#/components/schemas/PackInvitation"
+    ///    },
+    ///    "makers": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Maker"
+    ///      }
+    ///    },
+    ///    "networkDomains": {
+    ///      "description": "Network domain of the Pack",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "pack": {
+    ///      "$ref": "#/components/schemas/PackSummary"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackInvitationWithPack"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackInvitationWithPack {
+        pub invitation: PackInvitation,
+        pub makers: ::std::vec::Vec<Maker>,
+        ///Network domain of the Pack
+        #[serde(rename = "networkDomains")]
+        pub network_domains: ::std::vec::Vec<::std::string::String>,
+        pub pack: PackSummary,
+    }
+
+    impl ::std::convert::From<&PackInvitationWithPack> for PackInvitationWithPack {
+        fn from(value: &PackInvitationWithPack) -> Self {
+            value.clone()
+        }
+    }
+
+    ///List of Pack invitations with Pack metadata.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "List of Pack invitations with Pack metadata.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PackInvitationWithPack"
+    ///      }
+    ///    },
+    ///    "nextPageLink": {
+    ///      "description": "URL for fetching the next page of results",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "url"
+    ///    },
+    ///    "nextPageToken": {
+    ///      "description": "Token for fetching the next page of results",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackInvitationWithPackList"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackInvitationWithPackList {
+        pub items: ::std::vec::Vec<PackInvitationWithPack>,
+        ///URL for fetching the next page of results
+        #[serde(rename = "nextPageLink", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page_link: ::std::option::Option<::std::string::String>,
+        ///Token for fetching the next page of results
+        #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page_token: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&PackInvitationWithPackList> for PackInvitationWithPackList {
+        fn from(value: &PackInvitationWithPackList) -> Self {
+            value.clone()
+        }
+    }
+
     ///System logs of the invocations of the Pack.
     ///
     /// <details><summary>JSON schema</summary>
@@ -33888,13 +34306,14 @@ pub mod types {
         }
     }
 
-    ///Content for a page (canvas).
+    ///Content to be added or replaced with in a page (canvas).
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Content for a page (canvas).",
+    ///  "description": "Content to be added or replaced with in a page
+    /// (canvas).\n",
     ///  "type": "object",
     ///  "required": [
     ///    "content",
@@ -33927,6 +34346,99 @@ pub mod types {
 
     impl ::std::convert::From<&PageContent> for PageContent {
         fn from(value: &PageContent) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Payload for deleting content from a page.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Payload for deleting content from a page.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "elementIds": {
+    ///      "description": "IDs of the elements to delete from the page. If
+    /// omitted or empty, all content will be deleted.\n",
+    ///      "examples": [
+    ///        [
+    ///          "cl-lzqh0Q0poT",
+    ///          "cl-abc123def"
+    ///        ]
+    ///      ],
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PageContentDelete"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PageContentDelete {
+        ///IDs of the elements to delete from the page. If omitted or empty,
+        /// all content will be deleted.
+        #[serde(rename = "elementIds", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub element_ids: ::std::vec::Vec<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&PageContentDelete> for PageContentDelete {
+        fn from(value: &PageContentDelete) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for PageContentDelete {
+        fn default() -> Self {
+            Self {
+                element_ids: Default::default(),
+            }
+        }
+    }
+
+    ///`PageContentDeleteResult`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The result of a page content deletion.",
+    ///  "allOf": [
+    ///    {
+    ///      "$ref": "#/components/schemas/DocumentMutateResponse"
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "id"
+    ///      ],
+    ///      "properties": {
+    ///        "id": {
+    ///          "description": "ID of the page whose content was deleted.",
+    ///          "examples": [
+    ///            "canvas-tuVwxYz"
+    ///          ],
+    ///          "type": "string"
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    }
+    ///  ],
+    ///  "x-schema-name": "PageContentDeleteResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(deny_unknown_fields)]
+    pub enum PageContentDeleteResult {}
+    impl ::std::convert::From<&Self> for PageContentDeleteResult {
+        fn from(value: &PageContentDeleteResult) -> Self {
             value.clone()
         }
     }
@@ -34168,21 +34680,23 @@ pub mod types {
         }
     }
 
-    ///Mode for inserting content into an existing page.
+    ///Mode for updating the content on an existing page.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Mode for inserting content into an existing page.",
+    ///  "description": "Mode for updating the content on an existing page.",
     ///  "type": "string",
     ///  "enum": [
     ///    "append",
+    ///    "prepend",
     ///    "replace"
     ///  ],
     ///  "x-schema-name": "PageContentInsertionMode",
     ///  "x-tsEnumNames": [
     ///    "Append",
+    ///    "Prepend",
     ///    "Replace"
     ///  ]
     ///}
@@ -34192,6 +34706,8 @@ pub mod types {
     pub enum PageContentInsertionMode {
         #[serde(rename = "append")]
         Append,
+        #[serde(rename = "prepend")]
+        Prepend,
         #[serde(rename = "replace")]
         Replace,
     }
@@ -34206,6 +34722,7 @@ pub mod types {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
                 Self::Append => f.write_str("append"),
+                Self::Prepend => f.write_str("prepend"),
                 Self::Replace => f.write_str("replace"),
             }
         }
@@ -34216,6 +34733,7 @@ pub mod types {
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "append" => Ok(Self::Append),
+                "prepend" => Ok(Self::Prepend),
                 "replace" => Ok(Self::Replace),
                 _ => Err("invalid value".into()),
             }
@@ -34240,6 +34758,320 @@ pub mod types {
         type Error = self::error::ConversionError;
         fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
+        }
+    }
+
+    ///Content item in a page (canvas).
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Content item in a page (canvas).",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "id",
+    ///    "type"
+    ///  ],
+    ///  "properties": {
+    ///    "id": {
+    ///      "description": "ID of the content item.",
+    ///      "examples": [
+    ///        "cl-2ZUJuRhNuN"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "itemContent": {
+    ///      "$ref": "#/components/schemas/PageContentItemContent"
+    ///    },
+    ///    "type": {
+    ///      "$ref": "#/components/schemas/PageContentItemType"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PageContentItem"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PageContentItem {
+        ///ID of the content item.
+        pub id: ::std::string::String,
+        #[serde(rename = "itemContent", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub item_content: ::std::option::Option<PageContentItemContent>,
+        #[serde(rename = "type")]
+        pub type_: PageContentItemType,
+    }
+
+    impl ::std::convert::From<&PageContentItem> for PageContentItem {
+        fn from(value: &PageContentItem) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Content details of the item.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Content details of the item.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "content",
+    ///    "format",
+    ///    "style"
+    ///  ],
+    ///  "properties": {
+    ///    "content": {
+    ///      "description": "Content of the item in the specified format.",
+    ///      "examples": [
+    ///        "This is a paragraph of text."
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "format": {
+    ///      "$ref": "#/components/schemas/PageContentItemContentFormat"
+    ///    },
+    ///    "lineLevel": {
+    ///      "description": "Indentation level of the element. Present for
+    /// indentable elements (paragraphs, blockquotes, and list items).\n",
+    ///      "examples": [
+    ///        0
+    ///      ],
+    ///      "type": "integer"
+    ///    },
+    ///    "style": {
+    ///      "$ref": "#/components/schemas/PageLineStyle"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PageContentItemContent"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PageContentItemContent {
+        ///Content of the item in the specified format.
+        pub content: ::std::string::String,
+        pub format: PageContentItemContentFormat,
+        ///Indentation level of the element. Present for indentable elements
+        /// (paragraphs, blockquotes, and list items).
+        #[serde(rename = "lineLevel", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub line_level: ::std::option::Option<i64>,
+        pub style: PageLineStyle,
+    }
+
+    impl ::std::convert::From<&PageContentItemContent> for PageContentItemContent {
+        fn from(value: &PageContentItemContent) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Content format for the item.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Content format for the item.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "plainText"
+    ///  ],
+    ///  "x-schema-name": "PageContentItemContentFormat",
+    ///  "x-tsEnumNames": [
+    ///    "PlainText"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum PageContentItemContentFormat {
+        #[serde(rename = "plainText")]
+        PlainText,
+    }
+
+    impl ::std::convert::From<&Self> for PageContentItemContentFormat {
+        fn from(value: &PageContentItemContentFormat) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for PageContentItemContentFormat {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::PlainText => f.write_str("plainText"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for PageContentItemContentFormat {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "plainText" => Ok(Self::PlainText),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PageContentItemContentFormat {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PageContentItemContentFormat {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PageContentItemContentFormat {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    ///The type of content item in a page.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The type of content item in a page.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "line"
+    ///  ],
+    ///  "x-schema-name": "PageContentItemType",
+    ///  "x-tsEnumNames": [
+    ///    "Line"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum PageContentItemType {
+        #[serde(rename = "line")]
+        Line,
+    }
+
+    impl ::std::convert::From<&Self> for PageContentItemType {
+        fn from(value: &PageContentItemType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for PageContentItemType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Line => f.write_str("line"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for PageContentItemType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "line" => Ok(Self::Line),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PageContentItemType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PageContentItemType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PageContentItemType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    ///List of page content elements.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "List of page content elements.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "href",
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "href": {
+    ///      "description": "API link to these results",
+    ///      "examples": [
+    ///        "https://coda.io/apis/v1/docs/AbCDeFGH/pages/canvas-IjkLmnO/content?limit=20"
+    ///      ],
+    ///      "type": "string",
+    ///      "format": "url"
+    ///    },
+    ///    "items": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PageContentItem"
+    ///      }
+    ///    },
+    ///    "nextPageLink": {
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/nextPageLink"
+    ///        },
+    ///        {
+    ///          "examples": [
+    ///            "https://coda.io/apis/v1/docs/AbCDeFGH/pages/canvas-IjkLmnO/content?pageToken=eyJsaW1pd"
+    ///          ],
+    ///          "type": "string"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "nextPageToken": {
+    ///      "$ref": "#/components/schemas/nextPageToken"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PageContentList"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PageContentList {
+        ///API link to these results
+        pub href: ::std::string::String,
+        pub items: ::std::vec::Vec<PageContentItem>,
+        #[serde(rename = "nextPageLink", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page_link: ::std::option::Option<NextPageLink>,
+        #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page_token: ::std::option::Option<NextPageToken>,
+    }
+
+    impl ::std::convert::From<&PageContentList> for PageContentList {
+        fn from(value: &PageContentList) -> Self {
+            value.clone()
         }
     }
 
@@ -34336,6 +35168,17 @@ pub mod types {
     ///    "canvasContent": {
     ///      "$ref": "#/components/schemas/PageContent"
     ///    },
+    ///    "elementId": {
+    ///      "description": "ID of the element on the page to use as a reference
+    /// point for editing content. If provided, the operation will be relative
+    /// to this element (e.g., append after it, prepend before it, replace it).
+    /// If omitted, the operation will be performed on the entire page (e.g.,
+    /// append to end, prepend to beginning, replace all).\n",
+    ///      "examples": [
+    ///        "cl-lzqh0Q0poT"
+    ///      ],
+    ///      "type": "string"
+    ///    },
     ///    "insertionMode": {
     ///      "$ref": "#/components/schemas/PageContentInsertionMode"
     ///    }
@@ -34350,6 +35193,13 @@ pub mod types {
     pub struct PageContentUpdate {
         #[serde(rename = "canvasContent")]
         pub canvas_content: PageContent,
+        ///ID of the element on the page to use as a reference point for
+        /// editing content. If provided, the operation will be relative to this
+        /// element (e.g., append after it, prepend before it, replace it). If
+        /// omitted, the operation will be performed on the entire page (e.g.,
+        /// append to end, prepend to beginning, replace all).
+        #[serde(rename = "elementId", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub element_id: ::std::option::Option<::std::string::String>,
         #[serde(rename = "insertionMode")]
         pub insertion_mode: PageContentInsertionMode,
     }
@@ -34515,88 +35365,93 @@ pub mod types {
     ///      "additionalProperties": false
     ///    },
     ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "includeSubpages",
-    ///        "mode",
-    ///        "sourceDocId",
-    ///        "sourcePageId",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "includeSubpages": {
-    ///          "description": "Include subpages in the sync page.",
-    ///          "type": "boolean"
-    ///        },
-    ///        "mode": {
-    ///          "description": "Indicates a single-page sync page.",
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "page"
+    ///      "oneOf": [
+    ///        {
+    ///          "type": "object",
+    ///          "required": [
+    ///            "includeSubpages",
+    ///            "mode",
+    ///            "sourceDocId",
+    ///            "sourcePageId",
+    ///            "type"
     ///          ],
-    ///          "x-tsType": "SyncPageTypeEnum.Page"
-    ///        },
-    ///        "sourceDocId": {
-    ///          "description": "The id of the document to insert as a sync
+    ///          "properties": {
+    ///            "includeSubpages": {
+    ///              "description": "Include subpages in the sync page.",
+    ///              "type": "boolean"
+    ///            },
+    ///            "mode": {
+    ///              "description": "Indicates a single-page sync page.",
+    ///              "type": "string",
+    ///              "enum": [
+    ///                "page"
+    ///              ],
+    ///              "x-tsType": "SyncPageTypeEnum.Page"
+    ///            },
+    ///            "sourceDocId": {
+    ///              "description": "The id of the document to insert as a sync
     /// page.",
-    ///          "examples": [
-    ///            "sHbI4uIwiK"
-    ///          ],
-    ///          "type": "string"
-    ///        },
-    ///        "sourcePageId": {
-    ///          "description": "The page id to insert as a sync page.",
-    ///          "examples": [
-    ///            "canvas-IjkLmnO"
-    ///          ],
-    ///          "type": "string"
-    ///        },
-    ///        "type": {
-    ///          "description": "Indicates a page that embeds other Coda
+    ///              "examples": [
+    ///                "sHbI4uIwiK"
+    ///              ],
+    ///              "type": "string"
+    ///            },
+    ///            "sourcePageId": {
+    ///              "description": "The page id to insert as a sync page.",
+    ///              "examples": [
+    ///                "canvas-IjkLmnO"
+    ///              ],
+    ///              "type": "string"
+    ///            },
+    ///            "type": {
+    ///              "description": "Indicates a page that embeds other Coda
     /// content.",
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "syncPage"
-    ///          ],
-    ///          "x-tsType": "PageTypeEnum.SyncPage"
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "mode",
-    ///        "sourceDocId",
-    ///        "type"
-    ///      ],
-    ///      "properties": {
-    ///        "mode": {
-    ///          "description": "Indicates a full doc sync page.",
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "document"
-    ///          ],
-    ///          "x-tsType": "SyncPageTypeEnum.Document"
+    ///              "type": "string",
+    ///              "enum": [
+    ///                "syncPage"
+    ///              ],
+    ///              "x-tsType": "PageTypeEnum.SyncPage"
+    ///            }
+    ///          },
+    ///          "additionalProperties": false
     ///        },
-    ///        "sourceDocId": {
-    ///          "description": "The id of the document to insert as a sync
+    ///        {
+    ///          "type": "object",
+    ///          "required": [
+    ///            "mode",
+    ///            "sourceDocId",
+    ///            "type"
+    ///          ],
+    ///          "properties": {
+    ///            "mode": {
+    ///              "description": "Indicates a full doc sync page.",
+    ///              "type": "string",
+    ///              "enum": [
+    ///                "document"
+    ///              ],
+    ///              "x-tsType": "SyncPageTypeEnum.Document"
+    ///            },
+    ///            "sourceDocId": {
+    ///              "description": "The id of the document to insert as a sync
     /// page.",
-    ///          "examples": [
-    ///            "sHbI4uIwiK"
-    ///          ],
-    ///          "type": "string"
-    ///        },
-    ///        "type": {
-    ///          "description": "Indicates a page that embeds other content.",
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "syncPage"
-    ///          ],
-    ///          "x-tsType": "PageTypeEnum.SyncPage"
+    ///              "examples": [
+    ///                "sHbI4uIwiK"
+    ///              ],
+    ///              "type": "string"
+    ///            },
+    ///            "type": {
+    ///              "description": "Indicates a page that embeds other
+    /// content.",
+    ///              "type": "string",
+    ///              "enum": [
+    ///                "syncPage"
+    ///              ],
+    ///              "x-tsType": "PageTypeEnum.SyncPage"
+    ///            }
+    ///          },
+    ///          "additionalProperties": false
     ///        }
-    ///      },
-    ///      "additionalProperties": false
+    ///      ]
     ///    }
     ///  ],
     ///  "x-schema-name": "PageCreateContent"
@@ -34622,37 +35477,18 @@ pub mod types {
             ///The URL of the content to embed.
             url: ::std::string::String,
         },
-        Variant2 {
-            ///Include subpages in the sync page.
-            #[serde(rename = "includeSubpages")]
-            include_subpages: bool,
-            ///Indicates a single-page sync page.
-            mode: PageCreateContentVariant2Mode,
-            ///The id of the document to insert as a sync page.
-            #[serde(rename = "sourceDocId")]
-            source_doc_id: ::std::string::String,
-            ///The page id to insert as a sync page.
-            #[serde(rename = "sourcePageId")]
-            source_page_id: ::std::string::String,
-            ///Indicates a page that embeds other Coda content.
-            #[serde(rename = "type")]
-            type_: PageCreateContentVariant2Type,
-        },
-        Variant3 {
-            ///Indicates a full doc sync page.
-            mode: PageCreateContentVariant3Mode,
-            ///The id of the document to insert as a sync page.
-            #[serde(rename = "sourceDocId")]
-            source_doc_id: ::std::string::String,
-            ///Indicates a page that embeds other content.
-            #[serde(rename = "type")]
-            type_: PageCreateContentVariant3Type,
-        },
+        Variant2(PageCreateContentVariant2),
     }
 
     impl ::std::convert::From<&Self> for PageCreateContent {
         fn from(value: &PageCreateContent) -> Self {
             value.clone()
+        }
+    }
+
+    impl ::std::convert::From<PageCreateContentVariant2> for PageCreateContent {
+        fn from(value: PageCreateContentVariant2) -> Self {
+            Self::Variant2(value)
         }
     }
 
@@ -34788,69 +35624,133 @@ pub mod types {
         }
     }
 
-    ///Indicates a single-page sync page.
+    ///`PageCreateContentVariant2`
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Indicates a single-page sync page.",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "page"
-    ///  ],
-    ///  "x-tsType": "SyncPageTypeEnum.Page"
+    ///  "oneOf": [
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "includeSubpages",
+    ///        "mode",
+    ///        "sourceDocId",
+    ///        "sourcePageId",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "includeSubpages": {
+    ///          "description": "Include subpages in the sync page.",
+    ///          "type": "boolean"
+    ///        },
+    ///        "mode": {
+    ///          "description": "Indicates a single-page sync page.",
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "page"
+    ///          ],
+    ///          "x-tsType": "SyncPageTypeEnum.Page"
+    ///        },
+    ///        "sourceDocId": {
+    ///          "description": "The id of the document to insert as a sync
+    /// page.",
+    ///          "examples": [
+    ///            "sHbI4uIwiK"
+    ///          ],
+    ///          "type": "string"
+    ///        },
+    ///        "sourcePageId": {
+    ///          "description": "The page id to insert as a sync page.",
+    ///          "examples": [
+    ///            "canvas-IjkLmnO"
+    ///          ],
+    ///          "type": "string"
+    ///        },
+    ///        "type": {
+    ///          "description": "Indicates a page that embeds other Coda
+    /// content.",
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "syncPage"
+    ///          ],
+    ///          "x-tsType": "PageTypeEnum.SyncPage"
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    {
+    ///      "type": "object",
+    ///      "required": [
+    ///        "mode",
+    ///        "sourceDocId",
+    ///        "type"
+    ///      ],
+    ///      "properties": {
+    ///        "mode": {
+    ///          "description": "Indicates a full doc sync page.",
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "document"
+    ///          ],
+    ///          "x-tsType": "SyncPageTypeEnum.Document"
+    ///        },
+    ///        "sourceDocId": {
+    ///          "description": "The id of the document to insert as a sync
+    /// page.",
+    ///          "examples": [
+    ///            "sHbI4uIwiK"
+    ///          ],
+    ///          "type": "string"
+    ///        },
+    ///        "type": {
+    ///          "description": "Indicates a page that embeds other content.",
+    ///          "type": "string",
+    ///          "enum": [
+    ///            "syncPage"
+    ///          ],
+    ///          "x-tsType": "PageTypeEnum.SyncPage"
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    }
+    ///  ]
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-    pub enum PageCreateContentVariant2Mode {
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(tag = "mode", deny_unknown_fields)]
+    pub enum PageCreateContentVariant2 {
         #[serde(rename = "page")]
-        Page,
+        Page {
+            ///Include subpages in the sync page.
+            #[serde(rename = "includeSubpages")]
+            include_subpages: bool,
+            ///The id of the document to insert as a sync page.
+            #[serde(rename = "sourceDocId")]
+            source_doc_id: ::std::string::String,
+            ///The page id to insert as a sync page.
+            #[serde(rename = "sourcePageId")]
+            source_page_id: ::std::string::String,
+            ///Indicates a page that embeds other Coda content.
+            #[serde(rename = "type")]
+            type_: PageCreateContentVariant2Type,
+        },
+        #[serde(rename = "document")]
+        Document {
+            ///The id of the document to insert as a sync page.
+            #[serde(rename = "sourceDocId")]
+            source_doc_id: ::std::string::String,
+            ///Indicates a page that embeds other content.
+            #[serde(rename = "type")]
+            type_: PageCreateContentVariant2Type,
+        },
     }
 
-    impl ::std::convert::From<&Self> for PageCreateContentVariant2Mode {
-        fn from(value: &PageCreateContentVariant2Mode) -> Self {
+    impl ::std::convert::From<&Self> for PageCreateContentVariant2 {
+        fn from(value: &PageCreateContentVariant2) -> Self {
             value.clone()
-        }
-    }
-
-    impl ::std::fmt::Display for PageCreateContentVariant2Mode {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match *self {
-                Self::Page => f.write_str("page"),
-            }
-        }
-    }
-
-    impl ::std::str::FromStr for PageCreateContentVariant2Mode {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            match value {
-                "page" => Ok(Self::Page),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for PageCreateContentVariant2Mode {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for PageCreateContentVariant2Mode {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for PageCreateContentVariant2Mode {
-        type Error = self::error::ConversionError;
-        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
         }
     }
 
@@ -34914,138 +35814,6 @@ pub mod types {
     }
 
     impl ::std::convert::TryFrom<::std::string::String> for PageCreateContentVariant2Type {
-        type Error = self::error::ConversionError;
-        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    ///Indicates a full doc sync page.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "description": "Indicates a full doc sync page.",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "document"
-    ///  ],
-    ///  "x-tsType": "SyncPageTypeEnum.Document"
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-    pub enum PageCreateContentVariant3Mode {
-        #[serde(rename = "document")]
-        Document,
-    }
-
-    impl ::std::convert::From<&Self> for PageCreateContentVariant3Mode {
-        fn from(value: &PageCreateContentVariant3Mode) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::fmt::Display for PageCreateContentVariant3Mode {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match *self {
-                Self::Document => f.write_str("document"),
-            }
-        }
-    }
-
-    impl ::std::str::FromStr for PageCreateContentVariant3Mode {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            match value {
-                "document" => Ok(Self::Document),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for PageCreateContentVariant3Mode {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for PageCreateContentVariant3Mode {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for PageCreateContentVariant3Mode {
-        type Error = self::error::ConversionError;
-        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    ///Indicates a page that embeds other content.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "description": "Indicates a page that embeds other content.",
-    ///  "type": "string",
-    ///  "enum": [
-    ///    "syncPage"
-    ///  ],
-    ///  "x-tsType": "PageTypeEnum.SyncPage"
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-    pub enum PageCreateContentVariant3Type {
-        #[serde(rename = "syncPage")]
-        SyncPage,
-    }
-
-    impl ::std::convert::From<&Self> for PageCreateContentVariant3Type {
-        fn from(value: &PageCreateContentVariant3Type) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::fmt::Display for PageCreateContentVariant3Type {
-        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-            match *self {
-                Self::SyncPage => f.write_str("syncPage"),
-            }
-        }
-    }
-
-    impl ::std::str::FromStr for PageCreateContentVariant3Type {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            match value {
-                "syncPage" => Ok(Self::SyncPage),
-                _ => Err("invalid value".into()),
-            }
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for PageCreateContentVariant3Type {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for PageCreateContentVariant3Type {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for PageCreateContentVariant3Type {
         type Error = self::error::ConversionError;
         fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
@@ -35203,6 +35971,135 @@ pub mod types {
     }
 
     impl ::std::convert::TryFrom<::std::string::String> for PageEmbedRenderMethod {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    ///The style of a line element in a canvas page.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The style of a line element in a canvas page.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "blockQuote",
+    ///    "bulletedList",
+    ///    "checkboxList",
+    ///    "code",
+    ///    "collapsibleList",
+    ///    "h1",
+    ///    "h2",
+    ///    "h3",
+    ///    "numberedList",
+    ///    "paragraph",
+    ///    "pullQuote"
+    ///  ],
+    ///  "x-schema-name": "PageLineStyle",
+    ///  "x-tsEnumNames": [
+    ///    "BlockQuote",
+    ///    "BulletedList",
+    ///    "CheckboxList",
+    ///    "Code",
+    ///    "CollapsibleList",
+    ///    "H1",
+    ///    "H2",
+    ///    "H3",
+    ///    "NumberedList",
+    ///    "Paragraph",
+    ///    "PullQuote"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum PageLineStyle {
+        #[serde(rename = "blockQuote")]
+        BlockQuote,
+        #[serde(rename = "bulletedList")]
+        BulletedList,
+        #[serde(rename = "checkboxList")]
+        CheckboxList,
+        #[serde(rename = "code")]
+        Code,
+        #[serde(rename = "collapsibleList")]
+        CollapsibleList,
+        #[serde(rename = "h1")]
+        H1,
+        #[serde(rename = "h2")]
+        H2,
+        #[serde(rename = "h3")]
+        H3,
+        #[serde(rename = "numberedList")]
+        NumberedList,
+        #[serde(rename = "paragraph")]
+        Paragraph,
+        #[serde(rename = "pullQuote")]
+        PullQuote,
+    }
+
+    impl ::std::convert::From<&Self> for PageLineStyle {
+        fn from(value: &PageLineStyle) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for PageLineStyle {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::BlockQuote => f.write_str("blockQuote"),
+                Self::BulletedList => f.write_str("bulletedList"),
+                Self::CheckboxList => f.write_str("checkboxList"),
+                Self::Code => f.write_str("code"),
+                Self::CollapsibleList => f.write_str("collapsibleList"),
+                Self::H1 => f.write_str("h1"),
+                Self::H2 => f.write_str("h2"),
+                Self::H3 => f.write_str("h3"),
+                Self::NumberedList => f.write_str("numberedList"),
+                Self::Paragraph => f.write_str("paragraph"),
+                Self::PullQuote => f.write_str("pullQuote"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for PageLineStyle {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "blockQuote" => Ok(Self::BlockQuote),
+                "bulletedList" => Ok(Self::BulletedList),
+                "checkboxList" => Ok(Self::CheckboxList),
+                "code" => Ok(Self::Code),
+                "collapsibleList" => Ok(Self::CollapsibleList),
+                "h1" => Ok(Self::H1),
+                "h2" => Ok(Self::H2),
+                "h3" => Ok(Self::H3),
+                "numberedList" => Ok(Self::NumberedList),
+                "paragraph" => Ok(Self::Paragraph),
+                "pullQuote" => Ok(Self::PullQuote),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PageLineStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PageLineStyle {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PageLineStyle {
         type Error = self::error::ConversionError;
         fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
@@ -36226,6 +37123,9 @@ pub mod types {
     ///    },
     ///    {
     ///      "$ref": "#/components/schemas/AnyonePrincipal"
+    ///    },
+    ///    {
+    ///      "$ref": "#/components/schemas/InternalAccessPrincipal"
     ///    }
     ///  ],
     ///  "x-schema-name": "Principal"
@@ -36240,6 +37140,7 @@ pub mod types {
         DomainPrincipal(DomainPrincipal),
         WorkspacePrincipal(WorkspacePrincipal),
         AnyonePrincipal(AnyonePrincipal),
+        InternalAccessPrincipal(InternalAccessPrincipal),
     }
 
     impl ::std::convert::From<&Self> for Principal {
@@ -36278,6 +37179,12 @@ pub mod types {
         }
     }
 
+    impl ::std::convert::From<InternalAccessPrincipal> for Principal {
+        fn from(value: InternalAccessPrincipal) -> Self {
+            Self::InternalAccessPrincipal(value)
+        }
+    }
+
     ///Type of principal.
     ///
     /// <details><summary>JSON schema</summary>
@@ -36291,7 +37198,8 @@ pub mod types {
     ///    "group",
     ///    "domain",
     ///    "workspace",
-    ///    "anyone"
+    ///    "anyone",
+    ///    "internalAccess"
     ///  ],
     ///  "x-schema-name": "PrincipalType",
     ///  "x-tsEnumNames": [
@@ -36299,7 +37207,8 @@ pub mod types {
     ///    "Group",
     ///    "Domain",
     ///    "Workspace",
-    ///    "Anyone"
+    ///    "Anyone",
+    ///    "InternalAccess"
     ///  ]
     ///}
     /// ```
@@ -36316,6 +37225,8 @@ pub mod types {
         Workspace,
         #[serde(rename = "anyone")]
         Anyone,
+        #[serde(rename = "internalAccess")]
+        InternalAccess,
     }
 
     impl ::std::convert::From<&Self> for PrincipalType {
@@ -36332,6 +37243,7 @@ pub mod types {
                 Self::Domain => f.write_str("domain"),
                 Self::Workspace => f.write_str("workspace"),
                 Self::Anyone => f.write_str("anyone"),
+                Self::InternalAccess => f.write_str("internalAccess"),
             }
         }
     }
@@ -36345,6 +37257,7 @@ pub mod types {
                 "domain" => Ok(Self::Domain),
                 "workspace" => Ok(Self::Workspace),
                 "anyone" => Ok(Self::Anyone),
+                "internalAccess" => Ok(Self::InternalAccess),
                 _ => Err("invalid value".into()),
             }
         }
@@ -44497,7 +45410,7 @@ pub mod types {
 ///
 ///https://coda.io/trust/tos
 ///
-///Version: 1.4.19
+///Version: 1.5.0
 pub struct RawClient {
     pub(crate) baseurl: String,
     pub(crate) client: reqwest::Client,
@@ -44538,7 +45451,7 @@ impl RawClient {
 
 impl ClientInfo<()> for RawClient {
     fn api_version() -> &'static str {
-        "1.4.19"
+        "1.5.0"
     }
 
     fn baseurl(&self) -> &str {
@@ -45344,6 +46257,103 @@ impl RawClient {
             .build()?;
         let info = OperationInfo {
             operation_id: "delete_page",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            202u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///List page content
+    ///
+    ///Returns a list of content elements in a page.
+    ///
+    ///Sends a `GET` request to `/docs/{docId}/pages/{pageIdOrName}/content`
+    ///
+    ///Arguments:
+    /// - `doc_id`: ID of the doc.
+    /// - `page_id_or_name`: ID or name of the page. Names are discouraged
+    ///   because they're easily prone to being changed by users. If you're
+    ///   using a name, be sure to URI-encode it. If you provide a name and
+    ///   there are multiple pages with the same name, an arbitrary one will be
+    ///   selected.
+    ///
+    /// - `content_format`: The format to return content in. Defaults to
+    ///   plainText.
+    /// - `limit`: Maximum number of content items to return in this query.
+    /// - `page_token`: An opaque token used to fetch the next page of results.
+    pub async fn list_page_content<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str, content_format: Option<types::ListPageContentContentFormat>, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>) -> Result<ResponseValue<types::PageContentList>, Error<types::ListPageContentResponse>> {
+        let url = format!("{}/docs/{}/pages/{}/content", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&page_id_or_name.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .query(&progenitor_client::QueryParam::new("contentFormat", &content_format))
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "list_page_content",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            410u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Delete page content
+    ///
+    ///Delete content from a page. You can delete specific elements by
+    /// providing their IDs, or delete all content from the page.
+    ///
+    ///
+    ///Sends a `DELETE` request to `/docs/{docId}/pages/{pageIdOrName}/content`
+    ///
+    ///Arguments:
+    /// - `doc_id`: ID of the doc.
+    /// - `page_id_or_name`: ID or name of the page. Names are discouraged
+    ///   because they're easily prone to being changed by users. If you're
+    ///   using a name, be sure to URI-encode it. If you provide a name and
+    ///   there are multiple pages with the same name, an arbitrary one will be
+    ///   selected.
+    ///
+    /// - `body`: Parameters for deleting page content.
+    pub async fn delete_page_content<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str, body: &'a types::PageContentDelete) -> Result<ResponseValue<types::PageContentDeleteResult>, Error<types::DeletePageContentResponse>> {
+        let url = format!("{}/docs/{}/pages/{}/content", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&page_id_or_name.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .delete(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "delete_page_content",
         };
         self.pre(&mut request, &info).await?;
         let result = self.exec(request, &info).await;
@@ -48014,7 +49024,7 @@ impl RawClient {
     ///Arguments:
     /// - `limit`: Maximum number of results to return in this query.
     /// - `page_token`: An opaque token used to fetch the next page of results.
-    pub async fn list_user_pack_invitations<'a>(&'a self, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>) -> Result<ResponseValue<types::PackInvitationList>, Error<types::ListUserPackInvitationsResponse>> {
+    pub async fn list_user_pack_invitations<'a>(&'a self, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>) -> Result<ResponseValue<types::PackInvitationWithPackList>, Error<types::ListUserPackInvitationsResponse>> {
         let url = format!("{}/packs/invitations", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -49531,16 +50541,10 @@ pub mod prelude {
     pub use super::RawClient;
 }
 mod ext;
-
 pub use ext::*;
-
 mod client;
-
 pub use client::*;
-
 mod limiter;
-
 pub use limiter::*;
-
 #[cfg(test)]
 pub mod test;
