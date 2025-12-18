@@ -828,11 +828,6 @@ impl Client {
         })
     }
 
-    #[allow(clippy::too_many_arguments)]
-    pub async fn upsert_rows_conclusively_rich<'a>(&'a self, _doc_id: &'a str, _table_id_or_name: &'a str, _disable_parsing: Option<bool>, _body: &'a types::RowsUpsert, _max_attempts: usize, _delay_secs: u64) -> Result<UpsertRowsConclusivelyRichResult, UpsertRowsConclusivelyRichError> {
-        todo!()
-    }
-
     /// NOTE: This function works only for inserted rows, not for updated rows (it will always return after the first request for them)
     pub async fn wait_for_upserted_rows<T: DeserializeOwned + ValueFormatProvider>(&self, doc_id: &str, table_id: &str, row_ids: &[String], max_attempts: usize, delay_secs: u64) -> Result<Vec<T>, WaitForRowsError> {
         use WaitForRowsError::*;
@@ -841,7 +836,12 @@ impl Client {
             return Ok(Vec::new());
         }
 
+        // initialize manually because T is not Clone
         let mut rows: Vec<Option<T>> = Vec::with_capacity(row_ids.len());
+        for index in 0..row_ids.len() {
+            rows[index] = None;
+        }
+
         let delay = Duration::from_secs(delay_secs);
         let mut attempt = 0;
 
