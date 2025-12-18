@@ -838,8 +838,8 @@ impl Client {
 
         // initialize manually because T is not Clone
         let mut rows: Vec<Option<T>> = Vec::with_capacity(row_ids.len());
-        for index in 0..row_ids.len() {
-            rows[index] = None;
+        for _ in row_ids {
+            rows.push(None);
         }
 
         let delay = Duration::from_secs(delay_secs);
