@@ -52,7 +52,7 @@ impl TryFrom<CellValue> for Option<bool> {
 mod time_impls {
     use super::*;
     use crate::{DurationValueParserError, parse_duration_value};
-    use error_handling::handle;
+    use errgonomic::handle;
     use thiserror::Error;
     use time::format_description::well_known::Rfc3339;
     use time::{Duration, OffsetDateTime};

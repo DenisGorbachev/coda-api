@@ -1,7 +1,7 @@
 use crate::types::{Column, Row, Table, TableReference};
 use crate::{ClientTablesError, Error, Limiter, RawClient, ResponseValue, RichRow, RowUpdateResultCorrect, RowsUpsertResultCorrect, TableId, types};
 use crate::{ItemsList, ValueFormatProvider, paginate_all};
-use error_handling::handle;
+use errgonomic::handle;
 use serde::de::DeserializeOwned;
 use std::collections::HashMap;
 use std::time::Duration;

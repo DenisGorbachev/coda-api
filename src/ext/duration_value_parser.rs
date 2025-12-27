@@ -1,4 +1,4 @@
-use error_handling::{handle, handle_opt};
+use errgonomic::{handle, handle_opt};
 use std::num::ParseIntError;
 use thiserror::Error;
 use time::Duration;

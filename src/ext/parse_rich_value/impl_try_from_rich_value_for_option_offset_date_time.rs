@@ -1,5 +1,5 @@
 use crate::{ConvertRichValueRefToStringError, ConvertRichValueToStringError, RichValue};
-use error_handling::handle;
+use errgonomic::handle;
 use thiserror::Error;
 use time::OffsetDateTime;
 use time::format_description::well_known::Rfc3339;

@@ -1,5 +1,5 @@
 use crate::{ConvertRichValueRefToStringError, ConvertRichValueToStringError, DurationValueParserError, RichValue, parse_duration_value};
-use error_handling::handle;
+use errgonomic::handle;
 use thiserror::Error;
 use time::Duration;
 

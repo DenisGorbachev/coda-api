@@ -190,7 +190,7 @@ dependencies = [
  "chrono",
  "clap",
  "derive_more",
- "error-handling",
+ "errgonomic",
  "governor",
  "progenitor-client",
  "regress",
@@ -293,6 +293,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 
 [[package]]
+name = "errgonomic"
+version = "0.1.0"
+source = "git+https://github.com/DenisGorbachev/errgonomic#de796305fd0e2286c369d5d78f42bc4c4d3481a8"
+dependencies = [
+ "tempfile",
+ "thiserror",
+]
+
+[[package]]
 name = "errno"
 version = "0.3.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -300,15 +309,6 @@ checksum = "778e2ac28f6c47af28e4907f13ffd1e1ddbd400980a9abd7c8df189bf578a5ad"
 dependencies = [
  "libc",
  "windows-sys 0.60.2",
-]
-
-[[package]]
-name = "error-handling"
-version = "0.1.0"
-source = "git+https://github.com/DenisGorbachev/error-handling-rs#f26e25b8927b74a5bc0bc251bc1faa8560179bf1"
-dependencies = [
- "tempfile",
- "thiserror",
 ]
 
 [[package]]
