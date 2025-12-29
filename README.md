@@ -6,6 +6,10 @@
 
 [![Documentation](https://docs.rs/coda-api/badge.svg)](https://docs.rs/coda-api)
 
+<!-- crate documentation start -->
+
+<!-- crate documentation end -->
+
 ## Installation
 
 ```shell
