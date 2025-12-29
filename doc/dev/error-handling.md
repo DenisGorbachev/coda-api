@@ -54,6 +54,39 @@ pub fn exit_result<E: Error + 'static>(result: Result<(), E>) -> ExitCode {
 }
 ````
 
+## File: src/functions/partition_result.rs
+````rust
+use alloc::vec::Vec;
+
+/// Collects `Ok` values unless at least one `Err` is encountered.
+///
+/// This is optimized for `handle_iter!`: once an error appears, previously
+/// collected `Ok` values are dropped and further `Ok` values are ignored.
+#[doc(hidden)]
+pub fn partition_result<T, E>(results: impl IntoIterator<Item = Result<T, E>>) -> Result<Vec<T>, Vec<E>> {
+    let iter = results.into_iter();
+    let (lower, _) = iter.size_hint();
+    let (oks, errors) = iter.fold((Vec::with_capacity(lower), Vec::new()), |(mut oks, mut errors), result| {
+        match result {
+            Ok(value) => {
+                if errors.is_empty() {
+                    oks.push(value);
+                }
+            }
+            Err(error) => {
+                if errors.is_empty() {
+                    oks = Vec::new();
+                }
+                errors.push(error);
+            }
+        }
+        (oks, errors)
+    });
+
+    if errors.is_empty() { Ok(oks) } else { Err(errors) }
+}
+````
+
 ## File: src/functions/write_to_named_temp_file.rs
 ````rust
 use crate::{handle, map_err};
@@ -251,24 +284,6 @@ impl<'w> Write for Prefixer<'w> {
 }
 ````
 
-## File: src/functions.rs
-````rust
-mod get_root_error;
-
-pub use get_root_error::*;
-
-cfg_if::cfg_if! {
-    if #[cfg(feature = "std")] {
-        mod writeln_error;
-        mod write_to_named_temp_file;
-        mod exit_result;
-        pub use writeln_error::*;
-        pub use write_to_named_temp_file::*;
-        pub use exit_result::*;
-    }
-}
-````
-
 ## File: src/functions/get_root_error.rs
 ````rust
 use core::error::Error;
@@ -334,6 +349,202 @@ impl<T: Debug> Display for DisplayAsDebug<T> {
 impl<T: Debug> From<T> for DisplayAsDebug<T> {
     fn from(value: T) -> Self {
         Self(value)
+    }
+}
+````
+
+## File: src/functions.rs
+````rust
+mod get_root_error;
+mod partition_result;
+
+pub use get_root_error::*;
+pub use partition_result::*;
+
+cfg_if::cfg_if! {
+    if #[cfg(feature = "std")] {
+        mod writeln_error;
+        mod write_to_named_temp_file;
+        mod exit_result;
+        pub use writeln_error::*;
+        pub use write_to_named_temp_file::*;
+        pub use exit_result::*;
+    }
+}
+````
+
+## File: src/functions/writeln_error.rs
+````rust
+use crate::{ErrVec, Prefixer, write_to_named_temp_file};
+use std::error::Error;
+use std::io;
+use std::io::{Write, stderr};
+
+/// Writes a human-readable error trace to the provided writer and persists the full debug output to a temp file.
+///
+/// This is useful for CLI tools that want a concise error trace on stderr and a path to a full report.
+pub fn writeln_error_to_writer_and_file(error: &(dyn Error + 'static), writer: &mut dyn Write) -> Result<(), io::Error> {
+    writeln_error_to_writer(error, writer, true)?;
+    writeln!(writer)?;
+    let error_debug = format!("{error:#?}");
+    let result = write_to_named_temp_file(error_debug.as_bytes());
+    match result {
+        Ok((_file, path_buf)) => {
+            writeln!(writer, "See the full error report:\nless {}", path_buf.display())
+        }
+        Err(other_error) => {
+            writeln!(writer, "{other_error:#?}")
+        }
+    }
+}
+
+/// Writes a human-readable error trace to the provided writer.
+///
+/// When the error is an [`ErrVec`], each element is rendered as a nested bullet list.
+pub fn writeln_error_to_writer(error: &(dyn Error + 'static), writer: &mut dyn Write, is_top_level: bool) -> Result<(), io::Error> {
+    let source = error;
+    if let Some(err_vec) = source.downcast_ref::<ErrVec>() {
+        if is_top_level {
+            writeln!(writer, "- {error}")?;
+        }
+        err_vec.inner.iter().try_for_each(|err| {
+            let mut prefixer = error_prefixer(writer);
+            writeln_error_to_writer(err.as_ref(), &mut prefixer, false)
+        })
+    } else {
+        writeln!(writer, "- {error}")?;
+        if let Some(source_new) = source.source() {
+            writeln_error_to_writer(source_new, writer, false)
+        } else {
+            Ok(())
+        }
+    }
+}
+
+/// Writes an error trace to stderr and, if possible, includes a path to the full error report.
+pub fn eprintln_error(error: &(dyn Error + 'static)) {
+    let mut stderr = stderr().lock();
+    let result = writeln_error_to_writer_and_file(error, &mut stderr);
+    match result {
+        Ok(()) => (),
+        Err(err) => eprintln!("failed to write to stderr: {err:#?}"),
+    }
+}
+
+/// Builds a [`Prefixer`] suitable for nested error bullet lists.
+pub fn error_prefixer(writer: &mut dyn Write) -> Prefixer<'_> {
+    Prefixer::new("  * ", "    ", writer)
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::functions::writeln_error::tests::JsonSchemaNewError::InputMustBeObject;
+    use crate::{ErrVec, writeln_error_to_writer};
+    use thiserror::Error;
+
+    #[test]
+    fn must_write_error() {
+        let error = CliRunError::CommandRunFailed {
+            source: CommandRunError::I18nUpdateRunFailed {
+                source: I18nUpdateRunError::UpdateRowsFailed {
+                    source: vec![
+                        UpdateRowError::I18nRequestFailed {
+                            source: I18nRequestError::JsonSchemaNewFailed {
+                                source: InputMustBeObject {
+                                    input: "foo".to_string(),
+                                },
+                            },
+                            row: Row::new("Foo"),
+                        },
+                        UpdateRowError::I18nRequestFailed {
+                            source: I18nRequestError::RequestSendFailed {
+                                source: tokio::io::Error::new(tokio::io::ErrorKind::AddrNotAvailable, "server at 239.143.73.1 did not respond"),
+                            },
+                            row: Row::new("Bar"),
+                        },
+                    ]
+                    .into(),
+                },
+            },
+        };
+        let mut output = Vec::new();
+        writeln_error_to_writer(&error, &mut output, true).unwrap();
+        let string = String::from_utf8(output).unwrap();
+        assert_eq!(string, include_str!("writeln_error/fixtures/must_write_error.txt"))
+    }
+
+    #[derive(Error, Debug)]
+    pub enum CliRunError {
+        #[error("failed to run CLI command")]
+        CommandRunFailed { source: CommandRunError },
+    }
+
+    #[derive(Error, Debug)]
+    pub enum CommandRunError {
+        #[error("failed to run i18n update command")]
+        I18nUpdateRunFailed { source: I18nUpdateRunError },
+    }
+
+    #[derive(Error, Debug)]
+    pub enum I18nUpdateRunError {
+        #[error("failed to update {len} rows", len = source.len())]
+        UpdateRowsFailed { source: ErrVec },
+    }
+
+    #[derive(Error, Debug)]
+    pub enum UpdateRowError {
+        #[error("failed to send an i18n request for row '{row}'", row = row.name)]
+        I18nRequestFailed { source: I18nRequestError, row: Row },
+    }
+
+    #[derive(Error, Debug)]
+    pub enum I18nRequestError {
+        #[error("failed to construct a JSON schema")]
+        JsonSchemaNewFailed { source: JsonSchemaNewError },
+        #[error("failed to send a request")]
+        RequestSendFailed { source: tokio::io::Error },
+    }
+
+    #[derive(Error, Debug)]
+    pub enum JsonSchemaNewError {
+        #[error("input must be an object")]
+        InputMustBeObject { input: String },
+    }
+
+    #[derive(Debug)]
+    pub struct Row {
+        name: String,
+    }
+
+    impl Row {
+        pub fn new(name: impl Into<String>) -> Self {
+            Self {
+                name: name.into(),
+            }
+        }
+    }
+}
+````
+
+## File: src/types.rs
+````rust
+mod debug_as_display;
+mod display_as_debug;
+mod item_error;
+
+pub use debug_as_display::*;
+pub use display_as_debug::*;
+pub use item_error::*;
+
+cfg_if::cfg_if! {
+    if #[cfg(feature = "std")] {
+        mod err_vec;
+        mod path_buf_display;
+        mod prefixer;
+
+        pub use err_vec::*;
+        pub use path_buf_display::*;
+        pub use prefixer::*;
     }
 }
 ````
@@ -409,14 +620,14 @@ macro_rules! handle_bool {
 macro_rules! handle_iter {
     ($results:expr, $variant:ident$(,)? $($arg:ident$(: $value:expr)?),*) => {
         {
-            let (oks, errors): (Vec<_>, Vec<_>) = itertools::Itertools::partition_result($results);
-            if errors.is_empty() {
-                oks
-            } else {
-                return Err($variant {
-                    source: errors.into(),
-                    $($arg: $crate::_into!($arg$(: $value)?)),*
-                });
+            match $crate::partition_result($results) {
+                Ok(oks) => oks,
+                Err(errors) => {
+                    return Err($variant {
+                        source: errors.into(),
+                        $($arg: $crate::_into!($arg$(: $value)?)),*
+                    });
+                }
             }
         }
     };
@@ -431,7 +642,8 @@ macro_rules! handle_iter {
 macro_rules! handle_iter_of_refs {
     ($results:expr, $items:expr, $variant:ident $(, $arg:ident$(: $value:expr)?)*) => {
         {
-            let (outputs, items, errors) = std::iter::zip($results, $items).fold(
+            use alloc::vec::Vec;
+            let (outputs, items, errors) = core::iter::zip($results, $items).fold(
                 (Vec::new(), Vec::new(), Vec::new()),
                 |(mut outputs, mut items, mut errors), (result, item)| {
                     match result {
@@ -808,182 +1020,6 @@ mod tests {
 }
 ````
 
-## File: src/types.rs
-````rust
-mod debug_as_display;
-mod display_as_debug;
-
-pub use debug_as_display::*;
-pub use display_as_debug::*;
-
-cfg_if::cfg_if! {
-    if #[cfg(feature = "std")] {
-        mod err_vec;
-        mod item_error;
-        mod path_buf_display;
-        mod prefixer;
-
-        pub use err_vec::*;
-        pub use item_error::*;
-        pub use path_buf_display::*;
-        pub use prefixer::*;
-    }
-}
-````
-
-## File: src/functions/writeln_error.rs
-````rust
-use crate::{ErrVec, Prefixer, write_to_named_temp_file};
-use std::error::Error;
-use std::io;
-use std::io::{Write, stderr};
-
-/// Writes a human-readable error trace to the provided writer and persists the full debug output to a temp file.
-///
-/// This is useful for CLI tools that want a concise error trace on stderr and a path to a full report.
-pub fn writeln_error_to_writer_and_file(error: &(dyn Error + 'static), writer: &mut dyn Write) -> Result<(), io::Error> {
-    writeln_error_to_writer(error, writer, true)?;
-    writeln!(writer)?;
-    let error_debug = format!("{error:#?}");
-    let result = write_to_named_temp_file(error_debug.as_bytes());
-    match result {
-        Ok((_file, path_buf)) => {
-            writeln!(writer, "See the full error report:\nless {}", path_buf.display())
-        }
-        Err(other_error) => {
-            writeln!(writer, "{other_error:#?}")
-        }
-    }
-}
-
-/// Writes a human-readable error trace to the provided writer.
-///
-/// When the error is an [`ErrVec`], each element is rendered as a nested bullet list.
-pub fn writeln_error_to_writer(error: &(dyn Error + 'static), writer: &mut dyn Write, is_top_level: bool) -> Result<(), io::Error> {
-    let source = error;
-    if let Some(err_vec) = source.downcast_ref::<ErrVec>() {
-        if is_top_level {
-            writeln!(writer, "- {error}")?;
-        }
-        err_vec.inner.iter().try_for_each(|err| {
-            let mut prefixer = error_prefixer(writer);
-            writeln_error_to_writer(err.as_ref(), &mut prefixer, false)
-        })
-    } else {
-        writeln!(writer, "- {error}")?;
-        if let Some(source_new) = source.source() {
-            writeln_error_to_writer(source_new, writer, false)
-        } else {
-            Ok(())
-        }
-    }
-}
-
-/// Writes an error trace to stderr and, if possible, includes a path to the full error report.
-pub fn eprintln_error(error: &(dyn Error + 'static)) {
-    let mut stderr = stderr().lock();
-    let result = writeln_error_to_writer_and_file(error, &mut stderr);
-    match result {
-        Ok(()) => (),
-        Err(err) => eprintln!("failed to write to stderr: {err:#?}"),
-    }
-}
-
-/// Builds a [`Prefixer`] suitable for nested error bullet lists.
-pub fn error_prefixer(writer: &mut dyn Write) -> Prefixer<'_> {
-    Prefixer::new("  * ", "    ", writer)
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::functions::writeln_error::tests::JsonSchemaNewError::InputMustBeObject;
-    use crate::{ErrVec, writeln_error_to_writer};
-    use thiserror::Error;
-
-    #[test]
-    fn must_write_error() {
-        let error = CliRunError::CommandRunFailed {
-            source: CommandRunError::I18nUpdateRunFailed {
-                source: I18nUpdateRunError::UpdateRowsFailed {
-                    source: vec![
-                        UpdateRowError::I18nRequestFailed {
-                            source: I18nRequestError::JsonSchemaNewFailed {
-                                source: InputMustBeObject {
-                                    input: "foo".to_string(),
-                                },
-                            },
-                            row: Row::new("Foo"),
-                        },
-                        UpdateRowError::I18nRequestFailed {
-                            source: I18nRequestError::RequestSendFailed {
-                                source: tokio::io::Error::new(tokio::io::ErrorKind::AddrNotAvailable, "server at 239.143.73.1 did not respond"),
-                            },
-                            row: Row::new("Bar"),
-                        },
-                    ]
-                    .into(),
-                },
-            },
-        };
-        let mut output = Vec::new();
-        writeln_error_to_writer(&error, &mut output, true).unwrap();
-        let string = String::from_utf8(output).unwrap();
-        assert_eq!(string, include_str!("writeln_error/fixtures/must_write_error.txt"))
-    }
-
-    #[derive(Error, Debug)]
-    pub enum CliRunError {
-        #[error("failed to run CLI command")]
-        CommandRunFailed { source: CommandRunError },
-    }
-
-    #[derive(Error, Debug)]
-    pub enum CommandRunError {
-        #[error("failed to run i18n update command")]
-        I18nUpdateRunFailed { source: I18nUpdateRunError },
-    }
-
-    #[derive(Error, Debug)]
-    pub enum I18nUpdateRunError {
-        #[error("failed to update {len} rows", len = source.len())]
-        UpdateRowsFailed { source: ErrVec },
-    }
-
-    #[derive(Error, Debug)]
-    pub enum UpdateRowError {
-        #[error("failed to send an i18n request for row '{row}'", row = row.name)]
-        I18nRequestFailed { source: I18nRequestError, row: Row },
-    }
-
-    #[derive(Error, Debug)]
-    pub enum I18nRequestError {
-        #[error("failed to construct a JSON schema")]
-        JsonSchemaNewFailed { source: JsonSchemaNewError },
-        #[error("failed to send a request")]
-        RequestSendFailed { source: tokio::io::Error },
-    }
-
-    #[derive(Error, Debug)]
-    pub enum JsonSchemaNewError {
-        #[error("input must be an object")]
-        InputMustBeObject { input: String },
-    }
-
-    #[derive(Debug)]
-    pub struct Row {
-        name: String,
-    }
-
-    impl Row {
-        pub fn new(name: impl Into<String>) -> Self {
-            Self {
-                name: name.into(),
-            }
-        }
-    }
-}
-````
-
 ## File: src/lib.rs
 ````rust
 //! Macros for ergonomic error handling with [thiserror](https://crates.io/crates/thiserror).
@@ -1039,13 +1075,13 @@ mod tests {
 //!
 //! * `parse_config_v2` is longer
 //!
-//! That means `parse_config_v2` is strictly better but requires more code. However, with LLMs, writing more code is not an issue. Therefore, it's better to use a more verbose approach, which provides you with better errors.
+//! That means `parse_config_v2` is strictly better but requires writing more code. However, with LLMs, writing more code is not an issue. Therefore, it's better to use a more verbose approach `v2`, which provides you with better errors.
 //!
 //! This crates provides the `handle` family of macros to simplify the error handling code.
 //!
 //! ## Better debugging
 //!
-//! To improve your debugging experience: call [`exit_result`] in `main` right before return, and it will display all information necessary to understand the root cause of the error (see example below).
+//! To improve your debugging experience: call [`exit_result`] in `main` right before return, and it will display all information necessary to understand the root cause of the error:
 //!
 //! ```rust
 //! # #[cfg(feature = "std")]
@@ -1121,8 +1157,8 @@ mod tests {
 //! * [`handle_opt!`] instead of [`Option::ok_or`] and [`Option::ok_or_else`]
 //! * [`handle_bool!`] instead of `if condition { return Err(...) }`
 //! * [`handle_iter!`] instead of code that handles errors in iterators
-//! * [`handle_iter_of_refs!`] instead of the code handles errors in iterators of references (where the values are still being owned by the underlying collection)
-//! * [`handle_into_iter!`] replaces the code that handles errors in collections that implement [`IntoIterator`] (including [`Vec`] and [`HashMap`](std::collections::HashMap)
+//! * [`handle_iter_of_refs!`] instead of code that handles errors in iterators of references (where the values are still being owned by the underlying collection)
+//! * [`handle_into_iter!`] instead of code that handles errors in collections that implement [`IntoIterator`] (including [`Vec`] and [`HashMap`](std::collections::HashMap)
 //!
 //! ## Definitions
 //!

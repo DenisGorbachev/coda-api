@@ -294,8 +294,8 @@ checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 
 [[package]]
 name = "errgonomic"
-version = "0.1.0"
-source = "git+https://github.com/DenisGorbachev/errgonomic#05b74f4cda64bcd4fe60054c4b1dc5b3d1faf6f0"
+version = "0.1.2"
+source = "git+https://github.com/DenisGorbachev/errgonomic#ef90134510c276927fb7647af4e4d8ca29f6969f"
 dependencies = [
  "cfg-if",
  "tempfile",
@@ -309,7 +309,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "778e2ac28f6c47af28e4907f13ffd1e1ddbd400980a9abd7c8df189bf578a5ad"
 dependencies = [
  "libc",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -1164,7 +1164,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
@@ -1371,7 +1371,7 @@ dependencies = [
  "getrandom",
  "once_cell",
  "rustix",
- "windows-sys 0.52.0",
+ "windows-sys 0.59.0",
 ]
 
 [[package]]
