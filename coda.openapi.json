@@ -4924,6 +4924,46 @@
             "$ref": "#/components/responses/TooManyRequestsError"
           }
         }
+      },
+      "delete": {
+        "summary": "Delete a user's own permissions for Pack",
+        "description": "Delete a user's own permissions for a given Pack.\n",
+        "operationId": "deleteUserPackPermission",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/packId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Confirmation of successfully deleting a user's permissions for a Pack.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteUserPackPermissionsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestWithValidationErrors"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
       }
     },
     "/packs/{packId}/permissions/{permissionId}": {
@@ -14229,6 +14269,9 @@
           },
           {
             "$ref": "#/components/schemas/PackGlobalPrincipal"
+          },
+          {
+            "$ref": "#/components/schemas/PackGrammarlyInstitutionPrincipal"
           }
         ],
         "discriminator": {
@@ -14236,7 +14279,8 @@
           "mapping": {
             "user": "#/components/schemas/PackUserPrincipal",
             "workspace": "#/components/schemas/PackWorkspacePrincipal",
-            "global": "#/components/schemas/PackGlobalPrincipal"
+            "global": "#/components/schemas/PackGlobalPrincipal",
+            "grammarlyInstitution": "#/components/schemas/PackGrammarlyInstitutionPrincipal"
           }
         }
       },
@@ -14247,12 +14291,14 @@
         "enum": [
           "user",
           "workspace",
-          "worldwide"
+          "worldwide",
+          "grammarlyInstitution"
         ],
         "x-tsEnumNames": [
           "User",
           "Workspace",
-          "Worldwide"
+          "Worldwide",
+          "GrammarlyInstitution"
         ]
       },
       "PackAccessType": {
@@ -14350,6 +14396,29 @@
               "worldwide"
             ],
             "x-tsType": "PackPrincipalType.Worldwide"
+          }
+        }
+      },
+      "PackGrammarlyInstitutionPrincipal": {
+        "x-schema-name": "PackGrammarlyInstitutionPrincipal",
+        "type": "object",
+        "required": [
+          "type",
+          "grammarlyInstitutionId"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "grammarlyInstitution"
+            ],
+            "x-tsType": "PackPrincipalType.GrammarlyInstitution"
+          },
+          "grammarlyInstitutionId": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
           }
         }
       },
@@ -14954,11 +15023,13 @@
         "type": "string",
         "enum": [
           "public",
+          "grammarlyInstitution",
           "workspace",
           "private"
         ],
         "x-tsEnumNames": [
           "Public",
+          "GrammarlyInstitution",
           "Workspace",
           "Private"
         ]
@@ -18229,6 +18300,13 @@
       "DeletePackPermissionResponse": {
         "x-schema-name": "DeletePackPermissionResponse",
         "description": "Confirmation of successfully deleting a Pack permission.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "DeleteUserPackPermissionsResponse": {
+        "x-schema-name": "DeleteUserPackPermissionsResponse",
+        "description": "Confirmation of successfully deleting a user's permissions for a Pack.",
         "type": "object",
         "additionalProperties": false,
         "properties": {}

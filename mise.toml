@@ -133,6 +133,12 @@ rm -f "$LIB"
 echo "#![allow(unreachable_code)]" >> $LIB
 cat $TEMP/$LIB >> $LIB
 $SDF '///!' '/// !' $LIB
+$SDF '<span>' '' $LIB
+$SDF 'go/<name>/<var1>/<var2>' 'go/{name}/{var1}/{var2}' $LIB
+$SDF '"http://schema.org/"' '"<http://schema.org/>"' $LIB
+$SDF 'https://coda.io/trust/tos' '<https://coda.io/trust/tos>' $LIB
+$SDF '\n/// border' ' border' $LIB
+$SDF '    Your doc ID' 'Your doc ID' $LIB
 $SDF "elided_named_lifetimes" "mismatched_lifetime_syntaxes" $LIB
 $SDF "pub struct Client {" "pub struct RawClient {" $LIB
 $SDF "impl Client {" "impl RawClient {" $LIB

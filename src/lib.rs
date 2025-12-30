@@ -500,7 +500,7 @@ pub mod types {
     ///    "urlPattern": {
     ///      "description": "Optional destination URL with {*} placeholders for
     /// variables to be inserted. Variables are specified like
-    /// go/<name>/<var1>/<var2>.",
+    /// go/{name}/{var1}/{var2}.",
     ///      "examples": [
     ///        "https://example.com/{*}/{*}"
     ///      ],
@@ -533,7 +533,7 @@ pub mod types {
         /// characters, dashes, and underscores are allowed.
         pub name: AddGoLinkRequestName,
         ///Optional destination URL with {*} placeholders for variables to be
-        /// inserted. Variables are specified like go/<name>/<var1>/<var2>.
+        /// inserted. Variables are specified like go/{name}/{var1}/{var2}.
         #[serde(rename = "urlPattern", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub url_pattern: ::std::option::Option<AddGoLinkRequestUrlPattern>,
     }
@@ -861,7 +861,7 @@ pub mod types {
     }
 
     ///Optional destination URL with {*} placeholders for variables to be
-    /// inserted. Variables are specified like go/<name>/<var1>/<var2>.
+    /// inserted. Variables are specified like go/{name}/{var1}/{var2}.
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -869,7 +869,7 @@ pub mod types {
     ///{
     ///  "description": "Optional destination URL with {*} placeholders for
     /// variables to be inserted. Variables are specified like
-    /// go/<name>/<var1>/<var2>.",
+    /// go/{name}/{var1}/{var2}.",
     ///  "examples": [
     ///    "https://example.com/{*}/{*}"
     ///  ],
@@ -6793,6 +6793,150 @@ pub mod types {
     impl ::std::convert::From<&DeleteRowsResponse> for DeleteRowsResponse {
         fn from(value: &DeleteRowsResponse) -> Self {
             value.clone()
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeleteUserPackPermissionResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<DeleteUserPackPermissionResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&DeleteUserPackPermissionResponse> for DeleteUserPackPermissionResponse {
+        fn from(value: &DeleteUserPackPermissionResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Detail about why this request was rejected.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Detail about why this request was rejected.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "validationErrors": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ValidationError"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeleteUserPackPermissionResponseCodaDetail {
+        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub validation_errors: ::std::vec::Vec<ValidationError>,
+    }
+
+    impl ::std::convert::From<&DeleteUserPackPermissionResponseCodaDetail> for DeleteUserPackPermissionResponseCodaDetail {
+        fn from(value: &DeleteUserPackPermissionResponseCodaDetail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for DeleteUserPackPermissionResponseCodaDetail {
+        fn default() -> Self {
+            Self {
+                validation_errors: Default::default(),
+            }
+        }
+    }
+
+    ///Confirmation of successfully deleting a user's permissions for a Pack.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully deleting a user's
+    /// permissions for a Pack.",
+    ///  "type": "object",
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "DeleteUserPackPermissionsResponse"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeleteUserPackPermissionsResponse {}
+    impl ::std::convert::From<&DeleteUserPackPermissionsResponse> for DeleteUserPackPermissionsResponse {
+        fn from(value: &DeleteUserPackPermissionsResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for DeleteUserPackPermissionsResponse {
+        fn default() -> Self {
+            Self {}
         }
     }
 
@@ -15396,7 +15540,7 @@ pub mod types {
     ///    "@context": {
     ///      "description": "A url describing the schema context for this object, typically \"http://schema.org/\".",
     ///      "examples": [
-    ///        "http://schema.org/"
+    ///        "<http://schema.org/>"
     ///      ],
     ///      "type": "string"
     ///    },
@@ -15421,7 +15565,7 @@ pub mod types {
         /// be present in a schema.org taxonomy,
         #[serde(rename = "additionalType", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub additional_type: ::std::option::Option<::std::string::String>,
-        ///A url describing the schema context for this object, typically "http://schema.org/".
+        ///A url describing the schema context for this object, typically "<http://schema.org/>".
         #[serde(rename = "@context")]
         pub context: ::std::string::String,
         #[serde(rename = "@type")]
@@ -25948,12 +26092,14 @@ pub mod types {
     ///  "type": "string",
     ///  "enum": [
     ///    "public",
+    ///    "grammarlyInstitution",
     ///    "workspace",
     ///    "private"
     ///  ],
     ///  "x-schema-name": "PackDiscoverability",
     ///  "x-tsEnumNames": [
     ///    "Public",
+    ///    "GrammarlyInstitution",
     ///    "Workspace",
     ///    "Private"
     ///  ]
@@ -25964,6 +26110,8 @@ pub mod types {
     pub enum PackDiscoverability {
         #[serde(rename = "public")]
         Public,
+        #[serde(rename = "grammarlyInstitution")]
+        GrammarlyInstitution,
         #[serde(rename = "workspace")]
         Workspace,
         #[serde(rename = "private")]
@@ -25980,6 +26128,7 @@ pub mod types {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
                 Self::Public => f.write_str("public"),
+                Self::GrammarlyInstitution => f.write_str("grammarlyInstitution"),
                 Self::Workspace => f.write_str("workspace"),
                 Self::Private => f.write_str("private"),
             }
@@ -25991,6 +26140,7 @@ pub mod types {
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "public" => Ok(Self::Public),
+                "grammarlyInstitution" => Ok(Self::GrammarlyInstitution),
                 "workspace" => Ok(Self::Workspace),
                 "private" => Ok(Self::Private),
                 _ => Err("invalid value".into()),
@@ -27376,6 +27526,116 @@ pub mod types {
     }
 
     impl ::std::convert::TryFrom<::std::string::String> for PackGlobalPrincipalType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    ///`PackGrammarlyInstitutionPrincipal`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "grammarlyInstitutionId",
+    ///    "type"
+    ///  ],
+    ///  "properties": {
+    ///    "grammarlyInstitutionId": {
+    ///      "type": "integer",
+    ///      "format": "int64",
+    ///      "minimum": 1.0
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "grammarlyInstitution"
+    ///      ],
+    ///      "x-tsType": "PackPrincipalType.GrammarlyInstitution"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackGrammarlyInstitutionPrincipal"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackGrammarlyInstitutionPrincipal {
+        #[serde(rename = "grammarlyInstitutionId")]
+        pub grammarly_institution_id: ::std::num::NonZeroU64,
+        #[serde(rename = "type")]
+        pub type_: PackGrammarlyInstitutionPrincipalType,
+    }
+
+    impl ::std::convert::From<&PackGrammarlyInstitutionPrincipal> for PackGrammarlyInstitutionPrincipal {
+        fn from(value: &PackGrammarlyInstitutionPrincipal) -> Self {
+            value.clone()
+        }
+    }
+
+    ///`PackGrammarlyInstitutionPrincipalType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "grammarlyInstitution"
+    ///  ],
+    ///  "x-tsType": "PackPrincipalType.GrammarlyInstitution"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum PackGrammarlyInstitutionPrincipalType {
+        #[serde(rename = "grammarlyInstitution")]
+        GrammarlyInstitution,
+    }
+
+    impl ::std::convert::From<&Self> for PackGrammarlyInstitutionPrincipalType {
+        fn from(value: &PackGrammarlyInstitutionPrincipalType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for PackGrammarlyInstitutionPrincipalType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::GrammarlyInstitution => f.write_str("grammarlyInstitution"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for PackGrammarlyInstitutionPrincipalType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "grammarlyInstitution" => Ok(Self::GrammarlyInstitution),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackGrammarlyInstitutionPrincipalType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackGrammarlyInstitutionPrincipalType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackGrammarlyInstitutionPrincipalType {
         type Error = self::error::ConversionError;
         fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
@@ -31084,6 +31344,9 @@ pub mod types {
     ///    },
     ///    {
     ///      "$ref": "#/components/schemas/PackGlobalPrincipal"
+    ///    },
+    ///    {
+    ///      "$ref": "#/components/schemas/PackGrammarlyInstitutionPrincipal"
     ///    }
     ///  ],
     ///  "x-schema-name": "PackPrincipal"
@@ -31096,6 +31359,7 @@ pub mod types {
         UserPrincipal(PackUserPrincipal),
         WorkspacePrincipal(PackWorkspacePrincipal),
         GlobalPrincipal(PackGlobalPrincipal),
+        GrammarlyInstitutionPrincipal(PackGrammarlyInstitutionPrincipal),
     }
 
     impl ::std::convert::From<&Self> for PackPrincipal {
@@ -31122,6 +31386,12 @@ pub mod types {
         }
     }
 
+    impl ::std::convert::From<PackGrammarlyInstitutionPrincipal> for PackPrincipal {
+        fn from(value: PackGrammarlyInstitutionPrincipal) -> Self {
+            Self::GrammarlyInstitutionPrincipal(value)
+        }
+    }
+
     ///Type of Pack permissions.
     ///
     /// <details><summary>JSON schema</summary>
@@ -31133,13 +31403,15 @@ pub mod types {
     ///  "enum": [
     ///    "user",
     ///    "workspace",
-    ///    "worldwide"
+    ///    "worldwide",
+    ///    "grammarlyInstitution"
     ///  ],
     ///  "x-schema-name": "PackPrincipalType",
     ///  "x-tsEnumNames": [
     ///    "User",
     ///    "Workspace",
-    ///    "Worldwide"
+    ///    "Worldwide",
+    ///    "GrammarlyInstitution"
     ///  ]
     ///}
     /// ```
@@ -31152,6 +31424,8 @@ pub mod types {
         Workspace,
         #[serde(rename = "worldwide")]
         Worldwide,
+        #[serde(rename = "grammarlyInstitution")]
+        GrammarlyInstitution,
     }
 
     impl ::std::convert::From<&Self> for PackPrincipalType {
@@ -31166,6 +31440,7 @@ pub mod types {
                 Self::User => f.write_str("user"),
                 Self::Workspace => f.write_str("workspace"),
                 Self::Worldwide => f.write_str("worldwide"),
+                Self::GrammarlyInstitution => f.write_str("grammarlyInstitution"),
             }
         }
     }
@@ -31177,6 +31452,7 @@ pub mod types {
                 "user" => Ok(Self::User),
                 "workspace" => Ok(Self::Workspace),
                 "worldwide" => Ok(Self::Worldwide),
+                "grammarlyInstitution" => Ok(Self::GrammarlyInstitution),
                 _ => Err("invalid value".into()),
             }
         }
@@ -45229,11 +45505,10 @@ pub mod types {
 ///    <legend>Doc ID Extractor</legend>
 ///    <input type="text" id="de_docUrl" placeholder="Paste in a Coda doc URL"
 ///           style="width: 250px; padding: 8px; margin-right: 20px;" />
-///    <span>
-///      Your doc ID is:&nbsp;&nbsp;&nbsp;
+///    
+///  Your doc ID is:&nbsp;&nbsp;&nbsp;
 ///      <input id="de_docId" readonly="true"
-///             style="width: 150px; padding: 8px; font-family: monospace;
-/// border: 1px dashed gray;" />  </fieldset>
+///             style="width: 150px; padding: 8px; font-family: monospace; border: 1px dashed gray;" />  </fieldset>
 ///</form>
 ///
 ///<script>
@@ -45408,7 +45683,7 @@ pub mod types {
 /// - [Go](https://github.com/artsafin/coda-schema-generator) by Artur Safin
 ///
 ///
-///https://coda.io/trust/tos
+///<https://coda.io/trust/tos>
 ///
 ///Version: 1.5.0
 pub struct RawClient {
@@ -48959,6 +49234,44 @@ impl RawClient {
             .build()?;
         let info = OperationInfo {
             operation_id: "add_pack_permission",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Delete a user's own permissions for Pack
+    ///
+    ///Delete a user's own permissions for a given Pack.
+    ///
+    ///
+    ///Sends a `DELETE` request to `/packs/{packId}/permissions`
+    ///
+    ///Arguments:
+    /// - `pack_id`: ID of a Pack
+    pub async fn delete_user_pack_permission<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::DeleteUserPackPermissionsResponse>, Error<types::DeleteUserPackPermissionResponse>> {
+        let url = format!("{}/packs/{}/permissions", self.baseurl, encode_path(&pack_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .delete(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "delete_user_pack_permission",
         };
         self.pre(&mut request, &info).await?;
         let result = self.exec(request, &info).await;
