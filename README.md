@@ -4,6 +4,7 @@
 
 # Coda API client
 
+[![Build](https://github.com/DenisGorbachev/coda-api/actions/workflows/ci.yml/badge.svg)](https://github.com/DenisGorbachev/coda-api)
 [![Documentation](https://docs.rs/coda-api/badge.svg)](https://docs.rs/coda-api)
 
 <!-- crate documentation start -->
