@@ -37,7 +37,7 @@ readme = { }
 [dependencies]
 chrono = { version = "0.4", default-features = false, features = ["serde"] }
 derive_more = { version = "2.0", features = ["display"] }
-errgonomic = { version = "0.2.2" }
+errgonomic = { version = "0.4.0" }
 governor = { version = "0.10" }
 # progenitor-client version must be pinned
 progenitor-client = { version = "0.11.1" }
