@@ -163,7 +163,11 @@ mise run test
 
 [tasks."fix:docs"]
 # use `rumdl fmt` instead of `rumdl check --fix` because `rumdl fmt` exits with 0 after fixing the errors
-run = "rumdl fmt"
+# `rumdl fmt` may modify any file, so we need to `git add *.md` (`stage_fixed` only stages the files that were modified before `fix:docs` is run)
+run = """
+rumdl fmt
+git add *.md
+"""
 
 [tasks."fix:agents"]
 run = """
