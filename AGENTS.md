@@ -22,6 +22,12 @@ You are a senior Rust software architect. You write high-quality, production-rea
 * After finishing the task: run `mise run agent:on:stop` (this command runs the lints and tests)
 * Don't edit the files in the following top-level dirs: `specs`, `.agents`
 * Don't write the tests unless I ask you explicitly
+* If you notice unexpected edits, keep them
+
+### Review workflow
+
+* Output a numbered list of issues (I will reference the issues by number in my answer)
+* If there are no issues, then start your reply with "No issues found"
 
 ### Commands
 
@@ -124,8 +130,7 @@ You are a senior Rust software architect. You write high-quality, production-rea
 
 ### Code style
 
-* Implement proper error handling instead of `unwrap` or `expect` in production code
-  * Use `unwrap` or `expect` in tests
+* Implement proper error handling instead of `unwrap` or `expect` (in normal code and in tests)
   * Use `expect` only in exceptional cases where you can prove that it always succeeds, and provide the proof as the first argument to `expect` (the proof must start with "always succeeds because")
 * The file names must match the names of the primary item in this file (for example: a file with `struct User` must be in `user.rs`)
 * Don't use `mod.rs`, use module files with submodules in the folder with the same name (for example: `user.rs` with submodules in `user` folder)
@@ -239,6 +244,31 @@ You are a senior Rust software architect. You write high-quality, production-rea
     /// This is bad because it is not general enough and also forces the caller to collect the strings into a vec, which is bad for performance
     pub fn bar(inputs: impl IntoIterator<Item = String>) {}
     ```
+* Prefer `.map()` instead of `match` when you need to modify the value in the `Option` or `Result`. For example:
+  * Good:
+    ```rust
+    impl core::str::FromStr for UserId {
+        type Err = core::num::ParseIntError;
+
+        fn from_str(s: &str) -> Result<Self, Self::Err> {
+            s.parse::<u64>().map(Self::new)
+        }
+    }
+    ```
+  * Bad:
+  ```rust
+  impl core::str::FromStr for UserId {
+      type Err = core::num::ParseIntError;
+
+      fn from_str(s: &str) -> Result<Self, Self::Err> {
+          // This is bad because it uses more code to express the same idea
+          match s.parse::<u64>() {
+              Ok(value) => Ok(Self::new(value)),
+              Err(error) => Err(error),
+          }
+      }
+  }
+  ```
 * Write `macro_rules!` macros to reduce boilerplate
 * If you see similar code in different places, write a macro and replace the similar code with a macro call
 
