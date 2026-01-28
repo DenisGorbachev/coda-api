@@ -7,6 +7,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1](https://github.com/DenisGorbachev/coda-api/compare/v0.3.0...v0.3.1) - 2026-01-28
+
+### Added
+
+- implement AGENTS script
+
+### Fixed
+
+- AGENTS
+- auto-resolve the docs
+- ExitCode cli guidance
+- add itertools
+- use latest version of package in includeCargoDependencyFile
+- discourage unwrap and expect
+- render error handling docs directly from the dependency
+- update errgonomic
+- update errgonomic
+- update errgonomic
+- update errgonomic
+- update errgonomic
+- update errgonomic
+- update errgonomic
+- update errgonomic
+- AGENTS
+- bump deps
+- update errgonomic
+- update errgonomic
+- fenced code blocks
+- handle backticks in code fences
+- render code blocks in agents output
+- update errgonomic
+- AGENTS
+- AGENTS
+- update errgonomic
+
+### Other
+
+- Merge remote-tracking branch 'repoconf-rust-public-lib-template/main'
+- resolve parts with Promise.all
+- build parts array inline
+- update file existence check
+- add includeFileIfExists
+
 ## [0.3.0](https://github.com/DenisGorbachev/coda-api/compare/v0.2.1...v0.3.0) - 2025-12-30
 
 ### Fixed
