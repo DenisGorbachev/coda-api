@@ -11,9 +11,7 @@ cargo-binstall = "1.10.15"
 "npm:@commitlint/types" = "19.5.0"
 "npm:repomix" = "1.5.0"
 "cargo:cargo-insert-docs" = "1.2.0"
-"cargo:cargo-sort" = "1.0.9"
 "cargo:cargo-hack" = "0.6.33"
-"cargo:cargo-machete" = "0.7.0"
 "cargo:cargo-nextest" = "0.9.102"
 "cargo:cargo-expand" = "1.0.114"
 "cargo:rumdl" = "0.1.0"
@@ -23,9 +21,6 @@ jq = "1.8.1"
 
 [tasks."build"]
 run = "cargo build"
-
-[tasks."fix:code:style"]
-run = "cargo fmt --all"
 
 [tasks."lint"]
 depends = ["lint:code", "lint:docs", "lint:deps"]
@@ -40,17 +35,15 @@ run = "cargo clippy --all-targets --all-features"
 [tasks."lint:docs"]
 run = "rumdl check"
 
-[tasks."lint:deps"]
-run = "cargo machete --with-metadata"
-
 [tasks."test:code"]
 run = "cargo nextest run --all-features --no-tests warn"
 
 [tasks."test:docs"]
 run = "cargo test --doc --all-features --no-fail-fast --quiet"
 
-[tasks."fix:deps:order"]
-run = "cargo sort"
+[tasks."fix"]
+# run the tasks in parallel because they modify different files
+depends = ["fix:code", "fix:docs", "fix:agents"]
 
 [tasks."fix:code"]
 # run the tasks sequentially because they modify the same files
@@ -58,10 +51,6 @@ run = """
 mise run fix:code:warnings
 mise run fix:code:style
 """
-
-[tasks."fix"]
-# run the tasks in parallel because they modify different files
-depends = ["fix:code", "fix:docs", "fix:deps", "fix:agents"]
 
 [tasks."fix:code:warnings"]
 # second pass is needed because "cargo clippy --fix" exits with 0 even if some warnings remain
@@ -71,15 +60,28 @@ cargo clippy --all-targets --all-features --fix --allow-dirty --allow-staged
 cargo clippy --all-targets --all-features -- -D warnings
 """
 
-[tasks."fix:deps"]
-# run the tasks sequentially because they modify the same files
+[tasks."fix:code:style"]
+run = "cargo fmt --all"
+
+[tasks."fix:docs"]
+# `rumdl check --fix` may modify any file, so we need to stage all markdown files.
+# use `rumdl check --fix` instead of `rumdl fmt` because `rumdl check --fix` exits with 1 if errors remain (since v0.1.0)
+# use a quoted git pathspec so ignored files (e.g. `*.local.md`) don't fail the task.
 run = """
-mise run fix:deps:usage
-mise run fix:deps:order
+rumdl check --fix
+git add -- '*.md'
 """
 
-[tasks."fix:deps:usage"]
-run = "cargo machete --with-metadata --fix"
+[tasks."fix:agents"]
+run = """
+#!/usr/bin/env bash
+set -euo pipefail
+mise run gen:agents
+if [ -f AGENTS.md ]; then
+  # add AGENTS.md manually because it may not have been staged
+  git add AGENTS.md
+fi
+"""
 
 [tasks."watch"]
 run = """
@@ -159,25 +161,6 @@ echo "#[cfg(test)] pub mod test;" >> $LIB
 mise run fix
 mise run fix:type "pub enum PushButtonResult" snippets/PushButtonResult src/lib.rs
 mise run test
-"""
-
-[tasks."fix:docs"]
-# use `rumdl check --fix` instead of `rumdl fmt` because `rumdl check --fix` exits with 1 if errors remain (since v0.1.0)
-# `rumdl check --fix` may modify any file, so we need to `git add *.md` (`stage_fixed` only stages the files that were modified before `fix:docs` is run)
-run = """
-rumdl check --fix
-git add *.md
-"""
-
-[tasks."fix:agents"]
-run = """
-#!/usr/bin/env bash
-set -euo pipefail
-mise run gen:agents
-if [ -f AGENTS.md ]; then
-  # add AGENTS.md manually because it may not have been staged
-  git add AGENTS.md
-fi
 """
 
 [tasks."gen:readme"]

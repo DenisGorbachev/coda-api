@@ -1,8 +1,10 @@
 #![allow(unreachable_code)]
+
 #[allow(unused_imports)]
 pub use progenitor_client::{ByteStream, ClientInfo, Error, ResponseValue};
 #[allow(unused_imports)]
 use progenitor_client::{ClientHooks, OperationInfo, RequestBuilderExt, encode_path};
+
 /// Types used as operation parameters and responses.
 #[allow(clippy::all)]
 pub mod types {
@@ -45505,7 +45507,7 @@ pub mod types {
 ///    <legend>Doc ID Extractor</legend>
 ///    <input type="text" id="de_docUrl" placeholder="Paste in a Coda doc URL"
 ///           style="width: 250px; padding: 8px; margin-right: 20px;" />
-///    
+///
 ///  Your doc ID is:&nbsp;&nbsp;&nbsp;
 ///      <input id="de_docId" readonly="true"
 ///             style="width: 150px; padding: 8px; font-family: monospace; border: 1px dashed gray;" />  </fieldset>
@@ -50854,10 +50856,16 @@ pub mod prelude {
     pub use super::RawClient;
 }
 mod ext;
+
 pub use ext::*;
+
 mod client;
+
 pub use client::*;
+
 mod limiter;
+
 pub use limiter::*;
+
 #[cfg(test)]
 pub mod test;
