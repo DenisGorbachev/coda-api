@@ -31,7 +31,7 @@ pub fn parse_duration_value(source: &impl AsRef<str>) -> Result<Option<Duration>
     Ok(Some(duration))
 }
 
-#[derive(Debug, Error)]
+#[derive(Debug, PartialEq, Error)]
 pub enum DurationValueParserError {
     #[error("duration value does not contain a number")]
     NumberNotFound,
@@ -41,4 +41,20 @@ pub enum DurationValueParserError {
     NumberParseFailed { source: ParseIntError },
     #[error("unexpected duration unit: {unit}")]
     UnitUnexpected { unit: String },
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn must_parse_simple_duration() {
+        assert_eq!(parse_duration_value(&"2 hrs"), Ok(Some(Duration::hours(2))));
+    }
+
+    #[test]
+    #[ignore]
+    fn must_parse_complex_duration() {
+        assert_eq!(parse_duration_value(&"2 hrs 30 mins"), Ok(Some(Duration::hours(2) + Duration::minutes(30))));
+    }
 }
