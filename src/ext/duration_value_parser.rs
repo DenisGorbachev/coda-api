@@ -17,9 +17,9 @@ pub fn parse_duration_value(source: &impl AsRef<str>) -> Result<Option<Duration>
     let number = handle!(number_str.parse::<i64>(), NumberParseFailed);
 
     let duration = match unit_str.to_ascii_lowercase().as_str() {
-        "second" | "seconds" => Duration::seconds(number),
-        "minute" | "minutes" => Duration::minutes(number),
-        "hour" | "hours" => Duration::hours(number),
+        "second" | "seconds" | "secs" => Duration::seconds(number),
+        "minute" | "minutes" | "mins" => Duration::minutes(number),
+        "hour" | "hours" | "hrs" => Duration::hours(number),
         "day" | "days" => Duration::days(number),
         _ => {
             return Err(UnitUnexpected {
@@ -38,10 +38,7 @@ pub enum DurationValueParserError {
     #[error("duration value does not contain a unit")]
     UnitNotFound,
     #[error("failed to parse duration number: {source}")]
-    NumberParseFailed {
-        #[source]
-        source: ParseIntError,
-    },
+    NumberParseFailed { source: ParseIntError },
     #[error("unexpected duration unit: {unit}")]
     UnitUnexpected { unit: String },
 }
