@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         rust:
-          - ${{ runner.temp }}/deno
+          - stable
           - beta
     timeout-minutes: 45
     steps:
