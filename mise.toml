@@ -1,7 +1,9 @@
 min_version = "2026.4.8"
 
+[settings]
+idiomatic_version_file_enable_tools = ["rust"]
+
 [tools]
-rust = "1.92.0"
 node = "22.12.0"
 deno = "1.46.1"
 cargo-binstall = "1.10.15"
@@ -15,9 +17,6 @@ cargo-binstall = "1.10.15"
 "cargo:cargo-nextest" = "0.9.102"
 "cargo:cargo-expand" = "1.0.114"
 "cargo:rumdl" = "0.1.0"
-"cargo:sd" = "1.0.0"
-"cargo:cargo-progenitor" = "0.11.1"
-jq = "1.8.1"
 
 [tasks."build"]
 run = "cargo build --workspace"
@@ -159,67 +158,3 @@ run = "mise run agent:test:code -- --ignore-default-filter --max-fail 1 --test-t
 # see also: "test:code:slow"
 # `--test-threads` is omitted because slow tests may be run in parallel
 run = "mise run agent:test:code -- --ignore-default-filter --max-fail 1 'slow_tests::'"
-
-[tasks."gen"]
-run = """
-#!/usr/bin/env bash
-
-set -xeuo pipefail
-
-SPEC="coda.openapi.json"
-LIB="src/lib.rs"
-SDF="sd --fixed-strings"
-TEMP=$(mktemp -d)
-
-# download the spec
-curl https://coda.io/apis/v1/openapi.json > $SPEC
-
-# fix & format the spec
-for ENUM in PageType TableType ControlType; do
-    $SDF "$ENUM" "${ENUM}Enum" $SPEC
-done
-for FIELD in aiCreditsChat aiCreditsBlock aiCreditsColumn aiCreditsAssistant aiCreditsReviewer aiCredits; do
-    $SDF "$FIELD," "$FIELD" $SPEC
-done
-# add the "json" language tag
-$SDF '[JSON-LD](https://json-ld.org/) format.\\n\\n```\\n  // Currency' '[JSON-LD](https://json-ld.org/) format.\\n\\n```json\\n  // Currency' $SPEC
-cat $SPEC \
-    | jq 'del(.paths["/docs/{docId}/hooks/automation/{ruleId}"].post.requestBody.content["application/x-www-form-urlencoded","text/plain"])' \
-    | jq . \
-    | sponge $SPEC
-
-cargo progenitor -i $SPEC -o $TEMP -n coda_api -v 0.1.0
-mkdir -p src
-rm -f "$LIB"
-# #![allow(unreachable_code)] is needed to work around .clone() calls on empty enums
-# this line must be at the top of the file
-echo "#![allow(unreachable_code)]" >> $LIB
-cat $TEMP/$LIB >> $LIB
-$SDF '///!' '/// !' $LIB
-$SDF '<span>' '' $LIB
-$SDF 'go/<name>/<var1>/<var2>' 'go/{name}/{var1}/{var2}' $LIB
-$SDF '"http://schema.org/"' '"<http://schema.org/>"' $LIB
-$SDF 'https://coda.io/trust/tos' '<https://coda.io/trust/tos>' $LIB
-$SDF '\n/// border' ' border' $LIB
-$SDF '    Your doc ID' 'Your doc ID' $LIB
-$SDF "elided_named_lifetimes" "mismatched_lifetime_syntaxes" $LIB
-$SDF "pub struct Client {" "pub struct RawClient {" $LIB
-$SDF "impl Client {" "impl RawClient {" $LIB
-$SDF "for Client {" "for RawClient {" $LIB
-$SDF "for &Client {" "for &RawClient {" $LIB
-$SDF "pub use super::Client;" "pub use super::RawClient;" $LIB
-# echo "mod metadata;" >> $LIB
-# echo "pub use metadata::*;" >> $LIB
-echo "mod ext;" >> $LIB
-echo "pub use ext::*;" >> $LIB
-echo "mod client;" >> $LIB
-echo "pub use client::*;" >> $LIB
-echo "mod limiter;" >> $LIB
-echo "pub use limiter::*;" >> $LIB
-echo "#[cfg(test)] pub mod test;" >> $LIB
-
-# `fix` must be executed before `fix:type`
-mise run fix
-mise run fix:type "pub enum PushButtonResult" snippets/PushButtonResult src/lib.rs
-mise run test
-"""
