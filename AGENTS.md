@@ -1725,7 +1725,7 @@ cfg_if::cfg_if! {
 name = "coda-api"
 version = "0.3.0"
 edition = "2024"
-rust-version = "1.85.0"
+rust-version = "1.88.0"
 description = "Coda API client"
 license = "Apache-2.0 OR MIT"
 homepage = "https://github.com/DenisGorbachev/coda-api"
