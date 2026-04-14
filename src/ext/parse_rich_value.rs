@@ -2,6 +2,10 @@ mod impl_try_from_rich_value_for_string;
 
 pub use impl_try_from_rich_value_for_string::*;
 
+mod impl_try_from_rich_value_for_f64;
+
+pub use impl_try_from_rich_value_for_f64::*;
+
 mod impl_try_from_rich_value_for_bool;
 
 pub use impl_try_from_rich_value_for_bool::*;
