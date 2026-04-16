@@ -4,6 +4,7 @@ use progenitor_client::{ClientHooks, ClientInfo, OperationInfo, ResponseValue, e
 use serde::de::DeserializeOwned;
 use thiserror::Error;
 
+mod build_query_param;
 #[cfg(feature = "time")]
 mod duration_value_parser;
 mod impl_from_for_value;
@@ -15,6 +16,7 @@ mod row;
 mod string_or_f64;
 mod value_format_provider;
 
+pub use build_query_param::*;
 #[cfg(feature = "time")]
 pub use duration_value_parser::*;
 pub use items_list::*;
