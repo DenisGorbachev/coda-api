@@ -1723,7 +1723,7 @@ cfg_if::cfg_if! {
 ```toml
 [package]
 name = "coda-api"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2024"
 rust-version = "1.88.0"
 description = "Coda API client"
