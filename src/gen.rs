@@ -1,10 +1,8 @@
 #![allow(unreachable_code)]
-
 #[allow(unused_imports)]
 pub use progenitor_client::{ByteStream, ClientInfo, Error, ResponseValue};
 #[allow(unused_imports)]
 use progenitor_client::{ClientHooks, OperationInfo, RequestBuilderExt, encode_path};
-
 /// Types used as operation parameters and responses.
 #[allow(clippy::all)]
 pub mod types {
@@ -2891,6 +2889,34 @@ pub mod types {
         }
     }
 
+    ///Response confirming the pack review was canceled
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Response confirming the pack review was canceled",
+    ///  "type": "object",
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "CancelPackReviewResponse"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct CancelPackReviewResponse {}
+    impl ::std::convert::From<&CancelPackReviewResponse> for CancelPackReviewResponse {
+        fn from(value: &CancelPackReviewResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for CancelPackReviewResponse {
+        fn default() -> Self {
+            Self {}
+        }
+    }
+
     ///An edit made to a particular cell in a row.
     ///
     /// <details><summary>JSON schema</summary>
@@ -4761,6 +4787,125 @@ pub mod types {
         }
     }
 
+    ///Request for creating a folder.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Request for creating a folder.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "name",
+    ///    "workspaceId"
+    ///  ],
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "Description of the folder.",
+    ///      "examples": [
+    ///        "A collection of project docs."
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "description": "Name of the folder.",
+    ///      "examples": [
+    ///        "Projects"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "workspaceId": {
+    ///      "description": "ID of the workspace where the folder should be
+    /// created.",
+    ///      "examples": [
+    ///        "ws-1Ab234"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "CreateFolderRequest"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct CreateFolderRequest {
+        ///Description of the folder.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        ///Name of the folder.
+        pub name: ::std::string::String,
+        ///ID of the workspace where the folder should be created.
+        #[serde(rename = "workspaceId")]
+        pub workspace_id: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&CreateFolderRequest> for CreateFolderRequest {
+        fn from(value: &CreateFolderRequest) -> Self {
+            value.clone()
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct CreateFolderResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&CreateFolderResponse> for CreateFolderResponse {
+        fn from(value: &CreateFolderResponse) -> Self {
+            value.clone()
+        }
+    }
+
     ///Payload for creating a Pack invitation.
     ///
     /// <details><summary>JSON schema</summary>
@@ -5168,6 +5313,213 @@ pub mod types {
     impl ::std::convert::From<&CreatePackResponse> for CreatePackResponse {
         fn from(value: &CreatePackResponse) -> Self {
             value.clone()
+        }
+    }
+
+    ///Request to create a pack review
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Request to create a pack review",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "packVersion": {
+    ///      "description": "Pack version to review (for code reviews)",
+    ///      "type": "string"
+    ///    },
+    ///    "releaseNotes": {
+    ///      "description": "Release notes for this version (used when pack is
+    /// approved and released)",
+    ///      "type": "string",
+    ///      "maxLength": 8192
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "CreatePackReviewRequest"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct CreatePackReviewRequest {
+        ///Pack version to review (for code reviews)
+        #[serde(rename = "packVersion", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub pack_version: ::std::option::Option<::std::string::String>,
+        ///Release notes for this version (used when pack is approved and
+        /// released)
+        #[serde(rename = "releaseNotes", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub release_notes: ::std::option::Option<CreatePackReviewRequestReleaseNotes>,
+    }
+
+    impl ::std::convert::From<&CreatePackReviewRequest> for CreatePackReviewRequest {
+        fn from(value: &CreatePackReviewRequest) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for CreatePackReviewRequest {
+        fn default() -> Self {
+            Self {
+                pack_version: Default::default(),
+                release_notes: Default::default(),
+            }
+        }
+    }
+
+    ///Release notes for this version (used when pack is approved and released)
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Release notes for this version (used when pack is
+    /// approved and released)",
+    ///  "type": "string",
+    ///  "maxLength": 8192
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct CreatePackReviewRequestReleaseNotes(::std::string::String);
+    impl ::std::ops::Deref for CreatePackReviewRequestReleaseNotes {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<CreatePackReviewRequestReleaseNotes> for ::std::string::String {
+        fn from(value: CreatePackReviewRequestReleaseNotes) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&CreatePackReviewRequestReleaseNotes> for CreatePackReviewRequestReleaseNotes {
+        fn from(value: &CreatePackReviewRequestReleaseNotes) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for CreatePackReviewRequestReleaseNotes {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 8192usize {
+                return Err("longer than 8192 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for CreatePackReviewRequestReleaseNotes {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for CreatePackReviewRequestReleaseNotes {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for CreatePackReviewRequestReleaseNotes {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for CreatePackReviewRequestReleaseNotes {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///Response containing created review information
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Response containing created review information",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "packReviewId"
+    ///  ],
+    ///  "properties": {
+    ///    "packReviewId": {
+    ///      "description": "ID of the created review",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "CreatePackReviewResponse"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct CreatePackReviewResponse {
+        ///ID of the created review
+        #[serde(rename = "packReviewId")]
+        pub pack_review_id: ::uuid::Uuid,
+    }
+
+    impl ::std::convert::From<&CreatePackReviewResponse> for CreatePackReviewResponse {
+        fn from(value: &CreatePackReviewResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Detail about why this request was rejected.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Detail about why this request was rejected.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "validationErrors": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ValidationError"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct CreatePackReviewResponseCodaDetail {
+        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub validation_errors: ::std::vec::Vec<ValidationError>,
+    }
+
+    impl ::std::convert::From<&CreatePackReviewResponseCodaDetail> for CreatePackReviewResponseCodaDetail {
+        fn from(value: &CreatePackReviewResponseCodaDetail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for CreatePackReviewResponseCodaDetail {
+        fn default() -> Self {
+            Self {
+                validation_errors: Default::default(),
+            }
         }
     }
 
@@ -6168,6 +6520,93 @@ pub mod types {
         }
     }
 
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeleteFolderResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&DeleteFolderResponse> for DeleteFolderResponse {
+        fn from(value: &DeleteFolderResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///The result of a folder deletion.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The result of a folder deletion.",
+    ///  "type": "object",
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "DeleteFolderResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeleteFolderResult {}
+    impl ::std::convert::From<&DeleteFolderResult> for DeleteFolderResult {
+        fn from(value: &DeleteFolderResult) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for DeleteFolderResult {
+        fn default() -> Self {
+            Self {}
+        }
+    }
+
     ///Confirmation of successfully deleting a Pack category.
     ///
     /// <details><summary>JSON schema</summary>
@@ -6305,6 +6744,34 @@ pub mod types {
             Self {
                 validation_errors: Default::default(),
             }
+        }
+    }
+
+    ///Response after deleting a Pack listing draft
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Response after deleting a Pack listing draft",
+    ///  "type": "object",
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "DeletePackListingDraftResponse"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeletePackListingDraftResponse {}
+    impl ::std::convert::From<&DeletePackListingDraftResponse> for DeletePackListingDraftResponse {
+        fn from(value: &DeletePackListingDraftResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for DeletePackListingDraftResponse {
+        fn default() -> Self {
+            Self {}
         }
     }
 
@@ -9644,13 +10111,30 @@ pub mod types {
     ///  "description": "A Coda folder.",
     ///  "type": "object",
     ///  "required": [
-    ///    "createdAt",
+    ///    "browserLink",
     ///    "id",
     ///    "name",
     ///    "type",
-    ///    "workspaceId"
+    ///    "workspace"
     ///  ],
     ///  "properties": {
+    ///    "browserLink": {
+    ///      "description": "Browser-friendly link to the folder.",
+    ///      "examples": [
+    ///        "https://coda.io/folders/fl-1Ab234"
+    ///      ],
+    ///      "type": "string",
+    ///      "format": "url"
+    ///    },
+    ///    "canEdit": {
+    ///      "description": "Whether the folder settings can be edited. E.g.,
+    /// some folder types (like personal folders - \"My Docs\") cannot be
+    /// edited.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
     ///    "createdAt": {
     ///      "description": "Timestamp for when the folder was created.",
     ///      "examples": [
@@ -9691,12 +10175,8 @@ pub mod types {
     ///      ],
     ///      "x-tsType": "Type.Folder"
     ///    },
-    ///    "workspaceId": {
-    ///      "description": "ID of the Coda workspace.",
-    ///      "examples": [
-    ///        "ws-1Ab234"
-    ///      ],
-    ///      "type": "string"
+    ///    "workspace": {
+    ///      "$ref": "#/components/schemas/WorkspaceReference"
     ///    }
     ///  },
     ///  "additionalProperties": false,
@@ -9707,9 +10187,16 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct Folder {
+        ///Browser-friendly link to the folder.
+        #[serde(rename = "browserLink")]
+        pub browser_link: ::std::string::String,
+        ///Whether the folder settings can be edited. E.g., some folder types
+        /// (like personal folders - "My Docs") cannot be edited.
+        #[serde(rename = "canEdit", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub can_edit: ::std::option::Option<bool>,
         ///Timestamp for when the folder was created.
-        #[serde(rename = "createdAt")]
-        pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        #[serde(rename = "createdAt", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub created_at: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
         ///The description of the folder.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub description: ::std::option::Option<::std::string::String>,
@@ -9722,13 +10209,78 @@ pub mod types {
         ///The type of this resource.
         #[serde(rename = "type")]
         pub type_: FolderType,
-        ///ID of the Coda workspace.
-        #[serde(rename = "workspaceId")]
-        pub workspace_id: ::std::string::String,
+        pub workspace: WorkspaceReference,
     }
 
     impl ::std::convert::From<&Folder> for Folder {
         fn from(value: &Folder) -> Self {
+            value.clone()
+        }
+    }
+
+    ///List of folders.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "List of folders.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "href": {
+    ///      "description": "API link to these results.",
+    ///      "examples": [
+    ///        "https://coda.io/apis/v1/folders?workspaceId=ws-1Ab234"
+    ///      ],
+    ///      "type": "string",
+    ///      "format": "url"
+    ///    },
+    ///    "items": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Folder"
+    ///      }
+    ///    },
+    ///    "nextPageLink": {
+    ///      "allOf": [
+    ///        {
+    ///          "$ref": "#/components/schemas/nextPageLink"
+    ///        },
+    ///        {
+    ///          "examples": [
+    ///            "https://coda.io/apis/v1/folders?pageToken=xyz"
+    ///          ],
+    ///          "type": "string"
+    ///        }
+    ///      ]
+    ///    },
+    ///    "nextPageToken": {
+    ///      "$ref": "#/components/schemas/nextPageToken"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "FolderList"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct FolderList {
+        ///API link to these results.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub href: ::std::option::Option<::std::string::String>,
+        pub items: ::std::vec::Vec<Folder>,
+        #[serde(rename = "nextPageLink", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page_link: ::std::option::Option<NextPageLink>,
+        #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page_token: ::std::option::Option<NextPageToken>,
+    }
+
+    impl ::std::convert::From<&FolderList> for FolderList {
+        fn from(value: &FolderList) -> Self {
             value.clone()
         }
     }
@@ -9750,7 +10302,7 @@ pub mod types {
     ///    "browserLink": {
     ///      "description": "Browser-friendly link to the folder.",
     ///      "examples": [
-    ///        "https://coda.io/docs?folderId=fl-1Ab234"
+    ///        "https://coda.io/folders/fl-1Ab234"
     ///      ],
     ///      "type": "string",
     ///      "format": "url"
@@ -11445,6 +11997,95 @@ pub mod types {
     }
 
     impl ::std::default::Default for GetPackConfigurationSchemaResponseCodaDetail {
+        fn default() -> Self {
+            Self {
+                validation_errors: Default::default(),
+            }
+        }
+    }
+
+    ///Response containing the Pack listing draft
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Response containing the Pack listing draft",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "listingData": {
+    ///      "$ref": "#/components/schemas/PackListingDraftData"
+    ///    },
+    ///    "packListingDraftId": {
+    ///      "description": "ID of the listing draft",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "GetPackListingDraftResponse"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct GetPackListingDraftResponse {
+        #[serde(rename = "listingData", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub listing_data: ::std::option::Option<PackListingDraftData>,
+        ///ID of the listing draft
+        #[serde(rename = "packListingDraftId", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub pack_listing_draft_id: ::std::option::Option<::uuid::Uuid>,
+    }
+
+    impl ::std::convert::From<&GetPackListingDraftResponse> for GetPackListingDraftResponse {
+        fn from(value: &GetPackListingDraftResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for GetPackListingDraftResponse {
+        fn default() -> Self {
+            Self {
+                listing_data: Default::default(),
+                pack_listing_draft_id: Default::default(),
+            }
+        }
+    }
+
+    ///Detail about why this request was rejected.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Detail about why this request was rejected.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "validationErrors": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ValidationError"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct GetPackListingDraftResponseCodaDetail {
+        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub validation_errors: ::std::vec::Vec<ValidationError>,
+    }
+
+    impl ::std::convert::From<&GetPackListingDraftResponseCodaDetail> for GetPackListingDraftResponseCodaDetail {
+        fn from(value: &GetPackListingDraftResponseCodaDetail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for GetPackListingDraftResponseCodaDetail {
         fn default() -> Self {
             Self {
                 validation_errors: Default::default(),
@@ -16466,6 +17107,65 @@ pub mod types {
     ///      "description": "Any additional context on the error, or the same as
     /// `statusMessage` otherwise.",
     ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ListFoldersResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&ListFoldersResponse> for ListFoldersResponse {
+        fn from(value: &ListFoldersResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
     ///        "Unauthorized"
     ///      ],
     ///      "type": "string"
@@ -18212,6 +18912,59 @@ pub mod types {
         }
     }
 
+    ///Response containing pack reviews
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Response containing pack reviews",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "items"
+    ///  ],
+    ///  "properties": {
+    ///    "items": {
+    ///      "description": "List of pack reviews",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PackReview"
+    ///      }
+    ///    },
+    ///    "nextPageLink": {
+    ///      "description": "Link for fetching the next page of results",
+    ///      "type": "string",
+    ///      "format": "url"
+    ///    },
+    ///    "nextPageToken": {
+    ///      "description": "Token for fetching the next page of results",
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "ListPackReviewsResponse"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ListPackReviewsResponse {
+        ///List of pack reviews
+        pub items: ::std::vec::Vec<PackReview>,
+        ///Link for fetching the next page of results
+        #[serde(rename = "nextPageLink", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page_link: ::std::option::Option<::std::string::String>,
+        ///Token for fetching the next page of results
+        #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub next_page_token: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&ListPackReviewsResponse> for ListPackReviewsResponse {
+        fn from(value: &ListPackReviewsResponse) -> Self {
+            value.clone()
+        }
+    }
+
     ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
@@ -19813,6 +20566,9 @@ pub mod types {
     ///    "workspaceId"
     ///  ],
     ///  "properties": {
+    ///    "additionalInformation": {
+    ///      "$ref": "#/components/schemas/PackListingAdditionalInformation"
+    ///    },
     ///    "agentDescription": {
     ///      "description": "A full description for the pack as an agent.",
     ///      "examples": [
@@ -19945,6 +20701,16 @@ pub mod types {
     ///      "format": "url",
     ///      "maxLength": 512
     ///    },
+    ///    "verifiedVersion": {
+    ///      "description": "The latest released pack version that has been
+    /// verified (approved) for use. For agent packs, this is the most recent
+    /// release that passed review. For non-agent packs or legacy releases, this
+    /// is the most recent release.",
+    ///      "examples": [
+    ///        "1.0.0"
+    ///      ],
+    ///      "type": "string"
+    ///    },
     ///    "workspaceId": {
     ///      "description": "The parent workspace for the Pack.",
     ///      "examples": [
@@ -19961,6 +20727,8 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct Pack {
+        #[serde(rename = "additionalInformation", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub additional_information: ::std::option::Option<PackListingAdditionalInformation>,
         ///A full description for the pack as an agent.
         #[serde(rename = "agentDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub agent_description: ::std::option::Option<PackAgentDescription>,
@@ -20016,6 +20784,12 @@ pub mod types {
         ///A Terms of Service URL for the Pack.
         #[serde(rename = "termsOfServiceUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub terms_of_service_url: ::std::option::Option<::std::string::String>,
+        ///The latest released pack version that has been verified (approved)
+        /// for use. For agent packs, this is the most recent release that
+        /// passed review. For non-agent packs or legacy releases, this is the
+        /// most recent release.
+        #[serde(rename = "verifiedVersion", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub verified_version: ::std::option::Option<::std::string::String>,
         ///The parent workspace for the Pack.
         #[serde(rename = "workspaceId")]
         pub workspace_id: ::std::string::String,
@@ -21758,6 +22532,87 @@ pub mod types {
     }
 
     impl ::std::convert::TryFrom<::std::string::String> for PackAuthLogType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    ///The category of a Pack.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The category of a Pack.",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "connector",
+    ///    "agent",
+    ///    "customAgent"
+    ///  ],
+    ///  "x-schema-name": "PackCategoryType",
+    ///  "x-tsEnumNames": [
+    ///    "Connector",
+    ///    "Agent",
+    ///    "CustomAgent"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum PackCategoryType {
+        #[serde(rename = "connector")]
+        Connector,
+        #[serde(rename = "agent")]
+        Agent,
+        #[serde(rename = "customAgent")]
+        CustomAgent,
+    }
+
+    impl ::std::convert::From<&Self> for PackCategoryType {
+        fn from(value: &PackCategoryType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for PackCategoryType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Connector => f.write_str("connector"),
+                Self::Agent => f.write_str("agent"),
+                Self::CustomAgent => f.write_str("customAgent"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for PackCategoryType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "connector" => Ok(Self::Connector),
+                "agent" => Ok(Self::Agent),
+                "customAgent" => Ok(Self::CustomAgent),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackCategoryType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackCategoryType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackCategoryType {
         type Error = self::error::ConversionError;
         fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
             value.parse()
@@ -26094,6 +26949,8 @@ pub mod types {
     ///  "type": "string",
     ///  "enum": [
     ///    "public",
+    ///    "nomosOrganization",
+    ///    "group",
     ///    "grammarlyInstitution",
     ///    "workspace",
     ///    "private"
@@ -26101,6 +26958,8 @@ pub mod types {
     ///  "x-schema-name": "PackDiscoverability",
     ///  "x-tsEnumNames": [
     ///    "Public",
+    ///    "NomosOrganization",
+    ///    "Group",
     ///    "GrammarlyInstitution",
     ///    "Workspace",
     ///    "Private"
@@ -26112,6 +26971,10 @@ pub mod types {
     pub enum PackDiscoverability {
         #[serde(rename = "public")]
         Public,
+        #[serde(rename = "nomosOrganization")]
+        NomosOrganization,
+        #[serde(rename = "group")]
+        Group,
         #[serde(rename = "grammarlyInstitution")]
         GrammarlyInstitution,
         #[serde(rename = "workspace")]
@@ -26130,6 +26993,8 @@ pub mod types {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
                 Self::Public => f.write_str("public"),
+                Self::NomosOrganization => f.write_str("nomosOrganization"),
+                Self::Group => f.write_str("group"),
                 Self::GrammarlyInstitution => f.write_str("grammarlyInstitution"),
                 Self::Workspace => f.write_str("workspace"),
                 Self::Private => f.write_str("private"),
@@ -26142,6 +27007,8 @@ pub mod types {
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
             match value {
                 "public" => Ok(Self::Public),
+                "nomosOrganization" => Ok(Self::NomosOrganization),
+                "group" => Ok(Self::Group),
                 "grammarlyInstitution" => Ok(Self::GrammarlyInstitution),
                 "workspace" => Ok(Self::Workspace),
                 "private" => Ok(Self::Private),
@@ -27644,6 +28511,119 @@ pub mod types {
         }
     }
 
+    ///`PackGroupPrincipal`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "groupId",
+    ///    "type"
+    ///  ],
+    ///  "properties": {
+    ///    "groupId": {
+    ///      "type": "string"
+    ///    },
+    ///    "groupName": {
+    ///      "type": "string"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "group"
+    ///      ],
+    ///      "x-tsType": "PackPrincipalType.Group"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackGroupPrincipal"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackGroupPrincipal {
+        #[serde(rename = "groupId")]
+        pub group_id: ::std::string::String,
+        #[serde(rename = "groupName", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub group_name: ::std::option::Option<::std::string::String>,
+        #[serde(rename = "type")]
+        pub type_: PackGroupPrincipalType,
+    }
+
+    impl ::std::convert::From<&PackGroupPrincipal> for PackGroupPrincipal {
+        fn from(value: &PackGroupPrincipal) -> Self {
+            value.clone()
+        }
+    }
+
+    ///`PackGroupPrincipalType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "group"
+    ///  ],
+    ///  "x-tsType": "PackPrincipalType.Group"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum PackGroupPrincipalType {
+        #[serde(rename = "group")]
+        Group,
+    }
+
+    impl ::std::convert::From<&Self> for PackGroupPrincipalType {
+        fn from(value: &PackGroupPrincipalType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for PackGroupPrincipalType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Group => f.write_str("group"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for PackGroupPrincipalType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "group" => Ok(Self::Group),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackGroupPrincipalType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackGroupPrincipalType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackGroupPrincipalType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     ///A Pack image file.
     ///
     /// <details><summary>JSON schema</summary>
@@ -28776,6 +29756,7 @@ pub mod types {
     ///    "logoUrl",
     ///    "makers",
     ///    "name",
+    ///    "packCategoryType",
     ///    "packId",
     ///    "packVersion",
     ///    "sdkVersion",
@@ -28892,6 +29873,9 @@ pub mod types {
     ///        "Cool Geometry Formulas"
     ///      ],
     ///      "type": "string"
+    ///    },
+    ///    "packCategoryType": {
+    ///      "$ref": "#/components/schemas/PackCategoryType"
     ///    },
     ///    "packId": {
     ///      "description": "ID of the Pack.",
@@ -29011,6 +29995,8 @@ pub mod types {
         pub minimum_feature_set: ::std::option::Option<FeatureSet>,
         ///The name of the Pack.
         pub name: ::std::string::String,
+        #[serde(rename = "packCategoryType")]
+        pub pack_category_type: PackCategoryType,
         #[serde(rename = "packId")]
         pub pack_id: f64,
         ///The version of the Pack.
@@ -29044,6 +30030,277 @@ pub mod types {
     impl ::std::convert::From<&PackListing> for PackListing {
         fn from(value: &PackListing) -> Self {
             value.clone()
+        }
+    }
+
+    ///Additional information saved with the pack listing draft
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Additional information saved with the pack listing
+    /// draft",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "additionalDetails": {
+    ///      "description": "Additional details for the pack review.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "maxLength": 8192
+    ///    },
+    ///    "privacyCollectsPersonalInfo": {
+    ///      "description": "Whether the agent or third-party partners collect
+    /// personal information.",
+    ///      "type": [
+    ///        "boolean",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "privacyDataCollectedBy": {
+    ///      "description": "Whether data is collected by the developer, a third
+    /// party, or both.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "privacyDataUsagePurposes": {
+    ///      "description": "Purposes for which collected data is used by the
+    /// agent or third-party partners.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "privacyPersonalInfoCategories": {
+    ///      "description": "Categories of personal information collected by the
+    /// agent.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "videoWalkthrough": {
+    ///      "description": "URL or reference to video walkthrough for agent
+    /// verification.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "maxLength": 512
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackListingAdditionalInformation"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackListingAdditionalInformation {
+        ///Additional details for the pack review.
+        #[serde(rename = "additionalDetails", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub additional_details: ::std::option::Option<PackListingAdditionalInformationAdditionalDetails>,
+        ///Whether the agent or third-party partners collect personal
+        /// information.
+        #[serde(rename = "privacyCollectsPersonalInfo", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub privacy_collects_personal_info: ::std::option::Option<bool>,
+        ///Whether data is collected by the developer, a third party, or both.
+        #[serde(rename = "privacyDataCollectedBy", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub privacy_data_collected_by: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+        ///Purposes for which collected data is used by the agent or
+        /// third-party partners.
+        #[serde(rename = "privacyDataUsagePurposes", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub privacy_data_usage_purposes: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+        ///Categories of personal information collected by the agent.
+        #[serde(rename = "privacyPersonalInfoCategories", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub privacy_personal_info_categories: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+        ///URL or reference to video walkthrough for agent verification.
+        #[serde(rename = "videoWalkthrough", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub video_walkthrough: ::std::option::Option<PackListingAdditionalInformationVideoWalkthrough>,
+    }
+
+    impl ::std::convert::From<&PackListingAdditionalInformation> for PackListingAdditionalInformation {
+        fn from(value: &PackListingAdditionalInformation) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for PackListingAdditionalInformation {
+        fn default() -> Self {
+            Self {
+                additional_details: Default::default(),
+                privacy_collects_personal_info: Default::default(),
+                privacy_data_collected_by: Default::default(),
+                privacy_data_usage_purposes: Default::default(),
+                privacy_personal_info_categories: Default::default(),
+                video_walkthrough: Default::default(),
+            }
+        }
+    }
+
+    ///Additional details for the pack review.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Additional details for the pack review.",
+    ///  "type": "string",
+    ///  "maxLength": 8192
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingAdditionalInformationAdditionalDetails(::std::string::String);
+    impl ::std::ops::Deref for PackListingAdditionalInformationAdditionalDetails {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingAdditionalInformationAdditionalDetails> for ::std::string::String {
+        fn from(value: PackListingAdditionalInformationAdditionalDetails) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingAdditionalInformationAdditionalDetails> for PackListingAdditionalInformationAdditionalDetails {
+        fn from(value: &PackListingAdditionalInformationAdditionalDetails) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingAdditionalInformationAdditionalDetails {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 8192usize {
+                return Err("longer than 8192 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingAdditionalInformationAdditionalDetails {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingAdditionalInformationAdditionalDetails {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingAdditionalInformationAdditionalDetails {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingAdditionalInformationAdditionalDetails {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///URL or reference to video walkthrough for agent verification.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "URL or reference to video walkthrough for agent
+    /// verification.",
+    ///  "type": "string",
+    ///  "maxLength": 512
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingAdditionalInformationVideoWalkthrough(::std::string::String);
+    impl ::std::ops::Deref for PackListingAdditionalInformationVideoWalkthrough {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingAdditionalInformationVideoWalkthrough> for ::std::string::String {
+        fn from(value: PackListingAdditionalInformationVideoWalkthrough) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingAdditionalInformationVideoWalkthrough> for PackListingAdditionalInformationVideoWalkthrough {
+        fn from(value: &PackListingAdditionalInformationVideoWalkthrough) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingAdditionalInformationVideoWalkthrough {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 512usize {
+                return Err("longer than 512 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingAdditionalInformationVideoWalkthrough {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingAdditionalInformationVideoWalkthrough {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingAdditionalInformationVideoWalkthrough {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingAdditionalInformationVideoWalkthrough {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
 
@@ -29144,6 +30401,7 @@ pub mod types {
     ///    "logoUrl",
     ///    "makers",
     ///    "name",
+    ///    "packCategoryType",
     ///    "packId",
     ///    "packVersion",
     ///    "sdkVersion",
@@ -29274,6 +30532,9 @@ pub mod types {
     ///      ],
     ///      "type": "string"
     ///    },
+    ///    "packCategoryType": {
+    ///      "$ref": "#/components/schemas/PackCategoryType"
+    ///    },
     ///    "packId": {
     ///      "description": "ID of the Pack.",
     ///      "examples": [
@@ -29402,6 +30663,8 @@ pub mod types {
         pub minimum_feature_set: ::std::option::Option<FeatureSet>,
         ///The name of the Pack.
         pub name: ::std::string::String,
+        #[serde(rename = "packCategoryType")]
+        pub pack_category_type: PackCategoryType,
         #[serde(rename = "packId")]
         pub pack_id: f64,
         ///The version of the Pack.
@@ -29510,6 +30773,1255 @@ pub mod types {
     }
 
     impl<'de> ::serde::Deserialize<'de> for PackListingDetailDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///Draft listing data for a Pack. All fields are optional.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Draft listing data for a Pack. All fields are
+    /// optional.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "additionalInformation": {
+    ///      "$ref": "#/components/schemas/PackListingAdditionalInformation"
+    ///    },
+    ///    "agentDescription": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "maxLength": 8192
+    ///    },
+    ///    "agentImages": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PackImageFile"
+    ///      }
+    ///    },
+    ///    "agentShortDescription": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "maxLength": 256
+    ///    },
+    ///    "categoryIds": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "cover": {
+    ///      "$ref": "#/components/schemas/PackImageFile"
+    ///    },
+    ///    "description": {
+    ///      "description": "The full description of the Pack.",
+    ///      "type": "string",
+    ///      "maxLength": 8192
+    ///    },
+    ///    "exampleImages": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PackImageFile"
+    ///      }
+    ///    },
+    ///    "logo": {
+    ///      "$ref": "#/components/schemas/PackImageFile"
+    ///    },
+    ///    "name": {
+    ///      "description": "The name of the Pack.",
+    ///      "type": "string",
+    ///      "maxLength": 128
+    ///    },
+    ///    "privacyPolicyUrl": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "url",
+    ///      "maxLength": 512
+    ///    },
+    ///    "shortDescription": {
+    ///      "description": "A short version of the description of the Pack.",
+    ///      "type": "string",
+    ///      "maxLength": 256
+    ///    },
+    ///    "sourceCodeVisibility": {
+    ///      "$ref": "#/components/schemas/PackSourceCodeVisibility"
+    ///    },
+    ///    "supportEmail": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "maxLength": 512
+    ///    },
+    ///    "termsOfServiceUrl": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "url",
+    ///      "maxLength": 512
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackListingDraftData"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackListingDraftData {
+        #[serde(rename = "additionalInformation", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub additional_information: ::std::option::Option<PackListingAdditionalInformation>,
+        #[serde(rename = "agentDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_description: ::std::option::Option<PackListingDraftDataAgentDescription>,
+        #[serde(rename = "agentImages", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_images: ::std::option::Option<::std::vec::Vec<PackImageFile>>,
+        #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_short_description: ::std::option::Option<PackListingDraftDataAgentShortDescription>,
+        #[serde(rename = "categoryIds", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub category_ids: ::std::vec::Vec<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cover: ::std::option::Option<PackImageFile>,
+        ///The full description of the Pack.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<PackListingDraftDataDescription>,
+        #[serde(rename = "exampleImages", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub example_images: ::std::option::Option<::std::vec::Vec<PackImageFile>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub logo: ::std::option::Option<PackImageFile>,
+        ///The name of the Pack.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<PackListingDraftDataName>,
+        #[serde(rename = "privacyPolicyUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub privacy_policy_url: ::std::option::Option<::std::string::String>,
+        ///A short version of the description of the Pack.
+        #[serde(rename = "shortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub short_description: ::std::option::Option<PackListingDraftDataShortDescription>,
+        #[serde(rename = "sourceCodeVisibility", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub source_code_visibility: ::std::option::Option<PackSourceCodeVisibility>,
+        #[serde(rename = "supportEmail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub support_email: ::std::option::Option<PackListingDraftDataSupportEmail>,
+        #[serde(rename = "termsOfServiceUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub terms_of_service_url: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&PackListingDraftData> for PackListingDraftData {
+        fn from(value: &PackListingDraftData) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for PackListingDraftData {
+        fn default() -> Self {
+            Self {
+                additional_information: Default::default(),
+                agent_description: Default::default(),
+                agent_images: Default::default(),
+                agent_short_description: Default::default(),
+                category_ids: Default::default(),
+                cover: Default::default(),
+                description: Default::default(),
+                example_images: Default::default(),
+                logo: Default::default(),
+                name: Default::default(),
+                privacy_policy_url: Default::default(),
+                short_description: Default::default(),
+                source_code_visibility: Default::default(),
+                support_email: Default::default(),
+                terms_of_service_url: Default::default(),
+            }
+        }
+    }
+
+    ///`PackListingDraftDataAgentDescription`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "maxLength": 8192
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingDraftDataAgentDescription(::std::string::String);
+    impl ::std::ops::Deref for PackListingDraftDataAgentDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingDraftDataAgentDescription> for ::std::string::String {
+        fn from(value: PackListingDraftDataAgentDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingDraftDataAgentDescription> for PackListingDraftDataAgentDescription {
+        fn from(value: &PackListingDraftDataAgentDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingDraftDataAgentDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 8192usize {
+                return Err("longer than 8192 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingDraftDataAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingDraftDataAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingDraftDataAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingDraftDataAgentDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///`PackListingDraftDataAgentShortDescription`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "maxLength": 256
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingDraftDataAgentShortDescription(::std::string::String);
+    impl ::std::ops::Deref for PackListingDraftDataAgentShortDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingDraftDataAgentShortDescription> for ::std::string::String {
+        fn from(value: PackListingDraftDataAgentShortDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingDraftDataAgentShortDescription> for PackListingDraftDataAgentShortDescription {
+        fn from(value: &PackListingDraftDataAgentShortDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingDraftDataAgentShortDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 256usize {
+                return Err("longer than 256 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingDraftDataAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingDraftDataAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingDraftDataAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingDraftDataAgentShortDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///The full description of the Pack.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The full description of the Pack.",
+    ///  "type": "string",
+    ///  "maxLength": 8192
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingDraftDataDescription(::std::string::String);
+    impl ::std::ops::Deref for PackListingDraftDataDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingDraftDataDescription> for ::std::string::String {
+        fn from(value: PackListingDraftDataDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingDraftDataDescription> for PackListingDraftDataDescription {
+        fn from(value: &PackListingDraftDataDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingDraftDataDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 8192usize {
+                return Err("longer than 8192 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingDraftDataDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingDraftDataDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingDraftDataDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingDraftDataDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///The name of the Pack.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The name of the Pack.",
+    ///  "type": "string",
+    ///  "maxLength": 128
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingDraftDataName(::std::string::String);
+    impl ::std::ops::Deref for PackListingDraftDataName {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingDraftDataName> for ::std::string::String {
+        fn from(value: PackListingDraftDataName) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingDraftDataName> for PackListingDraftDataName {
+        fn from(value: &PackListingDraftDataName) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingDraftDataName {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 128usize {
+                return Err("longer than 128 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingDraftDataName {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingDraftDataName {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingDraftDataName {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingDraftDataName {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///A short version of the description of the Pack.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A short version of the description of the Pack.",
+    ///  "type": "string",
+    ///  "maxLength": 256
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingDraftDataShortDescription(::std::string::String);
+    impl ::std::ops::Deref for PackListingDraftDataShortDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingDraftDataShortDescription> for ::std::string::String {
+        fn from(value: PackListingDraftDataShortDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingDraftDataShortDescription> for PackListingDraftDataShortDescription {
+        fn from(value: &PackListingDraftDataShortDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingDraftDataShortDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 256usize {
+                return Err("longer than 256 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingDraftDataShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingDraftDataShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingDraftDataShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingDraftDataShortDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///`PackListingDraftDataSupportEmail`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "maxLength": 512
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingDraftDataSupportEmail(::std::string::String);
+    impl ::std::ops::Deref for PackListingDraftDataSupportEmail {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingDraftDataSupportEmail> for ::std::string::String {
+        fn from(value: PackListingDraftDataSupportEmail) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingDraftDataSupportEmail> for PackListingDraftDataSupportEmail {
+        fn from(value: &PackListingDraftDataSupportEmail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingDraftDataSupportEmail {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 512usize {
+                return Err("longer than 512 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingDraftDataSupportEmail {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingDraftDataSupportEmail {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingDraftDataSupportEmail {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingDraftDataSupportEmail {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///Input data for creating or updating a Pack listing draft. Agent images
+    /// only require assetId and filename; the server resolves the full image
+    /// URL.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Input data for creating or updating a Pack listing
+    /// draft. Agent images only require assetId and filename; the server
+    /// resolves the full image URL.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "additionalInformation": {
+    ///      "$ref": "#/components/schemas/PackListingAdditionalInformation"
+    ///    },
+    ///    "agentDescription": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "maxLength": 8192
+    ///    },
+    ///    "agentImages": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ImageFileForUpdatePackRequest"
+    ///      }
+    ///    },
+    ///    "agentShortDescription": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "maxLength": 256
+    ///    },
+    ///    "categoryIds": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "cover": {
+    ///      "$ref": "#/components/schemas/PackImageFile"
+    ///    },
+    ///    "description": {
+    ///      "description": "The full description of the Pack.",
+    ///      "type": "string",
+    ///      "maxLength": 8192
+    ///    },
+    ///    "exampleImages": {
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PackImageFile"
+    ///      }
+    ///    },
+    ///    "logo": {
+    ///      "$ref": "#/components/schemas/PackImageFile"
+    ///    },
+    ///    "name": {
+    ///      "description": "The name of the Pack.",
+    ///      "type": "string",
+    ///      "maxLength": 128
+    ///    },
+    ///    "privacyPolicyUrl": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "url",
+    ///      "maxLength": 512
+    ///    },
+    ///    "shortDescription": {
+    ///      "description": "A short version of the description of the Pack.",
+    ///      "type": "string",
+    ///      "maxLength": 256
+    ///    },
+    ///    "sourceCodeVisibility": {
+    ///      "$ref": "#/components/schemas/PackSourceCodeVisibility"
+    ///    },
+    ///    "supportEmail": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "maxLength": 512
+    ///    },
+    ///    "termsOfServiceUrl": {
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "format": "url",
+    ///      "maxLength": 512
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackListingDraftInputData"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackListingDraftInputData {
+        #[serde(rename = "additionalInformation", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub additional_information: ::std::option::Option<PackListingAdditionalInformation>,
+        #[serde(rename = "agentDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_description: ::std::option::Option<PackListingDraftInputDataAgentDescription>,
+        #[serde(rename = "agentImages", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_images: ::std::option::Option<::std::vec::Vec<ImageFileForUpdatePackRequest>>,
+        #[serde(rename = "agentShortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub agent_short_description: ::std::option::Option<PackListingDraftInputDataAgentShortDescription>,
+        #[serde(rename = "categoryIds", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub category_ids: ::std::vec::Vec<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub cover: ::std::option::Option<PackImageFile>,
+        ///The full description of the Pack.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<PackListingDraftInputDataDescription>,
+        #[serde(rename = "exampleImages", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub example_images: ::std::option::Option<::std::vec::Vec<PackImageFile>>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub logo: ::std::option::Option<PackImageFile>,
+        ///The name of the Pack.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<PackListingDraftInputDataName>,
+        #[serde(rename = "privacyPolicyUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub privacy_policy_url: ::std::option::Option<::std::string::String>,
+        ///A short version of the description of the Pack.
+        #[serde(rename = "shortDescription", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub short_description: ::std::option::Option<PackListingDraftInputDataShortDescription>,
+        #[serde(rename = "sourceCodeVisibility", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub source_code_visibility: ::std::option::Option<PackSourceCodeVisibility>,
+        #[serde(rename = "supportEmail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub support_email: ::std::option::Option<PackListingDraftInputDataSupportEmail>,
+        #[serde(rename = "termsOfServiceUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub terms_of_service_url: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&PackListingDraftInputData> for PackListingDraftInputData {
+        fn from(value: &PackListingDraftInputData) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for PackListingDraftInputData {
+        fn default() -> Self {
+            Self {
+                additional_information: Default::default(),
+                agent_description: Default::default(),
+                agent_images: Default::default(),
+                agent_short_description: Default::default(),
+                category_ids: Default::default(),
+                cover: Default::default(),
+                description: Default::default(),
+                example_images: Default::default(),
+                logo: Default::default(),
+                name: Default::default(),
+                privacy_policy_url: Default::default(),
+                short_description: Default::default(),
+                source_code_visibility: Default::default(),
+                support_email: Default::default(),
+                terms_of_service_url: Default::default(),
+            }
+        }
+    }
+
+    ///`PackListingDraftInputDataAgentDescription`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "maxLength": 8192
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingDraftInputDataAgentDescription(::std::string::String);
+    impl ::std::ops::Deref for PackListingDraftInputDataAgentDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingDraftInputDataAgentDescription> for ::std::string::String {
+        fn from(value: PackListingDraftInputDataAgentDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingDraftInputDataAgentDescription> for PackListingDraftInputDataAgentDescription {
+        fn from(value: &PackListingDraftInputDataAgentDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingDraftInputDataAgentDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 8192usize {
+                return Err("longer than 8192 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingDraftInputDataAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingDraftInputDataAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingDraftInputDataAgentDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingDraftInputDataAgentDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///`PackListingDraftInputDataAgentShortDescription`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "maxLength": 256
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingDraftInputDataAgentShortDescription(::std::string::String);
+    impl ::std::ops::Deref for PackListingDraftInputDataAgentShortDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingDraftInputDataAgentShortDescription> for ::std::string::String {
+        fn from(value: PackListingDraftInputDataAgentShortDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingDraftInputDataAgentShortDescription> for PackListingDraftInputDataAgentShortDescription {
+        fn from(value: &PackListingDraftInputDataAgentShortDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingDraftInputDataAgentShortDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 256usize {
+                return Err("longer than 256 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingDraftInputDataAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingDraftInputDataAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingDraftInputDataAgentShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingDraftInputDataAgentShortDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///The full description of the Pack.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The full description of the Pack.",
+    ///  "type": "string",
+    ///  "maxLength": 8192
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingDraftInputDataDescription(::std::string::String);
+    impl ::std::ops::Deref for PackListingDraftInputDataDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingDraftInputDataDescription> for ::std::string::String {
+        fn from(value: PackListingDraftInputDataDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingDraftInputDataDescription> for PackListingDraftInputDataDescription {
+        fn from(value: &PackListingDraftInputDataDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingDraftInputDataDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 8192usize {
+                return Err("longer than 8192 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingDraftInputDataDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingDraftInputDataDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingDraftInputDataDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingDraftInputDataDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///The name of the Pack.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The name of the Pack.",
+    ///  "type": "string",
+    ///  "maxLength": 128
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingDraftInputDataName(::std::string::String);
+    impl ::std::ops::Deref for PackListingDraftInputDataName {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingDraftInputDataName> for ::std::string::String {
+        fn from(value: PackListingDraftInputDataName) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingDraftInputDataName> for PackListingDraftInputDataName {
+        fn from(value: &PackListingDraftInputDataName) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingDraftInputDataName {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 128usize {
+                return Err("longer than 128 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingDraftInputDataName {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingDraftInputDataName {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingDraftInputDataName {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingDraftInputDataName {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///A short version of the description of the Pack.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A short version of the description of the Pack.",
+    ///  "type": "string",
+    ///  "maxLength": 256
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingDraftInputDataShortDescription(::std::string::String);
+    impl ::std::ops::Deref for PackListingDraftInputDataShortDescription {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingDraftInputDataShortDescription> for ::std::string::String {
+        fn from(value: PackListingDraftInputDataShortDescription) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingDraftInputDataShortDescription> for PackListingDraftInputDataShortDescription {
+        fn from(value: &PackListingDraftInputDataShortDescription) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingDraftInputDataShortDescription {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 256usize {
+                return Err("longer than 256 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingDraftInputDataShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingDraftInputDataShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingDraftInputDataShortDescription {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingDraftInputDataShortDescription {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///`PackListingDraftInputDataSupportEmail`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "maxLength": 512
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackListingDraftInputDataSupportEmail(::std::string::String);
+    impl ::std::ops::Deref for PackListingDraftInputDataSupportEmail {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackListingDraftInputDataSupportEmail> for ::std::string::String {
+        fn from(value: PackListingDraftInputDataSupportEmail) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackListingDraftInputDataSupportEmail> for PackListingDraftInputDataSupportEmail {
+        fn from(value: &PackListingDraftInputDataSupportEmail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackListingDraftInputDataSupportEmail {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 512usize {
+                return Err("longer than 512 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackListingDraftInputDataSupportEmail {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackListingDraftInputDataSupportEmail {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackListingDraftInputDataSupportEmail {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackListingDraftInputDataSupportEmail {
         fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
         where
             D: ::serde::Deserializer<'de>,
@@ -30775,6 +33287,114 @@ pub mod types {
         }
     }
 
+    ///`PackNomosOrganizationPrincipal`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "object",
+    ///  "required": [
+    ///    "nomosOrganizationId",
+    ///    "type"
+    ///  ],
+    ///  "properties": {
+    ///    "nomosOrganizationId": {
+    ///      "type": "string"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "nomosOrganization"
+    ///      ],
+    ///      "x-tsType": "PackPrincipalType.NomosOrganization"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackNomosOrganizationPrincipal"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackNomosOrganizationPrincipal {
+        #[serde(rename = "nomosOrganizationId")]
+        pub nomos_organization_id: ::std::string::String,
+        #[serde(rename = "type")]
+        pub type_: PackNomosOrganizationPrincipalType,
+    }
+
+    impl ::std::convert::From<&PackNomosOrganizationPrincipal> for PackNomosOrganizationPrincipal {
+        fn from(value: &PackNomosOrganizationPrincipal) -> Self {
+            value.clone()
+        }
+    }
+
+    ///`PackNomosOrganizationPrincipalType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "nomosOrganization"
+    ///  ],
+    ///  "x-tsType": "PackPrincipalType.NomosOrganization"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum PackNomosOrganizationPrincipalType {
+        #[serde(rename = "nomosOrganization")]
+        NomosOrganization,
+    }
+
+    impl ::std::convert::From<&Self> for PackNomosOrganizationPrincipalType {
+        fn from(value: &PackNomosOrganizationPrincipalType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for PackNomosOrganizationPrincipalType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::NomosOrganization => f.write_str("nomosOrganization"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for PackNomosOrganizationPrincipalType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "nomosOrganization" => Ok(Self::NomosOrganization),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackNomosOrganizationPrincipalType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackNomosOrganizationPrincipalType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackNomosOrganizationPrincipalType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
     ///Location of including OAuth2 client credentials in a request.
     ///
     /// <details><summary>JSON schema</summary>
@@ -30903,6 +33523,11 @@ pub mod types {
     ///    "tokenUrl": {
     ///      "description": "Token URL of the OAuth provider.",
     ///      "type": "string"
+    ///    },
+    ///    "useDynamicClientRegistration": {
+    ///      "description": "Whether this Pack uses Dynamic Client Registration
+    /// for OAuth.",
+    ///      "type": "boolean"
     ///    }
     ///  },
     ///  "additionalProperties": false,
@@ -30935,6 +33560,9 @@ pub mod types {
         ///Token URL of the OAuth provider.
         #[serde(rename = "tokenUrl")]
         pub token_url: ::std::string::String,
+        ///Whether this Pack uses Dynamic Client Registration for OAuth.
+        #[serde(rename = "useDynamicClientRegistration", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub use_dynamic_client_registration: ::std::option::Option<bool>,
     }
 
     impl ::std::convert::From<&PackOauthConfigMetadata> for PackOauthConfigMetadata {
@@ -31348,6 +33976,12 @@ pub mod types {
     ///      "$ref": "#/components/schemas/PackGlobalPrincipal"
     ///    },
     ///    {
+    ///      "$ref": "#/components/schemas/PackNomosOrganizationPrincipal"
+    ///    },
+    ///    {
+    ///      "$ref": "#/components/schemas/PackGroupPrincipal"
+    ///    },
+    ///    {
     ///      "$ref": "#/components/schemas/PackGrammarlyInstitutionPrincipal"
     ///    }
     ///  ],
@@ -31361,6 +33995,8 @@ pub mod types {
         UserPrincipal(PackUserPrincipal),
         WorkspacePrincipal(PackWorkspacePrincipal),
         GlobalPrincipal(PackGlobalPrincipal),
+        NomosOrganizationPrincipal(PackNomosOrganizationPrincipal),
+        GroupPrincipal(PackGroupPrincipal),
         GrammarlyInstitutionPrincipal(PackGrammarlyInstitutionPrincipal),
     }
 
@@ -31388,6 +34024,18 @@ pub mod types {
         }
     }
 
+    impl ::std::convert::From<PackNomosOrganizationPrincipal> for PackPrincipal {
+        fn from(value: PackNomosOrganizationPrincipal) -> Self {
+            Self::NomosOrganizationPrincipal(value)
+        }
+    }
+
+    impl ::std::convert::From<PackGroupPrincipal> for PackPrincipal {
+        fn from(value: PackGroupPrincipal) -> Self {
+            Self::GroupPrincipal(value)
+        }
+    }
+
     impl ::std::convert::From<PackGrammarlyInstitutionPrincipal> for PackPrincipal {
         fn from(value: PackGrammarlyInstitutionPrincipal) -> Self {
             Self::GrammarlyInstitutionPrincipal(value)
@@ -31406,6 +34054,8 @@ pub mod types {
     ///    "user",
     ///    "workspace",
     ///    "worldwide",
+    ///    "nomosOrganization",
+    ///    "group",
     ///    "grammarlyInstitution"
     ///  ],
     ///  "x-schema-name": "PackPrincipalType",
@@ -31413,6 +34063,8 @@ pub mod types {
     ///    "User",
     ///    "Workspace",
     ///    "Worldwide",
+    ///    "NomosOrganization",
+    ///    "Group",
     ///    "GrammarlyInstitution"
     ///  ]
     ///}
@@ -31426,6 +34078,10 @@ pub mod types {
         Workspace,
         #[serde(rename = "worldwide")]
         Worldwide,
+        #[serde(rename = "nomosOrganization")]
+        NomosOrganization,
+        #[serde(rename = "group")]
+        Group,
         #[serde(rename = "grammarlyInstitution")]
         GrammarlyInstitution,
     }
@@ -31442,6 +34098,8 @@ pub mod types {
                 Self::User => f.write_str("user"),
                 Self::Workspace => f.write_str("workspace"),
                 Self::Worldwide => f.write_str("worldwide"),
+                Self::NomosOrganization => f.write_str("nomosOrganization"),
+                Self::Group => f.write_str("group"),
                 Self::GrammarlyInstitution => f.write_str("grammarlyInstitution"),
             }
         }
@@ -31454,6 +34112,8 @@ pub mod types {
                 "user" => Ok(Self::User),
                 "workspace" => Ok(Self::Workspace),
                 "worldwide" => Ok(Self::Worldwide),
+                "nomosOrganization" => Ok(Self::NomosOrganization),
+                "group" => Ok(Self::Group),
                 "grammarlyInstitution" => Ok(Self::GrammarlyInstitution),
                 _ => Err("invalid value".into()),
             }
@@ -31683,6 +34343,457 @@ pub mod types {
     impl ::std::convert::From<&PackReleaseList> for PackReleaseList {
         fn from(value: &PackReleaseList) -> Self {
             value.clone()
+        }
+    }
+
+    ///A pack review submission
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "A pack review submission",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "packId",
+    ///    "packReviewId",
+    ///    "packReviewStatus",
+    ///    "submissionTimestamp",
+    ///    "submittedByUserId"
+    ///  ],
+    ///  "properties": {
+    ///    "additionalInformation": {
+    ///      "$ref": "#/components/schemas/PackReviewAdditionalInformation"
+    ///    },
+    ///    "includesListingReview": {
+    ///      "description": "Whether listing info was included in the review
+    /// scope",
+    ///      "type": "boolean"
+    ///    },
+    ///    "packId": {
+    ///      "description": "ID of the pack being reviewed",
+    ///      "type": "integer"
+    ///    },
+    ///    "packReviewId": {
+    ///      "description": "ID of the review",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    },
+    ///    "packReviewStatus": {
+    ///      "$ref": "#/components/schemas/PackReviewStatus"
+    ///    },
+    ///    "packVersion": {
+    ///      "description": "Pack version being reviewed (for code reviews)",
+    ///      "type": "string"
+    ///    },
+    ///    "submissionTimestamp": {
+    ///      "description": "When the review was submitted",
+    ///      "type": "string",
+    ///      "format": "date-time"
+    ///    },
+    ///    "submittedByUserId": {
+    ///      "description": "User ID of the person who submitted the review",
+    ///      "type": "integer"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackReview"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackReview {
+        #[serde(rename = "additionalInformation", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub additional_information: ::std::option::Option<PackReviewAdditionalInformation>,
+        ///Whether listing info was included in the review scope
+        #[serde(rename = "includesListingReview", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub includes_listing_review: ::std::option::Option<bool>,
+        ///ID of the pack being reviewed
+        #[serde(rename = "packId")]
+        pub pack_id: i64,
+        ///ID of the review
+        #[serde(rename = "packReviewId")]
+        pub pack_review_id: ::uuid::Uuid,
+        #[serde(rename = "packReviewStatus")]
+        pub pack_review_status: PackReviewStatus,
+        ///Pack version being reviewed (for code reviews)
+        #[serde(rename = "packVersion", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub pack_version: ::std::option::Option<::std::string::String>,
+        ///When the review was submitted
+        #[serde(rename = "submissionTimestamp")]
+        pub submission_timestamp: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///User ID of the person who submitted the review
+        #[serde(rename = "submittedByUserId")]
+        pub submitted_by_user_id: i64,
+    }
+
+    impl ::std::convert::From<&PackReview> for PackReview {
+        fn from(value: &PackReview) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Additional information about the pack review
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Additional information about the pack review",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "additionalDetails": {
+    ///      "description": "Additional details for the pack review.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "maxLength": 8192
+    ///    },
+    ///    "privacyCollectsPersonalInfo": {
+    ///      "description": "Whether the agent or third-party partners collect
+    /// personal information.",
+    ///      "type": [
+    ///        "boolean",
+    ///        "null"
+    ///      ]
+    ///    },
+    ///    "privacyDataCollectedBy": {
+    ///      "description": "Whether data is collected by the developer, a third
+    /// party, or both.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "privacyDataUsagePurposes": {
+    ///      "description": "Purposes for which collected data is used by the
+    /// agent or third-party partners.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "privacyPersonalInfoCategories": {
+    ///      "description": "Categories of personal information collected by the
+    /// agent.",
+    ///      "type": [
+    ///        "array",
+    ///        "null"
+    ///      ],
+    ///      "items": {
+    ///        "type": "string"
+    ///      }
+    ///    },
+    ///    "videoWalkthrough": {
+    ///      "description": "URL or reference to video walkthrough for agent
+    /// verification.",
+    ///      "type": [
+    ///        "string",
+    ///        "null"
+    ///      ],
+    ///      "maxLength": 512
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackReviewAdditionalInformation"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackReviewAdditionalInformation {
+        ///Additional details for the pack review.
+        #[serde(rename = "additionalDetails", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub additional_details: ::std::option::Option<PackReviewAdditionalInformationAdditionalDetails>,
+        ///Whether the agent or third-party partners collect personal
+        /// information.
+        #[serde(rename = "privacyCollectsPersonalInfo", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub privacy_collects_personal_info: ::std::option::Option<bool>,
+        ///Whether data is collected by the developer, a third party, or both.
+        #[serde(rename = "privacyDataCollectedBy", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub privacy_data_collected_by: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+        ///Purposes for which collected data is used by the agent or
+        /// third-party partners.
+        #[serde(rename = "privacyDataUsagePurposes", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub privacy_data_usage_purposes: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+        ///Categories of personal information collected by the agent.
+        #[serde(rename = "privacyPersonalInfoCategories", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub privacy_personal_info_categories: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
+        ///URL or reference to video walkthrough for agent verification.
+        #[serde(rename = "videoWalkthrough", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub video_walkthrough: ::std::option::Option<PackReviewAdditionalInformationVideoWalkthrough>,
+    }
+
+    impl ::std::convert::From<&PackReviewAdditionalInformation> for PackReviewAdditionalInformation {
+        fn from(value: &PackReviewAdditionalInformation) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for PackReviewAdditionalInformation {
+        fn default() -> Self {
+            Self {
+                additional_details: Default::default(),
+                privacy_collects_personal_info: Default::default(),
+                privacy_data_collected_by: Default::default(),
+                privacy_data_usage_purposes: Default::default(),
+                privacy_personal_info_categories: Default::default(),
+                video_walkthrough: Default::default(),
+            }
+        }
+    }
+
+    ///Additional details for the pack review.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Additional details for the pack review.",
+    ///  "type": "string",
+    ///  "maxLength": 8192
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackReviewAdditionalInformationAdditionalDetails(::std::string::String);
+    impl ::std::ops::Deref for PackReviewAdditionalInformationAdditionalDetails {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackReviewAdditionalInformationAdditionalDetails> for ::std::string::String {
+        fn from(value: PackReviewAdditionalInformationAdditionalDetails) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackReviewAdditionalInformationAdditionalDetails> for PackReviewAdditionalInformationAdditionalDetails {
+        fn from(value: &PackReviewAdditionalInformationAdditionalDetails) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackReviewAdditionalInformationAdditionalDetails {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 8192usize {
+                return Err("longer than 8192 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackReviewAdditionalInformationAdditionalDetails {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackReviewAdditionalInformationAdditionalDetails {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackReviewAdditionalInformationAdditionalDetails {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackReviewAdditionalInformationAdditionalDetails {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///URL or reference to video walkthrough for agent verification.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "URL or reference to video walkthrough for agent
+    /// verification.",
+    ///  "type": "string",
+    ///  "maxLength": 512
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[serde(transparent)]
+    pub struct PackReviewAdditionalInformationVideoWalkthrough(::std::string::String);
+    impl ::std::ops::Deref for PackReviewAdditionalInformationVideoWalkthrough {
+        type Target = ::std::string::String;
+        fn deref(&self) -> &::std::string::String {
+            &self.0
+        }
+    }
+
+    impl ::std::convert::From<PackReviewAdditionalInformationVideoWalkthrough> for ::std::string::String {
+        fn from(value: PackReviewAdditionalInformationVideoWalkthrough) -> Self {
+            value.0
+        }
+    }
+
+    impl ::std::convert::From<&PackReviewAdditionalInformationVideoWalkthrough> for PackReviewAdditionalInformationVideoWalkthrough {
+        fn from(value: &PackReviewAdditionalInformationVideoWalkthrough) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::str::FromStr for PackReviewAdditionalInformationVideoWalkthrough {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            if value.chars().count() > 512usize {
+                return Err("longer than 512 characters".into());
+            }
+            Ok(Self(value.to_string()))
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackReviewAdditionalInformationVideoWalkthrough {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackReviewAdditionalInformationVideoWalkthrough {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackReviewAdditionalInformationVideoWalkthrough {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl<'de> ::serde::Deserialize<'de> for PackReviewAdditionalInformationVideoWalkthrough {
+        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
+        where
+            D: ::serde::Deserializer<'de>,
+        {
+            ::std::string::String::deserialize(deserializer)?
+                .parse()
+                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
+        }
+    }
+
+    ///The status of a pack review
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "The status of a pack review",
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "pending",
+    ///    "approved",
+    ///    "denied",
+    ///    "canceled",
+    ///    "superseded"
+    ///  ],
+    ///  "x-schema-name": "PackReviewStatus",
+    ///  "x-tsEnumNames": [
+    ///    "Pending",
+    ///    "Approved",
+    ///    "Denied",
+    ///    "Canceled",
+    ///    "Superseded"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum PackReviewStatus {
+        #[serde(rename = "pending")]
+        Pending,
+        #[serde(rename = "approved")]
+        Approved,
+        #[serde(rename = "denied")]
+        Denied,
+        #[serde(rename = "canceled")]
+        Canceled,
+        #[serde(rename = "superseded")]
+        Superseded,
+    }
+
+    impl ::std::convert::From<&Self> for PackReviewStatus {
+        fn from(value: &PackReviewStatus) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for PackReviewStatus {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Pending => f.write_str("pending"),
+                Self::Approved => f.write_str("approved"),
+                Self::Denied => f.write_str("denied"),
+                Self::Canceled => f.write_str("canceled"),
+                Self::Superseded => f.write_str("superseded"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for PackReviewStatus {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "pending" => Ok(Self::Pending),
+                "approved" => Ok(Self::Approved),
+                "denied" => Ok(Self::Denied),
+                "canceled" => Ok(Self::Canceled),
+                "superseded" => Ok(Self::Superseded),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PackReviewStatus {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PackReviewStatus {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PackReviewStatus {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -32340,6 +35451,16 @@ pub mod types {
     ///      "format": "url",
     ///      "maxLength": 512
     ///    },
+    ///    "verifiedVersion": {
+    ///      "description": "The latest released pack version that has been
+    /// verified (approved) for use. For agent packs, this is the most recent
+    /// release that passed review. For non-agent packs or legacy releases, this
+    /// is the most recent release.",
+    ///      "examples": [
+    ///        "1.0.0"
+    ///      ],
+    ///      "type": "string"
+    ///    },
     ///    "workspaceId": {
     ///      "description": "The parent workspace for the Pack.",
     ///      "examples": [
@@ -32405,6 +35526,12 @@ pub mod types {
         ///A Terms of Service URL for the Pack.
         #[serde(rename = "termsOfServiceUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub terms_of_service_url: ::std::option::Option<::std::string::String>,
+        ///The latest released pack version that has been verified (approved)
+        /// for use. For agent packs, this is the most recent release that
+        /// passed review. For non-agent packs or legacy releases, this is the
+        /// most recent release.
+        #[serde(rename = "verifiedVersion", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub verified_version: ::std::option::Option<::std::string::String>,
         ///The parent workspace for the Pack.
         #[serde(rename = "workspaceId")]
         pub workspace_id: ::std::string::String,
@@ -37809,16 +40936,9 @@ pub mod types {
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
-    pub struct PushButtonResult {
-        #[serde(rename = "rowId")]
-        row_id: String,
-        #[serde(rename = "columnId")]
-        column_id: String,
-        #[serde(rename = "requestId")]
-        request_id: String,
-    }
+    pub enum PushButtonResult {}
     impl ::std::convert::From<&Self> for PushButtonResult {
         fn from(value: &PushButtonResult) -> Self {
             value.clone()
@@ -41187,10 +44307,12 @@ pub mod types {
     ///    "packFeaturedDocs",
     ///    "packFormulaAnalytics",
     ///    "packInvitation",
+    ///    "packListingDraft",
     ///    "packLog",
     ///    "packMaker",
     ///    "packOauthConfig",
     ///    "packRelease",
+    ///    "packReview",
     ///    "packSourceCode",
     ///    "packSystemConnection",
     ///    "packVersion",
@@ -41239,10 +44361,12 @@ pub mod types {
     ///    "PackFeaturedDocs",
     ///    "PackFormulaAnalytics",
     ///    "PackInvitation",
+    ///    "PackListingDraft",
     ///    "PackLog",
     ///    "PackMaker",
     ///    "PackOauthConfig",
     ///    "PackRelease",
+    ///    "PackReview",
     ///    "PackSourceCode",
     ///    "PackSystemConnection",
     ///    "PackVersion",
@@ -41328,6 +44452,8 @@ pub mod types {
         PackFormulaAnalytics,
         #[serde(rename = "packInvitation")]
         PackInvitation,
+        #[serde(rename = "packListingDraft")]
+        PackListingDraft,
         #[serde(rename = "packLog")]
         PackLog,
         #[serde(rename = "packMaker")]
@@ -41336,6 +44462,8 @@ pub mod types {
         PackOauthConfig,
         #[serde(rename = "packRelease")]
         PackRelease,
+        #[serde(rename = "packReview")]
+        PackReview,
         #[serde(rename = "packSourceCode")]
         PackSourceCode,
         #[serde(rename = "packSystemConnection")]
@@ -41403,10 +44531,12 @@ pub mod types {
                 Self::PackFeaturedDocs => f.write_str("packFeaturedDocs"),
                 Self::PackFormulaAnalytics => f.write_str("packFormulaAnalytics"),
                 Self::PackInvitation => f.write_str("packInvitation"),
+                Self::PackListingDraft => f.write_str("packListingDraft"),
                 Self::PackLog => f.write_str("packLog"),
                 Self::PackMaker => f.write_str("packMaker"),
                 Self::PackOauthConfig => f.write_str("packOauthConfig"),
                 Self::PackRelease => f.write_str("packRelease"),
+                Self::PackReview => f.write_str("packReview"),
                 Self::PackSourceCode => f.write_str("packSourceCode"),
                 Self::PackSystemConnection => f.write_str("packSystemConnection"),
                 Self::PackVersion => f.write_str("packVersion"),
@@ -41460,10 +44590,12 @@ pub mod types {
                 "packFeaturedDocs" => Ok(Self::PackFeaturedDocs),
                 "packFormulaAnalytics" => Ok(Self::PackFormulaAnalytics),
                 "packInvitation" => Ok(Self::PackInvitation),
+                "packListingDraft" => Ok(Self::PackListingDraft),
                 "packLog" => Ok(Self::PackLog),
                 "packMaker" => Ok(Self::PackMaker),
                 "packOauthConfig" => Ok(Self::PackOauthConfig),
                 "packRelease" => Ok(Self::PackRelease),
+                "packReview" => Ok(Self::PackReview),
                 "packSourceCode" => Ok(Self::PackSourceCode),
                 "packSystemConnection" => Ok(Self::PackSystemConnection),
                 "packVersion" => Ok(Self::PackVersion),
@@ -41819,6 +44951,120 @@ pub mod types {
 
     impl ::std::convert::From<&UpdateDocResponse> for UpdateDocResponse {
         fn from(value: &UpdateDocResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Request for updating a folder.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Request for updating a folder.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "description": {
+    ///      "description": "Description of the folder.",
+    ///      "examples": [
+    ///        "A collection of project docs."
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "description": "Name of the folder.",
+    ///      "examples": [
+    ///        "Projects"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "UpdateFolderRequest"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpdateFolderRequest {
+        ///Description of the folder.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub description: ::std::option::Option<::std::string::String>,
+        ///Name of the folder.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub name: ::std::option::Option<::std::string::String>,
+    }
+
+    impl ::std::convert::From<&UpdateFolderRequest> for UpdateFolderRequest {
+        fn from(value: &UpdateFolderRequest) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for UpdateFolderRequest {
+        fn default() -> Self {
+            Self {
+                description: Default::default(),
+                name: Default::default(),
+            }
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpdateFolderResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
+    impl ::std::convert::From<&UpdateFolderResponse> for UpdateFolderResponse {
+        fn from(value: &UpdateFolderResponse) -> Self {
             value.clone()
         }
     }
@@ -43716,6 +46962,131 @@ pub mod types {
         }
     }
 
+    ///Request to create or update a Pack listing draft
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Request to create or update a Pack listing draft",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "listingData"
+    ///  ],
+    ///  "properties": {
+    ///    "listingData": {
+    ///      "$ref": "#/components/schemas/PackListingDraftInputData"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "UpsertPackListingDraftRequest"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpsertPackListingDraftRequest {
+        #[serde(rename = "listingData")]
+        pub listing_data: PackListingDraftInputData,
+    }
+
+    impl ::std::convert::From<&UpsertPackListingDraftRequest> for UpsertPackListingDraftRequest {
+        fn from(value: &UpsertPackListingDraftRequest) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Response containing the upserted Pack listing draft
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Response containing the upserted Pack listing draft",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "listingData",
+    ///    "packId",
+    ///    "packListingDraftId"
+    ///  ],
+    ///  "properties": {
+    ///    "listingData": {
+    ///      "$ref": "#/components/schemas/PackListingDraftData"
+    ///    },
+    ///    "packId": {
+    ///      "description": "ID of the Pack",
+    ///      "type": "number"
+    ///    },
+    ///    "packListingDraftId": {
+    ///      "description": "ID of the listing draft",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "UpsertPackListingDraftResponse"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpsertPackListingDraftResponse {
+        #[serde(rename = "listingData")]
+        pub listing_data: PackListingDraftData,
+        #[serde(rename = "packId")]
+        pub pack_id: f64,
+        ///ID of the listing draft
+        #[serde(rename = "packListingDraftId")]
+        pub pack_listing_draft_id: ::uuid::Uuid,
+    }
+
+    impl ::std::convert::From<&UpsertPackListingDraftResponse> for UpsertPackListingDraftResponse {
+        fn from(value: &UpsertPackListingDraftResponse) -> Self {
+            value.clone()
+        }
+    }
+
+    ///Detail about why this request was rejected.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Detail about why this request was rejected.",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "validationErrors": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/ValidationError"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpsertPackListingDraftResponseCodaDetail {
+        #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub validation_errors: ::std::vec::Vec<ValidationError>,
+    }
+
+    impl ::std::convert::From<&UpsertPackListingDraftResponseCodaDetail> for UpsertPackListingDraftResponseCodaDetail {
+        fn from(value: &UpsertPackListingDraftResponseCodaDetail) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::default::Default for UpsertPackListingDraftResponseCodaDetail {
+        fn default() -> Self {
+            Self {
+                validation_errors: Default::default(),
+            }
+        }
+    }
+
     ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
@@ -45426,10 +48797,10 @@ pub mod types {
 /// * Discover pages, tables, formulas, and controls
 /// * Read, insert, upsert, update, and delete rows
 ///
-///As we update and release newer versions of the API, we reserve the right to
-/// remove older APIs and functionality with a 3-month deprecation notice. We
-/// will post about such changes as well as announce new features in the [Developers Central](https://community.coda.io/c/developers-central) section of our Community,
-///and update the [API updates](https://coda.io/api-updates) doc.
+///If you plan to integrate Coda with an AI tool, you may also want to consider
+/// using the [Coda MCP server](https://coda.io/resources/guides/getting_started_with_coda_mcp). It's optimized for LLM usage
+///patterns and often exposes more granular methods for accessing and modifying
+/// data.
 ///
 ///# Getting Started
 ///
@@ -45441,6 +48812,13 @@ pub mod types {
 /// - Build a one-way sync from one Coda doc to another
 /// - Automate reminders
 /// - Sync your Google Calendar to Coda
+///
+///# Changes to the API
+///
+///As we update and release newer versions of the API, we reserve the right to
+/// remove older APIs and functionality with a 3-month deprecation notice. We
+/// will post about such changes as well as announce new features in the [Developers Central](https://community.coda.io/c/developers-central) section of our Community,
+///and update the [API updates](https://coda.io/api-updates) doc.
 ///
 ///# Using the API
 ///
@@ -45507,23 +48885,12 @@ pub mod types {
 ///    <legend>Doc ID Extractor</legend>
 ///    <input type="text" id="de_docUrl" placeholder="Paste in a Coda doc URL"
 ///           style="width: 250px; padding: 8px; margin-right: 20px;" />
-///
+///    
 ///  Your doc ID is:&nbsp;&nbsp;&nbsp;
 ///      <input id="de_docId" readonly="true"
-///             style="width: 150px; padding: 8px; font-family: monospace; border: 1px dashed gray;" />  </fieldset>
+///             style="width: 150px; padding: 8px; font-family: monospace;
+/// border: 1px dashed gray;" />  </fieldset>
 ///</form>
-///
-///<script>
-///  (() => {
-///    const docUrl = document.getElementById('de_docUrl');
-///    const docId = document.getElementById('de_docId');
-///    docUrl.addEventListener('input', () => {
-///      docId.value = (docUrl.value.match(/_d([\w-]+)/) || [])[1] || '';
-///    });
-///    docId.addEventListener('mousedown', () => docId.select());
-///    docId.addEventListener('click', () => docId.select());
-///  })();
-///</script>
 ///
 ///## Rate Limiting
 ///
@@ -47719,6 +51086,90 @@ impl RawClient {
         }
     }
 
+    ///List folders
+    ///
+    ///Returns a list of folders the user has access to.
+    ///
+    ///
+    ///Sends a `GET` request to `/folders`
+    ///
+    ///Arguments:
+    /// - `is_starred`: If true, returns folders that are starred. If false,
+    ///   returns folders that are not starred. If not specified, returns all
+    ///   folders.
+    /// - `limit`: Maximum number of results to return in this query.
+    /// - `page_token`: An opaque token used to fetch the next page of results.
+    /// - `workspace_id`: Show only folders belonging to the given workspace.
+    pub async fn list_folders<'a>(&'a self, is_starred: Option<bool>, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, workspace_id: Option<&'a str>) -> Result<ResponseValue<types::FolderList>, Error<types::ListFoldersResponse>> {
+        let url = format!("{}/folders", self.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .query(&progenitor_client::QueryParam::new("isStarred", &is_starred))
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
+            .query(&progenitor_client::QueryParam::new("workspaceId", &workspace_id))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "list_folders",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Create folder
+    ///
+    ///Creates a new folder.
+    ///
+    ///
+    ///Sends a `POST` request to `/folders`
+    ///
+    ///Arguments:
+    /// - `body`: Parameters for creating the folder.
+    pub async fn create_folder<'a>(&'a self, body: &'a types::CreateFolderRequest) -> Result<ResponseValue<types::Folder>, Error<types::CreateFolderResponse>> {
+        let url = format!("{}/folders", self.baseurl,);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .post(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "create_folder",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            201u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
     ///Get folder
     ///
     ///Returns the requested folder.
@@ -47741,6 +51192,84 @@ impl RawClient {
             .build()?;
         let info = OperationInfo {
             operation_id: "get_folder",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Delete folder
+    ///
+    ///Deletes a folder. The folder must be empty (contain no docs).
+    ///
+    ///
+    ///Sends a `DELETE` request to `/folders/{folderId}`
+    ///
+    ///Arguments:
+    /// - `folder_id`: ID of the folder.
+    pub async fn delete_folder<'a>(&'a self, folder_id: &'a str) -> Result<ResponseValue<types::DeleteFolderResult>, Error<types::DeleteFolderResponse>> {
+        let url = format!("{}/folders/{}", self.baseurl, encode_path(&folder_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .delete(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "delete_folder",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Update folder
+    ///
+    ///Updates metadata for a folder.
+    ///
+    ///
+    ///Sends a `PATCH` request to `/folders/{folderId}`
+    ///
+    ///Arguments:
+    /// - `folder_id`: ID of the folder.
+    /// - `body`: Parameters for updating the folder.
+    pub async fn update_folder<'a>(&'a self, folder_id: &'a str, body: &'a types::UpdateFolderRequest) -> Result<ResponseValue<types::Folder>, Error<types::UpdateFolderResponse>> {
+        let url = format!("{}/folders/{}", self.baseurl, encode_path(&folder_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .patch(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "update_folder",
         };
         self.pre(&mut request, &info).await?;
         let result = self.exec(request, &info).await;
@@ -48392,8 +51921,12 @@ impl RawClient {
     /// - `access_types`: Filter to only return the Packs for which the current
     ///   user has these access types.
     /// - `direction`: Direction to sort results in.
+    /// - `exclude_grammarly_institution_acls`: Do not include Packs that are
+    ///   only shared with the user's Grammarly institution.
     /// - `exclude_individual_acls`: Do not include Packs that are only shared
     ///   with the user individually.
+    /// - `exclude_nomos_organization_acls`: Do not include Packs that are only
+    ///   shared with the user's NOMOS organization.
     /// - `exclude_public_packs`: Only get Packs shared with users/workspaces,
     ///   not publicly.
     /// - `exclude_workspace_acls`: Do not include Packs that are only shared
@@ -48407,7 +51940,7 @@ impl RawClient {
     /// - `parent_workspace_ids`: Filter to only Packs whose parent workspace is
     ///   one of the given IDs.
     /// - `sort_by`: The sort order of the Packs returned.
-    pub async fn list_packs<'a>(&'a self, access_type: Option<types::PackAccessType>, access_types: Option<&'a ::std::vec::Vec<types::PackAccessType>>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, pack_entrypoint: Option<types::PackEntrypoint>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PacksSortBy>) -> Result<ResponseValue<types::PackSummaryList>, Error<types::ListPacksResponse>> {
+    pub async fn list_packs<'a>(&'a self, access_type: Option<types::PackAccessType>, access_types: Option<&'a ::std::vec::Vec<types::PackAccessType>>, direction: Option<types::SortDirection>, exclude_grammarly_institution_acls: Option<bool>, exclude_individual_acls: Option<bool>, exclude_nomos_organization_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, pack_entrypoint: Option<types::PackEntrypoint>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PacksSortBy>) -> Result<ResponseValue<types::PackSummaryList>, Error<types::ListPacksResponse>> {
         let url = format!("{}/packs", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -48419,7 +51952,9 @@ impl RawClient {
             .query(&progenitor_client::QueryParam::new("accessType", &access_type))
             .query(&progenitor_client::QueryParam::new("accessTypes", &access_types))
             .query(&progenitor_client::QueryParam::new("direction", &direction))
+            .query(&progenitor_client::QueryParam::new("excludeGrammarlyInstitutionAcls", &exclude_grammarly_institution_acls))
             .query(&progenitor_client::QueryParam::new("excludeIndividualAcls", &exclude_individual_acls))
+            .query(&progenitor_client::QueryParam::new("excludeNomosOrganizationAcls", &exclude_nomos_organization_acls))
             .query(&progenitor_client::QueryParam::new("excludePublicPacks", &exclude_public_packs))
             .query(&progenitor_client::QueryParam::new("excludeWorkspaceAcls", &exclude_workspace_acls))
             .query(&progenitor_client::QueryParam::new("limit", &limit))
@@ -48975,6 +52510,238 @@ impl RawClient {
         }
     }
 
+    ///List pack reviews
+    ///
+    ///List reviews for a specific pack.
+    ///
+    ///Sends a `GET` request to `/packs/{packId}/reviews`
+    ///
+    ///Arguments:
+    /// - `pack_id`: ID of a Pack
+    /// - `limit`: Maximum number of results to return.
+    /// - `page_token`: An opaque token used to fetch the next page of results.
+    /// - `status`: Filter reviews by status.
+    pub async fn list_pack_reviews<'a>(&'a self, pack_id: ::std::num::NonZeroU64, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, status: Option<types::PackReviewStatus>) -> Result<ResponseValue<types::ListPackReviewsResponse>, Error<types::ListPackReviewsResponse>> {
+        let url = format!("{}/packs/{}/reviews", self.baseurl, encode_path(&pack_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .query(&progenitor_client::QueryParam::new("limit", &limit))
+            .query(&progenitor_client::QueryParam::new("pageToken", &page_token))
+            .query(&progenitor_client::QueryParam::new("status", &status))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "list_pack_reviews",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Create pack review
+    ///
+    ///Submit a pack for review in Superhuman GO.
+    ///
+    ///Sends a `POST` request to `/packs/{packId}/reviews`
+    ///
+    ///Arguments:
+    /// - `pack_id`: ID of a Pack
+    /// - `body`: Parameters for creating pack review.
+    pub async fn create_pack_review<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::CreatePackReviewRequest) -> Result<ResponseValue<types::CreatePackReviewResponse>, Error<types::CreatePackReviewResponse>> {
+        let url = format!("{}/packs/{}/reviews", self.baseurl, encode_path(&pack_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .post(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "create_pack_review",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Cancel pending pack review
+    ///
+    ///Cancel the pending pack review for this pack. Any user with edit
+    /// permission on the pack can cancel the review.
+    ///
+    ///Sends a `POST` request to `/packs/{packId}/reviews/pending/cancel`
+    ///
+    ///Arguments:
+    /// - `pack_id`: ID of a Pack
+    pub async fn cancel_pack_review<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::CancelPackReviewResponse>, Error<types::CancelPackReviewResponse>> {
+        let url = format!("{}/packs/{}/reviews/pending/cancel", self.baseurl, encode_path(&pack_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .post(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "cancel_pack_review",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Get Pack listing draft
+    ///
+    ///Get the current listing draft for a Pack.
+    ///
+    ///Sends a `GET` request to `/packs/{packId}/listingDraft`
+    ///
+    ///Arguments:
+    /// - `pack_id`: ID of a Pack
+    pub async fn get_pack_listing_draft<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::GetPackListingDraftResponse>, Error<types::GetPackListingDraftResponse>> {
+        let url = format!("{}/packs/{}/listingDraft", self.baseurl, encode_path(&pack_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .get(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "get_pack_listing_draft",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Upsert Pack listing draft
+    ///
+    ///Create or update the listing draft for a Pack.
+    ///
+    ///Sends a `PUT` request to `/packs/{packId}/listingDraft`
+    ///
+    ///Arguments:
+    /// - `pack_id`: ID of a Pack
+    /// - `body`: The listing draft data to save.
+    pub async fn upsert_pack_listing_draft<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::UpsertPackListingDraftRequest) -> Result<ResponseValue<types::UpsertPackListingDraftResponse>, Error<types::UpsertPackListingDraftResponse>> {
+        let url = format!("{}/packs/{}/listingDraft", self.baseurl, encode_path(&pack_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .put(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .json(&body)
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "upsert_pack_listing_draft",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            400u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
+    ///Delete Pack listing draft
+    ///
+    ///Delete the listing draft for a Pack, discarding any unsaved changes.
+    ///
+    ///Sends a `DELETE` request to `/packs/{packId}/listingDraft`
+    ///
+    ///Arguments:
+    /// - `pack_id`: ID of a Pack
+    pub async fn delete_pack_listing_draft<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::DeletePackListingDraftResponse>, Error<types::DeletePackListingDraftResponse>> {
+        let url = format!("{}/packs/{}/listingDraft", self.baseurl, encode_path(&pack_id.to_string()),);
+        let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
+        header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
+        #[allow(unused_mut)]
+        let mut request = self
+            .client
+            .delete(url)
+            .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
+            .headers(header_map)
+            .build()?;
+        let info = OperationInfo {
+            operation_id: "delete_pack_listing_draft",
+        };
+        self.pre(&mut request, &info).await?;
+        let result = self.exec(request, &info).await;
+        self.post(&result, &info).await?;
+        let response = result?;
+        match response.status().as_u16() {
+            200u16 => ResponseValue::from_response(response).await,
+            401u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            403u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            404u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            429u16 => Err(Error::ErrorResponse(ResponseValue::from_response(response).await?)),
+            _ => Err(Error::UnexpectedResponse(response)),
+        }
+    }
+
     ///Retrieve the OAuth configuration of the Pack
     ///
     ///Retrieve the OAuth configuration of the Pack for display purpose.
@@ -49213,8 +52980,8 @@ impl RawClient {
 
     ///Add a permission for Pack
     ///
-    ///Create or modify user, workspace, or global permissions for a given
-    /// Pack.
+    ///Create or modify user, workspace, organization, group, or global
+    /// permissions for a given Pack.
     ///
     ///
     ///Sends a `POST` request to `/packs/{packId}/permissions`
@@ -50038,6 +53805,7 @@ impl RawClient {
     ///   workspaces) to check for Packs shared via workspace ACL.
     /// - `order_by`: Deprecated: use sortBy instead.
     /// - `pack_access_types`: Pack access types.
+    /// - `pack_categories`: Filter Packs by one or more category types.
     /// - `pack_entrypoint`: Entrypoint for which this pack call is being made.
     ///   Used to filter non relevant packs
     /// - `pack_ids`: Which Pack IDs to fetch.
@@ -50046,7 +53814,7 @@ impl RawClient {
     ///   one of the given IDs.
     /// - `sort_by`: Specify a sort order for the returned Pack listings
     ///   returned.
-    pub async fn list_pack_listings<'a>(&'a self, certified_agents_only: Option<bool>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, install_context: Option<types::PackListingInstallContextType>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, order_by: Option<types::PackListingsSortBy>, pack_access_types: Option<&'a types::PackAccessTypes>, pack_entrypoint: Option<types::PackEntrypoint>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PackListingsSortBy>) -> Result<ResponseValue<types::PackListingList>, Error<types::ListPackListingsResponse>> {
+    pub async fn list_pack_listings<'a>(&'a self, certified_agents_only: Option<bool>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, install_context: Option<types::PackListingInstallContextType>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, order_by: Option<types::PackListingsSortBy>, pack_access_types: Option<&'a types::PackAccessTypes>, pack_categories: Option<&'a ::std::vec::Vec<types::PackCategoryType>>, pack_entrypoint: Option<types::PackEntrypoint>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PackListingsSortBy>) -> Result<ResponseValue<types::PackListingList>, Error<types::ListPackListingsResponse>> {
         let url = format!("{}/packs/listings", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -50065,6 +53833,7 @@ impl RawClient {
             .query(&progenitor_client::QueryParam::new("onlyWorkspaceId", &only_workspace_id))
             .query(&progenitor_client::QueryParam::new("orderBy", &order_by))
             .query(&progenitor_client::QueryParam::new("packAccessTypes", &pack_access_types))
+            .query(&progenitor_client::QueryParam::new("packCategories", &pack_categories))
             .query(&progenitor_client::QueryParam::new("packEntrypoint", &pack_entrypoint))
             .query(&progenitor_client::QueryParam::new("packIds", &pack_ids))
             .query(&progenitor_client::QueryParam::new("pageToken", &page_token))

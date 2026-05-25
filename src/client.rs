@@ -392,10 +392,10 @@ impl Client {
         self.raw.list_workspace_role_activity(workspace_id).await
     }
 
-    pub async fn list_packs<'a>(&'a self, access_type: Option<types::PackAccessType>, access_types: Option<&'a ::std::vec::Vec<types::PackAccessType>>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, pack_entrypoint: Option<types::PackEntrypoint>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PacksSortBy>) -> Result<ResponseValue<types::PackSummaryList>, Error<types::ListPacksResponse>> {
+    pub async fn list_packs<'a>(&'a self, access_type: Option<types::PackAccessType>, access_types: Option<&'a ::std::vec::Vec<types::PackAccessType>>, direction: Option<types::SortDirection>, exclude_grammarly_institution_acls: Option<bool>, exclude_individual_acls: Option<bool>, exclude_nomos_organization_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, pack_entrypoint: Option<types::PackEntrypoint>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PacksSortBy>) -> Result<ResponseValue<types::PackSummaryList>, Error<types::ListPacksResponse>> {
         self.limiter.read.until_ready().await;
         self.raw
-            .list_packs(access_type, access_types, direction, exclude_individual_acls, exclude_public_packs, exclude_workspace_acls, limit, only_workspace_id, pack_entrypoint, page_token, parent_workspace_ids, sort_by)
+            .list_packs(access_type, access_types, direction, exclude_grammarly_institution_acls, exclude_individual_acls, exclude_nomos_organization_acls, exclude_public_packs, exclude_workspace_acls, limit, only_workspace_id, pack_entrypoint, page_token, parent_workspace_ids, sort_by)
             .await
     }
 
@@ -613,10 +613,10 @@ impl Client {
         self.raw.get_pack_source_code(pack_id, pack_version).await
     }
 
-    pub async fn list_pack_listings<'a>(&'a self, certified_agents_only: Option<bool>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, install_context: Option<types::PackListingInstallContextType>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, order_by: Option<types::PackListingsSortBy>, pack_access_types: Option<&'a types::PackAccessTypes>, pack_entrypoint: Option<types::PackEntrypoint>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PackListingsSortBy>) -> Result<ResponseValue<types::PackListingList>, Error<types::ListPackListingsResponse>> {
+    pub async fn list_pack_listings<'a>(&'a self, certified_agents_only: Option<bool>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, install_context: Option<types::PackListingInstallContextType>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, order_by: Option<types::PackListingsSortBy>, pack_access_types: Option<&'a types::PackAccessTypes>, pack_categories: Option<&'a ::std::vec::Vec<types::PackCategoryType>>, pack_entrypoint: Option<types::PackEntrypoint>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PackListingsSortBy>) -> Result<ResponseValue<types::PackListingList>, Error<types::ListPackListingsResponse>> {
         self.limiter.read.until_ready().await;
         self.raw
-            .list_pack_listings(certified_agents_only, direction, exclude_individual_acls, exclude_public_packs, exclude_workspace_acls, install_context, limit, only_workspace_id, order_by, pack_access_types, pack_entrypoint, pack_ids, page_token, parent_workspace_ids, sort_by)
+            .list_pack_listings(certified_agents_only, direction, exclude_individual_acls, exclude_public_packs, exclude_workspace_acls, install_context, limit, only_workspace_id, order_by, pack_access_types, pack_categories, pack_entrypoint, pack_ids, page_token, parent_workspace_ids, sort_by)
             .await
     }
 

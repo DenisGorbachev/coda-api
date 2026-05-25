@@ -7,7 +7,7 @@
       "name": "Coda Developer Terms",
       "url": "https://coda.io/trust/developer"
     },
-    "description": "# Introduction\n\nThe Coda API is a RESTful API that lets you programmatically interact with Coda docs:\n\n * List and search Coda docs\n * Create new docs and copy existing ones\n * Share and publish docs\n * Discover pages, tables, formulas, and controls\n * Read, insert, upsert, update, and delete rows\n\nAs we update and release newer versions of the API, we reserve the right to remove\nolder APIs and functionality with a 3-month deprecation notice. We will post about such changes as well as announce\nnew features in the [Developers Central](https://community.coda.io/c/developers-central) section of our Community,\nand update the [API updates](https://coda.io/api-updates) doc.\n\n# Getting Started\n\nOur [Getting Started Guide](https://coda.io/@oleg/getting-started-guide-coda-api) helps you learn the\nbasic of working with the API and shows a few ways you can use it. Check it out, and learn how to:\n\n- Read data from Coda tables and write back to them\n- Build a one-way sync from one Coda doc to another\n- Automate reminders\n- Sync your Google Calendar to Coda\n\n# Using the API\n\nCoda's REST API is designed to be straightforward to use. You can use the language and platform of your choice to\nmake requests. To get a feel for the API, you can also use a tool like [Postman](https://www.getpostman.com/) or\n[Insomnia](https://insomnia.rest/).\n\n## API Endpoint\n\nThis API uses a base path of `https://coda.io/apis/v1`.\n\n## Resource IDs and Links\n\nEach resource instance retrieved via the API has the following fields:\n\n  - `id`: The resource's immutable ID, which can be used to refer to it within its context\n  - `type`: The type of resource, useful for identifying it in a heterogenous collection of results\n  - `href`: A fully qualified URI that can be used to refer to and get the latest details on the resource\n\nMost resources can be queried by their name or ID. We recommend sticking with IDs where possible, as names are\nfragile and prone to being changed by your doc's users.\n\n### List Endpoints\n\nEndpoints supporting listing of resources have the following fields:\n\n  - `items`: An array containing the listed resources, limited by the `limit` or `pageToken` query parameters\n  - `nextPageLink`: If more results are available, an API link to the next page of results\n  - `nextPageToken`: If more results are available, a page token that can be passed into the `pageToken` query parameter\n\n**The maximum page size may change at any time, and may be different for different endpoints.** Please do not rely on it\nfor any behavior of your application. If you pass a `limit` parameter that is larger than our maximum allowed limit,\nwe will only return as many results as our maximum limit. You should look for the presence of the `nextPageToken` on the\nresponse to see if there are more results available, rather than relying on a result set that matches your provided limit.\n\nTo fetch a subsequent page of results, pass the `pageToken` parameter. Set this parameter to the value given to you as the `nextPageToken`\nin a page response. If no value is provided, there are no more results available. You only need to pass the `pageToken` to get\nthe next page of results, you don't need to pass any of the parameters from your original request, as they are all\nimplied by the `pageToken`. Any other parameters provided alongside a `pageToken` will be ignored.\n\n### Doc IDs\n\nWhile most object IDs will have to be discovered via the API, you may find yourself frequently wanting to get the\nID of a specific Coda doc.\n\nHere's a handy tool that will extract it for you. (See if you can find the pattern!)\n\n<form>\n  <fieldset style=\"margin: 0px 25px 25px 25px; display: inline;\">\n    <legend>Doc ID Extractor</legend>\n    <input type=\"text\" id=\"de_docUrl\" placeholder=\"Paste in a Coda doc URL\"\n           style=\"width: 250px; padding: 8px; margin-right: 20px;\" />\n    <span>\n      Your doc ID is:&nbsp;&nbsp;&nbsp;\n      <input id=\"de_docId\" readonly=\"true\"\n             style=\"width: 150px; padding: 8px; font-family: monospace; border: 1px dashed gray;\" />\n  </fieldset>\n</form>\n\n<script>\n  (() => {\n    const docUrl = document.getElementById('de_docUrl');\n    const docId = document.getElementById('de_docId');\n    docUrl.addEventListener('input', () => {\n      docId.value = (docUrl.value.match(/_d([\\w-]+)/) || [])[1] || '';\n    });\n    docId.addEventListener('mousedown', () => docId.select());\n    docId.addEventListener('click', () => docId.select());\n  })();\n</script>\n\n## Rate Limiting\n\nThe Coda API sets a reasonable limit on the number of requests that can be made per minute. Once this limit is\nreached, calls to the API will start returning errors with an HTTP status code of 429.\n\nThese are the current rate limits. They are subject to change at any time without notice. For robustness,\nall API scripts should check for HTTP 429 Too Many Requests errors and back off and retry the request.\nLimits apply per-user across all endpoints that share the same limit and across all docs.\n\nReading data (with the exceptions below): {{READ_RATE_LIMIT}}\n<br/>\nWriting data (POST/PUT/PATCH): {{WRITE_RATE_LIMIT}}\n<br/>\nWriting doc content data (POST/PUT/PATCH): {{WRITE_DOC_CONTENT_RATE_LIMIT}}\n<br/>\nListing docs: {{LIST_DOCS_RATE_LIMIT}}\n<br/>\nReading analytics: {{ANALYTICS_RATE_LIMIT}}\n\n## Consistency\n\nWhile edits made in Coda are shared with other collaborators in real-time, it can take a few seconds for them to\nbecome available via the API. You may also notice that changes made via the API, such as updating a row, are not\nimmediate. These endpoints all return an HTTP 202 status code, instead of a standard 200, indicating that the\nedit has been accepted and queued for processing. This generally takes a few seconds, and the edit may fail if\ninvalid. Each such edit will return a `requestId` in the response, and you can pass this `requestId` to the\n[`#getMutationStatus`](#operation/getMutationStatus) endpoint to find out if it has been applied.\n\nSimilarly, when you get doc data from the API (rows, pages, columns, etc), the data you receive comes from\nthe most recent \"snapshot\" of the doc, which might be slightly stale relative to the data you observe in\nyour browser. If you want to ensure that the data you receive is up to date and are ok getting an error if not,\nyou can pass this header in your request: `X-Coda-Doc-Version: latest`. If the API's view of the doc is\nnot up to date, the API will return an HTTP 400 response.\n\n## Volatile Formulas\n\nCoda exposes a number of \"volatile\" formulas, as as `Today()`, `Now()`, and `User()`. When used in a live Coda\ndoc, these formulas affect what's visible in realtime, tailored to the current user.\n\nSuch formulas behave differently with the API. Time-based values may only be current to the last edit made to the\ndoc. User-based values may be blank or invalid.\n\n## Free and Paid Workspaces\n\nWe make the Coda API available to all of our users free of charge, in both free and paid workspaces. However, API\nusage is subject to the role of the user associated with the API token in the workspace applicable to each API\nrequest. What this means is:\n\n- For the [`#createDoc`](#operation/createDoc) endpoint specifically, the owner of the API token must be a Doc\n  Maker (or Admin) in the workspace. If the \"Any member can create docs\" option in enabled in the workspace\n  settings, they can be an Editor and will get auto-promoted to Doc Maker upon using this endpoint. Lastly, if in\n  addition, the API key owner matches the \"Auto-join email domains\" setting, they will be auto-added to the\n  workspace and promoted to Doc Maker upon using this endpoint\n\nThis behavior applies to the API as well as any integrations that may use it, such as Zapier.\n\n## Examples\n\nTo help you get started, this documentation provides code examples in Python, Unix shell, and Google Apps Script.\nThese examples are based on a simple doc that looks something like this:\n\n![](https://cdn.coda.io/external/img/api_example_doc.png)\n\n### Python examples\n\nThese examples use Python 3.6+. If you don't already have the `requests` module, use `pip` or `easy_install` to\nget it.\n\n### Shell examples\n\nThe shell examples are intended to be run in a Unix shell. If you're on Windows, you will need to install\n[WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10).\n\nThese examples use the standard cURL utility to pull from the API, and then process it with `jq` to extract and\nformat example output. If you don't already have it, you can either [install it](https://stedolan.github.io/jq/)\nor run the command without it to see the raw JSON output.\n\n### Google Apps Script examples\n\n![](https://cdn.coda.io/external/img/api_gas.png)\n\n[Google Apps Script](https://script.google.com/) makes it easy to write code in a JavaScript-like syntax and\neasily access many Google products with built-in libraries. You can set up your scripts to run periodically,\nwhich makes it a good environment for writing tools without maintaining your own server.\n\nCoda provides a library for Google Apps Script. To use it, go into `Resources -> Libraries...` and enter the\nfollowing library ID: `15IQuWOk8MqT50FDWomh57UqWGH23gjsWVWYFms3ton6L-UHmefYHS9Vl`. If you want to see the\nlibrary's source code, it's available\n[here](https://script.google.com/d/15IQuWOk8MqT50FDWomh57UqWGH23gjsWVWYFms3ton6L-UHmefYHS9Vl/edit).\n\nGoogle provides autocomplete for API functions as well as generated docs. You can access these docs via the\nLibraries dialog by clicking on the library name. Required parameters that would be included in the URL path are\npositional arguments in each of these functions, followed by the request body, if applicable. All remaining\nparameters can be specified in the options object.\n\n## OpenAPI/Swagger Spec\n\nIn an effort to standardize our API and make it accessible, we offer an OpenAPI 3.0 specification:\n\n- [OpenAPI 3.0 spec - YAML](https://coda.io/apis/v1/openapi.yaml)\n- [OpenAPI 3.0 spec - JSON](https://coda.io/apis/v1/openapi.json)\n\n#### Postman collection\n\nTo get started with prototyping the API quickly in Postman, you can use one of links above to import the Coda API\ninto a collection. You'll then need to set the [appropriate header](#section/Authentication) and environment\nvariables.\n\n## Client libraries\n\nWe do not currently support client libraries apart from Google Apps Script. To work with the Coda API, you can\neither use standard network libraries for your language, or use the appropriate Swagger Generator tool to\nauto-generate Coda API client libraries for your language of choice. We do not provide any guarantees that these\nautogenerated libraries are compatible with our API (e.g., some libraries may not work with Bearer\nauthentication).\n\n### OpenAPI 3.0\n\n[Swagger Generator 3](https://generator3.swagger.io/) (that link takes you to the docs for the generator API) can\ngenerate client libraries for [these languages](https://generator3.swagger.io/v2/clients). It's relatively new\nand thus only has support for a limited set of languages at this time.\n\n### Third-party client libraries\n\nSome members of our amazing community have written libraries to work with our API. These aren't officially\nsupported by Coda, but are listed here for convenience. (Please let us know if you've written a library and would\nlike to have it included here.)\n\n- [PHP](https://github.com/danielstieber/CodaPHP) by Daniel Stieber\n- [Node-RED](https://github.com/serene-water/node-red-contrib-coda-io) by Mori Sugimoto\n- [NodeJS](https://www.npmjs.com/package/coda-js) by Parker McMullin\n- [Ruby](https://rubygems.org/gems/coda_docs/) by Carlos Muñoz at Getro\n- [Python](https://github.com/Blasterai/codaio) by Mikhail Beliansky\n- [Go](https://github.com/artsafin/coda-schema-generator) by Artur Safin\n",
+    "description": "# Introduction\n\nThe Coda API is a RESTful API that lets you programmatically interact with Coda docs:\n\n * List and search Coda docs\n * Create new docs and copy existing ones\n * Share and publish docs\n * Discover pages, tables, formulas, and controls\n * Read, insert, upsert, update, and delete rows\n\nIf you plan to integrate Coda with an AI tool, you may also want to consider using the\n[Coda MCP server](https://coda.io/resources/guides/getting_started_with_coda_mcp). It's optimized for LLM usage\npatterns and often exposes more granular methods for accessing and modifying data.\n\n# Getting Started\n\nOur [Getting Started Guide](https://coda.io/@oleg/getting-started-guide-coda-api) helps you learn the\nbasic of working with the API and shows a few ways you can use it. Check it out, and learn how to:\n\n- Read data from Coda tables and write back to them\n- Build a one-way sync from one Coda doc to another\n- Automate reminders\n- Sync your Google Calendar to Coda\n\n# Changes to the API\n\nAs we update and release newer versions of the API, we reserve the right to remove\nolder APIs and functionality with a 3-month deprecation notice. We will post about such changes as well as announce\nnew features in the [Developers Central](https://community.coda.io/c/developers-central) section of our Community,\nand update the [API updates](https://coda.io/api-updates) doc.\n\n# Using the API\n\nCoda's REST API is designed to be straightforward to use. You can use the language and platform of your choice to\nmake requests. To get a feel for the API, you can also use a tool like [Postman](https://www.getpostman.com/) or\n[Insomnia](https://insomnia.rest/).\n\n## API Endpoint\n\nThis API uses a base path of `https://coda.io/apis/v1`.\n\n## Resource IDs and Links\n\nEach resource instance retrieved via the API has the following fields:\n\n  - `id`: The resource's immutable ID, which can be used to refer to it within its context\n  - `type`: The type of resource, useful for identifying it in a heterogenous collection of results\n  - `href`: A fully qualified URI that can be used to refer to and get the latest details on the resource\n\nMost resources can be queried by their name or ID. We recommend sticking with IDs where possible, as names are\nfragile and prone to being changed by your doc's users.\n\n### List Endpoints\n\nEndpoints supporting listing of resources have the following fields:\n\n  - `items`: An array containing the listed resources, limited by the `limit` or `pageToken` query parameters\n  - `nextPageLink`: If more results are available, an API link to the next page of results\n  - `nextPageToken`: If more results are available, a page token that can be passed into the `pageToken` query parameter\n\n**The maximum page size may change at any time, and may be different for different endpoints.** Please do not rely on it\nfor any behavior of your application. If you pass a `limit` parameter that is larger than our maximum allowed limit,\nwe will only return as many results as our maximum limit. You should look for the presence of the `nextPageToken` on the\nresponse to see if there are more results available, rather than relying on a result set that matches your provided limit.\n\nTo fetch a subsequent page of results, pass the `pageToken` parameter. Set this parameter to the value given to you as the `nextPageToken`\nin a page response. If no value is provided, there are no more results available. You only need to pass the `pageToken` to get\nthe next page of results, you don't need to pass any of the parameters from your original request, as they are all\nimplied by the `pageToken`. Any other parameters provided alongside a `pageToken` will be ignored.\n\n### Doc IDs\n\nWhile most object IDs will have to be discovered via the API, you may find yourself frequently wanting to get the\nID of a specific Coda doc.\n\nHere's a handy tool that will extract it for you. (See if you can find the pattern!)\n\n<form>\n  <fieldset style=\"margin: 0px 25px 25px 25px; display: inline;\">\n    <legend>Doc ID Extractor</legend>\n    <input type=\"text\" id=\"de_docUrl\" placeholder=\"Paste in a Coda doc URL\"\n           style=\"width: 250px; padding: 8px; margin-right: 20px;\" />\n    <span>\n      Your doc ID is:&nbsp;&nbsp;&nbsp;\n      <input id=\"de_docId\" readonly=\"true\"\n             style=\"width: 150px; padding: 8px; font-family: monospace; border: 1px dashed gray;\" />\n  </fieldset>\n</form>\n\n## Rate Limiting\n\nThe Coda API sets a reasonable limit on the number of requests that can be made per minute. Once this limit is\nreached, calls to the API will start returning errors with an HTTP status code of 429.\n\nThese are the current rate limits. They are subject to change at any time without notice. For robustness,\nall API scripts should check for HTTP 429 Too Many Requests errors and back off and retry the request.\nLimits apply per-user across all endpoints that share the same limit and across all docs.\n\nReading data (with the exceptions below): {{READ_RATE_LIMIT}}\n<br/>\nWriting data (POST/PUT/PATCH): {{WRITE_RATE_LIMIT}}\n<br/>\nWriting doc content data (POST/PUT/PATCH): {{WRITE_DOC_CONTENT_RATE_LIMIT}}\n<br/>\nListing docs: {{LIST_DOCS_RATE_LIMIT}}\n<br/>\nReading analytics: {{ANALYTICS_RATE_LIMIT}}\n\n## Consistency\n\nWhile edits made in Coda are shared with other collaborators in real-time, it can take a few seconds for them to\nbecome available via the API. You may also notice that changes made via the API, such as updating a row, are not\nimmediate. These endpoints all return an HTTP 202 status code, instead of a standard 200, indicating that the\nedit has been accepted and queued for processing. This generally takes a few seconds, and the edit may fail if\ninvalid. Each such edit will return a `requestId` in the response, and you can pass this `requestId` to the\n[`#getMutationStatus`](#operation/getMutationStatus) endpoint to find out if it has been applied.\n\nSimilarly, when you get doc data from the API (rows, pages, columns, etc), the data you receive comes from\nthe most recent \"snapshot\" of the doc, which might be slightly stale relative to the data you observe in\nyour browser. If you want to ensure that the data you receive is up to date and are ok getting an error if not,\nyou can pass this header in your request: `X-Coda-Doc-Version: latest`. If the API's view of the doc is\nnot up to date, the API will return an HTTP 400 response.\n\n## Volatile Formulas\n\nCoda exposes a number of \"volatile\" formulas, as as `Today()`, `Now()`, and `User()`. When used in a live Coda\ndoc, these formulas affect what's visible in realtime, tailored to the current user.\n\nSuch formulas behave differently with the API. Time-based values may only be current to the last edit made to the\ndoc. User-based values may be blank or invalid.\n\n## Free and Paid Workspaces\n\nWe make the Coda API available to all of our users free of charge, in both free and paid workspaces. However, API\nusage is subject to the role of the user associated with the API token in the workspace applicable to each API\nrequest. What this means is:\n\n- For the [`#createDoc`](#operation/createDoc) endpoint specifically, the owner of the API token must be a Doc\n  Maker (or Admin) in the workspace. If the \"Any member can create docs\" option in enabled in the workspace\n  settings, they can be an Editor and will get auto-promoted to Doc Maker upon using this endpoint. Lastly, if in\n  addition, the API key owner matches the \"Auto-join email domains\" setting, they will be auto-added to the\n  workspace and promoted to Doc Maker upon using this endpoint\n\nThis behavior applies to the API as well as any integrations that may use it, such as Zapier.\n\n## Examples\n\nTo help you get started, this documentation provides code examples in Python, Unix shell, and Google Apps Script.\nThese examples are based on a simple doc that looks something like this:\n\n![](https://cdn.coda.io/external/img/api_example_doc.png)\n\n### Python examples\n\nThese examples use Python 3.6+. If you don't already have the `requests` module, use `pip` or `easy_install` to\nget it.\n\n### Shell examples\n\nThe shell examples are intended to be run in a Unix shell. If you're on Windows, you will need to install\n[WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10).\n\nThese examples use the standard cURL utility to pull from the API, and then process it with `jq` to extract and\nformat example output. If you don't already have it, you can either [install it](https://stedolan.github.io/jq/)\nor run the command without it to see the raw JSON output.\n\n### Google Apps Script examples\n\n![](https://cdn.coda.io/external/img/api_gas.png)\n\n[Google Apps Script](https://script.google.com/) makes it easy to write code in a JavaScript-like syntax and\neasily access many Google products with built-in libraries. You can set up your scripts to run periodically,\nwhich makes it a good environment for writing tools without maintaining your own server.\n\nCoda provides a library for Google Apps Script. To use it, go into `Resources -> Libraries...` and enter the\nfollowing library ID: `15IQuWOk8MqT50FDWomh57UqWGH23gjsWVWYFms3ton6L-UHmefYHS9Vl`. If you want to see the\nlibrary's source code, it's available\n[here](https://script.google.com/d/15IQuWOk8MqT50FDWomh57UqWGH23gjsWVWYFms3ton6L-UHmefYHS9Vl/edit).\n\nGoogle provides autocomplete for API functions as well as generated docs. You can access these docs via the\nLibraries dialog by clicking on the library name. Required parameters that would be included in the URL path are\npositional arguments in each of these functions, followed by the request body, if applicable. All remaining\nparameters can be specified in the options object.\n\n## OpenAPI/Swagger Spec\n\nIn an effort to standardize our API and make it accessible, we offer an OpenAPI 3.0 specification:\n\n- [OpenAPI 3.0 spec - YAML](https://coda.io/apis/v1/openapi.yaml)\n- [OpenAPI 3.0 spec - JSON](https://coda.io/apis/v1/openapi.json)\n\n#### Postman collection\n\nTo get started with prototyping the API quickly in Postman, you can use one of links above to import the Coda API\ninto a collection. You'll then need to set the [appropriate header](#section/Authentication) and environment\nvariables.\n\n## Client libraries\n\nWe do not currently support client libraries apart from Google Apps Script. To work with the Coda API, you can\neither use standard network libraries for your language, or use the appropriate Swagger Generator tool to\nauto-generate Coda API client libraries for your language of choice. We do not provide any guarantees that these\nautogenerated libraries are compatible with our API (e.g., some libraries may not work with Bearer\nauthentication).\n\n### OpenAPI 3.0\n\n[Swagger Generator 3](https://generator3.swagger.io/) (that link takes you to the docs for the generator API) can\ngenerate client libraries for [these languages](https://generator3.swagger.io/v2/clients). It's relatively new\nand thus only has support for a limited set of languages at this time.\n\n### Third-party client libraries\n\nSome members of our amazing community have written libraries to work with our API. These aren't officially\nsupported by Coda, but are listed here for convenience. (Please let us know if you've written a library and would\nlike to have it included here.)\n\n- [PHP](https://github.com/danielstieber/CodaPHP) by Daniel Stieber\n- [Node-RED](https://github.com/serene-water/node-red-contrib-coda-io) by Mori Sugimoto\n- [NodeJS](https://www.npmjs.com/package/coda-js) by Parker McMullin\n- [Ruby](https://rubygems.org/gems/coda_docs/) by Carlos Muñoz at Getro\n- [Python](https://github.com/Blasterai/codaio) by Mikhail Beliansky\n- [Go](https://github.com/artsafin/coda-schema-generator) by Artur Safin\n",
     "termsOfService": "https://coda.io/trust/tos",
     "contact": {
       "name": "API Support",
@@ -53,6 +53,10 @@
       "description": "Coda docs are foundational, top-level collaborative projects that contain pages. The API lets you list and search your docs to obtain basic metadata like titles and ownership information.\n"
     },
     {
+      "name": "Folders",
+      "description": "Folders help you organize your docs within workspaces. This API lets you list, create, update, and delete folders.\n"
+    },
+    {
       "name": "Formulas",
       "description": "Formulas can be great for performing one-off computations, or used with tables and other formulas to compute a single value. With this API, you can discover formulas in a doc and obtain computed results.\n"
     },
@@ -90,6 +94,12 @@
     }
   ],
   "x-tagGroups": [
+    {
+      "name": "Folders",
+      "tags": [
+        "Folders"
+      ]
+    },
     {
       "name": "Docs",
       "tags": [
@@ -2968,6 +2978,132 @@
         }
       }
     },
+    "/folders": {
+      "get": {
+        "summary": "List folders",
+        "description": "Returns a list of folders the user has access to.\n",
+        "operationId": "listFolders",
+        "tags": [
+          "Folders"
+        ],
+        "parameters": [
+          {
+            "name": "workspaceId",
+            "in": "query",
+            "description": "Show only folders belonging to the given workspace.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "ws-1Ab234"
+          },
+          {
+            "name": "isStarred",
+            "in": "query",
+            "description": "If true, returns folders that are starred. If false, returns folders that are not starred. If not specified, returns all folders.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/limit"
+          },
+          {
+            "$ref": "#/components/parameters/pageToken"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of folders.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FolderList"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        },
+        "x-codeSamples": [
+          {
+            "label": "Python 3.13",
+            "lang": "python",
+            "source": "import requests\n\nheaders = {'Authorization': 'Bearer <your API token>'}\nuri = 'https://coda.io/apis/v1/folders'\nres = requests.get(uri, headers=headers).json()\n\nfor folder in res['items']:\n    print(f'Folder: {folder[\"name\"]}')\n"
+          },
+          {
+            "label": "Shell",
+            "lang": "shell",
+            "source": "curl -s -H 'Authorization: Bearer <your API token>' \\\n  'https://coda.io/apis/v1/folders' |\n  jq '.items[].name'\n"
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create folder",
+        "description": "Creates a new folder.\n",
+        "operationId": "createFolder",
+        "tags": [
+          "Folders"
+        ],
+        "requestBody": {
+          "description": "Parameters for creating the folder.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFolderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The created folder.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Folder"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        },
+        "x-codeSamples": [
+          {
+            "label": "Python 3.13",
+            "lang": "python",
+            "source": "import requests\n\nheaders = {'Authorization': 'Bearer <your API token>'}\nuri = 'https://coda.io/apis/v1/folders'\npayload = {'name': 'My New Folder'}\nres = requests.post(uri, headers=headers, json=payload).json()\n\nprint(f'Created folder: {res[\"id\"]}')\n"
+          },
+          {
+            "label": "Shell",
+            "lang": "shell",
+            "source": "curl -s -H 'Authorization: Bearer <your API token>' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"name\": \"My New Folder\"}' \\\n  'https://coda.io/apis/v1/folders' |\n  jq .id\n"
+          }
+        ]
+      }
+    },
     "/folders/{folderId}": {
       "get": {
         "summary": "Get folder",
@@ -3018,6 +3154,121 @@
             "label": "Shell",
             "lang": "shell",
             "source": "curl -s -H 'Authorization: Bearer <your API token>' \\\n  'https://coda.io/apis/v1/folders/<your folder id>' |\n  jq .name\n"
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Update folder",
+        "description": "Updates metadata for a folder.\n",
+        "operationId": "updateFolder",
+        "tags": [
+          "Folders"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/folderId"
+          }
+        ],
+        "requestBody": {
+          "description": "Parameters for updating the folder.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFolderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated folder.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Folder"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        },
+        "x-codeSamples": [
+          {
+            "label": "Python 3.13",
+            "lang": "python",
+            "source": "import requests\n\nheaders = {'Authorization': 'Bearer <your API token>'}\nuri = 'https://coda.io/apis/v1/folders/<your folder id>'\npayload = {'name': 'Updated Folder Name'}\nres = requests.patch(uri, headers=headers, json=payload).json()\n\nprint(f'Updated folder: {res[\"name\"]}')\n"
+          },
+          {
+            "label": "Shell",
+            "lang": "shell",
+            "source": "curl -s -X PATCH -H 'Authorization: Bearer <your API token>' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"name\": \"Updated Folder Name\"}' \\\n  'https://coda.io/apis/v1/folders/<your folder id>' |\n  jq .name\n"
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete folder",
+        "description": "Deletes a folder. The folder must be empty (contain no docs).\n",
+        "operationId": "deleteFolder",
+        "tags": [
+          "Folders"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/folderId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Folder was successfully deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteFolderResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        },
+        "x-codeSamples": [
+          {
+            "label": "Python 3.13",
+            "lang": "python",
+            "source": "import requests\n\nheaders = {'Authorization': 'Bearer <your API token>'}\nuri = 'https://coda.io/apis/v1/folders/<your folder id>'\nres = requests.delete(uri, headers=headers)\n\nprint(f'Deleted: {res.status_code == 200}')\n"
+          },
+          {
+            "label": "Shell",
+            "lang": "shell",
+            "source": "curl -s -X DELETE -H 'Authorization: Bearer <your API token>' \\\n  'https://coda.io/apis/v1/folders/<your folder id>'\n"
           }
         ]
       }
@@ -3921,6 +4172,12 @@
             "$ref": "#/components/parameters/excludeWorkspaceAcls"
           },
           {
+            "$ref": "#/components/parameters/excludeNomosOrganizationAcls"
+          },
+          {
+            "$ref": "#/components/parameters/excludeGrammarlyInstitutionAcls"
+          },
+          {
             "$ref": "#/components/parameters/packEntrypoint"
           }
         ],
@@ -4596,6 +4853,292 @@
         }
       }
     },
+    "/packs/{packId}/reviews": {
+      "get": {
+        "summary": "List pack reviews",
+        "description": "List reviews for a specific pack.",
+        "operationId": "listPackReviews",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/packId"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of results to return.",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 25
+            }
+          },
+          {
+            "$ref": "#/components/parameters/pageToken"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Filter reviews by status.",
+            "schema": {
+              "$ref": "#/components/schemas/PackReviewStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of pack reviews",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListPackReviewsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create pack review",
+        "description": "Submit a pack for review in Superhuman GO.",
+        "operationId": "createPackReview",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/packId"
+          }
+        ],
+        "requestBody": {
+          "description": "Parameters for creating pack review.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePackReviewRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pack review created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePackReviewResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestWithValidationErrors"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      }
+    },
+    "/packs/{packId}/reviews/pending/cancel": {
+      "post": {
+        "summary": "Cancel pending pack review",
+        "description": "Cancel the pending pack review for this pack. Any user with edit permission on the pack can cancel the review.",
+        "operationId": "cancelPackReview",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/packId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pack review canceled successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelPackReviewResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestError"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      }
+    },
+    "/packs/{packId}/listingDraft": {
+      "get": {
+        "summary": "Get Pack listing draft",
+        "description": "Get the current listing draft for a Pack.",
+        "operationId": "getPackListingDraft",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/packId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Pack listing draft",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPackListingDraftResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestWithValidationErrors"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      },
+      "put": {
+        "summary": "Upsert Pack listing draft",
+        "description": "Create or update the listing draft for a Pack.",
+        "operationId": "upsertPackListingDraft",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/packId"
+          }
+        ],
+        "requestBody": {
+          "description": "The listing draft data to save.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertPackListingDraftRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The saved Pack listing draft",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpsertPackListingDraftResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequestWithValidationErrors"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Pack listing draft",
+        "description": "Delete the listing draft for a Pack, discarding any unsaved changes.",
+        "operationId": "deletePackListingDraft",
+        "tags": [
+          "Packs"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/packId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Pack listing draft was deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeletePackListingDraftResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequestsError"
+          }
+        }
+      }
+    },
     "/packs/{packId}/oauthConfig": {
       "put": {
         "summary": "Set the OAuth configurations of the Pack.",
@@ -4876,7 +5419,7 @@
       },
       "post": {
         "summary": "Add a permission for Pack",
-        "description": "Create or modify user, workspace, or global permissions for a given Pack.\n",
+        "description": "Create or modify user, workspace, organization, group, or global permissions for a given Pack.\n",
         "operationId": "addPackPermission",
         "tags": [
           "Packs"
@@ -5868,6 +6411,9 @@
           },
           {
             "$ref": "#/components/parameters/certifiedAgentsOnly"
+          },
+          {
+            "$ref": "#/components/parameters/packCategories"
           },
           {
             "name": "sortBy",
@@ -7346,10 +7892,12 @@
           "packFeaturedDocs",
           "packFormulaAnalytics",
           "packInvitation",
+          "packListingDraft",
           "packLog",
           "packMaker",
           "packOauthConfig",
           "packRelease",
+          "packReview",
           "packSourceCode",
           "packSystemConnection",
           "packVersion",
@@ -7397,10 +7945,12 @@
           "PackFeaturedDocs",
           "PackFormulaAnalytics",
           "PackInvitation",
+          "PackListingDraft",
           "PackLog",
           "PackMaker",
           "PackOauthConfig",
           "PackRelease",
+          "PackReview",
           "PackSourceCode",
           "PackSystemConnection",
           "PackVersion",
@@ -8737,34 +9287,15 @@
           "id",
           "type",
           "name",
-          "createdAt",
-          "workspaceId"
+          "browserLink",
+          "workspace"
         ],
         "additionalProperties": false,
         "properties": {
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp for when the folder was created.",
-            "example": "2018-04-11T00:18:57.946Z"
-          },
-          "description": {
-            "type": "string",
-            "description": "The description of the folder.",
-            "example": "A collection of project docs."
-          },
-          "icon": {
-            "$ref": "#/components/schemas/Icon"
-          },
           "id": {
             "type": "string",
             "description": "ID of the Coda folder.",
             "example": "fl-1Ab234"
-          },
-          "name": {
-            "type": "string",
-            "description": "The name of the folder.",
-            "example": "Projects"
           },
           "type": {
             "type": "string",
@@ -8774,12 +9305,128 @@
             ],
             "x-tsType": "Type.Folder"
           },
-          "workspaceId": {
+          "name": {
             "type": "string",
-            "description": "ID of the Coda workspace.",
-            "example": "ws-1Ab234"
+            "description": "The name of the folder.",
+            "example": "Projects"
+          },
+          "browserLink": {
+            "type": "string",
+            "format": "url",
+            "description": "Browser-friendly link to the folder.",
+            "example": "https://coda.io/folders/fl-1Ab234"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the folder.",
+            "example": "A collection of project docs."
+          },
+          "icon": {
+            "$ref": "#/components/schemas/Icon"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp for when the folder was created.",
+            "example": "2018-04-11T00:18:57.946Z"
+          },
+          "canEdit": {
+            "type": "boolean",
+            "description": "Whether the folder settings can be edited. E.g., some folder types (like personal folders - \"My Docs\") cannot be edited.",
+            "example": true
+          },
+          "workspace": {
+            "$ref": "#/components/schemas/WorkspaceReference"
           }
         }
+      },
+      "FolderList": {
+        "x-schema-name": "FolderList",
+        "description": "List of folders.",
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Folder"
+            }
+          },
+          "href": {
+            "type": "string",
+            "format": "url",
+            "description": "API link to these results.",
+            "example": "https://coda.io/apis/v1/folders?workspaceId=ws-1Ab234"
+          },
+          "nextPageToken": {
+            "$ref": "#/components/schemas/nextPageToken"
+          },
+          "nextPageLink": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/nextPageLink"
+              },
+              {
+                "type": "string",
+                "example": "https://coda.io/apis/v1/folders?pageToken=xyz"
+              }
+            ]
+          }
+        }
+      },
+      "CreateFolderRequest": {
+        "x-schema-name": "CreateFolderRequest",
+        "description": "Request for creating a folder.",
+        "type": "object",
+        "required": [
+          "name",
+          "workspaceId"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the folder.",
+            "example": "Projects"
+          },
+          "workspaceId": {
+            "type": "string",
+            "description": "ID of the workspace where the folder should be created.",
+            "example": "ws-1Ab234"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the folder.",
+            "example": "A collection of project docs."
+          }
+        }
+      },
+      "UpdateFolderRequest": {
+        "x-schema-name": "UpdateFolderRequest",
+        "description": "Request for updating a folder.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the folder.",
+            "example": "Projects"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the folder.",
+            "example": "A collection of project docs."
+          }
+        }
+      },
+      "DeleteFolderResult": {
+        "x-schema-name": "DeleteFolderResult",
+        "description": "The result of a folder deletion.",
+        "type": "object",
+        "additionalProperties": false
       },
       "PageReference": {
         "x-schema-name": "PageReference",
@@ -12577,7 +13224,7 @@
             "type": "string",
             "format": "url",
             "description": "Browser-friendly link to the folder.",
-            "example": "https://coda.io/docs?folderId=fl-1Ab234"
+            "example": "https://coda.io/folders/fl-1Ab234"
           },
           "name": {
             "type": "string",
@@ -13958,6 +14605,11 @@
               "$ref": "#/components/schemas/PackEntrypoint"
             }
           },
+          "verifiedVersion": {
+            "type": "string",
+            "description": "The latest released pack version that has been verified (approved) for use. For agent packs, this is the most recent release that passed review. For non-agent packs or legacy releases, this is the most recent release.",
+            "example": "1.0.0"
+          },
           "name": {
             "type": "string",
             "description": "The name of the Pack.",
@@ -14015,6 +14667,9 @@
           },
           "featuredDocStatus": {
             "$ref": "#/components/schemas/FeaturedDocStatus"
+          },
+          "additionalInformation": {
+            "$ref": "#/components/schemas/PackListingAdditionalInformation"
           }
         }
       },
@@ -14090,6 +14745,11 @@
             "items": {
               "$ref": "#/components/schemas/PackEntrypoint"
             }
+          },
+          "verifiedVersion": {
+            "type": "string",
+            "description": "The latest released pack version that has been verified (approved) for use. For agent packs, this is the most recent release that passed review. For non-agent packs or legacy releases, this is the most recent release.",
+            "example": "1.0.0"
           },
           "name": {
             "type": "string",
@@ -14271,6 +14931,12 @@
             "$ref": "#/components/schemas/PackGlobalPrincipal"
           },
           {
+            "$ref": "#/components/schemas/PackNomosOrganizationPrincipal"
+          },
+          {
+            "$ref": "#/components/schemas/PackGroupPrincipal"
+          },
+          {
             "$ref": "#/components/schemas/PackGrammarlyInstitutionPrincipal"
           }
         ],
@@ -14280,6 +14946,8 @@
             "user": "#/components/schemas/PackUserPrincipal",
             "workspace": "#/components/schemas/PackWorkspacePrincipal",
             "global": "#/components/schemas/PackGlobalPrincipal",
+            "nomosOrganization": "#/components/schemas/PackNomosOrganizationPrincipal",
+            "group": "#/components/schemas/PackGroupPrincipal",
             "grammarlyInstitution": "#/components/schemas/PackGrammarlyInstitutionPrincipal"
           }
         }
@@ -14292,12 +14960,16 @@
           "user",
           "workspace",
           "worldwide",
+          "nomosOrganization",
+          "group",
           "grammarlyInstitution"
         ],
         "x-tsEnumNames": [
           "User",
           "Workspace",
           "Worldwide",
+          "NomosOrganization",
+          "Group",
           "GrammarlyInstitution"
         ]
       },
@@ -14396,6 +15068,51 @@
               "worldwide"
             ],
             "x-tsType": "PackPrincipalType.Worldwide"
+          }
+        }
+      },
+      "PackNomosOrganizationPrincipal": {
+        "x-schema-name": "PackNomosOrganizationPrincipal",
+        "type": "object",
+        "required": [
+          "type",
+          "nomosOrganizationId"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "nomosOrganization"
+            ],
+            "x-tsType": "PackPrincipalType.NomosOrganization"
+          },
+          "nomosOrganizationId": {
+            "type": "string"
+          }
+        }
+      },
+      "PackGroupPrincipal": {
+        "x-schema-name": "PackGroupPrincipal",
+        "type": "object",
+        "required": [
+          "type",
+          "groupId"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "group"
+            ],
+            "x-tsType": "PackPrincipalType.Group"
+          },
+          "groupId": {
+            "type": "string"
+          },
+          "groupName": {
+            "type": "string"
           }
         }
       },
@@ -14934,6 +15651,462 @@
           }
         }
       },
+      "CreatePackReviewRequest": {
+        "x-schema-name": "CreatePackReviewRequest",
+        "description": "Request to create a pack review",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "packVersion": {
+            "type": "string",
+            "description": "Pack version to review (for code reviews)"
+          },
+          "releaseNotes": {
+            "type": "string",
+            "maxLength": 8192,
+            "description": "Release notes for this version (used when pack is approved and released)"
+          }
+        }
+      },
+      "CreatePackReviewResponse": {
+        "x-schema-name": "CreatePackReviewResponse",
+        "description": "Response containing created review information",
+        "type": "object",
+        "required": [
+          "packReviewId"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "packReviewId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the created review"
+          }
+        }
+      },
+      "CancelPackReviewResponse": {
+        "x-schema-name": "CancelPackReviewResponse",
+        "description": "Response confirming the pack review was canceled",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "PackReviewStatus": {
+        "x-schema-name": "PackReviewStatus",
+        "description": "The status of a pack review",
+        "type": "string",
+        "enum": [
+          "pending",
+          "approved",
+          "denied",
+          "canceled",
+          "superseded"
+        ],
+        "x-tsEnumNames": [
+          "Pending",
+          "Approved",
+          "Denied",
+          "Canceled",
+          "Superseded"
+        ]
+      },
+      "PackReview": {
+        "x-schema-name": "PackReview",
+        "description": "A pack review submission",
+        "type": "object",
+        "required": [
+          "packReviewId",
+          "packId",
+          "packReviewStatus",
+          "submittedByUserId",
+          "submissionTimestamp"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "packReviewId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the review"
+          },
+          "packId": {
+            "type": "integer",
+            "description": "ID of the pack being reviewed"
+          },
+          "packVersion": {
+            "type": "string",
+            "description": "Pack version being reviewed (for code reviews)"
+          },
+          "includesListingReview": {
+            "type": "boolean",
+            "description": "Whether listing info was included in the review scope"
+          },
+          "packReviewStatus": {
+            "$ref": "#/components/schemas/PackReviewStatus"
+          },
+          "submittedByUserId": {
+            "type": "integer",
+            "description": "User ID of the person who submitted the review"
+          },
+          "submissionTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the review was submitted"
+          },
+          "additionalInformation": {
+            "$ref": "#/components/schemas/PackReviewAdditionalInformation"
+          }
+        }
+      },
+      "PackReviewAdditionalInformation": {
+        "x-schema-name": "PackReviewAdditionalInformation",
+        "description": "Additional information about the pack review",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "videoWalkthrough": {
+            "type": "string",
+            "nullable": true,
+            "description": "URL or reference to video walkthrough for agent verification.",
+            "maxLength": 512
+          },
+          "additionalDetails": {
+            "type": "string",
+            "nullable": true,
+            "description": "Additional details for the pack review.",
+            "maxLength": 8192
+          },
+          "privacyCollectsPersonalInfo": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether the agent or third-party partners collect personal information."
+          },
+          "privacyPersonalInfoCategories": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Categories of personal information collected by the agent."
+          },
+          "privacyDataUsagePurposes": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Purposes for which collected data is used by the agent or third-party partners."
+          },
+          "privacyDataCollectedBy": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Whether data is collected by the developer, a third party, or both."
+          }
+        }
+      },
+      "ListPackReviewsResponse": {
+        "x-schema-name": "ListPackReviewsResponse",
+        "description": "Response containing pack reviews",
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "description": "List of pack reviews",
+            "items": {
+              "$ref": "#/components/schemas/PackReview"
+            }
+          },
+          "nextPageToken": {
+            "type": "string",
+            "description": "Token for fetching the next page of results"
+          },
+          "nextPageLink": {
+            "type": "string",
+            "format": "url",
+            "description": "Link for fetching the next page of results"
+          }
+        }
+      },
+      "PackListingDraftData": {
+        "x-schema-name": "PackListingDraftData",
+        "description": "Draft listing data for a Pack. All fields are optional.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the Pack.",
+            "maxLength": 128
+          },
+          "description": {
+            "type": "string",
+            "description": "The full description of the Pack.",
+            "maxLength": 8192
+          },
+          "shortDescription": {
+            "type": "string",
+            "description": "A short version of the description of the Pack.",
+            "maxLength": 256
+          },
+          "logo": {
+            "$ref": "#/components/schemas/PackImageFile"
+          },
+          "cover": {
+            "$ref": "#/components/schemas/PackImageFile"
+          },
+          "exampleImages": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PackImageFile"
+            }
+          },
+          "agentImages": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PackImageFile"
+            }
+          },
+          "categoryIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "supportEmail": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 512
+          },
+          "termsOfServiceUrl": {
+            "type": "string",
+            "format": "url",
+            "nullable": true,
+            "maxLength": 512
+          },
+          "privacyPolicyUrl": {
+            "type": "string",
+            "format": "url",
+            "nullable": true,
+            "maxLength": 512
+          },
+          "sourceCodeVisibility": {
+            "$ref": "#/components/schemas/PackSourceCodeVisibility"
+          },
+          "agentShortDescription": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 256
+          },
+          "agentDescription": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 8192
+          },
+          "additionalInformation": {
+            "$ref": "#/components/schemas/PackListingAdditionalInformation"
+          }
+        }
+      },
+      "PackListingDraftInputData": {
+        "x-schema-name": "PackListingDraftInputData",
+        "description": "Input data for creating or updating a Pack listing draft. Agent images only require assetId and filename; the server resolves the full image URL.",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the Pack.",
+            "maxLength": 128
+          },
+          "description": {
+            "type": "string",
+            "description": "The full description of the Pack.",
+            "maxLength": 8192
+          },
+          "shortDescription": {
+            "type": "string",
+            "description": "A short version of the description of the Pack.",
+            "maxLength": 256
+          },
+          "logo": {
+            "$ref": "#/components/schemas/PackImageFile"
+          },
+          "cover": {
+            "$ref": "#/components/schemas/PackImageFile"
+          },
+          "exampleImages": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PackImageFile"
+            }
+          },
+          "agentImages": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ImageFileForUpdatePackRequest"
+            }
+          },
+          "categoryIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "supportEmail": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 512
+          },
+          "termsOfServiceUrl": {
+            "type": "string",
+            "format": "url",
+            "nullable": true,
+            "maxLength": 512
+          },
+          "privacyPolicyUrl": {
+            "type": "string",
+            "format": "url",
+            "nullable": true,
+            "maxLength": 512
+          },
+          "sourceCodeVisibility": {
+            "$ref": "#/components/schemas/PackSourceCodeVisibility"
+          },
+          "agentShortDescription": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 256
+          },
+          "agentDescription": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 8192
+          },
+          "additionalInformation": {
+            "$ref": "#/components/schemas/PackListingAdditionalInformation"
+          }
+        }
+      },
+      "PackListingAdditionalInformation": {
+        "x-schema-name": "PackListingAdditionalInformation",
+        "description": "Additional information saved with the pack listing draft",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "videoWalkthrough": {
+            "type": "string",
+            "nullable": true,
+            "description": "URL or reference to video walkthrough for agent verification.",
+            "maxLength": 512
+          },
+          "additionalDetails": {
+            "type": "string",
+            "nullable": true,
+            "description": "Additional details for the pack review.",
+            "maxLength": 8192
+          },
+          "privacyCollectsPersonalInfo": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether the agent or third-party partners collect personal information."
+          },
+          "privacyPersonalInfoCategories": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Categories of personal information collected by the agent."
+          },
+          "privacyDataUsagePurposes": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Purposes for which collected data is used by the agent or third-party partners."
+          },
+          "privacyDataCollectedBy": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Whether data is collected by the developer, a third party, or both."
+          }
+        }
+      },
+      "GetPackListingDraftResponse": {
+        "x-schema-name": "GetPackListingDraftResponse",
+        "description": "Response containing the Pack listing draft",
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "packListingDraftId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the listing draft"
+          },
+          "listingData": {
+            "$ref": "#/components/schemas/PackListingDraftData"
+          }
+        }
+      },
+      "UpsertPackListingDraftRequest": {
+        "x-schema-name": "UpsertPackListingDraftRequest",
+        "description": "Request to create or update a Pack listing draft",
+        "type": "object",
+        "required": [
+          "listingData"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "listingData": {
+            "$ref": "#/components/schemas/PackListingDraftInputData"
+          }
+        }
+      },
+      "UpsertPackListingDraftResponse": {
+        "x-schema-name": "UpsertPackListingDraftResponse",
+        "description": "Response containing the upserted Pack listing draft",
+        "type": "object",
+        "required": [
+          "packListingDraftId",
+          "packId",
+          "listingData"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "packListingDraftId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the listing draft"
+          },
+          "packId": {
+            "type": "number",
+            "description": "ID of the Pack"
+          },
+          "listingData": {
+            "$ref": "#/components/schemas/PackListingDraftData"
+          }
+        }
+      },
+      "DeletePackListingDraftResponse": {
+        "x-schema-name": "DeletePackListingDraftResponse",
+        "description": "Response after deleting a Pack listing draft",
+        "type": "object",
+        "additionalProperties": false
+      },
       "PackSource": {
         "x-schema-name": "PackSource",
         "type": "string",
@@ -15023,12 +16196,16 @@
         "type": "string",
         "enum": [
           "public",
+          "nomosOrganization",
+          "group",
           "grammarlyInstitution",
           "workspace",
           "private"
         ],
         "x-tsEnumNames": [
           "Public",
+          "NomosOrganization",
+          "Group",
           "GrammarlyInstitution",
           "Workspace",
           "Private"
@@ -15050,7 +16227,8 @@
           "externalMetadataUrl",
           "categories",
           "makers",
-          "sdkVersion"
+          "sdkVersion",
+          "packCategoryType"
         ],
         "properties": {
           "packId": {
@@ -15193,6 +16371,9 @@
             "type": "string",
             "description": "What Packs SDK version was this version built on.",
             "example": "1.5.1"
+          },
+          "packCategoryType": {
+            "$ref": "#/components/schemas/PackCategoryType"
           }
         }
       },
@@ -15214,7 +16395,8 @@
           "makers",
           "userAccess",
           "externalMetadataUrl",
-          "sdkVersion"
+          "sdkVersion",
+          "packCategoryType"
         ],
         "properties": {
           "packId": {
@@ -15357,6 +16539,9 @@
             "type": "string",
             "description": "What Packs SDK version was this version built on.",
             "example": "1.5.1"
+          },
+          "packCategoryType": {
+            "$ref": "#/components/schemas/PackCategoryType"
           },
           "discoverability": {
             "$ref": "#/components/schemas/PackDiscoverability"
@@ -15450,6 +16635,21 @@
             "awsAccessKey": "#/components/schemas/PackConnectionAwsAccessKeyMetadata"
           }
         }
+      },
+      "PackCategoryType": {
+        "x-schema-name": "PackCategoryType",
+        "description": "The category of a Pack.",
+        "type": "string",
+        "enum": [
+          "connector",
+          "agent",
+          "customAgent"
+        ],
+        "x-tsEnumNames": [
+          "Connector",
+          "Agent",
+          "CustomAgent"
+        ]
       },
       "PackUserAccess": {
         "x-schema-name": "PackUserAccess",
@@ -15569,6 +16769,10 @@
           "redirectUri": {
             "type": "string",
             "description": "Redirect URI of the Pack."
+          },
+          "useDynamicClientRegistration": {
+            "type": "boolean",
+            "description": "Whether this Pack uses Dynamic Client Registration for OAuth."
           }
         }
       },
@@ -19639,6 +20843,22 @@
           "type": "boolean"
         }
       },
+      "excludeNomosOrganizationAcls": {
+        "name": "excludeNomosOrganizationAcls",
+        "description": "Do not include Packs that are only shared with the user's NOMOS organization.",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
+      "excludeGrammarlyInstitutionAcls": {
+        "name": "excludeGrammarlyInstitutionAcls",
+        "description": "Do not include Packs that are only shared with the user's Grammarly institution.",
+        "in": "query",
+        "schema": {
+          "type": "boolean"
+        }
+      },
       "packEntrypoint": {
         "name": "packEntrypoint",
         "description": "Entrypoint for which this pack call is being made. Used to filter non relevant packs",
@@ -19654,6 +20874,19 @@
         "schema": {
           "type": "boolean",
           "default": false
+        }
+      },
+      "packCategories": {
+        "name": "packCategories",
+        "in": "query",
+        "description": "Filter Packs by one or more category types.",
+        "required": false,
+        "explode": false,
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/PackCategoryType"
+          }
         }
       },
       "onlyWorkspaceId": {
@@ -20138,7 +21371,7 @@
     },
     "securitySchemes": {
       "Bearer": {
-        "description": "The Coda API can be accessed using an API token, which can be obtained from [*My account*](https://coda.io/account)\nin Coda. This token should be specified by setting a header as follows.\n\n```Authorization: Bearer <api_token>```\n\nKeep your token safe, as anyone who gets access to it can access your account. Once a token is created\nit cannot be viewed or modified, so don't lose it.\n\nIf you're logged into Coda, you can also query the API directly using your browser. Note that only GET\nendpoints are supported; for anything else, you'll have to use Bearer authentication.\n\n### Restricting token authorization\n\nBy default, bearer tokens created for the Coda API can perform any action that the user who created the token\ncan perform. However, Coda API bearer tokens can also be created with restrictions. These restrictions\ncan limit what objects can be operated on and the types of operations that can be performed.\n\n#### Operation types\n\nThe table below describes the types of authorization restrictions that can be placed on a Coda API token.\n<table>\n  <tr><th>Restriction</th><th>Description</th><th>Allowed HTTP Methods</th></tr>\n  <tr>\n    <td>Read access</td>\n    <td>Allows access to API methods that read the state of an object</td>\n    <td>GET</td>\n  </tr>\n  <tr>\n    <td>Write access</td>\n    <td>Allows access to API methods that write the state of an object</td>\n    <td>POST, PUT, DELETE</td>\n  </tr>\n  <tr>\n    <td>Read and write access</td>\n    <td>Allows access to all methods for an object</td>\n    <td>All</td>\n  </tr>\n</table>\n\n#### Object types\n\nCoda API tokens can be restricted to the following types of objects.\n\n* Documents: Restricts access to only allow API calls for `/docs/${DOC_ID}`\n* Tables: Restricts access to only allow API calls for `/docs/${DOC_ID}/tables/${TABLE_ID}`\n\n#### Special cases\n\nThere are a few special case methods that violate the above restrictions.\n\n* `/whoami`: This method can be called by all Coda API tokens.\n* `/resolveBrowserLink`: This method can be called by all Coda API tokens, but will only return a result\nif the token has access (read or write) to the object referenced by the URL.\n\n#### Feedback\n\nThis feature is under development and we'd love to hear your feedback and bug reports. Please\nvisit us at the [Developers Central](https://community.coda.io/c/developers-central) forum within\nthe Coda Community.\n",
+        "description": "The Coda API can be accessed using an API token, which can be obtained from [*My account*](https://coda.io/account)\nin Coda. This token should be specified by setting a header as follows.\n\n```Authorization: Bearer <api_token>```\n\nKeep your token safe, as anyone who gets access to it can access your account. Once a token is created\nit cannot be viewed or modified, so don't lose it.\n\nIf you're logged into Coda, you can also query the API directly using your browser. Note that only GET\nendpoints are supported; for anything else, you'll have to use Bearer authentication.\n\n### Restricting token authorization\n\nBy default, bearer tokens created for the Coda API can perform any action that the user who created the token\ncan perform. However, Coda API bearer tokens can also be created with restrictions. These restrictions\ncan limit what objects can be operated on and the types of operations that can be performed.\n\n#### Operation types\n\nThe table below describes the types of authorization restrictions that can be placed on a Coda API token.\n<table>\n  <tr><th>Restriction</th><th>Description</th><th>Allowed HTTP Methods</th></tr>\n  <tr>\n    <td>Read access</td>\n    <td>Allows access to API methods that read the state of an object</td>\n    <td>GET</td>\n  </tr>\n  <tr>\n    <td>Write access</td>\n    <td>Allows access to API methods that write the state of an object</td>\n    <td>POST, PUT, DELETE</td>\n  </tr>\n  <tr>\n    <td>Read and write access</td>\n    <td>Allows access to all methods for an object</td>\n    <td>All</td>\n  </tr>\n</table>\n\n#### Object types\n\nCoda API tokens can be restricted to the following types of objects.\n\n* Documents: Restricts access to only allow API calls for `/docs/${DOC_ID}`\n* Tables: Restricts access to only allow API calls for `/docs/${DOC_ID}/tables/${TABLE_ID}`\n\n#### Special cases\n\nThere are a few special case methods that violate the above restrictions.\n\n* `/whoami`: This method can be called by all Coda API tokens.\n* `/resolveBrowserLink`: This method can be called by all Coda API tokens, but will only return a result\nif the token has access (read or write) to the object referenced by the URL.\n\n#### Feedback\n\nThis feature is under development and we'd love to hear your feedback and bug reports. Please\nvisit us at the [Developers Central](https://connect.superhuman.com/c/developers-central) forum within\nthe Coda Community.\n",
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "UUID"
