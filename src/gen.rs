@@ -40936,9 +40936,16 @@ pub mod types {
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
-    pub enum PushButtonResult {}
+    pub struct PushButtonResult {
+        #[serde(rename = "rowId")]
+        row_id: String,
+        #[serde(rename = "columnId")]
+        column_id: String,
+        #[serde(rename = "requestId")]
+        request_id: String,
+    }
     impl ::std::convert::From<&Self> for PushButtonResult {
         fn from(value: &PushButtonResult) -> Self {
             value.clone()

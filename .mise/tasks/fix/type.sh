@@ -15,10 +15,11 @@ needle_line=$(rg -n --no-filename "$needle" "$target_file" | cut -d: -f1)
 # delete the #[serde(deny_unknown_fields)]
 delete_from_line=$((needle_line - 2))
 delete_to_line=$((needle_line))
-insert_from_line=$((needle_line - 3))
+insert_after_line=$((needle_line - 3))
 
-ed -s "$target_file" <<ED
-$delete_from_line,$delete_to_line d
-$insert_from_line r $replacement_file
-wq
-ED
+temp_file=$(mktemp)
+
+sed -n "1,${insert_after_line}p" "$target_file" > "$temp_file"
+cat "$replacement_file" >> "$temp_file"
+sed -n "$((delete_to_line + 1)),\$p" "$target_file" >> "$temp_file"
+mv "$temp_file" "$target_file"
