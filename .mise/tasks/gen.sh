@@ -4,6 +4,7 @@ set -xeuo pipefail
 
 SPEC="coda.openapi.json"
 LIB="src/lib.rs"
+GEN="src/gen.rs"
 SDF="sd --fixed-strings"
 TEMP=$(mktemp -d)
 SPEC_FORMATTED="$TEMP/coda.openapi.formatted.json"
@@ -26,35 +27,26 @@ mv "$SPEC_FORMATTED" "$SPEC"
 
 cargo progenitor -i $SPEC -o $TEMP -n coda_api -v 0.1.0
 mkdir -p src
-rm -f "$LIB"
+rm -f "$GEN"
 # #![allow(unreachable_code)] is needed to work around .clone() calls on empty enums
 # this line must be at the top of the file
-echo "#![allow(unreachable_code)]" >> $LIB
-cat $TEMP/$LIB >> $LIB
-$SDF '///!' '/// !' $LIB
-$SDF '<span>' '' $LIB
-$SDF 'go/<name>/<var1>/<var2>' 'go/{name}/{var1}/{var2}' $LIB
-$SDF '"http://schema.org/"' '"<http://schema.org/>"' $LIB
-$SDF 'https://coda.io/trust/tos' '<https://coda.io/trust/tos>' $LIB
-$SDF '\n/// border' ' border' $LIB
-$SDF '    Your doc ID' 'Your doc ID' $LIB
-$SDF "elided_named_lifetimes" "mismatched_lifetime_syntaxes" $LIB
-$SDF "pub struct Client {" "pub struct RawClient {" $LIB
-$SDF "impl Client {" "impl RawClient {" $LIB
-$SDF "for Client {" "for RawClient {" $LIB
-$SDF "for &Client {" "for &RawClient {" $LIB
-$SDF "pub use super::Client;" "pub use super::RawClient;" $LIB
-# echo "mod metadata;" >> $LIB
-# echo "pub use metadata::*;" >> $LIB
-echo "mod ext;" >> $LIB
-echo "pub use ext::*;" >> $LIB
-echo "mod client;" >> $LIB
-echo "pub use client::*;" >> $LIB
-echo "mod limiter;" >> $LIB
-echo "pub use limiter::*;" >> $LIB
-echo "#[cfg(test)] pub mod test;" >> $LIB
+echo "#![allow(unreachable_code)]" >> $GEN
+cat $TEMP/$LIB >> $GEN
+$SDF '///!' '/// !' $GEN
+$SDF '<span>' '' $GEN
+$SDF 'go/<name>/<var1>/<var2>' 'go/{name}/{var1}/{var2}' $GEN
+$SDF '"http://schema.org/"' '"<http://schema.org/>"' $GEN
+$SDF 'https://coda.io/trust/tos' '<https://coda.io/trust/tos>' $GEN
+$SDF '\n/// border' ' border' $GEN
+$SDF '    Your doc ID' 'Your doc ID' $GEN
+$SDF "elided_named_lifetimes" "mismatched_lifetime_syntaxes" $GEN
+$SDF "pub struct Client {" "pub struct RawClient {" $GEN
+$SDF "impl Client {" "impl RawClient {" $GEN
+$SDF "for Client {" "for RawClient {" $GEN
+$SDF "for &Client {" "for &RawClient {" $GEN
+$SDF "pub use super::Client;" "pub use super::RawClient;" $GEN
 
 # `fix` must be executed before `fix:type`
 mise run fix
-mise run fix:type "pub enum PushButtonResult" snippets/PushButtonResult src/lib.rs
+mise run fix:type "pub enum PushButtonResult" snippets/PushButtonResult "$GEN"
 mise run test
