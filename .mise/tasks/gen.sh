@@ -31,6 +31,7 @@ rm -f "$GEN"
 # #![allow(unreachable_code)] is needed to work around .clone() calls on empty enums
 # this line must be at the top of the file
 echo "#![allow(unreachable_code)]" >> $GEN
+echo "#![allow(clippy::absolute_paths)]" >> $GEN
 cat $TEMP/$LIB >> $GEN
 $SDF '///!' '/// !' $GEN
 $SDF '<span>' '' $GEN

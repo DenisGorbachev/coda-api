@@ -2,6 +2,8 @@ use crate::types::{Column, ColumnList, Doc, DocList, GetTableResponse, ListTable
 use crate::{Error, RawClient, types};
 use progenitor_client::{ClientHooks, ClientInfo, OperationInfo, ResponseValue, encode_path};
 use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
+use std::num::NonZeroU64;
 use thiserror::Error;
 
 mod build_query_param;
@@ -162,7 +164,7 @@ impl RawClient {
     }
 
     #[allow(clippy::too_many_arguments)]
-    pub async fn list_rows_correct<'a, T: DeserializeOwned + ValueFormatProvider>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, query: Option<&'a str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&'a str>, use_column_names: Option<bool>, visible_only: Option<bool>) -> Result<ResponseValue<ItemsList<T>>, Error<types::ListRowsResponse>> {
+    pub async fn list_rows_correct<'a, T: DeserializeOwned + ValueFormatProvider>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, limit: Option<NonZeroU64>, page_token: Option<&'a str>, query: Option<&'a str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&'a str>, use_column_names: Option<bool>, visible_only: Option<bool>) -> Result<ResponseValue<ItemsList<T>>, Error<types::ListRowsResponse>> {
         let url = format!("{}/docs/{}/tables/{}/rows", self.baseurl, encode_path(doc_id), encode_path(table_id_or_name),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -405,7 +407,7 @@ pub enum ClientTablesError {
 ///}
 /// ```
 /// </details>
-#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Deserialize, Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(deny_unknown_fields)]
 pub struct RowUpdateResultCorrect {
     #[serde(rename = "id")]
@@ -450,7 +452,7 @@ pub struct RowUpdateResultCorrect {
 ///}
 /// ```
 /// </details>
-#[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Deserialize, Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(deny_unknown_fields)]
 pub struct RowsUpsertResultCorrect {
     #[serde(rename = "addedRowIds", default)]

@@ -1,6 +1,7 @@
 use clap::Parser;
 use coda_api::Client;
 use serde_json::json;
+use std::error::Error as StdError;
 
 #[derive(Clone, Debug, Parser)]
 pub struct MetadataCli {
@@ -12,7 +13,7 @@ pub struct MetadataCli {
 }
 
 impl MetadataCli {
-    pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+    pub async fn run(&self) -> Result<(), Box<dyn StdError>> {
         let client = Client::new_with_key(&self.api_key)?;
         let tables = client.tables(&self.doc_id).await?;
         let output = json!({
@@ -24,7 +25,7 @@ impl MetadataCli {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<(), Box<dyn StdError>> {
     let cli = MetadataCli::parse();
     cli.run().await
 }

@@ -1,4 +1,5 @@
 #![allow(unreachable_code)]
+#![allow(clippy::absolute_paths)]
 #[allow(unused_imports)]
 pub use progenitor_client::{ByteStream, ClientInfo, Error, ResponseValue};
 #[allow(unused_imports)]

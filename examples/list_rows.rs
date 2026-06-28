@@ -4,6 +4,7 @@ use coda_api::{
     types::{RowsSortBy, ValueFormat},
 };
 use serde_json::json;
+use std::error::Error as StdError;
 
 #[derive(Clone, Debug, Parser)]
 pub struct ListRowsCli {
@@ -45,7 +46,7 @@ pub struct ListRowsCli {
 }
 
 impl ListRowsCli {
-    pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+    pub async fn run(&self) -> Result<(), Box<dyn StdError>> {
         let client = Client::new_with_key(&self.api_key)?;
         let rows = client
             .rows(&self.doc_id, &self.table_id, self.query.as_deref(), self.sort_by, self.sync_token.as_deref(), self.use_column_names, self.value_format)
@@ -57,7 +58,7 @@ impl ListRowsCli {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<(), Box<dyn StdError>> {
     let cli = ListRowsCli::parse();
     cli.run().await
 }

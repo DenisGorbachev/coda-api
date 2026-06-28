@@ -1,6 +1,7 @@
 use clap::{Parser, builder::BoolishValueParser};
 use coda_api::{Client, RichRow, types::RowsSortBy};
 use serde_json::json;
+use std::error::Error as StdError;
 
 #[derive(Clone, Debug, Parser)]
 pub struct ListRowsRichCli {
@@ -38,7 +39,7 @@ pub struct ListRowsRichCli {
 }
 
 impl ListRowsRichCli {
-    pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+    pub async fn run(&self) -> Result<(), Box<dyn StdError>> {
         let client = Client::new_with_key(&self.api_key)?;
         let rows = client
             .rows_correct::<RichRow>(&self.doc_id, &self.table_id, self.query.as_deref(), self.sort_by, self.sync_token.as_deref(), self.use_column_names, self.visible_only)
@@ -50,7 +51,7 @@ impl ListRowsRichCli {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<(), Box<dyn StdError>> {
     let cli = ListRowsRichCli::parse();
     cli.run().await
 }
