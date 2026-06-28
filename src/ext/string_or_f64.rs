@@ -1,3 +1,4 @@
+use serde::de::Error;
 use serde::{Deserialize, Deserializer};
 
 #[derive(Deserialize)]
@@ -18,13 +19,7 @@ where
         Some(StringOrF64::Num(n)) => Some(n),
         Some(StringOrF64::Str(s)) => {
             let s = s.trim();
-            if s.is_empty() {
-                None
-            } else {
-                s.parse::<f64>()
-                    .map(Some)
-                    .map_err(serde::de::Error::custom)?
-            }
+            if s.is_empty() { None } else { s.parse::<f64>().map(Some).map_err(Error::custom)? }
         }
     })
 }

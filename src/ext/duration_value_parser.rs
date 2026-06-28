@@ -1,3 +1,4 @@
+use core::iter::from_fn;
 use errgonomic::{handle, handle_opt};
 use std::num::ParseIntError;
 use thiserror::Error;
@@ -19,7 +20,7 @@ pub fn parse_duration_value(source: &impl AsRef<str>) -> Result<Option<Duration>
     let unit_str = handle_opt!(tokens.next(), UnitNotFound);
     parse_duration_component(number_str, unit_str)
         .and_then(|duration_initial| {
-            core::iter::from_fn(|| tokens.next().map(|number_str| (number_str, tokens.next()))).try_fold(duration_initial, |duration_total, (number_str, unit_str_opt)| {
+            from_fn(|| tokens.next().map(|number_str| (number_str, tokens.next()))).try_fold(duration_initial, |duration_total, (number_str, unit_str_opt)| {
                 let unit_str = handle_opt!(unit_str_opt, UnitNotFound);
                 parse_duration_component(number_str, unit_str).and_then(|duration| duration_total.checked_add(duration).ok_or(DurationOverflow))
             })

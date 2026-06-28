@@ -26,6 +26,12 @@ mod impl_try_from_rich_value_for_option_offset_date_time;
 #[cfg(feature = "time")]
 pub use impl_try_from_rich_value_for_option_offset_date_time::*;
 
+#[cfg(feature = "time")]
+mod impl_try_from_rich_value_for_offset_date_time;
+
+#[cfg(feature = "time")]
+pub use impl_try_from_rich_value_for_offset_date_time::*;
+
 mod impl_try_from_rich_value_for_rich_row_reference;
 
 pub use impl_try_from_rich_value_for_rich_row_reference::*;
