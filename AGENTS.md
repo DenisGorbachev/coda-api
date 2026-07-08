@@ -1996,6 +1996,15 @@ if_missing = "error"
 [providers]
 keychain = { type = "keychain", service = "coda-api" }
 pass = { type = "password-store", prefix = "coda-api/" }
+
+[profiles]
+
+[profiles.test]
+
+[profiles.test.secrets]
+CODA_API_KEY= { provider = "pass", value = "TEST_CODA_API_KEY" }
+CODA_DOC_ID= { provider = "pass", value = "TEST_CODA_DOC_ID" }
+CODA_TASKS_TABLE_ID= { provider = "pass", value = "TEST_CODA_TASKS_TABLE_ID" }
 ```
 
 ### src/lib.rs
