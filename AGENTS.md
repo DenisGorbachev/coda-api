@@ -1971,9 +1971,9 @@ derive_more = { version = "2.0", features = ["display"] }
 errgonomic = { version = "0.4.0" }
 governor = { version = "0.10" }
 # progenitor-client version must be pinned
-progenitor-client = { version = "0.11.1" }
+progenitor-client = { version = "0.14.0" }
 regress = "0.10"
-reqwest = { version = "0.12", default-features = false, features = ["json", "stream", "default-tls"] }
+reqwest = { version = "0.13.4", default-features = false, features = ["json", "stream", "default-tls"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 thiserror = "2.0"

@@ -4,7 +4,7 @@ use thiserror::Error;
 
 use RichSingleValue::*;
 use RichValue::*;
-use ScalarValue::*;
+use ScalarValue::String as ScalarString;
 
 #[derive(Debug, Error)]
 pub enum ConvertRichValueRefToStringError {
@@ -34,7 +34,7 @@ impl TryFrom<&RichValue> for String {
         match value {
             Single(single) => match single {
                 Scalar(scalar) => match scalar {
-                    Variant0(text) => Ok(super::normalize_rich_string(text.as_str())),
+                    ScalarString(text) => Ok(super::normalize_rich_string(text.as_str())),
                     _ => Err(ScalarNotString),
                 },
                 _ => Err(RichSingleValueNotScalar),
@@ -52,7 +52,7 @@ impl TryFrom<RichValue> for String {
         match value {
             Single(single) => match single {
                 Scalar(scalar) => match scalar {
-                    Variant0(text) => Ok(super::normalize_owned_rich_string(text)),
+                    ScalarString(text) => Ok(super::normalize_owned_rich_string(text)),
                     scalar_value => Err(ScalarNotString {
                         scalar_value,
                     }),

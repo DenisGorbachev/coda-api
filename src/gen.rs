@@ -73,12 +73,6 @@ pub mod types {
         None,
     }
 
-    impl ::std::convert::From<&Self> for AccessType {
-        fn from(value: &AccessType) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::fmt::Display for AccessType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -154,12 +148,6 @@ pub mod types {
         Write,
         #[serde(rename = "comment")]
         Comment,
-    }
-
-    impl ::std::convert::From<&Self> for AccessTypeNotNone {
-        fn from(value: &AccessTypeNotNone) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for AccessTypeNotNone {
@@ -266,12 +254,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&Acl> for Acl {
-        fn from(value: &Acl) -> Self {
-            value.clone()
-        }
-    }
-
     ///Doc level metadata associated with ACL.
     ///
     /// <details><summary>JSON schema</summary>
@@ -328,12 +310,6 @@ pub mod types {
         pub can_share_with_workspace: bool,
     }
 
-    impl ::std::convert::From<&AclMetadata> for AclMetadata {
-        fn from(value: &AclMetadata) -> Self {
-            value.clone()
-        }
-    }
-
     ///Sharing settings for the doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -382,12 +358,6 @@ pub mod types {
         pub allow_viewers_to_request_editing: bool,
     }
 
-    impl ::std::convert::From<&AclSettings> for AclSettings {
-        fn from(value: &AclSettings) -> Self {
-            value.clone()
-        }
-    }
-
     ///Payload for adding a custom published doc domain.
     ///
     /// <details><summary>JSON schema</summary>
@@ -421,12 +391,6 @@ pub mod types {
         pub custom_doc_domain: ::std::string::String,
     }
 
-    impl ::std::convert::From<&AddCustomDocDomainRequest> for AddCustomDocDomainRequest {
-        fn from(value: &AddCustomDocDomainRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///The result of adding a custom domain to a published doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -444,12 +408,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct AddCustomDocDomainResponse {}
-    impl ::std::convert::From<&AddCustomDocDomainResponse> for AddCustomDocDomainResponse {
-        fn from(value: &AddCustomDocDomainResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for AddCustomDocDomainResponse {
         fn default() -> Self {
             Self {}
@@ -539,12 +497,6 @@ pub mod types {
         pub url_pattern: ::std::option::Option<AddGoLinkRequestUrlPattern>,
     }
 
-    impl ::std::convert::From<&AddGoLinkRequest> for AddGoLinkRequest {
-        fn from(value: &AddGoLinkRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///Optional creator email for the Go Link. Only organization admins can set
     /// this field.
     ///
@@ -575,12 +527,6 @@ pub mod types {
     impl ::std::convert::From<AddGoLinkRequestCreatorEmail> for ::std::string::String {
         fn from(value: AddGoLinkRequestCreatorEmail) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&AddGoLinkRequestCreatorEmail> for AddGoLinkRequestCreatorEmail {
-        fn from(value: &AddGoLinkRequestCreatorEmail) -> Self {
-            value.clone()
         }
     }
 
@@ -654,12 +600,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<&AddGoLinkRequestDescription> for AddGoLinkRequestDescription {
-        fn from(value: &AddGoLinkRequestDescription) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::str::FromStr for AddGoLinkRequestDescription {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -727,12 +667,6 @@ pub mod types {
     impl ::std::convert::From<AddGoLinkRequestDestinationUrl> for ::std::string::String {
         fn from(value: AddGoLinkRequestDestinationUrl) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&AddGoLinkRequestDestinationUrl> for AddGoLinkRequestDestinationUrl {
-        fn from(value: &AddGoLinkRequestDestinationUrl) -> Self {
-            value.clone()
         }
     }
 
@@ -806,12 +740,6 @@ pub mod types {
     impl ::std::convert::From<AddGoLinkRequestName> for ::std::string::String {
         fn from(value: AddGoLinkRequestName) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&AddGoLinkRequestName> for AddGoLinkRequestName {
-        fn from(value: &AddGoLinkRequestName) -> Self {
-            value.clone()
         }
     }
 
@@ -892,12 +820,6 @@ pub mod types {
     impl ::std::convert::From<AddGoLinkRequestUrlPattern> for ::std::string::String {
         fn from(value: AddGoLinkRequestUrlPattern) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&AddGoLinkRequestUrlPattern> for AddGoLinkRequestUrlPattern {
-        fn from(value: &AddGoLinkRequestUrlPattern) -> Self {
-            value.clone()
         }
     }
 
@@ -989,17 +911,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&AddGoLinkResponse> for AddGoLinkResponse {
-        fn from(value: &AddGoLinkResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///The result of adding a Go Link.
@@ -1018,12 +935,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct AddGoLinkResult {}
-    impl ::std::convert::From<&AddGoLinkResult> for AddGoLinkResult {
-        fn from(value: &AddGoLinkResult) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for AddGoLinkResult {
         fn default() -> Self {
             Self {}
@@ -1063,12 +974,6 @@ pub mod types {
         pub category_name: ::std::string::String,
     }
 
-    impl ::std::convert::From<&AddPackCategoryRequest> for AddPackCategoryRequest {
-        fn from(value: &AddPackCategoryRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///Confirmation of successfully adding a Pack category.
     ///
     /// <details><summary>JSON schema</summary>
@@ -1085,12 +990,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct AddPackCategoryResponse {}
-    impl ::std::convert::From<&AddPackCategoryResponse> for AddPackCategoryResponse {
-        fn from(value: &AddPackCategoryResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for AddPackCategoryResponse {
         fn default() -> Self {
             Self {}
@@ -1122,12 +1021,6 @@ pub mod types {
     pub struct AddPackCategoryResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&AddPackCategoryResponseCodaDetail> for AddPackCategoryResponseCodaDetail {
-        fn from(value: &AddPackCategoryResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for AddPackCategoryResponseCodaDetail {
@@ -1171,12 +1064,6 @@ pub mod types {
         pub login_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&AddPackMakerRequest> for AddPackMakerRequest {
-        fn from(value: &AddPackMakerRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///Confirmation of successfully adding a Pack maker.
     ///
     /// <details><summary>JSON schema</summary>
@@ -1193,12 +1080,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct AddPackMakerResponse {}
-    impl ::std::convert::From<&AddPackMakerResponse> for AddPackMakerResponse {
-        fn from(value: &AddPackMakerResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for AddPackMakerResponse {
         fn default() -> Self {
             Self {}
@@ -1230,12 +1111,6 @@ pub mod types {
     pub struct AddPackMakerResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&AddPackMakerResponseCodaDetail> for AddPackMakerResponseCodaDetail {
-        fn from(value: &AddPackMakerResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for AddPackMakerResponseCodaDetail {
@@ -1278,12 +1153,6 @@ pub mod types {
         pub principal: PackPrincipal,
     }
 
-    impl ::std::convert::From<&AddPackPermissionRequest> for AddPackPermissionRequest {
-        fn from(value: &AddPackPermissionRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///Confirmation of successfully upserting a Pack permission.
     ///
     /// <details><summary>JSON schema</summary>
@@ -1315,12 +1184,6 @@ pub mod types {
         pub permission_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&AddPackPermissionResponse> for AddPackPermissionResponse {
-        fn from(value: &AddPackPermissionResponse) -> Self {
-            value.clone()
-        }
-    }
-
     ///Detail about why this request was rejected.
     ///
     /// <details><summary>JSON schema</summary>
@@ -1346,12 +1209,6 @@ pub mod types {
     pub struct AddPackPermissionResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&AddPackPermissionResponseCodaDetail> for AddPackPermissionResponseCodaDetail {
-        fn from(value: &AddPackPermissionResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for AddPackPermissionResponseCodaDetail {
@@ -1401,12 +1258,6 @@ pub mod types {
         pub suppress_email: ::std::option::Option<bool>,
     }
 
-    impl ::std::convert::From<&AddPermissionRequest> for AddPermissionRequest {
-        fn from(value: &AddPermissionRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
@@ -1453,17 +1304,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&AddPermissionResponse> for AddPermissionResponse {
-        fn from(value: &AddPermissionResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///The result of sharing a doc.
@@ -1482,12 +1328,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct AddPermissionResult {}
-    impl ::std::convert::From<&AddPermissionResult> for AddPermissionResult {
-        fn from(value: &AddPermissionResult) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for AddPermissionResult {
         fn default() -> Self {
             Self {}
@@ -1526,12 +1366,6 @@ pub mod types {
         pub type_: AddedAnyonePrincipalType,
     }
 
-    impl ::std::convert::From<&AddedAnyonePrincipal> for AddedAnyonePrincipal {
-        fn from(value: &AddedAnyonePrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this principal.
     ///
     /// <details><summary>JSON schema</summary>
@@ -1551,12 +1385,6 @@ pub mod types {
     pub enum AddedAnyonePrincipalType {
         #[serde(rename = "anyone")]
         Anyone,
-    }
-
-    impl ::std::convert::From<&Self> for AddedAnyonePrincipalType {
-        fn from(value: &AddedAnyonePrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for AddedAnyonePrincipalType {
@@ -1640,12 +1468,6 @@ pub mod types {
         pub type_: AddedDomainPrincipalType,
     }
 
-    impl ::std::convert::From<&AddedDomainPrincipal> for AddedDomainPrincipal {
-        fn from(value: &AddedDomainPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this principal.
     ///
     /// <details><summary>JSON schema</summary>
@@ -1665,12 +1487,6 @@ pub mod types {
     pub enum AddedDomainPrincipalType {
         #[serde(rename = "domain")]
         Domain,
-    }
-
-    impl ::std::convert::From<&Self> for AddedDomainPrincipalType {
-        fn from(value: &AddedDomainPrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for AddedDomainPrincipalType {
@@ -1754,12 +1570,6 @@ pub mod types {
         pub type_: AddedEmailPrincipalType,
     }
 
-    impl ::std::convert::From<&AddedEmailPrincipal> for AddedEmailPrincipal {
-        fn from(value: &AddedEmailPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this principal.
     ///
     /// <details><summary>JSON schema</summary>
@@ -1779,12 +1589,6 @@ pub mod types {
     pub enum AddedEmailPrincipalType {
         #[serde(rename = "email")]
         Email,
-    }
-
-    impl ::std::convert::From<&Self> for AddedEmailPrincipalType {
-        fn from(value: &AddedEmailPrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for AddedEmailPrincipalType {
@@ -1869,12 +1673,6 @@ pub mod types {
         pub type_: AddedGroupPrincipalType,
     }
 
-    impl ::std::convert::From<&AddedGroupPrincipal> for AddedGroupPrincipal {
-        fn from(value: &AddedGroupPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this principal.
     ///
     /// <details><summary>JSON schema</summary>
@@ -1894,12 +1692,6 @@ pub mod types {
     pub enum AddedGroupPrincipalType {
         #[serde(rename = "group")]
         Group,
-    }
-
-    impl ::std::convert::From<&Self> for AddedGroupPrincipalType {
-        fn from(value: &AddedGroupPrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for AddedGroupPrincipalType {
@@ -1979,12 +1771,6 @@ pub mod types {
         AnyonePrincipal(AddedAnyonePrincipal),
     }
 
-    impl ::std::convert::From<&Self> for AddedPrincipal {
-        fn from(value: &AddedPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::convert::From<AddedEmailPrincipal> for AddedPrincipal {
         fn from(value: AddedEmailPrincipal) -> Self {
             Self::EmailPrincipal(value)
@@ -2058,12 +1844,6 @@ pub mod types {
         pub workspace_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&AddedWorkspacePrincipal> for AddedWorkspacePrincipal {
-        fn from(value: &AddedWorkspacePrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this principal.
     ///
     /// <details><summary>JSON schema</summary>
@@ -2083,12 +1863,6 @@ pub mod types {
     pub enum AddedWorkspacePrincipalType {
         #[serde(rename = "workspace")]
         Workspace,
-    }
-
-    impl ::std::convert::From<&Self> for AddedWorkspacePrincipalType {
-        fn from(value: &AddedWorkspacePrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for AddedWorkspacePrincipalType {
@@ -2190,12 +1964,6 @@ pub mod types {
         pub pack_formula_analytics_last_updated: ::chrono::naive::NaiveDate,
     }
 
-    impl ::std::convert::From<&AnalyticsLastUpdatedResponse> for AnalyticsLastUpdatedResponse {
-        fn from(value: &AnalyticsLastUpdatedResponse) -> Self {
-            value.clone()
-        }
-    }
-
     ///Quantization period over which to view analytics.
     ///
     /// <details><summary>JSON schema</summary>
@@ -2222,12 +1990,6 @@ pub mod types {
         Daily,
         #[serde(rename = "cumulative")]
         Cumulative,
-    }
-
-    impl ::std::convert::From<&Self> for AnalyticsScale {
-        fn from(value: &AnalyticsScale) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for AnalyticsScale {
@@ -2303,12 +2065,6 @@ pub mod types {
         pub type_: AnyonePrincipalType,
     }
 
-    impl ::std::convert::From<&AnyonePrincipal> for AnyonePrincipal {
-        fn from(value: &AnyonePrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this principal.
     ///
     /// <details><summary>JSON schema</summary>
@@ -2328,12 +2084,6 @@ pub mod types {
     pub enum AnyonePrincipalType {
         #[serde(rename = "anyone")]
         Anyone,
-    }
-
-    impl ::std::convert::From<&Self> for AnyonePrincipalType {
-        fn from(value: &AnyonePrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for AnyonePrincipalType {
@@ -2437,12 +2187,6 @@ pub mod types {
         pub type_: ApiLinkType,
     }
 
-    impl ::std::convert::From<&ApiLink> for ApiLink {
-        fn from(value: &ApiLink) -> Self {
-            value.clone()
-        }
-    }
-
     ///Reference to the resolved resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -2504,12 +2248,6 @@ pub mod types {
         pub type_: Type,
     }
 
-    impl ::std::convert::From<&ApiLinkResolvedResource> for ApiLinkResolvedResource {
-        fn from(value: &ApiLinkResolvedResource) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -2529,12 +2267,6 @@ pub mod types {
     pub enum ApiLinkType {
         #[serde(rename = "apiLink")]
         ApiLink,
-    }
-
-    impl ::std::convert::From<&Self> for ApiLinkType {
-        fn from(value: &ApiLinkType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ApiLinkType {
@@ -2604,12 +2336,6 @@ pub mod types {
         pub output_format: PageContentOutputFormat,
     }
 
-    impl ::std::convert::From<&BeginPageContentExportRequest> for BeginPageContentExportRequest {
-        fn from(value: &BeginPageContentExportRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///Response when beginning an export of page content.
     ///
     /// <details><summary>JSON schema</summary>
@@ -2661,12 +2387,6 @@ pub mod types {
         pub id: ::std::string::String,
         ///The status of this export.
         pub status: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&BeginPageContentExportResponse> for BeginPageContentExportResponse {
-        fn from(value: &BeginPageContentExportResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///The Pack plan to show the Pack can be accessed if the workspace is at
@@ -2722,12 +2442,6 @@ pub mod types {
         pub pricing: BundledPackPlanPricing,
     }
 
-    impl ::std::convert::From<&BundledPackPlan> for BundledPackPlan {
-        fn from(value: &BundledPackPlan) -> Self {
-            value.clone()
-        }
-    }
-
     ///Pricing used when workspaces have access to the Pack for free if their
     /// workspace is at least the given tier.
     ///
@@ -2768,12 +2482,6 @@ pub mod types {
         pub type_: BundledPackPlanPricingType,
     }
 
-    impl ::std::convert::From<&BundledPackPlanPricing> for BundledPackPlanPricing {
-        fn from(value: &BundledPackPlanPricing) -> Self {
-            value.clone()
-        }
-    }
-
     ///`BundledPackPlanPricingType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -2791,12 +2499,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     pub enum BundledPackPlanPricingType {
         BundledWithTier,
-    }
-
-    impl ::std::convert::From<&Self> for BundledPackPlanPricingType {
-        fn from(value: &BundledPackPlanPricingType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for BundledPackPlanPricingType {
@@ -2910,12 +2612,6 @@ pub mod types {
         pub type_: ButtonColumnFormatType,
     }
 
-    impl ::std::convert::From<&ButtonColumnFormat> for ButtonColumnFormat {
-        fn from(value: &ButtonColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`ButtonColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -2933,12 +2629,6 @@ pub mod types {
     pub enum ButtonColumnFormatType {
         #[serde(rename = "button")]
         Button,
-    }
-
-    impl ::std::convert::From<&Self> for ButtonColumnFormatType {
-        fn from(value: &ButtonColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ButtonColumnFormatType {
@@ -2996,12 +2686,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct CancelPackReviewResponse {}
-    impl ::std::convert::From<&CancelPackReviewResponse> for CancelPackReviewResponse {
-        fn from(value: &CancelPackReviewResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for CancelPackReviewResponse {
         fn default() -> Self {
             Self {}
@@ -3047,12 +2731,6 @@ pub mod types {
         pub value: Value,
     }
 
-    impl ::std::convert::From<&CellEdit> for CellEdit {
-        fn from(value: &CellEdit) -> Self {
-            value.clone()
-        }
-    }
-
     ///All values that a row cell can contain.
     ///
     /// <details><summary>JSON schema</summary>
@@ -3077,12 +2755,6 @@ pub mod types {
     pub enum CellValue {
         Value(Value),
         RichValue(RichValue),
-    }
-
-    impl ::std::convert::From<&Self> for CellValue {
-        fn from(value: &CellValue) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::convert::From<Value> for CellValue {
@@ -3135,12 +2807,6 @@ pub mod types {
         pub new_role: WorkspaceUserRole,
     }
 
-    impl ::std::convert::From<&ChangeRole> for ChangeRole {
-        fn from(value: &ChangeRole) -> Self {
-            value.clone()
-        }
-    }
-
     ///The result of changing a user's workspace user role.
     ///
     /// <details><summary>JSON schema</summary>
@@ -3174,12 +2840,6 @@ pub mod types {
         ///Timestamp for when the user's role last changed in this workspace.
         #[serde(rename = "roleChangedAt")]
         pub role_changed_at: ::chrono::DateTime<::chrono::offset::Utc>,
-    }
-
-    impl ::std::convert::From<&ChangeRoleResult> for ChangeRoleResult {
-        fn from(value: &ChangeRoleResult) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -3228,17 +2888,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ChangeUserRoleResponse> for ChangeUserRoleResponse {
-        fn from(value: &ChangeUserRoleResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Format of a checkbox column.
@@ -3289,12 +2944,6 @@ pub mod types {
         pub type_: CheckboxColumnFormatType,
     }
 
-    impl ::std::convert::From<&CheckboxColumnFormat> for CheckboxColumnFormat {
-        fn from(value: &CheckboxColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`CheckboxColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -3312,12 +2961,6 @@ pub mod types {
     pub enum CheckboxColumnFormatType {
         #[serde(rename = "checkbox")]
         Checkbox,
-    }
-
-    impl ::std::convert::From<&Self> for CheckboxColumnFormatType {
-        fn from(value: &CheckboxColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for CheckboxColumnFormatType {
@@ -3385,12 +3028,6 @@ pub mod types {
         Toggle,
         #[serde(rename = "check")]
         Check,
-    }
-
-    impl ::std::convert::From<&Self> for CheckboxDisplayType {
-        fn from(value: &CheckboxDisplayType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for CheckboxDisplayType {
@@ -3544,12 +3181,6 @@ pub mod types {
         pub type_: ColumnType,
     }
 
-    impl ::std::convert::From<&Column> for Column {
-        fn from(value: &Column) -> Self {
-            value.clone()
-        }
-    }
-
     ///Info about a column.
     ///
     /// <details><summary>JSON schema</summary>
@@ -3665,12 +3296,6 @@ pub mod types {
         pub type_: ColumnDetailType,
     }
 
-    impl ::std::convert::From<&ColumnDetail> for ColumnDetail {
-        fn from(value: &ColumnDetail) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -3690,12 +3315,6 @@ pub mod types {
     pub enum ColumnDetailType {
         #[serde(rename = "column")]
         Column,
-    }
-
-    impl ::std::convert::From<&Self> for ColumnDetailType {
-        fn from(value: &ColumnDetailType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ColumnDetailType {
@@ -3817,12 +3436,6 @@ pub mod types {
         ScaleColumnFormat(ScaleColumnFormat),
         SliderColumnFormat(SliderColumnFormat),
         TimeColumnFormat(TimeColumnFormat),
-    }
-
-    impl ::std::convert::From<&Self> for ColumnFormat {
-        fn from(value: &ColumnFormat) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::convert::From<ButtonColumnFormat> for ColumnFormat {
@@ -4037,12 +3650,6 @@ pub mod types {
         Other,
     }
 
-    impl ::std::convert::From<&Self> for ColumnFormatType {
-        fn from(value: &ColumnFormatType) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::fmt::Display for ColumnFormatType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -4189,12 +3796,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&ColumnList> for ColumnList {
-        fn from(value: &ColumnList) -> Self {
-            value.clone()
-        }
-    }
-
     ///Reference to a column.
     ///
     /// <details><summary>JSON schema</summary>
@@ -4250,12 +3851,6 @@ pub mod types {
         pub type_: ColumnReferenceType,
     }
 
-    impl ::std::convert::From<&ColumnReference> for ColumnReference {
-        fn from(value: &ColumnReference) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -4275,12 +3870,6 @@ pub mod types {
     pub enum ColumnReferenceType {
         #[serde(rename = "column")]
         Column,
-    }
-
-    impl ::std::convert::From<&Self> for ColumnReferenceType {
-        fn from(value: &ColumnReferenceType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ColumnReferenceType {
@@ -4341,12 +3930,6 @@ pub mod types {
     pub enum ColumnType {
         #[serde(rename = "column")]
         Column,
-    }
-
-    impl ::std::convert::From<&Self> for ColumnType {
-        fn from(value: &ColumnType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ColumnType {
@@ -4469,12 +4052,6 @@ pub mod types {
         pub value: Value,
     }
 
-    impl ::std::convert::From<&Control> for Control {
-        fn from(value: &Control) -> Self {
-            value.clone()
-        }
-    }
-
     ///List of controls.
     ///
     /// <details><summary>JSON schema</summary>
@@ -4534,12 +4111,6 @@ pub mod types {
         pub next_page_link: ::std::option::Option<NextPageLink>,
         #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page_token: ::std::option::Option<NextPageToken>,
-    }
-
-    impl ::std::convert::From<&ControlList> for ControlList {
-        fn from(value: &ControlList) -> Self {
-            value.clone()
-        }
     }
 
     ///Reference to a control.
@@ -4612,12 +4183,6 @@ pub mod types {
         pub type_: ControlReferenceType,
     }
 
-    impl ::std::convert::From<&ControlReference> for ControlReference {
-        fn from(value: &ControlReference) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -4637,12 +4202,6 @@ pub mod types {
     pub enum ControlReferenceType {
         #[serde(rename = "control")]
         Control,
-    }
-
-    impl ::std::convert::From<&Self> for ControlReferenceType {
-        fn from(value: &ControlReferenceType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ControlReferenceType {
@@ -4703,12 +4262,6 @@ pub mod types {
     pub enum ControlType {
         #[serde(rename = "control")]
         Control,
-    }
-
-    impl ::std::convert::From<&Self> for ControlType {
-        fn from(value: &ControlType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ControlType {
@@ -4829,12 +4382,6 @@ pub mod types {
         TimePicker,
     }
 
-    impl ::std::convert::From<&Self> for ControlTypeEnum {
-        fn from(value: &ControlTypeEnum) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::fmt::Display for ControlTypeEnum {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -4946,17 +4493,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&CreateDocResponse> for CreateDocResponse {
-        fn from(value: &CreateDocResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Request for creating a folder.
@@ -5013,12 +4555,6 @@ pub mod types {
         pub workspace_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&CreateFolderRequest> for CreateFolderRequest {
-        fn from(value: &CreateFolderRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
@@ -5065,17 +4601,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&CreateFolderResponse> for CreateFolderResponse {
-        fn from(value: &CreateFolderResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Payload for creating a Pack invitation.
@@ -5115,12 +4646,6 @@ pub mod types {
         pub email: ::std::string::String,
     }
 
-    impl ::std::convert::From<&CreatePackInvitationRequest> for CreatePackInvitationRequest {
-        fn from(value: &CreatePackInvitationRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///Confirmation of successfully creating a Pack invitation.
     ///
     /// <details><summary>JSON schema</summary>
@@ -5155,12 +4680,6 @@ pub mod types {
         pub invitation_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&CreatePackInvitationResponse> for CreatePackInvitationResponse {
-        fn from(value: &CreatePackInvitationResponse) -> Self {
-            value.clone()
-        }
-    }
-
     ///Detail about why this request was rejected.
     ///
     /// <details><summary>JSON schema</summary>
@@ -5186,12 +4705,6 @@ pub mod types {
     pub struct CreatePackInvitationResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&CreatePackInvitationResponseCodaDetail> for CreatePackInvitationResponseCodaDetail {
-        fn from(value: &CreatePackInvitationResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for CreatePackInvitationResponseCodaDetail {
@@ -5244,12 +4757,6 @@ pub mod types {
         ///Developers notes.
         #[serde(rename = "releaseNotes", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub release_notes: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&CreatePackReleaseRequest> for CreatePackReleaseRequest {
-        fn from(value: &CreatePackReleaseRequest) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -5313,17 +4820,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&CreatePackReleaseResponse> for CreatePackReleaseResponse {
-        fn from(value: &CreatePackReleaseResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -5351,12 +4853,6 @@ pub mod types {
     pub struct CreatePackReleaseResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&CreatePackReleaseResponseCodaDetail> for CreatePackReleaseResponseCodaDetail {
-        fn from(value: &CreatePackReleaseResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for CreatePackReleaseResponseCodaDetail {
@@ -5433,12 +4929,6 @@ pub mod types {
         pub workspace_id: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&CreatePackRequest> for CreatePackRequest {
-        fn from(value: &CreatePackRequest) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for CreatePackRequest {
         fn default() -> Self {
             Self {
@@ -5478,14 +4968,9 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct CreatePackResponse {
+        ///The ID assigned to the newly-created Pack.
         #[serde(rename = "packId")]
         pub pack_id: f64,
-    }
-
-    impl ::std::convert::From<&CreatePackResponse> for CreatePackResponse {
-        fn from(value: &CreatePackResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Request to create a pack review
@@ -5525,12 +5010,6 @@ pub mod types {
         pub release_notes: ::std::option::Option<CreatePackReviewRequestReleaseNotes>,
     }
 
-    impl ::std::convert::From<&CreatePackReviewRequest> for CreatePackReviewRequest {
-        fn from(value: &CreatePackReviewRequest) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for CreatePackReviewRequest {
         fn default() -> Self {
             Self {
@@ -5566,12 +5045,6 @@ pub mod types {
     impl ::std::convert::From<CreatePackReviewRequestReleaseNotes> for ::std::string::String {
         fn from(value: CreatePackReviewRequestReleaseNotes) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&CreatePackReviewRequestReleaseNotes> for CreatePackReviewRequestReleaseNotes {
-        fn from(value: &CreatePackReviewRequestReleaseNotes) -> Self {
-            value.clone()
         }
     }
 
@@ -5648,12 +5121,6 @@ pub mod types {
         pub pack_review_id: ::uuid::Uuid,
     }
 
-    impl ::std::convert::From<&CreatePackReviewResponse> for CreatePackReviewResponse {
-        fn from(value: &CreatePackReviewResponse) -> Self {
-            value.clone()
-        }
-    }
-
     ///Detail about why this request was rejected.
     ///
     /// <details><summary>JSON schema</summary>
@@ -5679,12 +5146,6 @@ pub mod types {
     pub struct CreatePackReviewResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&CreatePackReviewResponseCodaDetail> for CreatePackReviewResponseCodaDetail {
-        fn from(value: &CreatePackReviewResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for CreatePackReviewResponseCodaDetail {
@@ -5739,12 +5200,6 @@ pub mod types {
         pub source: ::std::option::Option<PackSource>,
     }
 
-    impl ::std::convert::From<&CreatePackVersionRequest> for CreatePackVersionRequest {
-        fn from(value: &CreatePackVersionRequest) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for CreatePackVersionRequest {
         fn default() -> Self {
             Self {
@@ -5781,12 +5236,6 @@ pub mod types {
     pub struct CreatePackVersionResponse {
         #[serde(rename = "deprecationWarnings", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub deprecation_warnings: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&CreatePackVersionResponse> for CreatePackVersionResponse {
-        fn from(value: &CreatePackVersionResponse) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for CreatePackVersionResponse {
@@ -5843,17 +5292,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&CreatePageResponse> for CreatePageResponse {
-        fn from(value: &CreatePageResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///A numeric monetary amount as a string or number.
@@ -5884,28 +5328,22 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(untagged)]
     pub enum CurrencyAmount {
-        Variant0(::std::string::String),
-        Variant1(f64),
-    }
-
-    impl ::std::convert::From<&Self> for CurrencyAmount {
-        fn from(value: &CurrencyAmount) -> Self {
-            value.clone()
-        }
+        String(::std::string::String),
+        Number(f64),
     }
 
     impl ::std::fmt::Display for CurrencyAmount {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match self {
-                Self::Variant0(x) => x.fmt(f),
-                Self::Variant1(x) => x.fmt(f),
+                Self::String(x) => x.fmt(f),
+                Self::Number(x) => x.fmt(f),
             }
         }
     }
 
     impl ::std::convert::From<f64> for CurrencyAmount {
         fn from(value: f64) -> Self {
-            Self::Variant1(value)
+            Self::Number(value)
         }
     }
 
@@ -5978,12 +5416,6 @@ pub mod types {
         pub type_: CurrencyColumnFormatType,
     }
 
-    impl ::std::convert::From<&CurrencyColumnFormat> for CurrencyColumnFormat {
-        fn from(value: &CurrencyColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`CurrencyColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6001,12 +5433,6 @@ pub mod types {
     pub enum CurrencyColumnFormatType {
         #[serde(rename = "currency")]
         Currency,
-    }
-
-    impl ::std::convert::From<&Self> for CurrencyColumnFormatType {
-        fn from(value: &CurrencyColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for CurrencyColumnFormatType {
@@ -6080,12 +5506,6 @@ pub mod types {
         Accounting,
         #[serde(rename = "financial")]
         Financial,
-    }
-
-    impl ::std::convert::From<&Self> for CurrencyFormatType {
-        fn from(value: &CurrencyFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for CurrencyFormatType {
@@ -6178,12 +5598,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum CurrencyValue {}
-    impl ::std::convert::From<&Self> for CurrencyValue {
-        fn from(value: &CurrencyValue) -> Self {
-            value.clone()
-        }
-    }
-
     ///The custom domain added to a published doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -6262,12 +5676,6 @@ pub mod types {
         pub setup_status: CustomDocDomainSetupStatus,
     }
 
-    impl ::std::convert::From<&CustomDocDomain> for CustomDocDomain {
-        fn from(value: &CustomDocDomain) -> Self {
-            value.clone()
-        }
-    }
-
     ///List of all custom domains added to a published doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -6321,12 +5729,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&CustomDocDomainList> for CustomDocDomainList {
-        fn from(value: &CustomDocDomainList) -> Self {
-            value.clone()
-        }
-    }
-
     ///`CustomDocDomainProvider`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6365,12 +5767,6 @@ pub mod types {
         #[serde(rename = "Google Domains")]
         GoogleDomains,
         Other,
-    }
-
-    impl ::std::convert::From<&Self> for CustomDocDomainProvider {
-        fn from(value: &CustomDocDomainProvider) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for CustomDocDomainProvider {
@@ -6450,12 +5846,6 @@ pub mod types {
         pub provider: CustomDocDomainProvider,
     }
 
-    impl ::std::convert::From<&CustomDocDomainProviderResponse> for CustomDocDomainProviderResponse {
-        fn from(value: &CustomDocDomainProviderResponse) -> Self {
-            value.clone()
-        }
-    }
-
     ///`CustomDocDomainSetupStatus`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6485,12 +5875,6 @@ pub mod types {
         Succeeded,
         #[serde(rename = "failed")]
         Failed,
-    }
-
-    impl ::std::convert::From<&Self> for CustomDocDomainSetupStatus {
-        fn from(value: &CustomDocDomainSetupStatus) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for CustomDocDomainSetupStatus {
@@ -6561,12 +5945,6 @@ pub mod types {
         Connected,
         #[serde(rename = "notConnected")]
         NotConnected,
-    }
-
-    impl ::std::convert::From<&Self> for CustomDomainConnectedStatus {
-        fn from(value: &CustomDomainConnectedStatus) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for CustomDomainConnectedStatus {
@@ -6662,12 +6040,6 @@ pub mod types {
         pub type_: DateColumnFormatType,
     }
 
-    impl ::std::convert::From<&DateColumnFormat> for DateColumnFormat {
-        fn from(value: &DateColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`DateColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6685,12 +6057,6 @@ pub mod types {
     pub enum DateColumnFormatType {
         #[serde(rename = "date")]
         Date,
-    }
-
-    impl ::std::convert::From<&Self> for DateColumnFormatType {
-        fn from(value: &DateColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for DateColumnFormatType {
@@ -6794,12 +6160,6 @@ pub mod types {
         pub type_: DateTimeColumnFormatType,
     }
 
-    impl ::std::convert::From<&DateTimeColumnFormat> for DateTimeColumnFormat {
-        fn from(value: &DateTimeColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`DateTimeColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -6817,12 +6177,6 @@ pub mod types {
     pub enum DateTimeColumnFormatType {
         #[serde(rename = "dateTime")]
         DateTime,
-    }
-
-    impl ::std::convert::From<&Self> for DateTimeColumnFormatType {
-        fn from(value: &DateTimeColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for DateTimeColumnFormatType {
@@ -6881,12 +6235,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DeleteCustomDocDomainResponse {}
-    impl ::std::convert::From<&DeleteCustomDocDomainResponse> for DeleteCustomDocDomainResponse {
-        fn from(value: &DeleteCustomDocDomainResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeleteCustomDocDomainResponse {
         fn default() -> Self {
             Self {}
@@ -6939,17 +6287,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&DeleteDocResponse> for DeleteDocResponse {
-        fn from(value: &DeleteDocResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -6998,17 +6341,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&DeleteFolderResponse> for DeleteFolderResponse {
-        fn from(value: &DeleteFolderResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///The result of a folder deletion.
@@ -7027,12 +6365,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DeleteFolderResult {}
-    impl ::std::convert::From<&DeleteFolderResult> for DeleteFolderResult {
-        fn from(value: &DeleteFolderResult) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeleteFolderResult {
         fn default() -> Self {
             Self {}
@@ -7056,12 +6388,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DeletePackCategoryResponse {}
-    impl ::std::convert::From<&DeletePackCategoryResponse> for DeletePackCategoryResponse {
-        fn from(value: &DeletePackCategoryResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeletePackCategoryResponse {
         fn default() -> Self {
             Self {}
@@ -7095,12 +6421,6 @@ pub mod types {
         pub validation_errors: ::std::vec::Vec<ValidationError>,
     }
 
-    impl ::std::convert::From<&DeletePackCategoryResponseCodaDetail> for DeletePackCategoryResponseCodaDetail {
-        fn from(value: &DeletePackCategoryResponseCodaDetail) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeletePackCategoryResponseCodaDetail {
         fn default() -> Self {
             Self {
@@ -7126,12 +6446,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DeletePackInvitationResponse {}
-    impl ::std::convert::From<&DeletePackInvitationResponse> for DeletePackInvitationResponse {
-        fn from(value: &DeletePackInvitationResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeletePackInvitationResponse {
         fn default() -> Self {
             Self {}
@@ -7165,12 +6479,6 @@ pub mod types {
         pub validation_errors: ::std::vec::Vec<ValidationError>,
     }
 
-    impl ::std::convert::From<&DeletePackInvitationResponseCodaDetail> for DeletePackInvitationResponseCodaDetail {
-        fn from(value: &DeletePackInvitationResponseCodaDetail) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeletePackInvitationResponseCodaDetail {
         fn default() -> Self {
             Self {
@@ -7195,12 +6503,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DeletePackListingDraftResponse {}
-    impl ::std::convert::From<&DeletePackListingDraftResponse> for DeletePackListingDraftResponse {
-        fn from(value: &DeletePackListingDraftResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeletePackListingDraftResponse {
         fn default() -> Self {
             Self {}
@@ -7223,12 +6525,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DeletePackMakerResponse {}
-    impl ::std::convert::From<&DeletePackMakerResponse> for DeletePackMakerResponse {
-        fn from(value: &DeletePackMakerResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeletePackMakerResponse {
         fn default() -> Self {
             Self {}
@@ -7262,12 +6558,6 @@ pub mod types {
         pub validation_errors: ::std::vec::Vec<ValidationError>,
     }
 
-    impl ::std::convert::From<&DeletePackMakerResponseCodaDetail> for DeletePackMakerResponseCodaDetail {
-        fn from(value: &DeletePackMakerResponseCodaDetail) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeletePackMakerResponseCodaDetail {
         fn default() -> Self {
             Self {
@@ -7293,12 +6583,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DeletePackPermissionResponse {}
-    impl ::std::convert::From<&DeletePackPermissionResponse> for DeletePackPermissionResponse {
-        fn from(value: &DeletePackPermissionResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeletePackPermissionResponse {
         fn default() -> Self {
             Self {}
@@ -7332,12 +6616,6 @@ pub mod types {
         pub validation_errors: ::std::vec::Vec<ValidationError>,
     }
 
-    impl ::std::convert::From<&DeletePackPermissionResponseCodaDetail> for DeletePackPermissionResponseCodaDetail {
-        fn from(value: &DeletePackPermissionResponseCodaDetail) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeletePackPermissionResponseCodaDetail {
         fn default() -> Self {
             Self {
@@ -7362,12 +6640,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DeletePackResponse {}
-    impl ::std::convert::From<&DeletePackResponse> for DeletePackResponse {
-        fn from(value: &DeletePackResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeletePackResponse {
         fn default() -> Self {
             Self {}
@@ -7420,17 +6692,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&DeletePageContentResponse> for DeletePageContentResponse {
-        fn from(value: &DeletePageContentResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -7479,17 +6746,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&DeletePageResponse> for DeletePageResponse {
-        fn from(value: &DeletePageResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -7538,17 +6800,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&DeletePermissionResponse> for DeletePermissionResponse {
-        fn from(value: &DeletePermissionResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///The result of deleting a permission.
@@ -7567,12 +6824,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DeletePermissionResult {}
-    impl ::std::convert::From<&DeletePermissionResult> for DeletePermissionResult {
-        fn from(value: &DeletePermissionResult) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeletePermissionResult {
         fn default() -> Self {
             Self {}
@@ -7625,17 +6876,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&DeleteRowResponse> for DeleteRowResponse {
-        fn from(value: &DeleteRowResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -7684,17 +6930,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&DeleteRowsResponse> for DeleteRowsResponse {
-        fn from(value: &DeleteRowsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -7758,17 +6999,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&DeleteUserPackPermissionResponse> for DeleteUserPackPermissionResponse {
-        fn from(value: &DeleteUserPackPermissionResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -7798,12 +7034,6 @@ pub mod types {
         pub validation_errors: ::std::vec::Vec<ValidationError>,
     }
 
-    impl ::std::convert::From<&DeleteUserPackPermissionResponseCodaDetail> for DeleteUserPackPermissionResponseCodaDetail {
-        fn from(value: &DeleteUserPackPermissionResponseCodaDetail) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeleteUserPackPermissionResponseCodaDetail {
         fn default() -> Self {
             Self {
@@ -7829,12 +7059,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DeleteUserPackPermissionsResponse {}
-    impl ::std::convert::From<&DeleteUserPackPermissionsResponse> for DeleteUserPackPermissionsResponse {
-        fn from(value: &DeleteUserPackPermissionsResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DeleteUserPackPermissionsResponse {
         fn default() -> Self {
             Self {}
@@ -8018,12 +7242,6 @@ pub mod types {
         pub workspace_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&Doc> for Doc {
-        fn from(value: &Doc) -> Self {
-            value.clone()
-        }
-    }
-
     ///List of analytics for Coda docs over a date range.
     ///
     /// <details><summary>JSON schema</summary>
@@ -8072,12 +7290,6 @@ pub mod types {
         pub next_page_link: ::std::option::Option<NextPageLink>,
         #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page_token: ::std::option::Option<NextPageToken>,
-    }
-
-    impl ::std::convert::From<&DocAnalyticsCollection> for DocAnalyticsCollection {
-        fn from(value: &DocAnalyticsCollection) -> Self {
-            value.clone()
-        }
     }
 
     ///`DocAnalyticsDetails`
@@ -8134,12 +7346,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum DocAnalyticsDetails {}
-    impl ::std::convert::From<&Self> for DocAnalyticsDetails {
-        fn from(value: &DocAnalyticsDetails) -> Self {
-            value.clone()
-        }
-    }
-
     ///Analytics data for a Coda doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -8173,12 +7379,6 @@ pub mod types {
     pub struct DocAnalyticsItem {
         pub doc: DocAnalyticsDetails,
         pub metrics: ::std::vec::Vec<DocAnalyticsMetrics>,
-    }
-
-    impl ::std::convert::From<&DocAnalyticsItem> for DocAnalyticsItem {
-        fn from(value: &DocAnalyticsItem) -> Self {
-            value.clone()
-        }
     }
 
     ///Analytics metrics for a Coda Doc.
@@ -8357,12 +7557,6 @@ pub mod types {
         pub views: i64,
     }
 
-    impl ::std::convert::From<&DocAnalyticsMetrics> for DocAnalyticsMetrics {
-        fn from(value: &DocAnalyticsMetrics) -> Self {
-            value.clone()
-        }
-    }
-
     ///Determines how the Doc analytics returned are sorted.
     ///
     /// <details><summary>JSON schema</summary>
@@ -8453,12 +7647,6 @@ pub mod types {
         AiCreditsReviewer,
         #[serde(rename = "aiCredits")]
         AiCredits,
-    }
-
-    impl ::std::convert::From<&Self> for DocAnalyticsOrderBy {
-        fn from(value: &DocAnalyticsOrderBy) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for DocAnalyticsOrderBy {
@@ -8567,12 +7755,6 @@ pub mod types {
         pub total_sessions: i64,
     }
 
-    impl ::std::convert::From<&DocAnalyticsSummary> for DocAnalyticsSummary {
-        fn from(value: &DocAnalyticsSummary) -> Self {
-            value.clone()
-        }
-    }
-
     ///The category applied to a doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -8605,12 +7787,6 @@ pub mod types {
         pub name: ::std::string::String,
     }
 
-    impl ::std::convert::From<&DocCategory> for DocCategory {
-        fn from(value: &DocCategory) -> Self {
-            value.clone()
-        }
-    }
-
     ///A list of categories that can be applied to a doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -8641,12 +7817,6 @@ pub mod types {
     pub struct DocCategoryList {
         ///Categories for the doc.
         pub items: ::std::vec::Vec<DocCategory>,
-    }
-
-    impl ::std::convert::From<&DocCategoryList> for DocCategoryList {
-        fn from(value: &DocCategoryList) -> Self {
-            value.clone()
-        }
     }
 
     ///Payload for creating a new doc.
@@ -8731,12 +7901,6 @@ pub mod types {
         pub title: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&DocCreate> for DocCreate {
-        fn from(value: &DocCreate) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DocCreate {
         fn default() -> Self {
             Self {
@@ -8771,12 +7935,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DocCreateInitialPage {}
-    impl ::std::convert::From<&DocCreateInitialPage> for DocCreateInitialPage {
-        fn from(value: &DocCreateInitialPage) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DocCreateInitialPage {
         fn default() -> Self {
             Self {}
@@ -8799,12 +7957,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DocDelete {}
-    impl ::std::convert::From<&DocDelete> for DocDelete {
-        fn from(value: &DocDelete) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DocDelete {
         fn default() -> Self {
             Self {}
@@ -8870,12 +8022,6 @@ pub mod types {
         pub next_page_link: ::std::option::Option<NextPageLink>,
         #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page_token: ::std::option::Option<NextPageToken>,
-    }
-
-    impl ::std::convert::From<&DocList> for DocList {
-        fn from(value: &DocList) -> Self {
-            value.clone()
-        }
     }
 
     ///Payload for publishing a doc or or updating its publishing information.
@@ -8953,12 +8099,6 @@ pub mod types {
         pub slug: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&DocPublish> for DocPublish {
-        fn from(value: &DocPublish) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DocPublish {
         fn default() -> Self {
             Self {
@@ -9001,12 +8141,6 @@ pub mod types {
         Play,
         #[serde(rename = "edit")]
         Edit,
-    }
-
-    impl ::std::convert::From<&Self> for DocPublishMode {
-        fn from(value: &DocPublishMode) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for DocPublishMode {
@@ -9148,12 +8282,6 @@ pub mod types {
         pub mode: DocPublishMode,
     }
 
-    impl ::std::convert::From<&DocPublished> for DocPublished {
-        fn from(value: &DocPublished) -> Self {
-            value.clone()
-        }
-    }
-
     ///Reference to a Coda doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -9221,12 +8349,6 @@ pub mod types {
         pub type_: DocReferenceType,
     }
 
-    impl ::std::convert::From<&DocReference> for DocReference {
-        fn from(value: &DocReference) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -9246,12 +8368,6 @@ pub mod types {
     pub enum DocReferenceType {
         #[serde(rename = "doc")]
         Doc,
-    }
-
-    impl ::std::convert::From<&Self> for DocReferenceType {
-        fn from(value: &DocReferenceType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for DocReferenceType {
@@ -9357,23 +8473,21 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DocSize {
+        ///The number of base tables contained within the doc.
         #[serde(rename = "baseTableCount", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub base_table_count: ::std::option::Option<f64>,
         ///If true, indicates that the doc is over the API size limit.
         #[serde(rename = "overApiSizeLimit")]
         pub over_api_size_limit: bool,
+        ///The total number of page contained within the doc.
         #[serde(rename = "pageCount")]
         pub page_count: f64,
+        ///The total number of tables and views contained within the doc.
         #[serde(rename = "tableAndViewCount")]
         pub table_and_view_count: f64,
+        ///The number of rows contained within all tables of the doc.
         #[serde(rename = "totalRowCount")]
         pub total_row_count: f64,
-    }
-
-    impl ::std::convert::From<&DocSize> for DocSize {
-        fn from(value: &DocSize) -> Self {
-            value.clone()
-        }
     }
 
     ///The type of this resource.
@@ -9395,12 +8509,6 @@ pub mod types {
     pub enum DocType {
         #[serde(rename = "doc")]
         Doc,
-    }
-
-    impl ::std::convert::From<&Self> for DocType {
-        fn from(value: &DocType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for DocType {
@@ -9482,12 +8590,6 @@ pub mod types {
         pub title: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&DocUpdate> for DocUpdate {
-        fn from(value: &DocUpdate) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DocUpdate {
         fn default() -> Self {
             Self {
@@ -9513,12 +8615,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DocUpdateResult {}
-    impl ::std::convert::From<&DocUpdateResult> for DocUpdateResult {
-        fn from(value: &DocUpdateResult) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for DocUpdateResult {
         fn default() -> Self {
             Self {}
@@ -9712,12 +8808,6 @@ pub mod types {
         pub workspace_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&DocumentCreationResult> for DocumentCreationResult {
-        fn from(value: &DocumentCreationResult) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -9737,12 +8827,6 @@ pub mod types {
     pub enum DocumentCreationResultType {
         #[serde(rename = "doc")]
         Doc,
-    }
-
-    impl ::std::convert::From<&Self> for DocumentCreationResultType {
-        fn from(value: &DocumentCreationResultType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for DocumentCreationResultType {
@@ -9818,12 +8902,6 @@ pub mod types {
         pub request_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&DocumentMutateResponse> for DocumentMutateResponse {
-        fn from(value: &DocumentMutateResponse) -> Self {
-            value.clone()
-        }
-    }
-
     ///`DomainPrincipal`
     ///
     /// <details><summary>JSON schema</summary>
@@ -9866,12 +8944,6 @@ pub mod types {
         pub type_: DomainPrincipalType,
     }
 
-    impl ::std::convert::From<&DomainPrincipal> for DomainPrincipal {
-        fn from(value: &DomainPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this principal.
     ///
     /// <details><summary>JSON schema</summary>
@@ -9891,12 +8963,6 @@ pub mod types {
     pub enum DomainPrincipalType {
         #[serde(rename = "domain")]
         Domain,
-    }
-
-    impl ::std::convert::From<&Self> for DomainPrincipalType {
-        fn from(value: &DomainPrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for DomainPrincipalType {
@@ -9993,12 +9059,6 @@ pub mod types {
         pub type_: DurationColumnFormatType,
     }
 
-    impl ::std::convert::From<&DurationColumnFormat> for DurationColumnFormat {
-        fn from(value: &DurationColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`DurationColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -10016,12 +9076,6 @@ pub mod types {
     pub enum DurationColumnFormatType {
         #[serde(rename = "duration")]
         Duration,
-    }
-
-    impl ::std::convert::From<&Self> for DurationColumnFormatType {
-        fn from(value: &DurationColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for DurationColumnFormatType {
@@ -10097,12 +9151,6 @@ pub mod types {
         Minutes,
         #[serde(rename = "seconds")]
         Seconds,
-    }
-
-    impl ::std::convert::From<&Self> for DurationUnit {
-        fn from(value: &DurationUnit) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for DurationUnit {
@@ -10202,12 +9250,6 @@ pub mod types {
         pub type_: EmailColumnFormatType,
     }
 
-    impl ::std::convert::From<&EmailColumnFormat> for EmailColumnFormat {
-        fn from(value: &EmailColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`EmailColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -10225,12 +9267,6 @@ pub mod types {
     pub enum EmailColumnFormatType {
         #[serde(rename = "email")]
         Email,
-    }
-
-    impl ::std::convert::From<&Self> for EmailColumnFormatType {
-        fn from(value: &EmailColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for EmailColumnFormatType {
@@ -10303,12 +9339,6 @@ pub mod types {
         IconOnly,
         #[serde(rename = "emailOnly")]
         EmailOnly,
-    }
-
-    impl ::std::convert::From<&Self> for EmailDisplayType {
-        fn from(value: &EmailDisplayType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for EmailDisplayType {
@@ -10396,12 +9426,6 @@ pub mod types {
         pub type_: EmailPrincipalType,
     }
 
-    impl ::std::convert::From<&EmailPrincipal> for EmailPrincipal {
-        fn from(value: &EmailPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this principal.
     ///
     /// <details><summary>JSON schema</summary>
@@ -10421,12 +9445,6 @@ pub mod types {
     pub enum EmailPrincipalType {
         #[serde(rename = "email")]
         Email,
-    }
-
-    impl ::std::convert::From<&Self> for EmailPrincipalType {
-        fn from(value: &EmailPrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for EmailPrincipalType {
@@ -10501,12 +9519,6 @@ pub mod types {
         Enterprise,
     }
 
-    impl ::std::convert::From<&Self> for FeatureSet {
-        fn from(value: &FeatureSet) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::fmt::Display for FeatureSet {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -10578,12 +9590,6 @@ pub mod types {
         DocInaccessibleOrDoesNotExist,
         #[serde(rename = "invalidPublishedDocUrl")]
         InvalidPublishedDocUrl,
-    }
-
-    impl ::std::convert::From<&Self> for FeaturedDocStatus {
-        fn from(value: &FeaturedDocStatus) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for FeaturedDocStatus {
@@ -10737,12 +9743,6 @@ pub mod types {
         pub workspace: WorkspaceReference,
     }
 
-    impl ::std::convert::From<&Folder> for Folder {
-        fn from(value: &Folder) -> Self {
-            value.clone()
-        }
-    }
-
     ///List of folders.
     ///
     /// <details><summary>JSON schema</summary>
@@ -10802,12 +9802,6 @@ pub mod types {
         pub next_page_link: ::std::option::Option<NextPageLink>,
         #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page_token: ::std::option::Option<NextPageToken>,
-    }
-
-    impl ::std::convert::From<&FolderList> for FolderList {
-        fn from(value: &FolderList) -> Self {
-            value.clone()
-        }
     }
 
     ///Reference to a Coda folder.
@@ -10877,12 +9871,6 @@ pub mod types {
         pub type_: FolderReferenceType,
     }
 
-    impl ::std::convert::From<&FolderReference> for FolderReference {
-        fn from(value: &FolderReference) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -10902,12 +9890,6 @@ pub mod types {
     pub enum FolderReferenceType {
         #[serde(rename = "folder")]
         Folder,
-    }
-
-    impl ::std::convert::From<&Self> for FolderReferenceType {
-        fn from(value: &FolderReferenceType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for FolderReferenceType {
@@ -10968,12 +9950,6 @@ pub mod types {
     pub enum FolderType {
         #[serde(rename = "folder")]
         Folder,
-    }
-
-    impl ::std::convert::From<&Self> for FolderType {
-        fn from(value: &FolderType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for FolderType {
@@ -11090,12 +10066,6 @@ pub mod types {
         pub value: Value,
     }
 
-    impl ::std::convert::From<&Formula> for Formula {
-        fn from(value: &Formula) -> Self {
-            value.clone()
-        }
-    }
-
     ///Detailed information about a formula.
     ///
     /// <details><summary>JSON schema</summary>
@@ -11178,12 +10148,6 @@ pub mod types {
         pub valid: bool,
     }
 
-    impl ::std::convert::From<&FormulaDetail> for FormulaDetail {
-        fn from(value: &FormulaDetail) -> Self {
-            value.clone()
-        }
-    }
-
     ///List of formulas.
     ///
     /// <details><summary>JSON schema</summary>
@@ -11243,12 +10207,6 @@ pub mod types {
         pub next_page_link: ::std::option::Option<NextPageLink>,
         #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page_token: ::std::option::Option<NextPageToken>,
-    }
-
-    impl ::std::convert::From<&FormulaList> for FormulaList {
-        fn from(value: &FormulaList) -> Self {
-            value.clone()
-        }
     }
 
     ///Reference to a formula.
@@ -11321,12 +10279,6 @@ pub mod types {
         pub type_: FormulaReferenceType,
     }
 
-    impl ::std::convert::From<&FormulaReference> for FormulaReference {
-        fn from(value: &FormulaReference) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -11346,12 +10298,6 @@ pub mod types {
     pub enum FormulaReferenceType {
         #[serde(rename = "formula")]
         Formula,
-    }
-
-    impl ::std::convert::From<&Self> for FormulaReferenceType {
-        fn from(value: &FormulaReferenceType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for FormulaReferenceType {
@@ -11412,12 +10358,6 @@ pub mod types {
     pub enum FormulaType {
         #[serde(rename = "formula")]
         Formula,
-    }
-
-    impl ::std::convert::From<&Self> for FormulaType {
-        fn from(value: &FormulaType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for FormulaType {
@@ -11492,12 +10432,6 @@ pub mod types {
         pub type_: FreePackPlanPricingType,
     }
 
-    impl ::std::convert::From<&FreePackPlanPricing> for FreePackPlanPricing {
-        fn from(value: &FreePackPlanPricing) -> Self {
-            value.clone()
-        }
-    }
-
     ///`FreePackPlanPricingType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -11515,12 +10449,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     pub enum FreePackPlanPricingType {
         Free,
-    }
-
-    impl ::std::convert::From<&Self> for FreePackPlanPricingType {
-        fn from(value: &FreePackPlanPricingType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for FreePackPlanPricingType {
@@ -11608,17 +10536,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetAclSettingsResponse> for GetAclSettingsResponse {
-        fn from(value: &GetAclSettingsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -11682,17 +10605,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetAgentPackLogDetailsResponse> for GetAgentPackLogDetailsResponse {
-        fn from(value: &GetAgentPackLogDetailsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -11720,12 +10638,6 @@ pub mod types {
     pub struct GetAgentPackLogDetailsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&GetAgentPackLogDetailsResponseCodaDetail> for GetAgentPackLogDetailsResponseCodaDetail {
-        fn from(value: &GetAgentPackLogDetailsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for GetAgentPackLogDetailsResponseCodaDetail {
@@ -11782,17 +10694,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetAnalyticsLastUpdatedResponse> for GetAnalyticsLastUpdatedResponse {
-        fn from(value: &GetAnalyticsLastUpdatedResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -11841,17 +10748,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetColumnResponse> for GetColumnResponse {
-        fn from(value: &GetColumnResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -11900,17 +10802,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetControlResponse> for GetControlResponse {
-        fn from(value: &GetControlResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -11959,17 +10856,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetCustomDocDomainProviderResponse> for GetCustomDocDomainProviderResponse {
-        fn from(value: &GetCustomDocDomainProviderResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -12018,17 +10910,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetDocResponse> for GetDocResponse {
-        fn from(value: &GetDocResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -12077,17 +10964,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetFolderResponse> for GetFolderResponse {
-        fn from(value: &GetFolderResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -12136,17 +11018,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetFormulaResponse> for GetFormulaResponse {
-        fn from(value: &GetFormulaResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -12195,17 +11072,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetMutationStatusResponse> for GetMutationStatusResponse {
-        fn from(value: &GetMutationStatusResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Payload for getting the next version of a Pack.
@@ -12250,12 +11122,6 @@ pub mod types {
         ///The SDK version the metadata was built on.
         #[serde(rename = "sdkVersion", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub sdk_version: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&GetNextPackVersionRequest> for GetNextPackVersionRequest {
-        fn from(value: &GetNextPackVersionRequest) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -12319,17 +11185,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetNextPackVersionResponse> for GetNextPackVersionResponse {
-        fn from(value: &GetNextPackVersionResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -12357,12 +11218,6 @@ pub mod types {
     pub struct GetNextPackVersionResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&GetNextPackVersionResponseCodaDetail> for GetNextPackVersionResponseCodaDetail {
-        fn from(value: &GetNextPackVersionResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for GetNextPackVersionResponseCodaDetail {
@@ -12399,12 +11254,6 @@ pub mod types {
     impl ::std::convert::From<GetPackConfigurationJsonSchemaResponse> for ::serde_json::Map<::std::string::String, ::serde_json::Value> {
         fn from(value: GetPackConfigurationJsonSchemaResponse) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&GetPackConfigurationJsonSchemaResponse> for GetPackConfigurationJsonSchemaResponse {
-        fn from(value: &GetPackConfigurationJsonSchemaResponse) -> Self {
-            value.clone()
         }
     }
 
@@ -12475,17 +11324,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetPackConfigurationSchemaResponse> for GetPackConfigurationSchemaResponse {
-        fn from(value: &GetPackConfigurationSchemaResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -12513,12 +11357,6 @@ pub mod types {
     pub struct GetPackConfigurationSchemaResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&GetPackConfigurationSchemaResponseCodaDetail> for GetPackConfigurationSchemaResponseCodaDetail {
-        fn from(value: &GetPackConfigurationSchemaResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for GetPackConfigurationSchemaResponseCodaDetail {
@@ -12562,12 +11400,6 @@ pub mod types {
         pub pack_listing_draft_id: ::std::option::Option<::uuid::Uuid>,
     }
 
-    impl ::std::convert::From<&GetPackListingDraftResponse> for GetPackListingDraftResponse {
-        fn from(value: &GetPackListingDraftResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for GetPackListingDraftResponse {
         fn default() -> Self {
             Self {
@@ -12602,12 +11434,6 @@ pub mod types {
     pub struct GetPackListingDraftResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&GetPackListingDraftResponseCodaDetail> for GetPackListingDraftResponseCodaDetail {
-        fn from(value: &GetPackListingDraftResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for GetPackListingDraftResponseCodaDetail {
@@ -12679,17 +11505,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetPackListingResponse> for GetPackListingResponse {
-        fn from(value: &GetPackListingResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -12717,12 +11538,6 @@ pub mod types {
     pub struct GetPackListingResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&GetPackListingResponseCodaDetail> for GetPackListingResponseCodaDetail {
-        fn from(value: &GetPackListingResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for GetPackListingResponseCodaDetail {
@@ -12794,17 +11609,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetPackLogDetailsResponse> for GetPackLogDetailsResponse {
-        fn from(value: &GetPackLogDetailsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -12832,12 +11642,6 @@ pub mod types {
     pub struct GetPackLogDetailsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&GetPackLogDetailsResponseCodaDetail> for GetPackLogDetailsResponseCodaDetail {
-        fn from(value: &GetPackLogDetailsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for GetPackLogDetailsResponseCodaDetail {
@@ -12909,17 +11713,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetPackOauthConfigResponse> for GetPackOauthConfigResponse {
-        fn from(value: &GetPackOauthConfigResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -12947,12 +11746,6 @@ pub mod types {
     pub struct GetPackOauthConfigResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&GetPackOauthConfigResponseCodaDetail> for GetPackOauthConfigResponseCodaDetail {
-        fn from(value: &GetPackOauthConfigResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for GetPackOauthConfigResponseCodaDetail {
@@ -13024,17 +11817,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetPackPermissionsResponse> for GetPackPermissionsResponse {
-        fn from(value: &GetPackPermissionsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -13062,12 +11850,6 @@ pub mod types {
     pub struct GetPackPermissionsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&GetPackPermissionsResponseCodaDetail> for GetPackPermissionsResponseCodaDetail {
-        fn from(value: &GetPackPermissionsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for GetPackPermissionsResponseCodaDetail {
@@ -13124,17 +11906,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetPackResponse> for GetPackResponse {
-        fn from(value: &GetPackResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -13198,17 +11975,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetPackSourceCodeResponse> for GetPackSourceCodeResponse {
-        fn from(value: &GetPackSourceCodeResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -13236,12 +12008,6 @@ pub mod types {
     pub struct GetPackSourceCodeResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&GetPackSourceCodeResponseCodaDetail> for GetPackSourceCodeResponseCodaDetail {
-        fn from(value: &GetPackSourceCodeResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for GetPackSourceCodeResponseCodaDetail {
@@ -13313,17 +12079,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetPackSystemConnectionResponse> for GetPackSystemConnectionResponse {
-        fn from(value: &GetPackSystemConnectionResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -13351,12 +12112,6 @@ pub mod types {
     pub struct GetPackSystemConnectionResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&GetPackSystemConnectionResponseCodaDetail> for GetPackSystemConnectionResponseCodaDetail {
-        fn from(value: &GetPackSystemConnectionResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for GetPackSystemConnectionResponseCodaDetail {
@@ -13428,17 +12183,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetPackVersionDiffsResponse> for GetPackVersionDiffsResponse {
-        fn from(value: &GetPackVersionDiffsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -13466,12 +12216,6 @@ pub mod types {
     pub struct GetPackVersionDiffsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&GetPackVersionDiffsResponseCodaDetail> for GetPackVersionDiffsResponseCodaDetail {
-        fn from(value: &GetPackVersionDiffsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for GetPackVersionDiffsResponseCodaDetail {
@@ -13528,17 +12272,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetPageContentExportStatusResponse> for GetPageContentExportStatusResponse {
-        fn from(value: &GetPageContentExportStatusResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -13587,17 +12326,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetPageResponse> for GetPageResponse {
-        fn from(value: &GetPageResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -13646,17 +12380,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetPermissionsResponse> for GetPermissionsResponse {
-        fn from(value: &GetPermissionsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -13705,17 +12434,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetRowResponse> for GetRowResponse {
-        fn from(value: &GetRowResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -13764,17 +12488,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetSharingMetadataResponse> for GetSharingMetadataResponse {
-        fn from(value: &GetSharingMetadataResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -13823,17 +12542,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&GetTableResponse> for GetTableResponse {
-        fn from(value: &GetTableResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Response for getting workspace role activity.
@@ -13864,12 +12578,6 @@ pub mod types {
     #[serde(deny_unknown_fields)]
     pub struct GetWorkspaceRoleActivity {
         pub items: ::std::vec::Vec<WorkspaceRoleActivity>,
-    }
-
-    impl ::std::convert::From<&GetWorkspaceRoleActivity> for GetWorkspaceRoleActivity {
-        fn from(value: &GetWorkspaceRoleActivity) -> Self {
-            value.clone()
-        }
     }
 
     ///`GroupPrincipal`
@@ -13926,12 +12634,6 @@ pub mod types {
         pub type_: GroupPrincipalType,
     }
 
-    impl ::std::convert::From<&GroupPrincipal> for GroupPrincipal {
-        fn from(value: &GroupPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this principal.
     ///
     /// <details><summary>JSON schema</summary>
@@ -13951,12 +12653,6 @@ pub mod types {
     pub enum GroupPrincipalType {
         #[serde(rename = "group")]
         Group,
-    }
-
-    impl ::std::convert::From<&Self> for GroupPrincipalType {
-        fn from(value: &GroupPrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for GroupPrincipalType {
@@ -14045,12 +12741,6 @@ pub mod types {
         pub type_: GroupedPackAuthLogType,
     }
 
-    impl ::std::convert::From<&GroupedPackAuthLog> for GroupedPackAuthLog {
-        fn from(value: &GroupedPackAuthLog) -> Self {
-            value.clone()
-        }
-    }
-
     ///`GroupedPackAuthLogType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -14069,12 +12759,6 @@ pub mod types {
     pub enum GroupedPackAuthLogType {
         #[serde(rename = "auth")]
         Auth,
-    }
-
-    impl ::std::convert::From<&Self> for GroupedPackAuthLogType {
-        fn from(value: &GroupedPackAuthLogType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for GroupedPackAuthLogType {
@@ -14163,12 +12847,6 @@ pub mod types {
         pub type_: GroupedPackInvocationLogType,
     }
 
-    impl ::std::convert::From<&GroupedPackInvocationLog> for GroupedPackInvocationLog {
-        fn from(value: &GroupedPackInvocationLog) -> Self {
-            value.clone()
-        }
-    }
-
     ///`GroupedPackInvocationLogType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -14187,12 +12865,6 @@ pub mod types {
     pub enum GroupedPackInvocationLogType {
         #[serde(rename = "invocation")]
         Invocation,
-    }
-
-    impl ::std::convert::From<&Self> for GroupedPackInvocationLogType {
-        fn from(value: &GroupedPackInvocationLogType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for GroupedPackInvocationLogType {
@@ -14258,12 +12930,6 @@ pub mod types {
     pub enum GroupedPackLog {
         InvocationLog(GroupedPackInvocationLog),
         AuthLog(GroupedPackAuthLog),
-    }
-
-    impl ::std::convert::From<&Self> for GroupedPackLog {
-        fn from(value: &GroupedPackLog) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::convert::From<GroupedPackInvocationLog> for GroupedPackLog {
@@ -14338,12 +13004,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&GroupedPackLogsList> for GroupedPackLogsList {
-        fn from(value: &GroupedPackLogsList) -> Self {
-            value.clone()
-        }
-    }
-
     ///Payload for handling a Pack invitation (accept or reject).
     ///
     /// <details><summary>JSON schema</summary>
@@ -14374,12 +13034,6 @@ pub mod types {
         pub accept: bool,
     }
 
-    impl ::std::convert::From<&HandlePackInvitationRequest> for HandlePackInvitationRequest {
-        fn from(value: &HandlePackInvitationRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///Confirmation of successfully handling a Pack invitation.
     ///
     /// <details><summary>JSON schema</summary>
@@ -14408,12 +13062,6 @@ pub mod types {
         /// accepting the invitation.
         #[serde(rename = "permissionId", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub permission_id: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&HandlePackInvitationResponse> for HandlePackInvitationResponse {
-        fn from(value: &HandlePackInvitationResponse) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for HandlePackInvitationResponse {
@@ -14471,12 +13119,6 @@ pub mod types {
         ///MIME type of the icon
         #[serde(rename = "type")]
         pub type_: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&Icon> for Icon {
-        fn from(value: &Icon) -> Self {
-            value.clone()
-        }
     }
 
     ///List of available icon sets.
@@ -14577,12 +13219,6 @@ pub mod types {
         Checkmark,
         #[serde(rename = "lightbulb")]
         Lightbulb,
-    }
-
-    impl ::std::convert::From<&Self> for IconSet {
-        fn from(value: &IconSet) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for IconSet {
@@ -14712,19 +13348,15 @@ pub mod types {
         ///Browser-friendly link to an image.
         #[serde(rename = "browserLink")]
         pub browser_link: ::std::string::String,
+        ///The height in pixels of the image.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub height: ::std::option::Option<f64>,
         ///MIME type of the image.
         #[serde(rename = "type", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub type_: ::std::option::Option<::std::string::String>,
+        ///The width in pixels of the image.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub width: ::std::option::Option<f64>,
-    }
-
-    impl ::std::convert::From<&Image> for Image {
-        fn from(value: &Image) -> Self {
-            value.clone()
-        }
     }
 
     ///Information about an image file for an update Pack request.
@@ -14777,12 +13409,6 @@ pub mod types {
         ///The media type of the image being sent.
         #[serde(rename = "mimeType", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub mime_type: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&ImageFileForUpdatePackRequest> for ImageFileForUpdatePackRequest {
-        fn from(value: &ImageFileForUpdatePackRequest) -> Self {
-            value.clone()
-        }
     }
 
     ///Format of an image reference column.
@@ -14842,12 +13468,6 @@ pub mod types {
         pub width: NumberOrNumberFormula,
     }
 
-    impl ::std::convert::From<&ImageReferenceColumnFormat> for ImageReferenceColumnFormat {
-        fn from(value: &ImageReferenceColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`ImageReferenceColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -14865,12 +13485,6 @@ pub mod types {
     pub enum ImageReferenceColumnFormatType {
         #[serde(rename = "imageReference")]
         ImageReference,
-    }
-
-    impl ::std::convert::From<&Self> for ImageReferenceColumnFormatType {
-        fn from(value: &ImageReferenceColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ImageReferenceColumnFormatType {
@@ -14938,12 +13552,6 @@ pub mod types {
         Auto,
         #[serde(rename = "circle")]
         Circle,
-    }
-
-    impl ::std::convert::From<&Self> for ImageShapeStyle {
-        fn from(value: &ImageShapeStyle) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ImageShapeStyle {
@@ -15017,12 +13625,6 @@ pub mod types {
         Deleted,
         #[serde(rename = "failed")]
         Failed,
-    }
-
-    impl ::std::convert::From<&Self> for ImageStatus {
-        fn from(value: &ImageStatus) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ImageStatus {
@@ -15134,12 +13736,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum ImageUrlValue {}
-    impl ::std::convert::From<&Self> for ImageUrlValue {
-        fn from(value: &ImageUrlValue) -> Self {
-            value.clone()
-        }
-    }
-
     ///An ingestion batch execution.
     ///
     /// <details><summary>JSON schema</summary>
@@ -15271,8 +13867,12 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct IngestionBatchExecution {
+        ///Completion time of the ingestion batch execution in seconds since
+        /// epoch.
         #[serde(rename = "completionTimestamp")]
         pub completion_timestamp: f64,
+        ///Creation time of the ingestion batch execution in seconds since
+        /// epoch.
         #[serde(rename = "creationTimestamp")]
         pub creation_timestamp: f64,
         ///The label of the dynamic URL of the ingestion, if any.
@@ -15324,16 +13924,12 @@ pub mod types {
         ///The ID of the parent sync tableingestion, if any.
         #[serde(rename = "parentSyncTableIngestionId", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub parent_sync_table_ingestion_id: ::std::option::Option<::std::string::String>,
+        ///Start time of the ingestion batch execution in seconds since epoch.
         #[serde(rename = "startTimestamp")]
         pub start_timestamp: f64,
+        ///The total number of rows processed in the ingestion batch execution.
         #[serde(rename = "totalRowCount", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub total_row_count: ::std::option::Option<f64>,
-    }
-
-    impl ::std::convert::From<&IngestionBatchExecution> for IngestionBatchExecution {
-        fn from(value: &IngestionBatchExecution) -> Self {
-            value.clone()
-        }
     }
 
     ///List of Ingestion Batch Executions.
@@ -15371,12 +13967,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&IngestionBatchExecutionsList> for IngestionBatchExecutionsList {
-        fn from(value: &IngestionBatchExecutionsList) -> Self {
-            value.clone()
-        }
-    }
-
     ///Type of an ingestion childexecution.
     ///
     /// <details><summary>JSON schema</summary>
@@ -15407,12 +13997,6 @@ pub mod types {
         Incremental,
         #[serde(rename = "PATCH")]
         Patch,
-    }
-
-    impl ::std::convert::From<&Self> for IngestionChildExecutionType {
-        fn from(value: &IngestionChildExecutionType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for IngestionChildExecutionType {
@@ -15536,6 +14120,7 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct IngestionExecutionAttempt {
+        ///The attempt number of the ingestion execution attempt.
         #[serde(rename = "attemptNumber")]
         pub attempt_number: f64,
         ///The completion time of the ingestion execution attempt in seconds
@@ -15563,12 +14148,6 @@ pub mod types {
         /// epoch.
         #[serde(rename = "startTimestamp")]
         pub start_timestamp: ::std::option::Option<f64>,
-    }
-
-    impl ::std::convert::From<&IngestionExecutionAttempt> for IngestionExecutionAttempt {
-        fn from(value: &IngestionExecutionAttempt) -> Self {
-            value.clone()
-        }
     }
 
     ///List of Ingestion Execution Attempts.
@@ -15604,12 +14183,6 @@ pub mod types {
         pub items: ::std::vec::Vec<IngestionExecutionAttempt>,
         #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page_token: ::std::option::Option<NextPageToken>,
-    }
-
-    impl ::std::convert::From<&IngestionExecutionAttemptsList> for IngestionExecutionAttemptsList {
-        fn from(value: &IngestionExecutionAttemptsList) -> Self {
-            value.clone()
-        }
     }
 
     ///Context that comes with a ingestion execution.
@@ -15726,11 +14299,13 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct IngestionExecutionContext {
+        ///The attempt number of the ingestion execution.
         #[serde(rename = "attemptNumber")]
         pub attempt_number: f64,
         ///Completion time of the ingestion execution in seconds since epoch.
         #[serde(rename = "completionTimestamp")]
         pub completion_timestamp: ::std::option::Option<f64>,
+        ///Creation time of the ingestion execution in seconds since epoch.
         #[serde(rename = "creationTimestamp")]
         pub creation_timestamp: f64,
         #[serde(rename = "csbIngestionExecutionId")]
@@ -15745,6 +14320,7 @@ pub mod types {
         pub ingestion_name: ::std::option::Option<::std::string::String>,
         #[serde(rename = "ingestionStatus")]
         pub ingestion_status: IngestionStatus,
+        ///The timestamp of the latest checkpoint of the ingestion execution.
         #[serde(rename = "latestCheckpointTimestamp", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub latest_checkpoint_timestamp: ::std::option::Option<f64>,
         ///Next eligible time for the ingestion to run incrementally in seconds
@@ -15762,12 +14338,6 @@ pub mod types {
         ///The total number of rows processed in the ingestion execution.
         #[serde(rename = "totalRowCount", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub total_row_count: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&IngestionExecutionContext> for IngestionExecutionContext {
-        fn from(value: &IngestionExecutionContext) -> Self {
-            value.clone()
-        }
     }
 
     ///Type of an ingestion batch execution.
@@ -15796,12 +14366,6 @@ pub mod types {
         Full,
         #[serde(rename = "INCREMENTAL")]
         Incremental,
-    }
-
-    impl ::std::convert::From<&Self> for IngestionExecutionType {
-        fn from(value: &IngestionExecutionType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for IngestionExecutionType {
@@ -15880,12 +14444,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&IngestionExecutionsList> for IngestionExecutionsList {
-        fn from(value: &IngestionExecutionsList) -> Self {
-            value.clone()
-        }
-    }
-
     ///Limits for a pack-driven ingestion
     ///
     /// <details><summary>JSON schema</summary>
@@ -15932,6 +14490,8 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct IngestionLimitSettings {
+        ///The maximum number of tables that can be included. -1 means no
+        /// limit.
         #[serde(rename = "allowedTablesCount")]
         pub allowed_tables_count: f64,
         ///The default bytes limit when ingesting data for a table in the pack.
@@ -15945,12 +14505,6 @@ pub mod types {
         /// parameterLimits dictionary of allowed parameter values.
         #[serde(rename = "tableSettings", default, skip_serializing_if = ":: std :: collections :: HashMap::is_empty")]
         pub table_settings: ::std::collections::HashMap<::std::string::String, IngestionTableSetting>,
-    }
-
-    impl ::std::convert::From<&IngestionLimitSettings> for IngestionLimitSettings {
-        fn from(value: &IngestionLimitSettings) -> Self {
-            value.clone()
-        }
     }
 
     ///Live or Latest version of pack
@@ -15979,12 +14533,6 @@ pub mod types {
         Live,
         #[serde(rename = "LATEST")]
         Latest,
-    }
-
-    impl ::std::convert::From<&Self> for IngestionPackReleaseChannel {
-        fn from(value: &IngestionPackReleaseChannel) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for IngestionPackReleaseChannel {
@@ -16112,8 +14660,11 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct IngestionParentItem {
+        ///The attempt number of the ingestion child execution.
         #[serde(rename = "attemptNumber", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub attempt_number: ::std::option::Option<f64>,
+        ///Completion time of the ingestion child execution in seconds since
+        /// epoch.
         #[serde(rename = "completionTimestamp")]
         pub completion_timestamp: f64,
         #[serde(rename = "creationTimestamp")]
@@ -16122,6 +14673,7 @@ pub mod types {
         pub error_message: ::std::option::Option<::std::string::String>,
         #[serde(rename = "executionType")]
         pub execution_type: IngestionChildExecutionType,
+        ///Current execution index for this parent item's child execution.
         #[serde(rename = "ingestionChildExecutionIndex", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub ingestion_child_execution_index: ::std::option::Option<f64>,
         ///The ID of the ingestion child execution.
@@ -16132,21 +14684,20 @@ pub mod types {
         pub ingestion_name: ::std::string::String,
         #[serde(rename = "ingestionStatus", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub ingestion_status: ::std::option::Option<IngestionStatus>,
+        ///The timestamp of the latest checkpoint of the ingestion child
+        /// execution.
         #[serde(rename = "latestCheckpointTimestamp", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub latest_checkpoint_timestamp: ::std::option::Option<f64>,
         ///The ID of the parent item.
         #[serde(rename = "parentItemId")]
         pub parent_item_id: ::std::string::String,
+        ///The number of rows processed so far in the current ingestion child
+        /// execution.
         #[serde(rename = "rowCount", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub row_count: ::std::option::Option<f64>,
+        ///Start time of the ingestion child execution in seconds since epoch.
         #[serde(rename = "startTimestamp")]
         pub start_timestamp: f64,
-    }
-
-    impl ::std::convert::From<&IngestionParentItem> for IngestionParentItem {
-        fn from(value: &IngestionParentItem) -> Self {
-            value.clone()
-        }
     }
 
     ///List of Ingestion Parent Items.
@@ -16182,12 +14733,6 @@ pub mod types {
         pub items: ::std::vec::Vec<IngestionParentItem>,
         #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page_token: ::std::option::Option<NextPageToken>,
-    }
-
-    impl ::std::convert::From<&IngestionParentItemsList> for IngestionParentItemsList {
-        fn from(value: &IngestionParentItemsList) -> Self {
-            value.clone()
-        }
     }
 
     ///Status of the ingestion execution.
@@ -16232,12 +14777,6 @@ pub mod types {
         Completed,
         #[serde(rename = "FAILED")]
         Failed,
-    }
-
-    impl ::std::convert::From<&Self> for IngestionStatus {
-        fn from(value: &IngestionStatus) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for IngestionStatus {
@@ -16339,12 +14878,6 @@ pub mod types {
         pub parameter_limits: ::std::collections::HashMap<::std::string::String, ParameterSetting>,
     }
 
-    impl ::std::convert::From<&IngestionTableSetting> for IngestionTableSetting {
-        fn from(value: &IngestionTableSetting) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for IngestionTableSetting {
         fn default() -> Self {
             Self {
@@ -16398,12 +14931,6 @@ pub mod types {
         pub type_: InternalAccessPrincipalType,
     }
 
-    impl ::std::convert::From<&InternalAccessPrincipal> for InternalAccessPrincipal {
-        fn from(value: &InternalAccessPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this principal.
     ///
     /// <details><summary>JSON schema</summary>
@@ -16423,12 +14950,6 @@ pub mod types {
     pub enum InternalAccessPrincipalType {
         #[serde(rename = "internalAccess")]
         InternalAccess,
-    }
-
-    impl ::std::convert::From<&Self> for InternalAccessPrincipalType {
-        fn from(value: &InternalAccessPrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for InternalAccessPrincipalType {
@@ -16548,12 +15069,6 @@ pub mod types {
         Slide,
         #[serde(rename = "wordCloud")]
         WordCloud,
-    }
-
-    impl ::std::convert::From<&Self> for Layout {
-        fn from(value: &Layout) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for Layout {
@@ -16682,12 +15197,6 @@ pub mod types {
         pub type_: LinkColumnFormatType,
     }
 
-    impl ::std::convert::From<&LinkColumnFormat> for LinkColumnFormat {
-        fn from(value: &LinkColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`LinkColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -16705,12 +15214,6 @@ pub mod types {
     pub enum LinkColumnFormatType {
         #[serde(rename = "link")]
         Link,
-    }
-
-    impl ::std::convert::From<&Self> for LinkColumnFormatType {
-        fn from(value: &LinkColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for LinkColumnFormatType {
@@ -16790,12 +15293,6 @@ pub mod types {
         Card,
         #[serde(rename = "embed")]
         Embed,
-    }
-
-    impl ::std::convert::From<&Self> for LinkDisplayType {
-        fn from(value: &LinkDisplayType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for LinkDisplayType {
@@ -16893,12 +15390,6 @@ pub mod types {
         pub type_: LinkedDataType,
     }
 
-    impl ::std::convert::From<&LinkedDataObject> for LinkedDataObject {
-        fn from(value: &LinkedDataObject) -> Self {
-            value.clone()
-        }
-    }
-
     ///A schema.org identifier for the object.
     ///
     /// <details><summary>JSON schema</summary>
@@ -16932,12 +15423,6 @@ pub mod types {
         Person,
         WebPage,
         StructuredValue,
-    }
-
-    impl ::std::convert::From<&Self> for LinkedDataType {
-        fn from(value: &LinkedDataType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for LinkedDataType {
@@ -17007,12 +15492,6 @@ pub mod types {
         Asc,
         #[serde(rename = "desc")]
         Desc,
-    }
-
-    impl ::std::convert::From<&Self> for ListAgentLogsOrder {
-        fn from(value: &ListAgentLogsOrder) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ListAgentLogsOrder {
@@ -17117,17 +15596,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListAgentLogsResponse> for ListAgentLogsResponse {
-        fn from(value: &ListAgentLogsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -17155,12 +15629,6 @@ pub mod types {
     pub struct ListAgentLogsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListAgentLogsResponseCodaDetail> for ListAgentLogsResponseCodaDetail {
-        fn from(value: &ListAgentLogsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListAgentLogsResponseCodaDetail {
@@ -17191,12 +15659,6 @@ pub mod types {
         Asc,
         #[serde(rename = "desc")]
         Desc,
-    }
-
-    impl ::std::convert::From<&Self> for ListAgentSessionIdsOrder {
-        fn from(value: &ListAgentSessionIdsOrder) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ListAgentSessionIdsOrder {
@@ -17301,17 +15763,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListAgentSessionIdsResponse> for ListAgentSessionIdsResponse {
-        fn from(value: &ListAgentSessionIdsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -17339,12 +15796,6 @@ pub mod types {
     pub struct ListAgentSessionIdsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListAgentSessionIdsResponseCodaDetail> for ListAgentSessionIdsResponseCodaDetail {
-        fn from(value: &ListAgentSessionIdsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListAgentSessionIdsResponseCodaDetail {
@@ -17401,17 +15852,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListCategoriesResponse> for ListCategoriesResponse {
-        fn from(value: &ListCategoriesResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -17460,17 +15906,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListColumnsResponse> for ListColumnsResponse {
-        fn from(value: &ListColumnsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -17519,17 +15960,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListControlsResponse> for ListControlsResponse {
-        fn from(value: &ListControlsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -17578,17 +16014,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListCustomDocDomainsResponse> for ListCustomDocDomainsResponse {
-        fn from(value: &ListCustomDocDomainsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -17637,17 +16068,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListDocAnalyticsResponse> for ListDocAnalyticsResponse {
-        fn from(value: &ListDocAnalyticsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -17696,17 +16122,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListDocAnalyticsSummaryResponse> for ListDocAnalyticsSummaryResponse {
-        fn from(value: &ListDocAnalyticsSummaryResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -17755,17 +16176,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListDocsResponse> for ListDocsResponse {
-        fn from(value: &ListDocsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -17814,17 +16230,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListFoldersResponse> for ListFoldersResponse {
-        fn from(value: &ListFoldersResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -17873,17 +16284,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListFormulasResponse> for ListFormulasResponse {
-        fn from(value: &ListFormulasResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///`ListGroupedIngestionLogsOrder`
@@ -17906,12 +16312,6 @@ pub mod types {
         Asc,
         #[serde(rename = "desc")]
         Desc,
-    }
-
-    impl ::std::convert::From<&Self> for ListGroupedIngestionLogsOrder {
-        fn from(value: &ListGroupedIngestionLogsOrder) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ListGroupedIngestionLogsOrder {
@@ -18016,17 +16416,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListGroupedIngestionLogsResponse> for ListGroupedIngestionLogsResponse {
-        fn from(value: &ListGroupedIngestionLogsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -18054,12 +16449,6 @@ pub mod types {
     pub struct ListGroupedIngestionLogsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListGroupedIngestionLogsResponseCodaDetail> for ListGroupedIngestionLogsResponseCodaDetail {
-        fn from(value: &ListGroupedIngestionLogsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListGroupedIngestionLogsResponseCodaDetail {
@@ -18090,12 +16479,6 @@ pub mod types {
         Asc,
         #[serde(rename = "desc")]
         Desc,
-    }
-
-    impl ::std::convert::From<&Self> for ListGroupedPackLogsOrder {
-        fn from(value: &ListGroupedPackLogsOrder) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ListGroupedPackLogsOrder {
@@ -18200,17 +16583,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListGroupedPackLogsResponse> for ListGroupedPackLogsResponse {
-        fn from(value: &ListGroupedPackLogsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -18238,12 +16616,6 @@ pub mod types {
     pub struct ListGroupedPackLogsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListGroupedPackLogsResponseCodaDetail> for ListGroupedPackLogsResponseCodaDetail {
-        fn from(value: &ListGroupedPackLogsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListGroupedPackLogsResponseCodaDetail {
@@ -18315,17 +16687,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListIngestionBatchExecutionsResponse> for ListIngestionBatchExecutionsResponse {
-        fn from(value: &ListIngestionBatchExecutionsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -18353,12 +16720,6 @@ pub mod types {
     pub struct ListIngestionBatchExecutionsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListIngestionBatchExecutionsResponseCodaDetail> for ListIngestionBatchExecutionsResponseCodaDetail {
-        fn from(value: &ListIngestionBatchExecutionsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListIngestionBatchExecutionsResponseCodaDetail {
@@ -18389,12 +16750,6 @@ pub mod types {
         Asc,
         #[serde(rename = "desc")]
         Desc,
-    }
-
-    impl ::std::convert::From<&Self> for ListIngestionLogsOrder {
-        fn from(value: &ListIngestionLogsOrder) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ListIngestionLogsOrder {
@@ -18499,17 +16854,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListIngestionLogsResponse> for ListIngestionLogsResponse {
-        fn from(value: &ListIngestionLogsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -18537,12 +16887,6 @@ pub mod types {
     pub struct ListIngestionLogsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListIngestionLogsResponseCodaDetail> for ListIngestionLogsResponseCodaDetail {
-        fn from(value: &ListIngestionLogsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListIngestionLogsResponseCodaDetail {
@@ -18614,17 +16958,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListIngestionParentItemsResponse> for ListIngestionParentItemsResponse {
-        fn from(value: &ListIngestionParentItemsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -18652,12 +16991,6 @@ pub mod types {
     pub struct ListIngestionParentItemsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListIngestionParentItemsResponseCodaDetail> for ListIngestionParentItemsResponseCodaDetail {
-        fn from(value: &ListIngestionParentItemsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListIngestionParentItemsResponseCodaDetail {
@@ -18714,17 +17047,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListPackAnalyticsResponse> for ListPackAnalyticsResponse {
-        fn from(value: &ListPackAnalyticsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -18773,17 +17101,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListPackAnalyticsSummaryResponse> for ListPackAnalyticsSummaryResponse {
-        fn from(value: &ListPackAnalyticsSummaryResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Confirmation of successfully retrieving Pack categories.
@@ -18819,12 +17142,6 @@ pub mod types {
         pub categories: ::std::vec::Vec<PublishingCategory>,
     }
 
-    impl ::std::convert::From<&ListPackCategoriesResponse> for ListPackCategoriesResponse {
-        fn from(value: &ListPackCategoriesResponse) -> Self {
-            value.clone()
-        }
-    }
-
     ///Detail about why this request was rejected.
     ///
     /// <details><summary>JSON schema</summary>
@@ -18850,12 +17167,6 @@ pub mod types {
     pub struct ListPackCategoriesResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListPackCategoriesResponseCodaDetail> for ListPackCategoriesResponseCodaDetail {
-        fn from(value: &ListPackCategoriesResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListPackCategoriesResponseCodaDetail {
@@ -18912,17 +17223,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListPackFeaturedDocsResponse> for ListPackFeaturedDocsResponse {
-        fn from(value: &ListPackFeaturedDocsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -18971,17 +17277,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListPackFormulaAnalyticsResponse> for ListPackFormulaAnalyticsResponse {
-        fn from(value: &ListPackFormulaAnalyticsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -19045,17 +17346,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListPackInvitationsResponse> for ListPackInvitationsResponse {
-        fn from(value: &ListPackInvitationsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -19083,12 +17379,6 @@ pub mod types {
     pub struct ListPackInvitationsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListPackInvitationsResponseCodaDetail> for ListPackInvitationsResponseCodaDetail {
-        fn from(value: &ListPackInvitationsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListPackInvitationsResponseCodaDetail {
@@ -19160,17 +17450,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListPackListingsResponse> for ListPackListingsResponse {
-        fn from(value: &ListPackListingsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -19198,12 +17483,6 @@ pub mod types {
     pub struct ListPackListingsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListPackListingsResponseCodaDetail> for ListPackListingsResponseCodaDetail {
-        fn from(value: &ListPackListingsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListPackListingsResponseCodaDetail {
@@ -19234,12 +17513,6 @@ pub mod types {
         Asc,
         #[serde(rename = "desc")]
         Desc,
-    }
-
-    impl ::std::convert::From<&Self> for ListPackLogsOrder {
-        fn from(value: &ListPackLogsOrder) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ListPackLogsOrder {
@@ -19344,17 +17617,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListPackLogsResponse> for ListPackLogsResponse {
-        fn from(value: &ListPackLogsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -19382,12 +17650,6 @@ pub mod types {
     pub struct ListPackLogsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListPackLogsResponseCodaDetail> for ListPackLogsResponseCodaDetail {
-        fn from(value: &ListPackLogsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListPackLogsResponseCodaDetail {
@@ -19428,12 +17690,6 @@ pub mod types {
         pub makers: ::std::vec::Vec<Maker>,
     }
 
-    impl ::std::convert::From<&ListPackMakersResponse> for ListPackMakersResponse {
-        fn from(value: &ListPackMakersResponse) -> Self {
-            value.clone()
-        }
-    }
-
     ///Detail about why this request was rejected.
     ///
     /// <details><summary>JSON schema</summary>
@@ -19459,12 +17715,6 @@ pub mod types {
     pub struct ListPackMakersResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListPackMakersResponseCodaDetail> for ListPackMakersResponseCodaDetail {
-        fn from(value: &ListPackMakersResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListPackMakersResponseCodaDetail {
@@ -19536,17 +17786,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListPackReleasesResponse> for ListPackReleasesResponse {
-        fn from(value: &ListPackReleasesResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -19574,12 +17819,6 @@ pub mod types {
     pub struct ListPackReleasesResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListPackReleasesResponseCodaDetail> for ListPackReleasesResponseCodaDetail {
-        fn from(value: &ListPackReleasesResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListPackReleasesResponseCodaDetail {
@@ -19635,12 +17874,6 @@ pub mod types {
         ///Token for fetching the next page of results
         #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page_token: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&ListPackReviewsResponse> for ListPackReviewsResponse {
-        fn from(value: &ListPackReviewsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -19704,17 +17937,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListPackVersionsResponse> for ListPackVersionsResponse {
-        fn from(value: &ListPackVersionsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -19742,12 +17970,6 @@ pub mod types {
     pub struct ListPackVersionsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListPackVersionsResponseCodaDetail> for ListPackVersionsResponseCodaDetail {
-        fn from(value: &ListPackVersionsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListPackVersionsResponseCodaDetail {
@@ -19804,17 +18026,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListPacksResponse> for ListPacksResponse {
-        fn from(value: &ListPacksResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -19863,17 +18080,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListPageAnalyticsResponse> for ListPageAnalyticsResponse {
-        fn from(value: &ListPageAnalyticsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///`ListPageContentContentFormat`
@@ -19894,12 +18106,6 @@ pub mod types {
     pub enum ListPageContentContentFormat {
         #[serde(rename = "plainText")]
         PlainText,
-    }
-
-    impl ::std::convert::From<&Self> for ListPageContentContentFormat {
-        fn from(value: &ListPageContentContentFormat) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ListPageContentContentFormat {
@@ -19993,17 +18199,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListPageContentResponse> for ListPageContentResponse {
-        fn from(value: &ListPageContentResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -20052,17 +18253,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListPagesResponse> for ListPagesResponse {
-        fn from(value: &ListPagesResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -20111,17 +18307,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListRowsResponse> for ListRowsResponse {
-        fn from(value: &ListRowsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -20170,17 +18361,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListTablesResponse> for ListTablesResponse {
-        fn from(value: &ListTablesResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -20244,17 +18430,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListUserPackInvitationsResponse> for ListUserPackInvitationsResponse {
-        fn from(value: &ListUserPackInvitationsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -20282,12 +18463,6 @@ pub mod types {
     pub struct ListUserPackInvitationsResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ListUserPackInvitationsResponseCodaDetail> for ListUserPackInvitationsResponseCodaDetail {
-        fn from(value: &ListUserPackInvitationsResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ListUserPackInvitationsResponseCodaDetail {
@@ -20344,17 +18519,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListWorkspaceMembersResponse> for ListWorkspaceMembersResponse {
-        fn from(value: &ListWorkspaceMembersResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -20403,17 +18573,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ListWorkspaceRoleActivityResponse> for ListWorkspaceRoleActivityResponse {
-        fn from(value: &ListWorkspaceRoleActivityResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///`LogLevel`
@@ -20457,12 +18622,6 @@ pub mod types {
         Trace,
         #[serde(rename = "unknown")]
         Unknown,
-    }
-
-    impl ::std::convert::From<&Self> for LogLevel {
-        fn from(value: &LogLevel) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for LogLevel {
@@ -20597,12 +18756,6 @@ pub mod types {
         pub slug: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&Maker> for Maker {
-        fn from(value: &Maker) -> Self {
-            value.clone()
-        }
-    }
-
     ///Summary about a maker
     ///
     /// <details><summary>JSON schema</summary>
@@ -20675,12 +18828,6 @@ pub mod types {
         pub slug: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&MakerSummary> for MakerSummary {
-        fn from(value: &MakerSummary) -> Self {
-            value.clone()
-        }
-    }
-
     ///Pricing used when workspaces can subscribe to the Pack for a monthly
     /// cost per Doc Maker.
     ///
@@ -20720,16 +18867,11 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct MonthlyDocMakerPackPlanPricing {
+        ///The monthly cost of the Pack per Doc Maker.
         pub amount: f64,
         pub currency: PackPlanCurrency,
         #[serde(rename = "type")]
         pub type_: MonthlyDocMakerPackPlanPricingType,
-    }
-
-    impl ::std::convert::From<&MonthlyDocMakerPackPlanPricing> for MonthlyDocMakerPackPlanPricing {
-        fn from(value: &MonthlyDocMakerPackPlanPricing) -> Self {
-            value.clone()
-        }
     }
 
     ///`MonthlyDocMakerPackPlanPricingType`
@@ -20749,12 +18891,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     pub enum MonthlyDocMakerPackPlanPricingType {
         MonthlyDocMaker,
-    }
-
-    impl ::std::convert::From<&Self> for MonthlyDocMakerPackPlanPricingType {
-        fn from(value: &MonthlyDocMakerPackPlanPricingType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for MonthlyDocMakerPackPlanPricingType {
@@ -20839,12 +18975,6 @@ pub mod types {
         pub warning: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&MutationStatus> for MutationStatus {
-        fn from(value: &MutationStatus) -> Self {
-            value.clone()
-        }
-    }
-
     ///Information indicating the next Pack version definition.
     ///
     /// <details><summary>JSON schema</summary>
@@ -20912,12 +19042,6 @@ pub mod types {
         pub next_version: ::std::string::String,
     }
 
-    impl ::std::convert::From<&NextPackVersionInfo> for NextPackVersionInfo {
-        fn from(value: &NextPackVersionInfo) -> Self {
-            value.clone()
-        }
-    }
-
     ///`NextPackVersionInfoFindingDetailsItem`
     ///
     /// <details><summary>JSON schema</summary>
@@ -20948,12 +19072,6 @@ pub mod types {
         pub path: ::std::string::String,
     }
 
-    impl ::std::convert::From<&NextPackVersionInfoFindingDetailsItem> for NextPackVersionInfoFindingDetailsItem {
-        fn from(value: &NextPackVersionInfoFindingDetailsItem) -> Self {
-            value.clone()
-        }
-    }
-
     ///If specified, a link that can be used to fetch the next page of results.
     ///
     /// <details><summary>JSON schema</summary>
@@ -20980,12 +19098,6 @@ pub mod types {
     impl ::std::convert::From<NextPageLink> for ::std::string::String {
         fn from(value: NextPageLink) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&NextPageLink> for NextPageLink {
-        fn from(value: &NextPageLink) -> Self {
-            value.clone()
         }
     }
 
@@ -21036,12 +19148,6 @@ pub mod types {
     impl ::std::convert::From<NextPageToken> for ::std::string::String {
         fn from(value: NextPageToken) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&NextPageToken> for NextPageToken {
-        fn from(value: &NextPageToken) -> Self {
-            value.clone()
         }
     }
 
@@ -21098,12 +19204,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<&NextSyncToken> for NextSyncToken {
-        fn from(value: &NextSyncToken) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::convert::From<::std::string::String> for NextSyncToken {
         fn from(value: ::std::string::String) -> Self {
             Self(value)
@@ -21154,28 +19254,22 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(untagged)]
     pub enum NumberOrNumberFormula {
-        Variant0(f64),
-        Variant1(::std::string::String),
-    }
-
-    impl ::std::convert::From<&Self> for NumberOrNumberFormula {
-        fn from(value: &NumberOrNumberFormula) -> Self {
-            value.clone()
-        }
+        Number(f64),
+        String(::std::string::String),
     }
 
     impl ::std::fmt::Display for NumberOrNumberFormula {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match self {
-                Self::Variant0(x) => x.fmt(f),
-                Self::Variant1(x) => x.fmt(f),
+                Self::Number(x) => x.fmt(f),
+                Self::String(x) => x.fmt(f),
             }
         }
     }
 
     impl ::std::convert::From<f64> for NumberOrNumberFormula {
         fn from(value: f64) -> Self {
-            Self::Variant0(value)
+            Self::Number(value)
         }
     }
 
@@ -21246,12 +19340,6 @@ pub mod types {
         pub use_thousands_separator: ::std::option::Option<bool>,
     }
 
-    impl ::std::convert::From<&NumericColumnFormat> for NumericColumnFormat {
-        fn from(value: &NumericColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`NumericColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -21272,12 +19360,6 @@ pub mod types {
         Number,
         #[serde(rename = "percent")]
         Percent,
-    }
-
-    impl ::std::convert::From<&Self> for NumericColumnFormatType {
-        fn from(value: &NumericColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for NumericColumnFormatType {
@@ -21529,6 +19611,7 @@ pub mod types {
         pub example_images: ::std::vec::Vec<PackImageFile>,
         #[serde(rename = "featuredDocStatus", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub featured_doc_status: ::std::option::Option<FeaturedDocStatus>,
+        ///ID of the Pack.
         pub id: f64,
         ///The link to the logo of the Pack.
         #[serde(rename = "logoUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -21565,12 +19648,6 @@ pub mod types {
         ///The parent workspace for the Pack.
         #[serde(rename = "workspaceId")]
         pub workspace_id: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&Pack> for Pack {
-        fn from(value: &Pack) -> Self {
-            value.clone()
-        }
     }
 
     ///`PackAccessType`
@@ -21610,12 +19687,6 @@ pub mod types {
         Edit,
         #[serde(rename = "admin")]
         Admin,
-    }
-
-    impl ::std::convert::From<&Self> for PackAccessType {
-        fn from(value: &PackAccessType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackAccessType {
@@ -21697,12 +19768,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<&PackAccessTypes> for PackAccessTypes {
-        fn from(value: &PackAccessTypes) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::convert::From<::std::vec::Vec<PackAccessType>> for PackAccessTypes {
         fn from(value: ::std::vec::Vec<PackAccessType>) -> Self {
             Self(value)
@@ -21741,12 +19806,6 @@ pub mod types {
     impl ::std::convert::From<PackAgentDescription> for ::std::string::String {
         fn from(value: PackAgentDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackAgentDescription> for PackAgentDescription {
-        fn from(value: &PackAgentDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -21858,6 +19917,7 @@ pub mod types {
     #[serde(deny_unknown_fields)]
     pub struct PackAgentRuntimeLog {
         pub context: PackLogContext,
+        ///The duration of the turn in milliseconds.
         #[serde(rename = "durationMs", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub duration_ms: ::std::option::Option<f64>,
         ///The name of the agent that initiated the turn.
@@ -21883,12 +19943,6 @@ pub mod types {
         pub turn_type: ::std::string::String,
         #[serde(rename = "type")]
         pub type_: PackAgentRuntimeLogType,
-    }
-
-    impl ::std::convert::From<&PackAgentRuntimeLog> for PackAgentRuntimeLog {
-        fn from(value: &PackAgentRuntimeLog) -> Self {
-            value.clone()
-        }
     }
 
     ///Details for pack agent runtime logs
@@ -21937,12 +19991,6 @@ pub mod types {
         pub type_: PackAgentRuntimeLogDetailsType,
     }
 
-    impl ::std::convert::From<&PackAgentRuntimeLogDetails> for PackAgentRuntimeLogDetails {
-        fn from(value: &PackAgentRuntimeLogDetails) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackAgentRuntimeLogDetailsType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -21961,12 +20009,6 @@ pub mod types {
     pub enum PackAgentRuntimeLogDetailsType {
         #[serde(rename = "agentRuntime")]
         AgentRuntime,
-    }
-
-    impl ::std::convert::From<&Self> for PackAgentRuntimeLogDetailsType {
-        fn from(value: &PackAgentRuntimeLogDetailsType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackAgentRuntimeLogDetailsType {
@@ -22026,12 +20068,6 @@ pub mod types {
     pub enum PackAgentRuntimeLogType {
         #[serde(rename = "agentRuntime")]
         AgentRuntime,
-    }
-
-    impl ::std::convert::From<&Self> for PackAgentRuntimeLogType {
-        fn from(value: &PackAgentRuntimeLogType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackAgentRuntimeLogType {
@@ -22102,12 +20138,6 @@ pub mod types {
     impl ::std::convert::From<PackAgentShortDescription> for ::std::string::String {
         fn from(value: PackAgentShortDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackAgentShortDescription> for PackAgentShortDescription {
-        fn from(value: &PackAgentShortDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -22203,12 +20233,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&PackAnalyticsCollection> for PackAnalyticsCollection {
-        fn from(value: &PackAnalyticsCollection) -> Self {
-            value.clone()
-        }
-    }
-
     ///Metadata about a Pack relevant to analytics.
     ///
     /// <details><summary>JSON schema</summary>
@@ -22262,18 +20286,13 @@ pub mod types {
         ///Creation time of the Pack.
         #[serde(rename = "createdAt")]
         pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///ID of the Pack.
         pub id: f64,
         ///The link to the logo of the Pack.
         #[serde(rename = "logoUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub logo_url: ::std::option::Option<::std::string::String>,
         ///The name of the Pack.
         pub name: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&PackAnalyticsDetails> for PackAnalyticsDetails {
-        fn from(value: &PackAnalyticsDetails) -> Self {
-            value.clone()
-        }
     }
 
     ///Analytics data for a Coda Pack.
@@ -22309,12 +20328,6 @@ pub mod types {
     pub struct PackAnalyticsItem {
         pub metrics: ::std::vec::Vec<PackAnalyticsMetrics>,
         pub pack: PackAnalyticsDetails,
-    }
-
-    impl ::std::convert::From<&PackAnalyticsItem> for PackAnalyticsItem {
-        fn from(value: &PackAnalyticsItem) -> Self {
-            value.clone()
-        }
     }
 
     ///Analytics metrics for a Coda Pack.
@@ -22638,12 +20651,6 @@ pub mod types {
         pub workspaces_with_successful_trials: i64,
     }
 
-    impl ::std::convert::From<&PackAnalyticsMetrics> for PackAnalyticsMetrics {
-        fn from(value: &PackAnalyticsMetrics) -> Self {
-            value.clone()
-        }
-    }
-
     ///Determines how the Pack analytics returned are sorted.
     ///
     /// <details><summary>JSON schema</summary>
@@ -22755,12 +20762,6 @@ pub mod types {
         WorkspacesWithSuccessfulTrials,
         #[serde(rename = "revenueUsd")]
         RevenueUsd,
-    }
-
-    impl ::std::convert::From<&Self> for PackAnalyticsOrderBy {
-        fn from(value: &PackAnalyticsOrderBy) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackAnalyticsOrderBy {
@@ -22895,12 +20896,6 @@ pub mod types {
         pub total_workspace_installs: i64,
     }
 
-    impl ::std::convert::From<&PackAnalyticsSummary> for PackAnalyticsSummary {
-        fn from(value: &PackAnalyticsSummary) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackAssetType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -22934,12 +20929,6 @@ pub mod types {
         ExampleImage,
         #[serde(rename = "agentImage")]
         AgentImage,
-    }
-
-    impl ::std::convert::From<&Self> for PackAssetType {
-        fn from(value: &PackAssetType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackAssetType {
@@ -23015,12 +21004,6 @@ pub mod types {
         pub pack_asset_type: PackAssetType,
     }
 
-    impl ::std::convert::From<&PackAssetUploadCompleteRequest> for PackAssetUploadCompleteRequest {
-        fn from(value: &PackAssetUploadCompleteRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///Response for noting a Pack asset upload is complete.
     ///
     /// <details><summary>JSON schema</summary>
@@ -23065,12 +21048,6 @@ pub mod types {
         pub request_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackAssetUploadCompleteResponse> for PackAssetUploadCompleteResponse {
-        fn from(value: &PackAssetUploadCompleteResponse) -> Self {
-            value.clone()
-        }
-    }
-
     ///Detail about why this request was rejected.
     ///
     /// <details><summary>JSON schema</summary>
@@ -23096,12 +21073,6 @@ pub mod types {
     pub struct PackAssetUploadCompleteResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&PackAssetUploadCompleteResponseCodaDetail> for PackAssetUploadCompleteResponseCodaDetail {
-        fn from(value: &PackAssetUploadCompleteResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for PackAssetUploadCompleteResponseCodaDetail {
@@ -23175,12 +21146,6 @@ pub mod types {
         pub upload_url: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackAssetUploadInfo> for PackAssetUploadInfo {
-        fn from(value: &PackAssetUploadInfo) -> Self {
-            value.clone()
-        }
-    }
-
     ///System logs of Pack authentication requests.
     ///
     /// <details><summary>JSON schema</summary>
@@ -23239,12 +21204,6 @@ pub mod types {
         pub type_: PackAuthLogType,
     }
 
-    impl ::std::convert::From<&PackAuthLog> for PackAuthLog {
-        fn from(value: &PackAuthLog) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackAuthLogType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -23263,12 +21222,6 @@ pub mod types {
     pub enum PackAuthLogType {
         #[serde(rename = "auth")]
         Auth,
-    }
-
-    impl ::std::convert::From<&Self> for PackAuthLogType {
-        fn from(value: &PackAuthLogType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackAuthLogType {
@@ -23340,12 +21293,6 @@ pub mod types {
         Agent,
         #[serde(rename = "customAgent")]
         CustomAgent,
-    }
-
-    impl ::std::convert::From<&Self> for PackCategoryType {
-        fn from(value: &PackCategoryType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackCategoryType {
@@ -23436,12 +21383,6 @@ pub mod types {
         pub policy: ::serde_json::Map<::std::string::String, ::serde_json::Value>,
     }
 
-    impl ::std::convert::From<&PackConfigurationEntry> for PackConfigurationEntry {
-        fn from(value: &PackConfigurationEntry) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionAwsAccessKeyCredentials`
     ///
     /// <details><summary>JSON schema</summary>
@@ -23485,12 +21426,6 @@ pub mod types {
         pub type_: PackConnectionAwsAccessKeyCredentialsType,
     }
 
-    impl ::std::convert::From<&PackConnectionAwsAccessKeyCredentials> for PackConnectionAwsAccessKeyCredentials {
-        fn from(value: &PackConnectionAwsAccessKeyCredentials) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionAwsAccessKeyCredentialsType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -23509,12 +21444,6 @@ pub mod types {
     pub enum PackConnectionAwsAccessKeyCredentialsType {
         #[serde(rename = "awsAccessKey")]
         AwsAccessKey,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionAwsAccessKeyCredentialsType {
-        fn from(value: &PackConnectionAwsAccessKeyCredentialsType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionAwsAccessKeyCredentialsType {
@@ -23604,12 +21533,6 @@ pub mod types {
         pub type_: PackConnectionAwsAccessKeyMetadataType,
     }
 
-    impl ::std::convert::From<&PackConnectionAwsAccessKeyMetadata> for PackConnectionAwsAccessKeyMetadata {
-        fn from(value: &PackConnectionAwsAccessKeyMetadata) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionAwsAccessKeyMetadataType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -23628,12 +21551,6 @@ pub mod types {
     pub enum PackConnectionAwsAccessKeyMetadataType {
         #[serde(rename = "awsAccessKey")]
         AwsAccessKey,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionAwsAccessKeyMetadataType {
-        fn from(value: &PackConnectionAwsAccessKeyMetadataType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionAwsAccessKeyMetadataType {
@@ -23716,12 +21633,6 @@ pub mod types {
         pub type_: PackConnectionAwsAccessKeyPatchType,
     }
 
-    impl ::std::convert::From<&PackConnectionAwsAccessKeyPatch> for PackConnectionAwsAccessKeyPatch {
-        fn from(value: &PackConnectionAwsAccessKeyPatch) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionAwsAccessKeyPatchType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -23740,12 +21651,6 @@ pub mod types {
     pub enum PackConnectionAwsAccessKeyPatchType {
         #[serde(rename = "awsAccessKey")]
         AwsAccessKey,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionAwsAccessKeyPatchType {
-        fn from(value: &PackConnectionAwsAccessKeyPatchType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionAwsAccessKeyPatchType {
@@ -23830,12 +21735,6 @@ pub mod types {
         pub type_: PackConnectionAwsAssumeRoleCredentialsType,
     }
 
-    impl ::std::convert::From<&PackConnectionAwsAssumeRoleCredentials> for PackConnectionAwsAssumeRoleCredentials {
-        fn from(value: &PackConnectionAwsAssumeRoleCredentials) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionAwsAssumeRoleCredentialsType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -23854,12 +21753,6 @@ pub mod types {
     pub enum PackConnectionAwsAssumeRoleCredentialsType {
         #[serde(rename = "awsAssumeRole")]
         AwsAssumeRole,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionAwsAssumeRoleCredentialsType {
-        fn from(value: &PackConnectionAwsAssumeRoleCredentialsType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionAwsAssumeRoleCredentialsType {
@@ -23949,12 +21842,6 @@ pub mod types {
         pub type_: PackConnectionAwsAssumeRoleMetadataType,
     }
 
-    impl ::std::convert::From<&PackConnectionAwsAssumeRoleMetadata> for PackConnectionAwsAssumeRoleMetadata {
-        fn from(value: &PackConnectionAwsAssumeRoleMetadata) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionAwsAssumeRoleMetadataType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -23973,12 +21860,6 @@ pub mod types {
     pub enum PackConnectionAwsAssumeRoleMetadataType {
         #[serde(rename = "awsAssumeRole")]
         AwsAssumeRole,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionAwsAssumeRoleMetadataType {
-        fn from(value: &PackConnectionAwsAssumeRoleMetadataType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionAwsAssumeRoleMetadataType {
@@ -24061,12 +21942,6 @@ pub mod types {
         pub type_: PackConnectionAwsAssumeRolePatchType,
     }
 
-    impl ::std::convert::From<&PackConnectionAwsAssumeRolePatch> for PackConnectionAwsAssumeRolePatch {
-        fn from(value: &PackConnectionAwsAssumeRolePatch) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionAwsAssumeRolePatchType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -24085,12 +21960,6 @@ pub mod types {
     pub enum PackConnectionAwsAssumeRolePatchType {
         #[serde(rename = "awsAssumeRole")]
         AwsAssumeRole,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionAwsAssumeRolePatchType {
-        fn from(value: &PackConnectionAwsAssumeRolePatchType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionAwsAssumeRolePatchType {
@@ -24184,12 +22053,6 @@ pub mod types {
         pub type_: PackConnectionCustomCredentialsType,
     }
 
-    impl ::std::convert::From<&PackConnectionCustomCredentials> for PackConnectionCustomCredentials {
-        fn from(value: &PackConnectionCustomCredentials) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionCustomCredentialsParamsItem`
     ///
     /// <details><summary>JSON schema</summary>
@@ -24220,12 +22083,6 @@ pub mod types {
         pub value: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackConnectionCustomCredentialsParamsItem> for PackConnectionCustomCredentialsParamsItem {
-        fn from(value: &PackConnectionCustomCredentialsParamsItem) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionCustomCredentialsType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -24244,12 +22101,6 @@ pub mod types {
     pub enum PackConnectionCustomCredentialsType {
         #[serde(rename = "custom")]
         Custom,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionCustomCredentialsType {
-        fn from(value: &PackConnectionCustomCredentialsType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionCustomCredentialsType {
@@ -24368,12 +22219,6 @@ pub mod types {
         pub type_: PackConnectionCustomMetadataType,
     }
 
-    impl ::std::convert::From<&PackConnectionCustomMetadata> for PackConnectionCustomMetadata {
-        fn from(value: &PackConnectionCustomMetadata) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionCustomMetadataParamsItem`
     ///
     /// <details><summary>JSON schema</summary>
@@ -24405,12 +22250,6 @@ pub mod types {
         pub masked_value: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackConnectionCustomMetadataParamsItem> for PackConnectionCustomMetadataParamsItem {
-        fn from(value: &PackConnectionCustomMetadataParamsItem) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionCustomMetadataType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -24429,12 +22268,6 @@ pub mod types {
     pub enum PackConnectionCustomMetadataType {
         #[serde(rename = "custom")]
         Custom,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionCustomMetadataType {
-        fn from(value: &PackConnectionCustomMetadataType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionCustomMetadataType {
@@ -24528,12 +22361,6 @@ pub mod types {
         pub type_: PackConnectionCustomPatchType,
     }
 
-    impl ::std::convert::From<&PackConnectionCustomPatch> for PackConnectionCustomPatch {
-        fn from(value: &PackConnectionCustomPatch) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionCustomPatchParamsToPatchItem`
     ///
     /// <details><summary>JSON schema</summary>
@@ -24564,12 +22391,6 @@ pub mod types {
         pub value: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackConnectionCustomPatchParamsToPatchItem> for PackConnectionCustomPatchParamsToPatchItem {
-        fn from(value: &PackConnectionCustomPatchParamsToPatchItem) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionCustomPatchType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -24588,12 +22409,6 @@ pub mod types {
     pub enum PackConnectionCustomPatchType {
         #[serde(rename = "custom")]
         Custom,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionCustomPatchType {
-        fn from(value: &PackConnectionCustomPatchType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionCustomPatchType {
@@ -24672,12 +22487,6 @@ pub mod types {
         pub type_: PackConnectionGoogleServiceAccountCredentialsType,
     }
 
-    impl ::std::convert::From<&PackConnectionGoogleServiceAccountCredentials> for PackConnectionGoogleServiceAccountCredentials {
-        fn from(value: &PackConnectionGoogleServiceAccountCredentials) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionGoogleServiceAccountCredentialsType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -24696,12 +22505,6 @@ pub mod types {
     pub enum PackConnectionGoogleServiceAccountCredentialsType {
         #[serde(rename = "googleServiceAccount")]
         GoogleServiceAccount,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionGoogleServiceAccountCredentialsType {
-        fn from(value: &PackConnectionGoogleServiceAccountCredentialsType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionGoogleServiceAccountCredentialsType {
@@ -24780,12 +22583,6 @@ pub mod types {
         pub type_: PackConnectionGoogleServiceAccountMetadataType,
     }
 
-    impl ::std::convert::From<&PackConnectionGoogleServiceAccountMetadata> for PackConnectionGoogleServiceAccountMetadata {
-        fn from(value: &PackConnectionGoogleServiceAccountMetadata) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionGoogleServiceAccountMetadataType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -24804,12 +22601,6 @@ pub mod types {
     pub enum PackConnectionGoogleServiceAccountMetadataType {
         #[serde(rename = "googleServiceAccount")]
         GoogleServiceAccount,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionGoogleServiceAccountMetadataType {
-        fn from(value: &PackConnectionGoogleServiceAccountMetadataType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionGoogleServiceAccountMetadataType {
@@ -24888,12 +22679,6 @@ pub mod types {
         pub type_: PackConnectionGoogleServiceAccountPatchType,
     }
 
-    impl ::std::convert::From<&PackConnectionGoogleServiceAccountPatch> for PackConnectionGoogleServiceAccountPatch {
-        fn from(value: &PackConnectionGoogleServiceAccountPatch) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionGoogleServiceAccountPatchServiceAccountKey`
     ///
     /// <details><summary>JSON schema</summary>
@@ -24918,12 +22703,6 @@ pub mod types {
     impl ::std::convert::From<PackConnectionGoogleServiceAccountPatchServiceAccountKey> for ::std::string::String {
         fn from(value: PackConnectionGoogleServiceAccountPatchServiceAccountKey) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackConnectionGoogleServiceAccountPatchServiceAccountKey> for PackConnectionGoogleServiceAccountPatchServiceAccountKey {
-        fn from(value: &PackConnectionGoogleServiceAccountPatchServiceAccountKey) -> Self {
-            value.clone()
         }
     }
 
@@ -24987,12 +22766,6 @@ pub mod types {
     pub enum PackConnectionGoogleServiceAccountPatchType {
         #[serde(rename = "googleServiceAccount")]
         GoogleServiceAccount,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionGoogleServiceAccountPatchType {
-        fn from(value: &PackConnectionGoogleServiceAccountPatchType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionGoogleServiceAccountPatchType {
@@ -25070,12 +22843,6 @@ pub mod types {
         pub type_: PackConnectionHeaderCredentialsType,
     }
 
-    impl ::std::convert::From<&PackConnectionHeaderCredentials> for PackConnectionHeaderCredentials {
-        fn from(value: &PackConnectionHeaderCredentials) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionHeaderCredentialsType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -25094,12 +22861,6 @@ pub mod types {
     pub enum PackConnectionHeaderCredentialsType {
         #[serde(rename = "header")]
         Header,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionHeaderCredentialsType {
-        fn from(value: &PackConnectionHeaderCredentialsType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionHeaderCredentialsType {
@@ -25189,12 +22950,6 @@ pub mod types {
         pub type_: PackConnectionHeaderMetadataType,
     }
 
-    impl ::std::convert::From<&PackConnectionHeaderMetadata> for PackConnectionHeaderMetadata {
-        fn from(value: &PackConnectionHeaderMetadata) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionHeaderMetadataType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -25213,12 +22968,6 @@ pub mod types {
     pub enum PackConnectionHeaderMetadataType {
         #[serde(rename = "header")]
         Header,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionHeaderMetadataType {
-        fn from(value: &PackConnectionHeaderMetadataType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionHeaderMetadataType {
@@ -25296,12 +23045,6 @@ pub mod types {
         pub type_: PackConnectionHeaderPatchType,
     }
 
-    impl ::std::convert::From<&PackConnectionHeaderPatch> for PackConnectionHeaderPatch {
-        fn from(value: &PackConnectionHeaderPatch) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionHeaderPatchType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -25320,12 +23063,6 @@ pub mod types {
     pub enum PackConnectionHeaderPatchType {
         #[serde(rename = "header")]
         Header,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionHeaderPatchType {
-        fn from(value: &PackConnectionHeaderPatchType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionHeaderPatchType {
@@ -25409,12 +23146,6 @@ pub mod types {
         pub username: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackConnectionHttpBasicCredentials> for PackConnectionHttpBasicCredentials {
-        fn from(value: &PackConnectionHttpBasicCredentials) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionHttpBasicCredentialsType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -25433,12 +23164,6 @@ pub mod types {
     pub enum PackConnectionHttpBasicCredentialsType {
         #[serde(rename = "httpBasic")]
         HttpBasic,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionHttpBasicCredentialsType {
-        fn from(value: &PackConnectionHttpBasicCredentialsType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionHttpBasicCredentialsType {
@@ -25521,12 +23246,6 @@ pub mod types {
         pub type_: PackConnectionHttpBasicMetadataType,
     }
 
-    impl ::std::convert::From<&PackConnectionHttpBasicMetadata> for PackConnectionHttpBasicMetadata {
-        fn from(value: &PackConnectionHttpBasicMetadata) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionHttpBasicMetadataType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -25545,12 +23264,6 @@ pub mod types {
     pub enum PackConnectionHttpBasicMetadataType {
         #[serde(rename = "httpBasic")]
         HttpBasic,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionHttpBasicMetadataType {
-        fn from(value: &PackConnectionHttpBasicMetadataType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionHttpBasicMetadataType {
@@ -25634,12 +23347,6 @@ pub mod types {
         pub username: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&PackConnectionHttpBasicPatch> for PackConnectionHttpBasicPatch {
-        fn from(value: &PackConnectionHttpBasicPatch) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionHttpBasicPatchType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -25658,12 +23365,6 @@ pub mod types {
     pub enum PackConnectionHttpBasicPatchType {
         #[serde(rename = "httpBasic")]
         HttpBasic,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionHttpBasicPatchType {
-        fn from(value: &PackConnectionHttpBasicPatchType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionHttpBasicPatchType {
@@ -25757,12 +23458,6 @@ pub mod types {
         pub type_: PackConnectionMultiHeaderCredentialsType,
     }
 
-    impl ::std::convert::From<&PackConnectionMultiHeaderCredentials> for PackConnectionMultiHeaderCredentials {
-        fn from(value: &PackConnectionMultiHeaderCredentials) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionMultiHeaderCredentialsTokensItem`
     ///
     /// <details><summary>JSON schema</summary>
@@ -25793,12 +23488,6 @@ pub mod types {
         pub value: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackConnectionMultiHeaderCredentialsTokensItem> for PackConnectionMultiHeaderCredentialsTokensItem {
-        fn from(value: &PackConnectionMultiHeaderCredentialsTokensItem) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionMultiHeaderCredentialsType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -25817,12 +23506,6 @@ pub mod types {
     pub enum PackConnectionMultiHeaderCredentialsType {
         #[serde(rename = "multiHeader")]
         MultiHeader,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionMultiHeaderCredentialsType {
-        fn from(value: &PackConnectionMultiHeaderCredentialsType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionMultiHeaderCredentialsType {
@@ -25939,12 +23622,6 @@ pub mod types {
         pub type_: PackConnectionMultiHeaderMetadataType,
     }
 
-    impl ::std::convert::From<&PackConnectionMultiHeaderMetadata> for PackConnectionMultiHeaderMetadata {
-        fn from(value: &PackConnectionMultiHeaderMetadata) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionMultiHeaderMetadataHeadersItem`
     ///
     /// <details><summary>JSON schema</summary>
@@ -25982,12 +23659,6 @@ pub mod types {
         pub token_prefix: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&PackConnectionMultiHeaderMetadataHeadersItem> for PackConnectionMultiHeaderMetadataHeadersItem {
-        fn from(value: &PackConnectionMultiHeaderMetadataHeadersItem) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionMultiHeaderMetadataPresetsItem`
     ///
     /// <details><summary>JSON schema</summary>
@@ -26019,12 +23690,6 @@ pub mod types {
         pub token_prefix: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&PackConnectionMultiHeaderMetadataPresetsItem> for PackConnectionMultiHeaderMetadataPresetsItem {
-        fn from(value: &PackConnectionMultiHeaderMetadataPresetsItem) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionMultiHeaderMetadataType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -26043,12 +23708,6 @@ pub mod types {
     pub enum PackConnectionMultiHeaderMetadataType {
         #[serde(rename = "multiHeader")]
         MultiHeader,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionMultiHeaderMetadataType {
-        fn from(value: &PackConnectionMultiHeaderMetadataType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionMultiHeaderMetadataType {
@@ -26142,12 +23801,6 @@ pub mod types {
         pub type_: PackConnectionMultiHeaderPatchType,
     }
 
-    impl ::std::convert::From<&PackConnectionMultiHeaderPatch> for PackConnectionMultiHeaderPatch {
-        fn from(value: &PackConnectionMultiHeaderPatch) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionMultiHeaderPatchTokensToPatchItem`
     ///
     /// <details><summary>JSON schema</summary>
@@ -26178,12 +23831,6 @@ pub mod types {
         pub value: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackConnectionMultiHeaderPatchTokensToPatchItem> for PackConnectionMultiHeaderPatchTokensToPatchItem {
-        fn from(value: &PackConnectionMultiHeaderPatchTokensToPatchItem) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionMultiHeaderPatchType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -26202,12 +23849,6 @@ pub mod types {
     pub enum PackConnectionMultiHeaderPatchType {
         #[serde(rename = "multiHeader")]
         MultiHeader,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionMultiHeaderPatchType {
-        fn from(value: &PackConnectionMultiHeaderPatchType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionMultiHeaderPatchType {
@@ -26294,12 +23935,6 @@ pub mod types {
         pub type_: PackConnectionOauth2ClientCredentialsType,
     }
 
-    impl ::std::convert::From<&PackConnectionOauth2ClientCredentials> for PackConnectionOauth2ClientCredentials {
-        fn from(value: &PackConnectionOauth2ClientCredentials) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionOauth2ClientCredentialsClientId`
     ///
     /// <details><summary>JSON schema</summary>
@@ -26324,12 +23959,6 @@ pub mod types {
     impl ::std::convert::From<PackConnectionOauth2ClientCredentialsClientId> for ::std::string::String {
         fn from(value: PackConnectionOauth2ClientCredentialsClientId) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackConnectionOauth2ClientCredentialsClientId> for PackConnectionOauth2ClientCredentialsClientId {
-        fn from(value: &PackConnectionOauth2ClientCredentialsClientId) -> Self {
-            value.clone()
         }
     }
 
@@ -26399,12 +24028,6 @@ pub mod types {
     impl ::std::convert::From<PackConnectionOauth2ClientCredentialsClientSecret> for ::std::string::String {
         fn from(value: PackConnectionOauth2ClientCredentialsClientSecret) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackConnectionOauth2ClientCredentialsClientSecret> for PackConnectionOauth2ClientCredentialsClientSecret {
-        fn from(value: &PackConnectionOauth2ClientCredentialsClientSecret) -> Self {
-            value.clone()
         }
     }
 
@@ -26498,12 +24121,6 @@ pub mod types {
         pub type_: PackConnectionOauth2ClientCredentialsMetadataType,
     }
 
-    impl ::std::convert::From<&PackConnectionOauth2ClientCredentialsMetadata> for PackConnectionOauth2ClientCredentialsMetadata {
-        fn from(value: &PackConnectionOauth2ClientCredentialsMetadata) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionOauth2ClientCredentialsMetadataType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -26522,12 +24139,6 @@ pub mod types {
     pub enum PackConnectionOauth2ClientCredentialsMetadataType {
         #[serde(rename = "oauth2ClientCredentials")]
         Oauth2ClientCredentials,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionOauth2ClientCredentialsMetadataType {
-        fn from(value: &PackConnectionOauth2ClientCredentialsMetadataType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionOauth2ClientCredentialsMetadataType {
@@ -26612,12 +24223,6 @@ pub mod types {
         pub type_: PackConnectionOauth2ClientCredentialsPatchType,
     }
 
-    impl ::std::convert::From<&PackConnectionOauth2ClientCredentialsPatch> for PackConnectionOauth2ClientCredentialsPatch {
-        fn from(value: &PackConnectionOauth2ClientCredentialsPatch) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionOauth2ClientCredentialsPatchClientId`
     ///
     /// <details><summary>JSON schema</summary>
@@ -26642,12 +24247,6 @@ pub mod types {
     impl ::std::convert::From<PackConnectionOauth2ClientCredentialsPatchClientId> for ::std::string::String {
         fn from(value: PackConnectionOauth2ClientCredentialsPatchClientId) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackConnectionOauth2ClientCredentialsPatchClientId> for PackConnectionOauth2ClientCredentialsPatchClientId {
-        fn from(value: &PackConnectionOauth2ClientCredentialsPatchClientId) -> Self {
-            value.clone()
         }
     }
 
@@ -26720,12 +24319,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<&PackConnectionOauth2ClientCredentialsPatchClientSecret> for PackConnectionOauth2ClientCredentialsPatchClientSecret {
-        fn from(value: &PackConnectionOauth2ClientCredentialsPatchClientSecret) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::str::FromStr for PackConnectionOauth2ClientCredentialsPatchClientSecret {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -26788,12 +24381,6 @@ pub mod types {
         Oauth2ClientCredentials,
     }
 
-    impl ::std::convert::From<&Self> for PackConnectionOauth2ClientCredentialsPatchType {
-        fn from(value: &PackConnectionOauth2ClientCredentialsPatchType) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::fmt::Display for PackConnectionOauth2ClientCredentialsPatchType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -26851,12 +24438,6 @@ pub mod types {
     pub enum PackConnectionOauth2ClientCredentialsType {
         #[serde(rename = "oauth2ClientCredentials")]
         Oauth2ClientCredentials,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionOauth2ClientCredentialsType {
-        fn from(value: &PackConnectionOauth2ClientCredentialsType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionOauth2ClientCredentialsType {
@@ -26952,12 +24533,6 @@ pub mod types {
         AwsAssumeRole,
         #[serde(rename = "awsAccessKey")]
         AwsAccessKey,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionType {
-        fn from(value: &PackConnectionType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionType {
@@ -27067,12 +24642,6 @@ pub mod types {
         pub type_: PackConnectionUrlParamCredentialsType,
     }
 
-    impl ::std::convert::From<&PackConnectionUrlParamCredentials> for PackConnectionUrlParamCredentials {
-        fn from(value: &PackConnectionUrlParamCredentials) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionUrlParamCredentialsParamsItem`
     ///
     /// <details><summary>JSON schema</summary>
@@ -27103,12 +24672,6 @@ pub mod types {
         pub value: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackConnectionUrlParamCredentialsParamsItem> for PackConnectionUrlParamCredentialsParamsItem {
-        fn from(value: &PackConnectionUrlParamCredentialsParamsItem) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionUrlParamCredentialsType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -27127,12 +24690,6 @@ pub mod types {
     pub enum PackConnectionUrlParamCredentialsType {
         #[serde(rename = "urlParam")]
         UrlParam,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionUrlParamCredentialsType {
-        fn from(value: &PackConnectionUrlParamCredentialsType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionUrlParamCredentialsType {
@@ -27240,12 +24797,6 @@ pub mod types {
         pub type_: PackConnectionUrlParamMetadataType,
     }
 
-    impl ::std::convert::From<&PackConnectionUrlParamMetadata> for PackConnectionUrlParamMetadata {
-        fn from(value: &PackConnectionUrlParamMetadata) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionUrlParamMetadataParamsItem`
     ///
     /// <details><summary>JSON schema</summary>
@@ -27277,12 +24828,6 @@ pub mod types {
         pub masked_value: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackConnectionUrlParamMetadataParamsItem> for PackConnectionUrlParamMetadataParamsItem {
-        fn from(value: &PackConnectionUrlParamMetadataParamsItem) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionUrlParamMetadataType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -27301,12 +24846,6 @@ pub mod types {
     pub enum PackConnectionUrlParamMetadataType {
         #[serde(rename = "urlParam")]
         UrlParam,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionUrlParamMetadataType {
-        fn from(value: &PackConnectionUrlParamMetadataType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionUrlParamMetadataType {
@@ -27400,12 +24939,6 @@ pub mod types {
         pub type_: PackConnectionUrlParamPatchType,
     }
 
-    impl ::std::convert::From<&PackConnectionUrlParamPatch> for PackConnectionUrlParamPatch {
-        fn from(value: &PackConnectionUrlParamPatch) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionUrlParamPatchParamsToPatchItem`
     ///
     /// <details><summary>JSON schema</summary>
@@ -27436,12 +24969,6 @@ pub mod types {
         pub value: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackConnectionUrlParamPatchParamsToPatchItem> for PackConnectionUrlParamPatchParamsToPatchItem {
-        fn from(value: &PackConnectionUrlParamPatchParamsToPatchItem) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackConnectionUrlParamPatchType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -27460,12 +24987,6 @@ pub mod types {
     pub enum PackConnectionUrlParamPatchType {
         #[serde(rename = "urlParam")]
         UrlParam,
-    }
-
-    impl ::std::convert::From<&Self> for PackConnectionUrlParamPatchType {
-        fn from(value: &PackConnectionUrlParamPatchType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackConnectionUrlParamPatchType {
@@ -27560,12 +25081,6 @@ pub mod types {
         pub type_: PackCustomLogType,
     }
 
-    impl ::std::convert::From<&PackCustomLog> for PackCustomLog {
-        fn from(value: &PackCustomLog) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackCustomLogType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -27584,12 +25099,6 @@ pub mod types {
     pub enum PackCustomLogType {
         #[serde(rename = "custom")]
         Custom,
-    }
-
-    impl ::std::convert::From<&Self> for PackCustomLogType {
-        fn from(value: &PackCustomLogType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackCustomLogType {
@@ -27660,12 +25169,6 @@ pub mod types {
     impl ::std::convert::From<PackDescription> for ::std::string::String {
         fn from(value: PackDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackDescription> for PackDescription {
-        fn from(value: &PackDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -27755,12 +25258,6 @@ pub mod types {
         Private,
     }
 
-    impl ::std::convert::From<&Self> for PackDiscoverability {
-        fn from(value: &PackDiscoverability) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::fmt::Display for PackDiscoverability {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -27835,12 +25332,6 @@ pub mod types {
         Go,
         #[serde(rename = "docs")]
         Docs,
-    }
-
-    impl ::std::convert::From<&Self> for PackEntrypoint {
-        fn from(value: &PackEntrypoint) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackEntrypoint {
@@ -27932,12 +25423,6 @@ pub mod types {
         pub published_url: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&PackFeaturedDoc> for PackFeaturedDoc {
-        fn from(value: &PackFeaturedDoc) -> Self {
-            value.clone()
-        }
-    }
-
     ///Item representing a featured doc in the update Pack featured docs
     /// request.
     ///
@@ -27976,12 +25461,6 @@ pub mod types {
         pub url: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackFeaturedDocRequestItem> for PackFeaturedDocRequestItem {
-        fn from(value: &PackFeaturedDocRequestItem) -> Self {
-            value.clone()
-        }
-    }
-
     ///List of a Pack's featured docs.
     ///
     /// <details><summary>JSON schema</summary>
@@ -28012,12 +25491,6 @@ pub mod types {
     pub struct PackFeaturedDocsResponse {
         ///A list of featured docs for the Pack.
         pub items: ::std::vec::Vec<PackFeaturedDoc>,
-    }
-
-    impl ::std::convert::From<&PackFeaturedDocsResponse> for PackFeaturedDocsResponse {
-        fn from(value: &PackFeaturedDocsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///System logs of Pack calls to context.fetcher.
@@ -28100,24 +25573,21 @@ pub mod types {
         #[serde(rename = "cacheHit", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub cache_hit: ::std::option::Option<bool>,
         pub context: PackLogContext,
+        ///Duration of the fetcher request in miliseconds.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub duration: ::std::option::Option<f64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub method: ::std::option::Option<PackFetcherLogMethod>,
+        ///The number of bytes in the HTTP request sent
         #[serde(rename = "requestSizeBytes", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub request_size_bytes: ::std::option::Option<f64>,
         #[serde(rename = "responseCode", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub response_code: ::std::option::Option<f64>,
+        ///The number of bytes in the HTTP response received
         #[serde(rename = "responseSizeBytes", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub response_size_bytes: ::std::option::Option<f64>,
         #[serde(rename = "type")]
         pub type_: PackFetcherLogType,
-    }
-
-    impl ::std::convert::From<&PackFetcherLog> for PackFetcherLog {
-        fn from(value: &PackFetcherLog) -> Self {
-            value.clone()
-        }
     }
 
     ///Details for pack fetcher logs
@@ -28162,12 +25632,6 @@ pub mod types {
         pub type_: PackFetcherLogDetailsType,
     }
 
-    impl ::std::convert::From<&PackFetcherLogDetails> for PackFetcherLogDetails {
-        fn from(value: &PackFetcherLogDetails) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackFetcherLogDetailsType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -28186,12 +25650,6 @@ pub mod types {
     pub enum PackFetcherLogDetailsType {
         #[serde(rename = "fetcher")]
         Fetcher,
-    }
-
-    impl ::std::convert::From<&Self> for PackFetcherLogDetailsType {
-        fn from(value: &PackFetcherLogDetailsType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackFetcherLogDetailsType {
@@ -28267,12 +25725,6 @@ pub mod types {
         Head,
     }
 
-    impl ::std::convert::From<&Self> for PackFetcherLogMethod {
-        fn from(value: &PackFetcherLogMethod) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::fmt::Display for PackFetcherLogMethod {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -28340,12 +25792,6 @@ pub mod types {
     pub enum PackFetcherLogType {
         #[serde(rename = "fetcher")]
         Fetcher,
-    }
-
-    impl ::std::convert::From<&Self> for PackFetcherLogType {
-        fn from(value: &PackFetcherLogType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackFetcherLogType {
@@ -28438,12 +25884,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&PackFormulaAnalyticsCollection> for PackFormulaAnalyticsCollection {
-        fn from(value: &PackFormulaAnalyticsCollection) -> Self {
-            value.clone()
-        }
-    }
-
     ///Analytics data for a Coda Pack formula.
     ///
     /// <details><summary>JSON schema</summary>
@@ -28477,12 +25917,6 @@ pub mod types {
     pub struct PackFormulaAnalyticsItem {
         pub formula: PackFormulaIdentifier,
         pub metrics: ::std::vec::Vec<PackFormulaAnalyticsMetrics>,
-    }
-
-    impl ::std::convert::From<&PackFormulaAnalyticsItem> for PackFormulaAnalyticsItem {
-        fn from(value: &PackFormulaAnalyticsItem) -> Self {
-            value.clone()
-        }
     }
 
     ///Analytics metrics for a Coda Pack formula.
@@ -28770,12 +26204,6 @@ pub mod types {
         pub workspaces_with_successful_trials: ::std::option::Option<i64>,
     }
 
-    impl ::std::convert::From<&PackFormulaAnalyticsMetrics> for PackFormulaAnalyticsMetrics {
-        fn from(value: &PackFormulaAnalyticsMetrics) -> Self {
-            value.clone()
-        }
-    }
-
     ///Determines how the Pack formula analytics returned are sorted.
     ///
     /// <details><summary>JSON schema</summary>
@@ -28863,12 +26291,6 @@ pub mod types {
         WorkspacesActivelyUsing90Day,
         #[serde(rename = "workspacesActivelyUsingAllTime")]
         WorkspacesActivelyUsingAllTime,
-    }
-
-    impl ::std::convert::From<&Self> for PackFormulaAnalyticsOrderBy {
-        fn from(value: &PackFormulaAnalyticsOrderBy) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackFormulaAnalyticsOrderBy {
@@ -28979,12 +26401,6 @@ pub mod types {
         pub type_: PackFormulaType,
     }
 
-    impl ::std::convert::From<&PackFormulaIdentifier> for PackFormulaIdentifier {
-        fn from(value: &PackFormulaIdentifier) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackFormulaType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -29018,12 +26434,6 @@ pub mod types {
         Sync,
         #[serde(rename = "metadata")]
         Metadata,
-    }
-
-    impl ::std::convert::From<&Self> for PackFormulaType {
-        fn from(value: &PackFormulaType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackFormulaType {
@@ -29102,12 +26512,6 @@ pub mod types {
         pub type_: PackGlobalPrincipalType,
     }
 
-    impl ::std::convert::From<&PackGlobalPrincipal> for PackGlobalPrincipal {
-        fn from(value: &PackGlobalPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackGlobalPrincipalType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -29126,12 +26530,6 @@ pub mod types {
     pub enum PackGlobalPrincipalType {
         #[serde(rename = "worldwide")]
         Worldwide,
-    }
-
-    impl ::std::convert::From<&Self> for PackGlobalPrincipalType {
-        fn from(value: &PackGlobalPrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackGlobalPrincipalType {
@@ -29212,12 +26610,6 @@ pub mod types {
         pub type_: PackGrammarlyInstitutionPrincipalType,
     }
 
-    impl ::std::convert::From<&PackGrammarlyInstitutionPrincipal> for PackGrammarlyInstitutionPrincipal {
-        fn from(value: &PackGrammarlyInstitutionPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackGrammarlyInstitutionPrincipalType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -29236,12 +26628,6 @@ pub mod types {
     pub enum PackGrammarlyInstitutionPrincipalType {
         #[serde(rename = "grammarlyInstitution")]
         GrammarlyInstitution,
-    }
-
-    impl ::std::convert::From<&Self> for PackGrammarlyInstitutionPrincipalType {
-        fn from(value: &PackGrammarlyInstitutionPrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackGrammarlyInstitutionPrincipalType {
@@ -29325,12 +26711,6 @@ pub mod types {
         pub type_: PackGroupPrincipalType,
     }
 
-    impl ::std::convert::From<&PackGroupPrincipal> for PackGroupPrincipal {
-        fn from(value: &PackGroupPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackGroupPrincipalType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -29349,12 +26729,6 @@ pub mod types {
     pub enum PackGroupPrincipalType {
         #[serde(rename = "group")]
         Group,
-    }
-
-    impl ::std::convert::From<&Self> for PackGroupPrincipalType {
-        fn from(value: &PackGroupPrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackGroupPrincipalType {
@@ -29459,12 +26833,6 @@ pub mod types {
         pub mime_type: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&PackImageFile> for PackImageFile {
-        fn from(value: &PackImageFile) -> Self {
-            value.clone()
-        }
-    }
-
     ///Pack log generated by an executing ingestion. Contains metadata helpful
     /// for debugging
     ///
@@ -29519,12 +26887,6 @@ pub mod types {
         pub type_: PackIngestionDebugLogType,
     }
 
-    impl ::std::convert::From<&PackIngestionDebugLog> for PackIngestionDebugLog {
-        fn from(value: &PackIngestionDebugLog) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackIngestionDebugLogType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -29543,12 +26905,6 @@ pub mod types {
     pub enum PackIngestionDebugLogType {
         #[serde(rename = "ingestionDebug")]
         IngestionDebug,
-    }
-
-    impl ::std::convert::From<&Self> for PackIngestionDebugLogType {
-        fn from(value: &PackIngestionDebugLogType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackIngestionDebugLogType {
@@ -29642,12 +26998,6 @@ pub mod types {
         pub type_: PackIngestionLifecycleLogType,
     }
 
-    impl ::std::convert::From<&PackIngestionLifecycleLog> for PackIngestionLifecycleLog {
-        fn from(value: &PackIngestionLifecycleLog) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackIngestionLifecycleLogType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -29666,12 +27016,6 @@ pub mod types {
     pub enum PackIngestionLifecycleLogType {
         #[serde(rename = "ingestionLifecycle")]
         IngestionLifecycle,
-    }
-
-    impl ::std::convert::From<&Self> for PackIngestionLifecycleLogType {
-        fn from(value: &PackIngestionLifecycleLogType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackIngestionLifecycleLogType {
@@ -29764,12 +27108,6 @@ pub mod types {
         pub type_: PackInternalLogType,
     }
 
-    impl ::std::convert::From<&PackInternalLog> for PackInternalLog {
-        fn from(value: &PackInternalLog) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackInternalLogType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -29788,12 +27126,6 @@ pub mod types {
     pub enum PackInternalLogType {
         #[serde(rename = "internal")]
         Internal,
-    }
-
-    impl ::std::convert::From<&Self> for PackInternalLogType {
-        fn from(value: &PackInternalLogType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackInternalLogType {
@@ -29919,14 +27251,9 @@ pub mod types {
         ///User ID of the user who created this invitation
         #[serde(rename = "inviterUserId")]
         pub inviter_user_id: i64,
+        ///ID of the Pack
         #[serde(rename = "packId")]
         pub pack_id: f64,
-    }
-
-    impl ::std::convert::From<&PackInvitation> for PackInvitation {
-        fn from(value: &PackInvitation) -> Self {
-            value.clone()
-        }
     }
 
     ///List of Pack invitations.
@@ -29980,12 +27307,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&PackInvitationList> for PackInvitationList {
-        fn from(value: &PackInvitationList) -> Self {
-            value.clone()
-        }
-    }
-
     ///Pack invitation with Pack metadata.
     ///
     /// <details><summary>JSON schema</summary>
@@ -30037,12 +27358,6 @@ pub mod types {
         pub pack: PackSummary,
     }
 
-    impl ::std::convert::From<&PackInvitationWithPack> for PackInvitationWithPack {
-        fn from(value: &PackInvitationWithPack) -> Self {
-            value.clone()
-        }
-    }
-
     ///List of Pack invitations with Pack metadata.
     ///
     /// <details><summary>JSON schema</summary>
@@ -30092,12 +27407,6 @@ pub mod types {
         ///Token for fetching the next page of results
         #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page_token: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&PackInvitationWithPackList> for PackInvitationWithPackList {
-        fn from(value: &PackInvitationWithPackList) -> Self {
-            value.clone()
-        }
     }
 
     ///System logs of the invocations of the Pack.
@@ -30162,18 +27471,13 @@ pub mod types {
         #[serde(rename = "cacheHit", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub cache_hit: ::std::option::Option<bool>,
         pub context: PackLogContext,
+        ///Duration of the formula exeuction in miliseconds.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub duration: ::std::option::Option<f64>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub error: ::std::option::Option<PackInvocationLogError>,
         #[serde(rename = "type")]
         pub type_: PackInvocationLogType,
-    }
-
-    impl ::std::convert::From<&PackInvocationLog> for PackInvocationLog {
-        fn from(value: &PackInvocationLog) -> Self {
-            value.clone()
-        }
     }
 
     ///Details for pack invocation logs
@@ -30277,12 +27581,6 @@ pub mod types {
         pub type_: PackInvocationLogDetailsType,
     }
 
-    impl ::std::convert::From<&PackInvocationLogDetails> for PackInvocationLogDetails {
-        fn from(value: &PackInvocationLogDetails) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackInvocationLogDetailsResult`
     ///
     /// <details><summary>JSON schema</summary>
@@ -30339,12 +27637,6 @@ pub mod types {
         pub string_val: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackInvocationLogDetailsResult> for PackInvocationLogDetailsResult {
-        fn from(value: &PackInvocationLogDetailsResult) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackInvocationLogDetailsType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -30363,12 +27655,6 @@ pub mod types {
     pub enum PackInvocationLogDetailsType {
         #[serde(rename = "invocation")]
         Invocation,
-    }
-
-    impl ::std::convert::From<&Self> for PackInvocationLogDetailsType {
-        fn from(value: &PackInvocationLogDetailsType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackInvocationLogDetailsType {
@@ -30441,12 +27727,6 @@ pub mod types {
         pub stack: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&PackInvocationLogError> for PackInvocationLogError {
-        fn from(value: &PackInvocationLogError) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackInvocationLogType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -30465,12 +27745,6 @@ pub mod types {
     pub enum PackInvocationLogType {
         #[serde(rename = "invocation")]
         Invocation,
-    }
-
-    impl ::std::convert::From<&Self> for PackInvocationLogType {
-        fn from(value: &PackInvocationLogType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackInvocationLogType {
@@ -30769,6 +28043,7 @@ pub mod types {
         pub name: ::std::string::String,
         #[serde(rename = "packCategoryType")]
         pub pack_category_type: PackCategoryType,
+        ///ID of the Pack.
         #[serde(rename = "packId")]
         pub pack_id: f64,
         ///The version of the Pack.
@@ -30777,6 +28052,8 @@ pub mod types {
         ///A Privacy Policy URL for the Pack.
         #[serde(rename = "privacyPolicyUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub privacy_policy_url: ::std::option::Option<::std::string::String>,
+        ///The current release number of the Pack if released, otherwise
+        /// undefined.
         #[serde(rename = "releaseId", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub release_id: ::std::option::Option<f64>,
         ///What Packs SDK version was this version built on.
@@ -30797,12 +28074,6 @@ pub mod types {
         pub terms_of_service_url: ::std::option::Option<::std::string::String>,
         #[serde(rename = "unrestrictedFeatureSet", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub unrestricted_feature_set: ::std::option::Option<FeatureSet>,
-    }
-
-    impl ::std::convert::From<&PackListing> for PackListing {
-        fn from(value: &PackListing) -> Self {
-            value.clone()
-        }
     }
 
     ///Additional information saved with the pack listing draft
@@ -30881,12 +28152,6 @@ pub mod types {
         pub privacy_personal_info_categories: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
     }
 
-    impl ::std::convert::From<&PackListingAdditionalInformation> for PackListingAdditionalInformation {
-        fn from(value: &PackListingAdditionalInformation) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for PackListingAdditionalInformation {
         fn default() -> Self {
             Self {
@@ -30927,12 +28192,6 @@ pub mod types {
     impl ::std::convert::From<PackListingDescription> for ::std::string::String {
         fn from(value: PackListingDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackListingDescription> for PackListingDescription {
-        fn from(value: &PackListingDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -31259,6 +28518,7 @@ pub mod types {
         pub name: ::std::string::String,
         #[serde(rename = "packCategoryType")]
         pub pack_category_type: PackCategoryType,
+        ///ID of the Pack.
         #[serde(rename = "packId")]
         pub pack_id: f64,
         ///The version of the Pack.
@@ -31267,6 +28527,8 @@ pub mod types {
         ///A Privacy Policy URL for the Pack.
         #[serde(rename = "privacyPolicyUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub privacy_policy_url: ::std::option::Option<::std::string::String>,
+        ///The current release number of the Pack if released, otherwise
+        /// undefined.
         #[serde(rename = "releaseId", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub release_id: ::std::option::Option<f64>,
         ///What Packs SDK version was this version built on.
@@ -31289,12 +28551,6 @@ pub mod types {
         pub unrestricted_feature_set: ::std::option::Option<FeatureSet>,
         #[serde(rename = "userAccess")]
         pub user_access: PackUserAccess,
-    }
-
-    impl ::std::convert::From<&PackListingDetail> for PackListingDetail {
-        fn from(value: &PackListingDetail) -> Self {
-            value.clone()
-        }
     }
 
     ///The full description of the Pack.
@@ -31326,12 +28582,6 @@ pub mod types {
     impl ::std::convert::From<PackListingDetailDescription> for ::std::string::String {
         fn from(value: PackListingDetailDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackListingDetailDescription> for PackListingDetailDescription {
-        fn from(value: &PackListingDetailDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -31519,12 +28769,6 @@ pub mod types {
         pub terms_of_service_url: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&PackListingDraftData> for PackListingDraftData {
-        fn from(value: &PackListingDraftData) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for PackListingDraftData {
         fn default() -> Self {
             Self {
@@ -31571,12 +28815,6 @@ pub mod types {
     impl ::std::convert::From<PackListingDraftDataAgentDescription> for ::std::string::String {
         fn from(value: PackListingDraftDataAgentDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackListingDraftDataAgentDescription> for PackListingDraftDataAgentDescription {
-        fn from(value: &PackListingDraftDataAgentDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -31646,12 +28884,6 @@ pub mod types {
     impl ::std::convert::From<PackListingDraftDataAgentShortDescription> for ::std::string::String {
         fn from(value: PackListingDraftDataAgentShortDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackListingDraftDataAgentShortDescription> for PackListingDraftDataAgentShortDescription {
-        fn from(value: &PackListingDraftDataAgentShortDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -31725,12 +28957,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<&PackListingDraftDataDescription> for PackListingDraftDataDescription {
-        fn from(value: &PackListingDraftDataDescription) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::str::FromStr for PackListingDraftDataDescription {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -31798,12 +29024,6 @@ pub mod types {
     impl ::std::convert::From<PackListingDraftDataName> for ::std::string::String {
         fn from(value: PackListingDraftDataName) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackListingDraftDataName> for PackListingDraftDataName {
-        fn from(value: &PackListingDraftDataName) -> Self {
-            value.clone()
         }
     }
 
@@ -31877,12 +29097,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<&PackListingDraftDataShortDescription> for PackListingDraftDataShortDescription {
-        fn from(value: &PackListingDraftDataShortDescription) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::str::FromStr for PackListingDraftDataShortDescription {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -31949,12 +29163,6 @@ pub mod types {
     impl ::std::convert::From<PackListingDraftDataSupportEmail> for ::std::string::String {
         fn from(value: PackListingDraftDataSupportEmail) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackListingDraftDataSupportEmail> for PackListingDraftDataSupportEmail {
-        fn from(value: &PackListingDraftDataSupportEmail) -> Self {
-            value.clone()
         }
     }
 
@@ -32145,12 +29353,6 @@ pub mod types {
         pub terms_of_service_url: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&PackListingDraftInputData> for PackListingDraftInputData {
-        fn from(value: &PackListingDraftInputData) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for PackListingDraftInputData {
         fn default() -> Self {
             Self {
@@ -32197,12 +29399,6 @@ pub mod types {
     impl ::std::convert::From<PackListingDraftInputDataAgentDescription> for ::std::string::String {
         fn from(value: PackListingDraftInputDataAgentDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackListingDraftInputDataAgentDescription> for PackListingDraftInputDataAgentDescription {
-        fn from(value: &PackListingDraftInputDataAgentDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -32272,12 +29468,6 @@ pub mod types {
     impl ::std::convert::From<PackListingDraftInputDataAgentShortDescription> for ::std::string::String {
         fn from(value: PackListingDraftInputDataAgentShortDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackListingDraftInputDataAgentShortDescription> for PackListingDraftInputDataAgentShortDescription {
-        fn from(value: &PackListingDraftInputDataAgentShortDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -32351,12 +29541,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<&PackListingDraftInputDataDescription> for PackListingDraftInputDataDescription {
-        fn from(value: &PackListingDraftInputDataDescription) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::str::FromStr for PackListingDraftInputDataDescription {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -32424,12 +29608,6 @@ pub mod types {
     impl ::std::convert::From<PackListingDraftInputDataName> for ::std::string::String {
         fn from(value: PackListingDraftInputDataName) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackListingDraftInputDataName> for PackListingDraftInputDataName {
-        fn from(value: &PackListingDraftInputDataName) -> Self {
-            value.clone()
         }
     }
 
@@ -32503,12 +29681,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<&PackListingDraftInputDataShortDescription> for PackListingDraftInputDataShortDescription {
-        fn from(value: &PackListingDraftInputDataShortDescription) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::str::FromStr for PackListingDraftInputDataShortDescription {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -32575,12 +29747,6 @@ pub mod types {
     impl ::std::convert::From<PackListingDraftInputDataSupportEmail> for ::std::string::String {
         fn from(value: PackListingDraftInputDataSupportEmail) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackListingDraftInputDataSupportEmail> for PackListingDraftInputDataSupportEmail {
-        fn from(value: &PackListingDraftInputDataSupportEmail) -> Self {
-            value.clone()
         }
     }
 
@@ -32652,12 +29818,6 @@ pub mod types {
         Workspace,
         #[serde(rename = "doc")]
         Doc,
-    }
-
-    impl ::std::convert::From<&Self> for PackListingInstallContextType {
-        fn from(value: &PackListingInstallContextType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackListingInstallContextType {
@@ -32751,12 +29911,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&PackListingList> for PackListingList {
-        fn from(value: &PackListingList) -> Self {
-            value.clone()
-        }
-    }
-
     ///Determines how the Pack listings returned are sorted.
     ///
     /// <details><summary>JSON schema</summary>
@@ -32795,12 +29949,6 @@ pub mod types {
         PackVersionModifiedAt,
         #[serde(rename = "agentDirectorySort")]
         AgentDirectorySort,
-    }
-
-    impl ::std::convert::From<&Self> for PackListingsSortBy {
-        fn from(value: &PackListingsSortBy) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackListingsSortBy {
@@ -32902,12 +30050,6 @@ pub mod types {
         IngestionDebugLog(PackIngestionDebugLog),
         AgentRuntimeLog(PackAgentRuntimeLog),
         McpLog(PackMcpLog),
-    }
-
-    impl ::std::convert::From<&Self> for PackLog {
-        fn from(value: &PackLog) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::convert::From<PackCustomLog> for PackLog {
@@ -33174,6 +30316,7 @@ pub mod types {
         pub executing_agent_instance_id: ::std::option::Option<::std::string::String>,
         #[serde(rename = "formulaName")]
         pub formula_name: ::std::string::String,
+        ///Child execution id for this ingestion log.
         #[serde(rename = "ingestionChildExecutionIndex", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub ingestion_child_execution_index: ::std::option::Option<f64>,
         ///Execution attempt for this ingestion log.
@@ -33232,12 +30375,6 @@ pub mod types {
         pub user_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackLogContext> for PackLogContext {
-        fn from(value: &PackLogContext) -> Self {
-            value.clone()
-        }
-    }
-
     ///Details for a pack log.
     ///
     /// <details><summary>JSON schema</summary>
@@ -33266,12 +30403,6 @@ pub mod types {
         FetcherLogDetails(PackFetcherLogDetails),
         InvocationLogDetails(PackInvocationLogDetails),
         AgentRuntimeLogDetails(PackAgentRuntimeLogDetails),
-    }
-
-    impl ::std::convert::From<&Self> for PackLogDetails {
-        fn from(value: &PackLogDetails) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::convert::From<PackFetcherLogDetails> for PackLogDetails {
@@ -33379,12 +30510,6 @@ pub mod types {
         ValidateParametersMetadataRequest,
         #[serde(rename = "mcp")]
         Mcp,
-    }
-
-    impl ::std::convert::From<&Self> for PackLogRequestType {
-        fn from(value: &PackLogRequestType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackLogRequestType {
@@ -33513,12 +30638,6 @@ pub mod types {
         Mcp,
     }
 
-    impl ::std::convert::From<&Self> for PackLogType {
-        fn from(value: &PackLogType) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::fmt::Display for PackLogType {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -33624,12 +30743,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&PackLogsList> for PackLogsList {
-        fn from(value: &PackLogsList) -> Self {
-            value.clone()
-        }
-    }
-
     ///Pack log generated by an MCP (Model Context Protocol) operation.
     ///
     /// <details><summary>JSON schema</summary>
@@ -33694,12 +30807,6 @@ pub mod types {
         pub type_: PackMcpLogType,
     }
 
-    impl ::std::convert::From<&PackMcpLog> for PackMcpLog {
-        fn from(value: &PackMcpLog) -> Self {
-            value.clone()
-        }
-    }
-
     ///Error info if this invocation resulted in an error.
     ///
     /// <details><summary>JSON schema</summary>
@@ -33731,12 +30838,6 @@ pub mod types {
         pub stack: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&PackMcpLogError> for PackMcpLogError {
-        fn from(value: &PackMcpLogError) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackMcpLogType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -33755,12 +30856,6 @@ pub mod types {
     pub enum PackMcpLogType {
         #[serde(rename = "mcp")]
         Mcp,
-    }
-
-    impl ::std::convert::From<&Self> for PackMcpLogType {
-        fn from(value: &PackMcpLogType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackMcpLogType {
@@ -33830,12 +30925,6 @@ pub mod types {
     impl ::std::convert::From<PackName> for ::std::string::String {
         fn from(value: PackName) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackName> for PackName {
-        fn from(value: &PackName) -> Self {
-            value.clone()
         }
     }
 
@@ -33918,12 +31007,6 @@ pub mod types {
         pub type_: PackNomosOrganizationPrincipalType,
     }
 
-    impl ::std::convert::From<&PackNomosOrganizationPrincipal> for PackNomosOrganizationPrincipal {
-        fn from(value: &PackNomosOrganizationPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackNomosOrganizationPrincipalType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -33942,12 +31025,6 @@ pub mod types {
     pub enum PackNomosOrganizationPrincipalType {
         #[serde(rename = "nomosOrganization")]
         NomosOrganization,
-    }
-
-    impl ::std::convert::From<&Self> for PackNomosOrganizationPrincipalType {
-        fn from(value: &PackNomosOrganizationPrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackNomosOrganizationPrincipalType {
@@ -34020,12 +31097,6 @@ pub mod types {
         Body,
         #[serde(rename = "header")]
         Header,
-    }
-
-    impl ::std::convert::From<&Self> for PackOAuth2ClientCredentialsLocation {
-        fn from(value: &PackOAuth2ClientCredentialsLocation) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackOAuth2ClientCredentialsLocation {
@@ -34159,12 +31230,6 @@ pub mod types {
         pub use_dynamic_client_registration: ::std::option::Option<bool>,
     }
 
-    impl ::std::convert::From<&PackOauthConfigMetadata> for PackOauthConfigMetadata {
-        fn from(value: &PackOauthConfigMetadata) -> Self {
-            value.clone()
-        }
-    }
-
     ///Describes restrictions that a user's organization has placed on a pack
     /// for Coda Brain ingestions
     ///
@@ -34221,12 +31286,6 @@ pub mod types {
         pub has_requested_access: bool,
         #[serde(rename = "requiresConfiguration")]
         pub requires_configuration: bool,
-    }
-
-    impl ::std::convert::From<&PackOrganizationAccessForCodaBrain> for PackOrganizationAccessForCodaBrain {
-        fn from(value: &PackOrganizationAccessForCodaBrain) -> Self {
-            value.clone()
-        }
     }
 
     ///Describes restrictions that a user's organization has placed on a pack
@@ -34309,12 +31368,6 @@ pub mod types {
         pub requires_configuration: bool,
     }
 
-    impl ::std::convert::From<&PackOrganizationAccessForDocs> for PackOrganizationAccessForDocs {
-        fn from(value: &PackOrganizationAccessForDocs) -> Self {
-            value.clone()
-        }
-    }
-
     ///Metadata about a Pack permission.
     ///
     /// <details><summary>JSON schema</summary>
@@ -34352,12 +31405,6 @@ pub mod types {
         ///Id for the Permission
         pub id: ::std::string::String,
         pub principal: PackPrincipal,
-    }
-
-    impl ::std::convert::From<&PackPermission> for PackPermission {
-        fn from(value: &PackPermission) -> Self {
-            value.clone()
-        }
     }
 
     ///List of Pack permissions.
@@ -34399,12 +31446,6 @@ pub mod types {
         pub permission_users: ::std::vec::Vec<UserSummary>,
     }
 
-    impl ::std::convert::From<&PackPermissionList> for PackPermissionList {
-        fn from(value: &PackPermissionList) -> Self {
-            value.clone()
-        }
-    }
-
     ///Currency needed to subscribe to the Pack.
     ///
     /// <details><summary>JSON schema</summary>
@@ -34427,12 +31468,6 @@ pub mod types {
     pub enum PackPlanCurrency {
         #[serde(rename = "USD")]
         Usd,
-    }
-
-    impl ::std::convert::From<&Self> for PackPlanCurrency {
-        fn from(value: &PackPlanCurrency) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackPlanCurrency {
@@ -34501,12 +31536,6 @@ pub mod types {
         Free,
         MonthlyDocMaker,
         BundledWithTier,
-    }
-
-    impl ::std::convert::From<&Self> for PackPlanPricingType {
-        fn from(value: &PackPlanPricingType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackPlanPricingType {
@@ -34594,12 +31623,6 @@ pub mod types {
         GrammarlyInstitutionPrincipal(PackGrammarlyInstitutionPrincipal),
     }
 
-    impl ::std::convert::From<&Self> for PackPrincipal {
-        fn from(value: &PackPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::convert::From<PackUserPrincipal> for PackPrincipal {
         fn from(value: PackUserPrincipal) -> Self {
             Self::UserPrincipal(value)
@@ -34678,12 +31701,6 @@ pub mod types {
         Group,
         #[serde(rename = "grammarlyInstitution")]
         GrammarlyInstitution,
-    }
-
-    impl ::std::convert::From<&Self> for PackPrincipalType {
-        fn from(value: &PackPrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackPrincipalType {
@@ -34784,12 +31801,6 @@ pub mod types {
         pub operations_per_interval: u64,
     }
 
-    impl ::std::convert::From<&PackRateLimit> for PackRateLimit {
-        fn from(value: &PackRateLimit) -> Self {
-            value.clone()
-        }
-    }
-
     ///Details about a Pack release.
     ///
     /// <details><summary>JSON schema</summary>
@@ -34863,11 +31874,13 @@ pub mod types {
         ///Timestamp for when the release was created.
         #[serde(rename = "createdAt")]
         pub created_at: ::chrono::DateTime<::chrono::offset::Utc>,
+        ///ID of the Packs.
         #[serde(rename = "packId")]
         pub pack_id: f64,
         ///The semantic format of the Pack version.
         #[serde(rename = "packVersion")]
         pub pack_version: ::std::string::String,
+        ///The release number of the Pack version if it has one.
         #[serde(rename = "releaseId")]
         pub release_id: f64,
         ///Developer notes.
@@ -34876,12 +31889,6 @@ pub mod types {
         ///What Packs SDK version was this version built on.
         #[serde(rename = "sdkVersion")]
         pub sdk_version: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&PackRelease> for PackRelease {
-        fn from(value: &PackRelease) -> Self {
-            value.clone()
-        }
     }
 
     ///List of Pack releases.
@@ -34932,12 +31939,6 @@ pub mod types {
         pub next_page_link: ::std::option::Option<NextPageLink>,
         #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page_token: ::std::option::Option<NextPageToken>,
-    }
-
-    impl ::std::convert::From<&PackReleaseList> for PackReleaseList {
-        fn from(value: &PackReleaseList) -> Self {
-            value.clone()
-        }
     }
 
     ///A pack review submission
@@ -35022,12 +32023,6 @@ pub mod types {
         pub submitted_by_user_id: i64,
     }
 
-    impl ::std::convert::From<&PackReview> for PackReview {
-        fn from(value: &PackReview) -> Self {
-            value.clone()
-        }
-    }
-
     ///Additional information about the pack review
     ///
     /// <details><summary>JSON schema</summary>
@@ -35103,12 +32098,6 @@ pub mod types {
         pub privacy_personal_info_categories: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
     }
 
-    impl ::std::convert::From<&PackReviewAdditionalInformation> for PackReviewAdditionalInformation {
-        fn from(value: &PackReviewAdditionalInformation) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for PackReviewAdditionalInformation {
         fn default() -> Self {
             Self {
@@ -35158,12 +32147,6 @@ pub mod types {
         Canceled,
         #[serde(rename = "superseded")]
         Superseded,
-    }
-
-    impl ::std::convert::From<&Self> for PackReviewStatus {
-        fn from(value: &PackReviewStatus) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackReviewStatus {
@@ -35244,12 +32227,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<&PackShortDescription> for PackShortDescription {
-        fn from(value: &PackShortDescription) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::str::FromStr for PackShortDescription {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -35317,12 +32294,6 @@ pub mod types {
         Web,
         #[serde(rename = "cli")]
         Cli,
-    }
-
-    impl ::std::convert::From<&Self> for PackSource {
-        fn from(value: &PackSource) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackSource {
@@ -35408,12 +32379,6 @@ pub mod types {
         pub url: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackSourceCode> for PackSourceCode {
-        fn from(value: &PackSourceCode) -> Self {
-            value.clone()
-        }
-    }
-
     ///Information indicating where to upload the Pack source code, and an
     /// endpoint to mark the upload as complete.
     ///
@@ -35444,12 +32409,6 @@ pub mod types {
     #[serde(deny_unknown_fields)]
     pub struct PackSourceCodeInfo {
         pub files: ::std::vec::Vec<PackSourceCode>,
-    }
-
-    impl ::std::convert::From<&PackSourceCodeInfo> for PackSourceCodeInfo {
-        fn from(value: &PackSourceCodeInfo) -> Self {
-            value.clone()
-        }
     }
 
     ///Payload for noting a Pack source code upload is complete.
@@ -35496,12 +32455,6 @@ pub mod types {
         pub filename: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackSourceCodeUploadCompleteRequest> for PackSourceCodeUploadCompleteRequest {
-        fn from(value: &PackSourceCodeUploadCompleteRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///Response for noting a Pack source code upload is complete.
     ///
     /// <details><summary>JSON schema</summary>
@@ -35536,12 +32489,6 @@ pub mod types {
         pub request_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackSourceCodeUploadCompleteResponse> for PackSourceCodeUploadCompleteResponse {
-        fn from(value: &PackSourceCodeUploadCompleteResponse) -> Self {
-            value.clone()
-        }
-    }
-
     ///Detail about why this request was rejected.
     ///
     /// <details><summary>JSON schema</summary>
@@ -35567,12 +32514,6 @@ pub mod types {
     pub struct PackSourceCodeUploadCompleteResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&PackSourceCodeUploadCompleteResponseCodaDetail> for PackSourceCodeUploadCompleteResponseCodaDetail {
-        fn from(value: &PackSourceCodeUploadCompleteResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for PackSourceCodeUploadCompleteResponseCodaDetail {
@@ -35646,12 +32587,6 @@ pub mod types {
         pub uploaded_path_name: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackSourceCodeUploadInfo> for PackSourceCodeUploadInfo {
-        fn from(value: &PackSourceCodeUploadInfo) -> Self {
-            value.clone()
-        }
-    }
-
     ///Visibility of a pack's source code.
     ///
     /// <details><summary>JSON schema</summary>
@@ -35678,12 +32613,6 @@ pub mod types {
         Private,
         #[serde(rename = "shared")]
         Shared,
-    }
-
-    impl ::std::convert::From<&Self> for PackSourceCodeVisibility {
-        fn from(value: &PackSourceCodeVisibility) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackSourceCodeVisibility {
@@ -35919,6 +32848,7 @@ pub mod types {
         ///The example images for the Pack.
         #[serde(rename = "exampleImages", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub example_images: ::std::vec::Vec<PackImageFile>,
+        ///ID of the Pack.
         pub id: f64,
         ///The link to the logo of the Pack.
         #[serde(rename = "logoUrl", default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -35953,12 +32883,6 @@ pub mod types {
         pub workspace_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackSummary> for PackSummary {
-        fn from(value: &PackSummary) -> Self {
-            value.clone()
-        }
-    }
-
     ///A full description for the pack as an agent.
     ///
     /// <details><summary>JSON schema</summary>
@@ -35991,12 +32915,6 @@ pub mod types {
     impl ::std::convert::From<PackSummaryAgentDescription> for ::std::string::String {
         fn from(value: PackSummaryAgentDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackSummaryAgentDescription> for PackSummaryAgentDescription {
-        fn from(value: &PackSummaryAgentDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -36074,12 +32992,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<&PackSummaryAgentShortDescription> for PackSummaryAgentShortDescription {
-        fn from(value: &PackSummaryAgentShortDescription) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::str::FromStr for PackSummaryAgentShortDescription {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -36151,12 +33063,6 @@ pub mod types {
     impl ::std::convert::From<PackSummaryDescription> for ::std::string::String {
         fn from(value: PackSummaryDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackSummaryDescription> for PackSummaryDescription {
-        fn from(value: &PackSummaryDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -36252,12 +33158,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&PackSummaryList> for PackSummaryList {
-        fn from(value: &PackSummaryList) -> Self {
-            value.clone()
-        }
-    }
-
     ///The name of the Pack.
     ///
     /// <details><summary>JSON schema</summary>
@@ -36286,12 +33186,6 @@ pub mod types {
     impl ::std::convert::From<PackSummaryName> for ::std::string::String {
         fn from(value: PackSummaryName) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackSummaryName> for PackSummaryName {
-        fn from(value: &PackSummaryName) -> Self {
-            value.clone()
         }
     }
 
@@ -36368,12 +33262,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<&PackSummaryShortDescription> for PackSummaryShortDescription {
-        fn from(value: &PackSummaryShortDescription) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::str::FromStr for PackSummaryShortDescription {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -36447,12 +33335,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<&PackSummarySupportEmail> for PackSummarySupportEmail {
-        fn from(value: &PackSummarySupportEmail) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::str::FromStr for PackSummarySupportEmail {
         type Err = self::error::ConversionError;
         fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
@@ -36523,12 +33405,6 @@ pub mod types {
     impl ::std::convert::From<PackSupportEmail> for ::std::string::String {
         fn from(value: PackSupportEmail) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackSupportEmail> for PackSupportEmail {
-        fn from(value: &PackSupportEmail) -> Self {
-            value.clone()
         }
     }
 
@@ -36630,12 +33506,6 @@ pub mod types {
         GoogleServiceAccountCredentials(PackConnectionGoogleServiceAccountCredentials),
         AwsAssumeRoleCredentials(PackConnectionAwsAssumeRoleCredentials),
         AwsAccessKeyCredentials(PackConnectionAwsAccessKeyCredentials),
-    }
-
-    impl ::std::convert::From<&Self> for PackSystemConnectionCredentials {
-        fn from(value: &PackSystemConnectionCredentials) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::convert::From<PackConnectionHeaderCredentials> for PackSystemConnectionCredentials {
@@ -36746,12 +33616,6 @@ pub mod types {
         GoogleServiceAccountMetadata(PackConnectionGoogleServiceAccountMetadata),
         AwsAssumeRoleMetadata(PackConnectionAwsAssumeRoleMetadata),
         AwsAccessKeyMetadata(PackConnectionAwsAccessKeyMetadata),
-    }
-
-    impl ::std::convert::From<&Self> for PackSystemConnectionMetadata {
-        fn from(value: &PackSystemConnectionMetadata) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::convert::From<PackConnectionHeaderMetadata> for PackSystemConnectionMetadata {
@@ -36895,12 +33759,6 @@ pub mod types {
         pub requires_trial: bool,
     }
 
-    impl ::std::convert::From<&PackUserAccess> for PackUserAccess {
-        fn from(value: &PackUserAccess) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackUserAccessOrganization`
     ///
     /// <details><summary>JSON schema</summary>
@@ -36923,12 +33781,6 @@ pub mod types {
     pub enum PackUserAccessOrganization {
         Docs(PackOrganizationAccessForDocs),
         CodaBrain(PackOrganizationAccessForCodaBrain),
-    }
-
-    impl ::std::convert::From<&Self> for PackUserAccessOrganization {
-        fn from(value: &PackUserAccessOrganization) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::convert::From<PackOrganizationAccessForDocs> for PackUserAccessOrganization {
@@ -36979,12 +33831,6 @@ pub mod types {
         pub type_: PackUserPrincipalType,
     }
 
-    impl ::std::convert::From<&PackUserPrincipal> for PackUserPrincipal {
-        fn from(value: &PackUserPrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackUserPrincipalType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -37003,12 +33849,6 @@ pub mod types {
     pub enum PackUserPrincipalType {
         #[serde(rename = "user")]
         User,
-    }
-
-    impl ::std::convert::From<&Self> for PackUserPrincipalType {
-        fn from(value: &PackUserPrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackUserPrincipalType {
@@ -37139,11 +33979,13 @@ pub mod types {
         ///The login ID of creation user of the Pack version.
         #[serde(rename = "creationUserLoginId")]
         pub creation_user_login_id: ::std::string::String,
+        ///ID of the Pack.
         #[serde(rename = "packId")]
         pub pack_id: f64,
         ///The semantic format of the Pack version.
         #[serde(rename = "packVersion")]
         pub pack_version: ::std::string::String,
+        ///The release number of the Pack version if it has one.
         #[serde(rename = "releaseId", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub release_id: ::std::option::Option<f64>,
         ///What Packs SDK version was this version built on.
@@ -37151,12 +33993,6 @@ pub mod types {
         pub sdk_version: ::std::option::Option<::std::string::String>,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub source: ::std::option::Option<PackSource>,
-    }
-
-    impl ::std::convert::From<&PackVersion> for PackVersion {
-        fn from(value: &PackVersion) -> Self {
-            value.clone()
-        }
     }
 
     ///Info about the diff between two Pack versions.
@@ -37215,12 +34051,6 @@ pub mod types {
         pub findings: ::std::vec::Vec<::std::string::String>,
     }
 
-    impl ::std::convert::From<&PackVersionDiffs> for PackVersionDiffs {
-        fn from(value: &PackVersionDiffs) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackVersionDiffsFindingDetailsItem`
     ///
     /// <details><summary>JSON schema</summary>
@@ -37249,12 +34079,6 @@ pub mod types {
     pub struct PackVersionDiffsFindingDetailsItem {
         pub finding: ::std::string::String,
         pub path: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&PackVersionDiffsFindingDetailsItem> for PackVersionDiffsFindingDetailsItem {
-        fn from(value: &PackVersionDiffsFindingDetailsItem) -> Self {
-            value.clone()
-        }
     }
 
     ///List of Pack versions.
@@ -37314,12 +34138,6 @@ pub mod types {
         pub next_page_link: ::std::option::Option<NextPageLink>,
         #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page_token: ::std::option::Option<NextPageToken>,
-    }
-
-    impl ::std::convert::From<&PackVersionList> for PackVersionList {
-        fn from(value: &PackVersionList) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -37383,17 +34201,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&PackVersionUploadCompleteResponse> for PackVersionUploadCompleteResponse {
-        fn from(value: &PackVersionUploadCompleteResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -37421,12 +34234,6 @@ pub mod types {
     pub struct PackVersionUploadCompleteResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&PackVersionUploadCompleteResponseCodaDetail> for PackVersionUploadCompleteResponseCodaDetail {
-        fn from(value: &PackVersionUploadCompleteResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for PackVersionUploadCompleteResponseCodaDetail {
@@ -37487,12 +34294,6 @@ pub mod types {
         pub upload_url: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackVersionUploadInfo> for PackVersionUploadInfo {
-        fn from(value: &PackVersionUploadInfo) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackWorkspacePrincipal`
     ///
     /// <details><summary>JSON schema</summary>
@@ -37530,12 +34331,6 @@ pub mod types {
         pub workspace_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PackWorkspacePrincipal> for PackWorkspacePrincipal {
-        fn from(value: &PackWorkspacePrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PackWorkspacePrincipalType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -37554,12 +34349,6 @@ pub mod types {
     pub enum PackWorkspacePrincipalType {
         #[serde(rename = "workspace")]
         Workspace,
-    }
-
-    impl ::std::convert::From<&Self> for PackWorkspacePrincipalType {
-        fn from(value: &PackWorkspacePrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PackWorkspacePrincipalType {
@@ -37631,12 +34420,6 @@ pub mod types {
         CreatedAt,
         #[serde(rename = "updatedAt")]
         UpdatedAt,
-    }
-
-    impl ::std::convert::From<&Self> for PacksSortBy {
-        fn from(value: &PacksSortBy) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PacksSortBy {
@@ -37864,12 +34647,6 @@ pub mod types {
         pub updated_by: ::std::option::Option<PersonValue>,
     }
 
-    impl ::std::convert::From<&Page> for Page {
-        fn from(value: &Page) -> Self {
-            value.clone()
-        }
-    }
-
     ///List of analytics for pages within a Coda doc over a date range.
     ///
     /// <details><summary>JSON schema</summary>
@@ -37921,12 +34698,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&PageAnalyticsCollection> for PageAnalyticsCollection {
-        fn from(value: &PageAnalyticsCollection) -> Self {
-            value.clone()
-        }
-    }
-
     ///Metadata about a page relevant to analytics.
     ///
     /// <details><summary>JSON schema</summary>
@@ -37973,12 +34744,6 @@ pub mod types {
         pub name: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PageAnalyticsDetails> for PageAnalyticsDetails {
-        fn from(value: &PageAnalyticsDetails) -> Self {
-            value.clone()
-        }
-    }
-
     ///Analytics data for a page within a Coda doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -38012,12 +34777,6 @@ pub mod types {
     pub struct PageAnalyticsItem {
         pub metrics: ::std::vec::Vec<PageAnalyticsMetrics>,
         pub page: PageAnalyticsDetails,
-    }
-
-    impl ::std::convert::From<&PageAnalyticsItem> for PageAnalyticsItem {
-        fn from(value: &PageAnalyticsItem) -> Self {
-            value.clone()
-        }
     }
 
     ///Analytics metrics for a page within a Coda doc.
@@ -38121,12 +34880,6 @@ pub mod types {
         pub views: i64,
     }
 
-    impl ::std::convert::From<&PageAnalyticsMetrics> for PageAnalyticsMetrics {
-        fn from(value: &PageAnalyticsMetrics) -> Self {
-            value.clone()
-        }
-    }
-
     ///Content to be added or replaced with in a page (canvas).
     ///
     /// <details><summary>JSON schema</summary>
@@ -38165,12 +34918,6 @@ pub mod types {
         pub format: PageContentFormat,
     }
 
-    impl ::std::convert::From<&PageContent> for PageContent {
-        fn from(value: &PageContent) -> Self {
-            value.clone()
-        }
-    }
-
     ///Payload for deleting content from a page.
     ///
     /// <details><summary>JSON schema</summary>
@@ -38207,12 +34954,6 @@ pub mod types {
         /// all content will be deleted.
         #[serde(rename = "elementIds", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub element_ids: ::std::vec::Vec<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&PageContentDelete> for PageContentDelete {
-        fn from(value: &PageContentDelete) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for PageContentDelete {
@@ -38258,12 +34999,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum PageContentDeleteResult {}
-    impl ::std::convert::From<&Self> for PageContentDeleteResult {
-        fn from(value: &PageContentDeleteResult) -> Self {
-            value.clone()
-        }
-    }
-
     ///Status of a page content export.
     ///
     /// <details><summary>JSON schema</summary>
@@ -38294,12 +35029,6 @@ pub mod types {
         Failed,
         #[serde(rename = "complete")]
         Complete,
-    }
-
-    impl ::std::convert::From<&Self> for PageContentExportStatus {
-        fn from(value: &PageContentExportStatus) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageContentExportStatus {
@@ -38420,12 +35149,6 @@ pub mod types {
         pub status: ::std::string::String,
     }
 
-    impl ::std::convert::From<&PageContentExportStatusResponse> for PageContentExportStatusResponse {
-        fn from(value: &PageContentExportStatusResponse) -> Self {
-            value.clone()
-        }
-    }
-
     ///Supported content types for page (canvas) content.
     ///
     /// <details><summary>JSON schema</summary>
@@ -38452,12 +35175,6 @@ pub mod types {
         Html,
         #[serde(rename = "markdown")]
         Markdown,
-    }
-
-    impl ::std::convert::From<&Self> for PageContentFormat {
-        fn from(value: &PageContentFormat) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageContentFormat {
@@ -38531,12 +35248,6 @@ pub mod types {
         Prepend,
         #[serde(rename = "replace")]
         Replace,
-    }
-
-    impl ::std::convert::From<&Self> for PageContentInsertionMode {
-        fn from(value: &PageContentInsertionMode) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageContentInsertionMode {
@@ -38625,12 +35336,6 @@ pub mod types {
         pub type_: PageContentItemType,
     }
 
-    impl ::std::convert::From<&PageContentItem> for PageContentItem {
-        fn from(value: &PageContentItem) -> Self {
-            value.clone()
-        }
-    }
-
     ///Content details of the item.
     ///
     /// <details><summary>JSON schema</summary>
@@ -38685,12 +35390,6 @@ pub mod types {
         pub style: PageLineStyle,
     }
 
-    impl ::std::convert::From<&PageContentItemContent> for PageContentItemContent {
-        fn from(value: &PageContentItemContent) -> Self {
-            value.clone()
-        }
-    }
-
     ///Content format for the item.
     ///
     /// <details><summary>JSON schema</summary>
@@ -38713,12 +35412,6 @@ pub mod types {
     pub enum PageContentItemContentFormat {
         #[serde(rename = "plainText")]
         PlainText,
-    }
-
-    impl ::std::convert::From<&Self> for PageContentItemContentFormat {
-        fn from(value: &PageContentItemContentFormat) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageContentItemContentFormat {
@@ -38782,12 +35475,6 @@ pub mod types {
     pub enum PageContentItemType {
         #[serde(rename = "line")]
         Line,
-    }
-
-    impl ::std::convert::From<&Self> for PageContentItemType {
-        fn from(value: &PageContentItemType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageContentItemType {
@@ -38890,12 +35577,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&PageContentList> for PageContentList {
-        fn from(value: &PageContentList) -> Self {
-            value.clone()
-        }
-    }
-
     ///Supported output content formats that can be requested for getting
     /// content for an existing page.
     ///
@@ -38924,12 +35605,6 @@ pub mod types {
         Html,
         #[serde(rename = "markdown")]
         Markdown,
-    }
-
-    impl ::std::convert::From<&Self> for PageContentOutputFormat {
-        fn from(value: &PageContentOutputFormat) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageContentOutputFormat {
@@ -39025,12 +35700,6 @@ pub mod types {
         pub insertion_mode: PageContentInsertionMode,
     }
 
-    impl ::std::convert::From<&PageContentUpdate> for PageContentUpdate {
-        fn from(value: &PageContentUpdate) -> Self {
-            value.clone()
-        }
-    }
-
     ///Payload for creating a new page in a doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -39105,12 +35774,6 @@ pub mod types {
         ///Subtitle of the page.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub subtitle: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&PageCreate> for PageCreate {
-        fn from(value: &PageCreate) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for PageCreate {
@@ -39301,12 +35964,6 @@ pub mod types {
         Variant2(PageCreateContentVariant2),
     }
 
-    impl ::std::convert::From<&Self> for PageCreateContent {
-        fn from(value: &PageCreateContent) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::convert::From<PageCreateContentVariant2> for PageCreateContent {
         fn from(value: PageCreateContentVariant2) -> Self {
             Self::Variant2(value)
@@ -39332,12 +35989,6 @@ pub mod types {
     pub enum PageCreateContentVariant0Type {
         #[serde(rename = "canvas")]
         Canvas,
-    }
-
-    impl ::std::convert::From<&Self> for PageCreateContentVariant0Type {
-        fn from(value: &PageCreateContentVariant0Type) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageCreateContentVariant0Type {
@@ -39398,12 +36049,6 @@ pub mod types {
     pub enum PageCreateContentVariant1Type {
         #[serde(rename = "embed")]
         Embed,
-    }
-
-    impl ::std::convert::From<&Self> for PageCreateContentVariant1Type {
-        fn from(value: &PageCreateContentVariant1Type) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageCreateContentVariant1Type {
@@ -39569,12 +36214,6 @@ pub mod types {
         },
     }
 
-    impl ::std::convert::From<&Self> for PageCreateContentVariant2 {
-        fn from(value: &PageCreateContentVariant2) -> Self {
-            value.clone()
-        }
-    }
-
     ///Indicates a page that embeds other Coda content.
     ///
     /// <details><summary>JSON schema</summary>
@@ -39594,12 +36233,6 @@ pub mod types {
     pub enum PageCreateContentVariant2Type {
         #[serde(rename = "syncPage")]
         SyncPage,
-    }
-
-    impl ::std::convert::From<&Self> for PageCreateContentVariant2Type {
-        fn from(value: &PageCreateContentVariant2Type) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageCreateContentVariant2Type {
@@ -39676,12 +36309,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum PageCreateResult {}
-    impl ::std::convert::From<&Self> for PageCreateResult {
-        fn from(value: &PageCreateResult) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PageDeleteResult`
     ///
     /// <details><summary>JSON schema</summary>
@@ -39717,12 +36344,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum PageDeleteResult {}
-    impl ::std::convert::From<&Self> for PageDeleteResult {
-        fn from(value: &PageDeleteResult) -> Self {
-            value.clone()
-        }
-    }
-
     ///Render mode for a page using the Embed page type.
     ///
     /// <details><summary>JSON schema</summary>
@@ -39749,12 +36370,6 @@ pub mod types {
         Compatibility,
         #[serde(rename = "standard")]
         Standard,
-    }
-
-    impl ::std::convert::From<&Self> for PageEmbedRenderMethod {
-        fn from(value: &PageEmbedRenderMethod) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageEmbedRenderMethod {
@@ -39860,12 +36475,6 @@ pub mod types {
         Paragraph,
         #[serde(rename = "pullQuote")]
         PullQuote,
-    }
-
-    impl ::std::convert::From<&Self> for PageLineStyle {
-        fn from(value: &PageLineStyle) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageLineStyle {
@@ -39988,12 +36597,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&PageList> for PageList {
-        fn from(value: &PageList) -> Self {
-            value.clone()
-        }
-    }
-
     ///Reference to a page.
     ///
     /// <details><summary>JSON schema</summary>
@@ -40071,12 +36674,6 @@ pub mod types {
         pub type_: PageReferenceType,
     }
 
-    impl ::std::convert::From<&PageReference> for PageReference {
-        fn from(value: &PageReference) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -40096,12 +36693,6 @@ pub mod types {
     pub enum PageReferenceType {
         #[serde(rename = "page")]
         Page,
-    }
-
-    impl ::std::convert::From<&Self> for PageReferenceType {
-        fn from(value: &PageReferenceType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageReferenceType {
@@ -40162,12 +36753,6 @@ pub mod types {
     pub enum PageType {
         #[serde(rename = "page")]
         Page,
-    }
-
-    impl ::std::convert::From<&Self> for PageType {
-        fn from(value: &PageType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageType {
@@ -40243,12 +36828,6 @@ pub mod types {
         SyncPage,
         #[serde(rename = "table")]
         Table,
-    }
-
-    impl ::std::convert::From<&Self> for PageTypeEnum {
-        fn from(value: &PageTypeEnum) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PageTypeEnum {
@@ -40385,12 +36964,6 @@ pub mod types {
         pub subtitle: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&PageUpdate> for PageUpdate {
-        fn from(value: &PageUpdate) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for PageUpdate {
         fn default() -> Self {
             Self {
@@ -40426,12 +36999,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum PageUpdateContentUpdate {}
-    impl ::std::convert::From<&Self> for PageUpdateContentUpdate {
-        fn from(value: &PageUpdateContentUpdate) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PageUpdateResult`
     ///
     /// <details><summary>JSON schema</summary>
@@ -40467,12 +37034,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum PageUpdateResult {}
-    impl ::std::convert::From<&Self> for PageUpdateResult {
-        fn from(value: &PageUpdateResult) -> Self {
-            value.clone()
-        }
-    }
-
     ///Workspace feature set excluding free.
     ///
     /// <details><summary>JSON schema</summary>
@@ -40500,12 +37061,6 @@ pub mod types {
         Pro,
         Team,
         Enterprise,
-    }
-
-    impl ::std::convert::From<&Self> for PaidFeatureSet {
-        fn from(value: &PaidFeatureSet) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PaidFeatureSet {
@@ -40588,12 +37143,6 @@ pub mod types {
         pub default: ::std::string::String,
     }
 
-    impl ::std::convert::From<&ParameterSetting> for ParameterSetting {
-        fn from(value: &ParameterSetting) -> Self {
-            value.clone()
-        }
-    }
-
     ///The request to patch pack system connection credentials.
     ///
     /// <details><summary>JSON schema</summary>
@@ -40649,12 +37198,6 @@ pub mod types {
         GoogleServiceAccountPatch(PackConnectionGoogleServiceAccountPatch),
         AwsAssumeRolePatch(PackConnectionAwsAssumeRolePatch),
         AwsAccessKeyPatch(PackConnectionAwsAccessKeyPatch),
-    }
-
-    impl ::std::convert::From<&Self> for PatchPackSystemConnectionRequest {
-        fn from(value: &PatchPackSystemConnectionRequest) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::convert::From<PackConnectionHeaderPatch> for PatchPackSystemConnectionRequest {
@@ -40772,17 +37315,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&PatchPackSystemConnectionResponse> for PatchPackSystemConnectionResponse {
-        fn from(value: &PatchPackSystemConnectionResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -40810,12 +37348,6 @@ pub mod types {
     pub struct PatchPackSystemConnectionResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&PatchPackSystemConnectionResponseCodaDetail> for PatchPackSystemConnectionResponseCodaDetail {
-        fn from(value: &PatchPackSystemConnectionResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for PatchPackSystemConnectionResponseCodaDetail {
@@ -40863,12 +37395,6 @@ pub mod types {
         ///Id for the Permission
         pub id: ::std::string::String,
         pub principal: Principal,
-    }
-
-    impl ::std::convert::From<&Permission> for Permission {
-        fn from(value: &Permission) -> Self {
-            value.clone()
-        }
     }
 
     ///A named reference to a person, where the person is identified by email
@@ -40945,12 +37471,6 @@ pub mod types {
         pub type_: PersonValueType,
     }
 
-    impl ::std::convert::From<&PersonValue> for PersonValue {
-        fn from(value: &PersonValue) -> Self {
-            value.clone()
-        }
-    }
-
     ///`PersonValueType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -40968,12 +37488,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     pub enum PersonValueType {
         Person,
-    }
-
-    impl ::std::convert::From<&Self> for PersonValueType {
-        fn from(value: &PersonValueType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PersonValueType {
@@ -41057,12 +37571,6 @@ pub mod types {
         InternalAccessPrincipal(InternalAccessPrincipal),
     }
 
-    impl ::std::convert::From<&Self> for Principal {
-        fn from(value: &Principal) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::convert::From<EmailPrincipal> for Principal {
         fn from(value: EmailPrincipal) -> Self {
             Self::EmailPrincipal(value)
@@ -41141,12 +37649,6 @@ pub mod types {
         Anyone,
         #[serde(rename = "internalAccess")]
         InternalAccess,
-    }
-
-    impl ::std::convert::From<&Self> for PrincipalType {
-        fn from(value: &PrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for PrincipalType {
@@ -41244,17 +37746,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&PublishDocResponse> for PublishDocResponse {
-        fn from(value: &PublishDocResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///`PublishResult`
@@ -41280,12 +37777,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum PublishResult {}
-    impl ::std::convert::From<&Self> for PublishResult {
-        fn from(value: &PublishResult) -> Self {
-            value.clone()
-        }
-    }
-
     ///Info about a publishing category
     ///
     /// <details><summary>JSON schema</summary>
@@ -41340,12 +37831,6 @@ pub mod types {
         pub category_slug: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&PublishingCategory> for PublishingCategory {
-        fn from(value: &PublishingCategory) -> Self {
-            value.clone()
-        }
-    }
-
     ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
@@ -41392,17 +37877,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&PushButtonResponse> for PushButtonResponse {
-        fn from(value: &PushButtonResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///`PushButtonResult`
@@ -41455,12 +37935,6 @@ pub mod types {
         #[serde(rename = "requestId")]
         request_id: String,
     }
-    impl ::std::convert::From<&Self> for PushButtonResult {
-        fn from(value: &PushButtonResult) -> Self {
-            value.clone()
-        }
-    }
-
     ///Format of a column that refers to another table.
     ///
     /// <details><summary>JSON schema</summary>
@@ -41509,12 +37983,6 @@ pub mod types {
         pub type_: ReferenceColumnFormatType,
     }
 
-    impl ::std::convert::From<&ReferenceColumnFormat> for ReferenceColumnFormat {
-        fn from(value: &ReferenceColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`ReferenceColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -41535,12 +38003,6 @@ pub mod types {
         Person,
         #[serde(rename = "lookup")]
         Lookup,
-    }
-
-    impl ::std::convert::From<&Self> for ReferenceColumnFormatType {
-        fn from(value: &ReferenceColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ReferenceColumnFormatType {
@@ -41617,12 +38079,6 @@ pub mod types {
         pub bundle_hash: ::std::string::String,
     }
 
-    impl ::std::convert::From<&RegisterPackVersionRequest> for RegisterPackVersionRequest {
-        fn from(value: &RegisterPackVersionRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
@@ -41669,17 +38125,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&RegisterPackVersionResponse> for RegisterPackVersionResponse {
-        fn from(value: &RegisterPackVersionResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -41743,17 +38194,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ReplyToPackInvitationResponse> for ReplyToPackInvitationResponse {
-        fn from(value: &ReplyToPackInvitationResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -41781,12 +38227,6 @@ pub mod types {
     pub struct ReplyToPackInvitationResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&ReplyToPackInvitationResponseCodaDetail> for ReplyToPackInvitationResponseCodaDetail {
-        fn from(value: &ReplyToPackInvitationResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for ReplyToPackInvitationResponseCodaDetail {
@@ -41843,17 +38283,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&ResolveBrowserLinkResponse> for ResolveBrowserLinkResponse {
-        fn from(value: &ResolveBrowserLinkResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///A value that contains rich structured data. Cell values are composed of
@@ -41898,12 +38333,6 @@ pub mod types {
         PersonValue(PersonValue),
         UrlValue(UrlValue),
         RowValue(RowValue),
-    }
-
-    impl ::std::convert::From<&Self> for RichSingleValue {
-        fn from(value: &RichSingleValue) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::convert::From<ScalarValue> for RichSingleValue {
@@ -41977,29 +38406,23 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(untagged)]
     pub enum RichValue {
-        Variant0(RichSingleValue),
-        Variant1(::std::vec::Vec<RichValueVariant1Item>),
-    }
-
-    impl ::std::convert::From<&Self> for RichValue {
-        fn from(value: &RichValue) -> Self {
-            value.clone()
-        }
+        RichSingleValue(RichSingleValue),
+        Array(::std::vec::Vec<RichValueArrayItem>),
     }
 
     impl ::std::convert::From<RichSingleValue> for RichValue {
         fn from(value: RichSingleValue) -> Self {
-            Self::Variant0(value)
+            Self::RichSingleValue(value)
         }
     }
 
-    impl ::std::convert::From<::std::vec::Vec<RichValueVariant1Item>> for RichValue {
-        fn from(value: ::std::vec::Vec<RichValueVariant1Item>) -> Self {
-            Self::Variant1(value)
+    impl ::std::convert::From<::std::vec::Vec<RichValueArrayItem>> for RichValue {
+        fn from(value: ::std::vec::Vec<RichValueArrayItem>) -> Self {
+            Self::Array(value)
         }
     }
 
-    ///`RichValueVariant1Item`
+    ///`RichValueArrayItem`
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -42021,26 +38444,20 @@ pub mod types {
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(untagged)]
-    pub enum RichValueVariant1Item {
-        Variant0(RichSingleValue),
-        Variant1(::std::vec::Vec<RichSingleValue>),
+    pub enum RichValueArrayItem {
+        RichSingleValue(RichSingleValue),
+        Array(::std::vec::Vec<RichSingleValue>),
     }
 
-    impl ::std::convert::From<&Self> for RichValueVariant1Item {
-        fn from(value: &RichValueVariant1Item) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::convert::From<RichSingleValue> for RichValueVariant1Item {
+    impl ::std::convert::From<RichSingleValue> for RichValueArrayItem {
         fn from(value: RichSingleValue) -> Self {
-            Self::Variant0(value)
+            Self::RichSingleValue(value)
         }
     }
 
-    impl ::std::convert::From<::std::vec::Vec<RichSingleValue>> for RichValueVariant1Item {
+    impl ::std::convert::From<::std::vec::Vec<RichSingleValue>> for RichValueArrayItem {
         fn from(value: ::std::vec::Vec<RichSingleValue>) -> Self {
-            Self::Variant1(value)
+            Self::Array(value)
         }
     }
 
@@ -42177,12 +38594,6 @@ pub mod types {
         pub values: ::std::collections::HashMap<::std::string::String, CellValue>,
     }
 
-    impl ::std::convert::From<&Row> for Row {
-        fn from(value: &Row) -> Self {
-            value.clone()
-        }
-    }
-
     ///`RowDeleteResult`
     ///
     /// <details><summary>JSON schema</summary>
@@ -42218,12 +38629,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum RowDeleteResult {}
-    impl ::std::convert::From<&Self> for RowDeleteResult {
-        fn from(value: &RowDeleteResult) -> Self {
-            value.clone()
-        }
-    }
-
     ///Details about a row.
     ///
     /// <details><summary>JSON schema</summary>
@@ -42362,12 +38767,6 @@ pub mod types {
         pub values: ::std::collections::HashMap<::std::string::String, CellValue>,
     }
 
-    impl ::std::convert::From<&RowDetail> for RowDetail {
-        fn from(value: &RowDetail) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -42387,12 +38786,6 @@ pub mod types {
     pub enum RowDetailType {
         #[serde(rename = "row")]
         Row,
-    }
-
-    impl ::std::convert::From<&Self> for RowDetailType {
-        fn from(value: &RowDetailType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for RowDetailType {
@@ -42464,12 +38857,6 @@ pub mod types {
         pub cells: ::std::vec::Vec<CellEdit>,
     }
 
-    impl ::std::convert::From<&RowEdit> for RowEdit {
-        fn from(value: &RowEdit) -> Self {
-            value.clone()
-        }
-    }
-
     ///List of rows.
     ///
     /// <details><summary>JSON schema</summary>
@@ -42536,12 +38923,6 @@ pub mod types {
         pub next_sync_token: ::std::option::Option<NextSyncToken>,
     }
 
-    impl ::std::convert::From<&RowList> for RowList {
-        fn from(value: &RowList) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -42561,12 +38942,6 @@ pub mod types {
     pub enum RowType {
         #[serde(rename = "row")]
         Row,
-    }
-
-    impl ::std::convert::From<&Self> for RowType {
-        fn from(value: &RowType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for RowType {
@@ -42635,12 +39010,6 @@ pub mod types {
         pub row: RowEdit,
     }
 
-    impl ::std::convert::From<&RowUpdate> for RowUpdate {
-        fn from(value: &RowUpdate) -> Self {
-            value.clone()
-        }
-    }
-
     ///`RowUpdateResult`
     ///
     /// <details><summary>JSON schema</summary>
@@ -42676,12 +39045,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum RowUpdateResult {}
-    impl ::std::convert::From<&Self> for RowUpdateResult {
-        fn from(value: &RowUpdateResult) -> Self {
-            value.clone()
-        }
-    }
-
     ///`RowValue`
     ///
     /// <details><summary>JSON schema</summary>
@@ -42767,12 +39130,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum RowValue {}
-    impl ::std::convert::From<&Self> for RowValue {
-        fn from(value: &RowValue) -> Self {
-            value.clone()
-        }
-    }
-
     ///Payload for deleting rows from a table.
     ///
     /// <details><summary>JSON schema</summary>
@@ -42810,12 +39167,6 @@ pub mod types {
         ///Row IDs to delete.
         #[serde(rename = "rowIds")]
         pub row_ids: ::std::vec::Vec<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&RowsDelete> for RowsDelete {
-        fn from(value: &RowsDelete) -> Self {
-            value.clone()
-        }
     }
 
     ///`RowsDeleteResult`
@@ -42859,12 +39210,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum RowsDeleteResult {}
-    impl ::std::convert::From<&Self> for RowsDeleteResult {
-        fn from(value: &RowsDeleteResult) -> Self {
-            value.clone()
-        }
-    }
-
     ///Determines how the rows returned are sorted
     ///
     /// <details><summary>JSON schema</summary>
@@ -42895,12 +39240,6 @@ pub mod types {
         Natural,
         #[serde(rename = "updatedAt")]
         UpdatedAt,
-    }
-
-    impl ::std::convert::From<&Self> for RowsSortBy {
-        fn from(value: &RowsSortBy) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for RowsSortBy {
@@ -42993,12 +39332,6 @@ pub mod types {
         pub rows: ::std::vec::Vec<RowEdit>,
     }
 
-    impl ::std::convert::From<&RowsUpsert> for RowsUpsert {
-        fn from(value: &RowsUpsert) -> Self {
-            value.clone()
-        }
-    }
-
     ///`RowsUpsertResult`
     ///
     /// <details><summary>JSON schema</summary>
@@ -43038,12 +39371,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum RowsUpsertResult {}
-    impl ::std::convert::From<&Self> for RowsUpsertResult {
-        fn from(value: &RowsUpsertResult) -> Self {
-            value.clone()
-        }
-    }
-
     ///A Coda result or entity expressed as a primitive type.
     ///
     /// <details><summary>JSON schema</summary>
@@ -43079,36 +39406,30 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(untagged)]
     pub enum ScalarValue {
-        Variant0(::std::string::String),
-        Variant1(f64),
-        Variant2(bool),
-    }
-
-    impl ::std::convert::From<&Self> for ScalarValue {
-        fn from(value: &ScalarValue) -> Self {
-            value.clone()
-        }
+        String(::std::string::String),
+        Number(f64),
+        Boolean(bool),
     }
 
     impl ::std::fmt::Display for ScalarValue {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match self {
-                Self::Variant0(x) => x.fmt(f),
-                Self::Variant1(x) => x.fmt(f),
-                Self::Variant2(x) => x.fmt(f),
+                Self::String(x) => x.fmt(f),
+                Self::Number(x) => x.fmt(f),
+                Self::Boolean(x) => x.fmt(f),
             }
         }
     }
 
     impl ::std::convert::From<f64> for ScalarValue {
         fn from(value: f64) -> Self {
-            Self::Variant1(value)
+            Self::Number(value)
         }
     }
 
     impl ::std::convert::From<bool> for ScalarValue {
         fn from(value: bool) -> Self {
-            Self::Variant2(value)
+            Self::Boolean(value)
         }
     }
 
@@ -43164,15 +39485,10 @@ pub mod types {
         ///Whether or not this column is an array.
         #[serde(rename = "isArray")]
         pub is_array: bool,
+        ///The maximum number allowed for this scale.
         pub maximum: f64,
         #[serde(rename = "type")]
         pub type_: ScaleColumnFormatType,
-    }
-
-    impl ::std::convert::From<&ScaleColumnFormat> for ScaleColumnFormat {
-        fn from(value: &ScaleColumnFormat) -> Self {
-            value.clone()
-        }
     }
 
     ///`ScaleColumnFormatType`
@@ -43192,12 +39508,6 @@ pub mod types {
     pub enum ScaleColumnFormatType {
         #[serde(rename = "scale")]
         Scale,
-    }
-
-    impl ::std::convert::From<&Self> for ScaleColumnFormatType {
-        fn from(value: &ScaleColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ScaleColumnFormatType {
@@ -43278,12 +39588,6 @@ pub mod types {
         pub users: ::std::vec::Vec<UserSummary>,
     }
 
-    impl ::std::convert::From<&SearchPrincipalsResponse> for SearchPrincipalsResponse {
-        fn from(value: &SearchPrincipalsResponse) -> Self {
-            value.clone()
-        }
-    }
-
     ///Format of a select column.
     ///
     /// <details><summary>JSON schema</summary>
@@ -43340,12 +39644,6 @@ pub mod types {
         pub type_: SelectColumnFormatType,
     }
 
-    impl ::std::convert::From<&SelectColumnFormat> for SelectColumnFormat {
-        fn from(value: &SelectColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`SelectColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -43363,12 +39661,6 @@ pub mod types {
     pub enum SelectColumnFormatType {
         #[serde(rename = "select")]
         Select,
-    }
-
-    impl ::std::convert::From<&Self> for SelectColumnFormatType {
-        fn from(value: &SelectColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for SelectColumnFormatType {
@@ -43462,12 +39754,6 @@ pub mod types {
         pub name: ::std::string::String,
     }
 
-    impl ::std::convert::From<&SelectOption> for SelectOption {
-        fn from(value: &SelectOption) -> Self {
-            value.clone()
-        }
-    }
-
     ///Request to set the Pack OAuth configuration.
     ///
     /// <details><summary>JSON schema</summary>
@@ -43501,12 +39787,6 @@ pub mod types {
         pub client_secret: ::std::option::Option<::std::string::String>,
         #[serde(rename = "redirectUri", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub redirect_uri: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&SetPackOauthConfigRequest> for SetPackOauthConfigRequest {
-        fn from(value: &SetPackOauthConfigRequest) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for SetPackOauthConfigRequest {
@@ -43580,17 +39860,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&SetPackOauthConfigResponse> for SetPackOauthConfigResponse {
-        fn from(value: &SetPackOauthConfigResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -43618,12 +39893,6 @@ pub mod types {
     pub struct SetPackOauthConfigResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&SetPackOauthConfigResponseCodaDetail> for SetPackOauthConfigResponseCodaDetail {
-        fn from(value: &SetPackOauthConfigResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for SetPackOauthConfigResponseCodaDetail {
@@ -43660,12 +39929,6 @@ pub mod types {
     #[serde(deny_unknown_fields)]
     pub struct SetPackSystemConnectionRequest {
         pub credentials: PackSystemConnectionCredentials,
-    }
-
-    impl ::std::convert::From<&SetPackSystemConnectionRequest> for SetPackSystemConnectionRequest {
-        fn from(value: &SetPackSystemConnectionRequest) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -43729,17 +39992,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&SetPackSystemConnectionResponse> for SetPackSystemConnectionResponse {
-        fn from(value: &SetPackSystemConnectionResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -43767,12 +40025,6 @@ pub mod types {
     pub struct SetPackSystemConnectionResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&SetPackSystemConnectionResponseCodaDetail> for SetPackSystemConnectionResponseCodaDetail {
-        fn from(value: &SetPackSystemConnectionResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for SetPackSystemConnectionResponseCodaDetail {
@@ -43831,12 +40083,6 @@ pub mod types {
         pub type_: SimpleColumnFormatType,
     }
 
-    impl ::std::convert::From<&SimpleColumnFormat> for SimpleColumnFormat {
-        fn from(value: &SimpleColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`SimpleColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -43872,12 +40118,6 @@ pub mod types {
         Canvas,
         #[serde(rename = "other")]
         Other,
-    }
-
-    impl ::std::convert::From<&Self> for SimpleColumnFormatType {
-        fn from(value: &SimpleColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for SimpleColumnFormatType {
@@ -44004,12 +40244,6 @@ pub mod types {
         pub type_: SliderColumnFormatType,
     }
 
-    impl ::std::convert::From<&SliderColumnFormat> for SliderColumnFormat {
-        fn from(value: &SliderColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`SliderColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -44027,12 +40261,6 @@ pub mod types {
     pub enum SliderColumnFormatType {
         #[serde(rename = "slider")]
         Slider,
-    }
-
-    impl ::std::convert::From<&Self> for SliderColumnFormatType {
-        fn from(value: &SliderColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for SliderColumnFormatType {
@@ -44100,12 +40328,6 @@ pub mod types {
         Slider,
         #[serde(rename = "progress")]
         Progress,
-    }
-
-    impl ::std::convert::From<&Self> for SliderDisplayType {
-        fn from(value: &SliderDisplayType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for SliderDisplayType {
@@ -44181,12 +40403,6 @@ pub mod types {
         pub direction: SortDirection,
     }
 
-    impl ::std::convert::From<&Sort> for Sort {
-        fn from(value: &Sort) -> Self {
-            value.clone()
-        }
-    }
-
     ///Determines how the objects returned are sorted
     ///
     /// <details><summary>JSON schema</summary>
@@ -44209,12 +40425,6 @@ pub mod types {
     pub enum SortBy {
         #[serde(rename = "name")]
         Name,
-    }
-
-    impl ::std::convert::From<&Self> for SortBy {
-        fn from(value: &SortBy) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for SortBy {
@@ -44282,12 +40492,6 @@ pub mod types {
         Ascending,
         #[serde(rename = "descending")]
         Descending,
-    }
-
-    impl ::std::convert::From<&Self> for SortDirection {
-        fn from(value: &SortDirection) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for SortDirection {
@@ -44394,12 +40598,6 @@ pub mod types {
         pub pricing: StandardPackPlanPricing,
     }
 
-    impl ::std::convert::From<&StandardPackPlan> for StandardPackPlan {
-        fn from(value: &StandardPackPlan) -> Self {
-            value.clone()
-        }
-    }
-
     ///Pricing to show how workspaces can subscribe to the Pack.
     ///
     /// <details><summary>JSON schema</summary>
@@ -44424,12 +40622,6 @@ pub mod types {
     pub enum StandardPackPlanPricing {
         FreePackPlanPricing(FreePackPlanPricing),
         MonthlyDocMakerPackPlanPricing(MonthlyDocMakerPackPlanPricing),
-    }
-
-    impl ::std::convert::From<&Self> for StandardPackPlanPricing {
-        fn from(value: &StandardPackPlanPricing) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::convert::From<FreePackPlanPricing> for StandardPackPlanPricing {
@@ -44470,12 +40662,6 @@ pub mod types {
         Page,
         #[serde(rename = "document")]
         Document,
-    }
-
-    impl ::std::convert::From<&Self> for SyncPageTypeEnum {
-        fn from(value: &SyncPageTypeEnum) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for SyncPageTypeEnum {
@@ -44676,12 +40862,6 @@ pub mod types {
         pub view_id: ::serde_json::Value,
     }
 
-    impl ::std::convert::From<&Table> for Table {
-        fn from(value: &Table) -> Self {
-            value.clone()
-        }
-    }
-
     ///List of tables.
     ///
     /// <details><summary>JSON schema</summary>
@@ -44741,12 +40921,6 @@ pub mod types {
         pub next_page_link: ::std::option::Option<NextPageLink>,
         #[serde(rename = "nextPageToken", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub next_page_token: ::std::option::Option<NextPageToken>,
-    }
-
-    impl ::std::convert::From<&TableList> for TableList {
-        fn from(value: &TableList) -> Self {
-            value.clone()
-        }
     }
 
     ///Reference to a table or view.
@@ -44837,12 +41011,6 @@ pub mod types {
         pub type_: TableReferenceType,
     }
 
-    impl ::std::convert::From<&TableReference> for TableReference {
-        fn from(value: &TableReference) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -44862,12 +41030,6 @@ pub mod types {
     pub enum TableReferenceType {
         #[serde(rename = "table")]
         Table,
-    }
-
-    impl ::std::convert::From<&Self> for TableReferenceType {
-        fn from(value: &TableReferenceType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for TableReferenceType {
@@ -44928,12 +41090,6 @@ pub mod types {
     pub enum TableType {
         #[serde(rename = "table")]
         Table,
-    }
-
-    impl ::std::convert::From<&Self> for TableType {
-        fn from(value: &TableType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for TableType {
@@ -45000,12 +41156,6 @@ pub mod types {
         Table,
         #[serde(rename = "view")]
         View,
-    }
-
-    impl ::std::convert::From<&Self> for TableTypeEnum {
-        fn from(value: &TableTypeEnum) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for TableTypeEnum {
@@ -45101,12 +41251,6 @@ pub mod types {
         pub type_: TimeColumnFormatType,
     }
 
-    impl ::std::convert::From<&TimeColumnFormat> for TimeColumnFormat {
-        fn from(value: &TimeColumnFormat) -> Self {
-            value.clone()
-        }
-    }
-
     ///`TimeColumnFormatType`
     ///
     /// <details><summary>JSON schema</summary>
@@ -45124,12 +41268,6 @@ pub mod types {
     pub enum TimeColumnFormatType {
         #[serde(rename = "time")]
         Time,
-    }
-
-    impl ::std::convert::From<&Self> for TimeColumnFormatType {
-        fn from(value: &TimeColumnFormatType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for TimeColumnFormatType {
@@ -45217,17 +41355,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&TriggerWebhookAutomationResponse> for TriggerWebhookAutomationResponse {
-        fn from(value: &TriggerWebhookAutomationResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///A constant identifying the type of the resource.
@@ -45454,12 +41587,6 @@ pub mod types {
         Workspace,
     }
 
-    impl ::std::convert::From<&Self> for Type {
-        fn from(value: &Type) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::fmt::Display for Type {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match *self {
@@ -45645,17 +41772,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&UnpublishDocResponse> for UnpublishDocResponse {
-        fn from(value: &UnpublishDocResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///The result of unpublishing a doc.
@@ -45674,12 +41796,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct UnpublishResult {}
-    impl ::std::convert::From<&UnpublishResult> for UnpublishResult {
-        fn from(value: &UnpublishResult) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for UnpublishResult {
         fn default() -> Self {
             Self {}
@@ -45727,12 +41843,6 @@ pub mod types {
         ///When true, allows doc viewers to request editing permissions.
         #[serde(rename = "allowViewersToRequestEditing", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub allow_viewers_to_request_editing: ::std::option::Option<bool>,
-    }
-
-    impl ::std::convert::From<&UpdateAclSettingsRequest> for UpdateAclSettingsRequest {
-        fn from(value: &UpdateAclSettingsRequest) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for UpdateAclSettingsRequest {
@@ -45791,17 +41901,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&UpdateAclSettingsResponse> for UpdateAclSettingsResponse {
-        fn from(value: &UpdateAclSettingsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Payload for updating the properties of a custom published doc domain.
@@ -45821,12 +41926,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct UpdateCustomDocDomainRequest {}
-    impl ::std::convert::From<&UpdateCustomDocDomainRequest> for UpdateCustomDocDomainRequest {
-        fn from(value: &UpdateCustomDocDomainRequest) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for UpdateCustomDocDomainRequest {
         fn default() -> Self {
             Self {}
@@ -45850,12 +41949,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct UpdateCustomDocDomainResponse {}
-    impl ::std::convert::From<&UpdateCustomDocDomainResponse> for UpdateCustomDocDomainResponse {
-        fn from(value: &UpdateCustomDocDomainResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for UpdateCustomDocDomainResponse {
         fn default() -> Self {
             Self {}
@@ -45908,17 +42001,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&UpdateDocResponse> for UpdateDocResponse {
-        fn from(value: &UpdateDocResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Request for updating a folder.
@@ -45959,12 +42047,6 @@ pub mod types {
         ///Name of the folder.
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub name: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&UpdateFolderRequest> for UpdateFolderRequest {
-        fn from(value: &UpdateFolderRequest) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for UpdateFolderRequest {
@@ -46022,17 +42104,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&UpdateFolderResponse> for UpdateFolderResponse {
-        fn from(value: &UpdateFolderResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Payload for updating featured docs for a Pack.
@@ -46070,12 +42147,6 @@ pub mod types {
         pub items: Vec<PackFeaturedDocRequestItem>,
     }
 
-    impl ::std::convert::From<&UpdatePackFeaturedDocsRequest> for UpdatePackFeaturedDocsRequest {
-        fn from(value: &UpdatePackFeaturedDocsRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///Confirmation of successful Pack featured docs update.
     ///
     /// <details><summary>JSON schema</summary>
@@ -46092,12 +42163,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct UpdatePackFeaturedDocsResponse {}
-    impl ::std::convert::From<&UpdatePackFeaturedDocsResponse> for UpdatePackFeaturedDocsResponse {
-        fn from(value: &UpdatePackFeaturedDocsResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for UpdatePackFeaturedDocsResponse {
         fn default() -> Self {
             Self {}
@@ -46131,12 +42196,6 @@ pub mod types {
         pub access: PackAccessType,
     }
 
-    impl ::std::convert::From<&UpdatePackInvitationRequest> for UpdatePackInvitationRequest {
-        fn from(value: &UpdatePackInvitationRequest) -> Self {
-            value.clone()
-        }
-    }
-
     ///Confirmation of successfully updating a Pack invitation.
     ///
     /// <details><summary>JSON schema</summary>
@@ -46154,12 +42213,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct UpdatePackInvitationResponse {}
-    impl ::std::convert::From<&UpdatePackInvitationResponse> for UpdatePackInvitationResponse {
-        fn from(value: &UpdatePackInvitationResponse) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for UpdatePackInvitationResponse {
         fn default() -> Self {
             Self {}
@@ -46191,12 +42244,6 @@ pub mod types {
     pub struct UpdatePackInvitationResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&UpdatePackInvitationResponseCodaDetail> for UpdatePackInvitationResponseCodaDetail {
-        fn from(value: &UpdatePackInvitationResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for UpdatePackInvitationResponseCodaDetail {
@@ -46237,12 +42284,6 @@ pub mod types {
         /// maker wants to communicate to users.
         #[serde(rename = "releaseNotes", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub release_notes: ::std::option::Option<::std::string::String>,
-    }
-
-    impl ::std::convert::From<&UpdatePackReleaseRequest> for UpdatePackReleaseRequest {
-        fn from(value: &UpdatePackReleaseRequest) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for UpdatePackReleaseRequest {
@@ -46314,17 +42355,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&UpdatePackReleaseResponse> for UpdatePackReleaseResponse {
-        fn from(value: &UpdatePackReleaseResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -46352,12 +42388,6 @@ pub mod types {
     pub struct UpdatePackReleaseResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&UpdatePackReleaseResponseCodaDetail> for UpdatePackReleaseResponseCodaDetail {
-        fn from(value: &UpdatePackReleaseResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for UpdatePackReleaseResponseCodaDetail {
@@ -46667,12 +42697,6 @@ pub mod types {
         pub terms_of_service_url: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&UpdatePackRequest> for UpdatePackRequest {
-        fn from(value: &UpdatePackRequest) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::default::Default for UpdatePackRequest {
         fn default() -> Self {
             Self {
@@ -46728,12 +42752,6 @@ pub mod types {
     impl ::std::convert::From<UpdatePackRequestAgentDescription> for ::std::string::String {
         fn from(value: UpdatePackRequestAgentDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&UpdatePackRequestAgentDescription> for UpdatePackRequestAgentDescription {
-        fn from(value: &UpdatePackRequestAgentDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -46808,12 +42826,6 @@ pub mod types {
     impl ::std::convert::From<UpdatePackRequestAgentShortDescription> for ::std::string::String {
         fn from(value: UpdatePackRequestAgentShortDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&UpdatePackRequestAgentShortDescription> for UpdatePackRequestAgentShortDescription {
-        fn from(value: &UpdatePackRequestAgentShortDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -46911,12 +42923,6 @@ pub mod types {
         pub mime_type: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&UpdatePackRequestCover> for UpdatePackRequestCover {
-        fn from(value: &UpdatePackRequestCover) -> Self {
-            value.clone()
-        }
-    }
-
     ///The full description of the Pack.
     ///
     /// <details><summary>JSON schema</summary>
@@ -46946,12 +42952,6 @@ pub mod types {
     impl ::std::convert::From<UpdatePackRequestDescription> for ::std::string::String {
         fn from(value: UpdatePackRequestDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&UpdatePackRequestDescription> for UpdatePackRequestDescription {
-        fn from(value: &UpdatePackRequestDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -47049,12 +43049,6 @@ pub mod types {
         pub mime_type: ::std::option::Option<::std::string::String>,
     }
 
-    impl ::std::convert::From<&UpdatePackRequestLogo> for UpdatePackRequestLogo {
-        fn from(value: &UpdatePackRequestLogo) -> Self {
-            value.clone()
-        }
-    }
-
     ///The name of the Pack.
     ///
     /// <details><summary>JSON schema</summary>
@@ -47083,12 +43077,6 @@ pub mod types {
     impl ::std::convert::From<UpdatePackRequestName> for ::std::string::String {
         fn from(value: UpdatePackRequestName) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&UpdatePackRequestName> for UpdatePackRequestName {
-        fn from(value: &UpdatePackRequestName) -> Self {
-            value.clone()
         }
     }
 
@@ -47183,12 +43171,6 @@ pub mod types {
         pub operations_per_interval: u64,
     }
 
-    impl ::std::convert::From<&UpdatePackRequestOverallRateLimit> for UpdatePackRequestOverallRateLimit {
-        fn from(value: &UpdatePackRequestOverallRateLimit) -> Self {
-            value.clone()
-        }
-    }
-
     ///Rate limit in Pack settings.
     ///
     /// <details><summary>JSON schema</summary>
@@ -47238,12 +43220,6 @@ pub mod types {
         pub operations_per_interval: u64,
     }
 
-    impl ::std::convert::From<&UpdatePackRequestPerConnectionRateLimit> for UpdatePackRequestPerConnectionRateLimit {
-        fn from(value: &UpdatePackRequestPerConnectionRateLimit) -> Self {
-            value.clone()
-        }
-    }
-
     ///A short version of the description of the Pack.
     ///
     /// <details><summary>JSON schema</summary>
@@ -47272,12 +43248,6 @@ pub mod types {
     impl ::std::convert::From<UpdatePackRequestShortDescription> for ::std::string::String {
         fn from(value: UpdatePackRequestShortDescription) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&UpdatePackRequestShortDescription> for UpdatePackRequestShortDescription {
-        fn from(value: &UpdatePackRequestShortDescription) -> Self {
-            value.clone()
         }
     }
 
@@ -47351,12 +43321,6 @@ pub mod types {
     impl ::std::convert::From<UpdatePackRequestSupportEmail> for ::std::string::String {
         fn from(value: UpdatePackRequestSupportEmail) -> Self {
             value.0
-        }
-    }
-
-    impl ::std::convert::From<&UpdatePackRequestSupportEmail> for UpdatePackRequestSupportEmail {
-        fn from(value: &UpdatePackRequestSupportEmail) -> Self {
-            value.clone()
         }
     }
 
@@ -47448,17 +43412,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&UpdatePackResponse> for UpdatePackResponse {
-        fn from(value: &UpdatePackResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -47507,17 +43466,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&UpdatePageResponse> for UpdatePageResponse {
-        fn from(value: &UpdatePageResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -47566,17 +43520,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&UpdateRowResponse> for UpdateRowResponse {
-        fn from(value: &UpdateRowResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Payload for a Pack asset upload.
@@ -47635,12 +43584,6 @@ pub mod types {
         pub mime_type: ::std::string::String,
         #[serde(rename = "packAssetType")]
         pub pack_asset_type: PackAssetType,
-    }
-
-    impl ::std::convert::From<&UploadPackAssetRequest> for UploadPackAssetRequest {
-        fn from(value: &UploadPackAssetRequest) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -47704,17 +43647,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&UploadPackAssetResponse> for UploadPackAssetResponse {
-        fn from(value: &UploadPackAssetResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -47742,12 +43680,6 @@ pub mod types {
     pub struct UploadPackAssetResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&UploadPackAssetResponseCodaDetail> for UploadPackAssetResponseCodaDetail {
-        fn from(value: &UploadPackAssetResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for UploadPackAssetResponseCodaDetail {
@@ -47805,12 +43737,6 @@ pub mod types {
         ///The SHA-256 hash of the image to be uploaded.
         #[serde(rename = "payloadHash")]
         pub payload_hash: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&UploadPackSourceCodeRequest> for UploadPackSourceCodeRequest {
-        fn from(value: &UploadPackSourceCodeRequest) -> Self {
-            value.clone()
-        }
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -47874,17 +43800,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&UploadPackSourceCodeResponse> for UploadPackSourceCodeResponse {
-        fn from(value: &UploadPackSourceCodeResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -47912,12 +43833,6 @@ pub mod types {
     pub struct UploadPackSourceCodeResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&UploadPackSourceCodeResponseCodaDetail> for UploadPackSourceCodeResponseCodaDetail {
-        fn from(value: &UploadPackSourceCodeResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for UploadPackSourceCodeResponseCodaDetail {
@@ -47954,12 +43869,6 @@ pub mod types {
     pub struct UpsertPackListingDraftRequest {
         #[serde(rename = "listingData")]
         pub listing_data: PackListingDraftInputData,
-    }
-
-    impl ::std::convert::From<&UpsertPackListingDraftRequest> for UpsertPackListingDraftRequest {
-        fn from(value: &UpsertPackListingDraftRequest) -> Self {
-            value.clone()
-        }
     }
 
     ///Response containing the upserted Pack listing draft
@@ -47999,17 +43908,12 @@ pub mod types {
     pub struct UpsertPackListingDraftResponse {
         #[serde(rename = "listingData")]
         pub listing_data: PackListingDraftData,
+        ///ID of the Pack
         #[serde(rename = "packId")]
         pub pack_id: f64,
         ///ID of the listing draft
         #[serde(rename = "packListingDraftId")]
         pub pack_listing_draft_id: ::uuid::Uuid,
-    }
-
-    impl ::std::convert::From<&UpsertPackListingDraftResponse> for UpsertPackListingDraftResponse {
-        fn from(value: &UpsertPackListingDraftResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Detail about why this request was rejected.
@@ -48037,12 +43941,6 @@ pub mod types {
     pub struct UpsertPackListingDraftResponseCodaDetail {
         #[serde(rename = "validationErrors", default, skip_serializing_if = "::std::vec::Vec::is_empty")]
         pub validation_errors: ::std::vec::Vec<ValidationError>,
-    }
-
-    impl ::std::convert::From<&UpsertPackListingDraftResponseCodaDetail> for UpsertPackListingDraftResponseCodaDetail {
-        fn from(value: &UpsertPackListingDraftResponseCodaDetail) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::default::Default for UpsertPackListingDraftResponseCodaDetail {
@@ -48099,17 +43997,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&UpsertRowsResponse> for UpsertRowsResponse {
-        fn from(value: &UpsertRowsResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///`UrlValue`
@@ -48162,12 +44055,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum UrlValue {}
-    impl ::std::convert::From<&Self> for UrlValue {
-        fn from(value: &UrlValue) -> Self {
-            value.clone()
-        }
-    }
-
     ///Info about the user.
     ///
     /// <details><summary>JSON schema</summary>
@@ -48274,12 +44161,6 @@ pub mod types {
         pub workspace: WorkspaceReference,
     }
 
-    impl ::std::convert::From<&User> for User {
-        fn from(value: &User) -> Self {
-            value.clone()
-        }
-    }
-
     ///Summary about the user.
     ///
     /// <details><summary>JSON schema</summary>
@@ -48346,12 +44227,6 @@ pub mod types {
         pub type_: UserSummaryType,
     }
 
-    impl ::std::convert::From<&UserSummary> for UserSummary {
-        fn from(value: &UserSummary) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -48371,12 +44246,6 @@ pub mod types {
     pub enum UserSummaryType {
         #[serde(rename = "user")]
         User,
-    }
-
-    impl ::std::convert::From<&Self> for UserSummaryType {
-        fn from(value: &UserSummaryType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for UserSummaryType {
@@ -48437,12 +44306,6 @@ pub mod types {
     pub enum UserType {
         #[serde(rename = "user")]
         User,
-    }
-
-    impl ::std::convert::From<&Self> for UserType {
-        fn from(value: &UserType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for UserType {
@@ -48528,12 +44391,6 @@ pub mod types {
         pub path: ::std::string::String,
     }
 
-    impl ::std::convert::From<&ValidationError> for ValidationError {
-        fn from(value: &ValidationError) -> Self {
-            value.clone()
-        }
-    }
-
     ///A Coda result or entity expressed as a primitive type, or array of
     /// primitive types.
     ///
@@ -48574,12 +44431,6 @@ pub mod types {
     pub enum Value {
         Variant0(ValueVariant0),
         Variant1(::std::vec::Vec<ValueVariant1Item>),
-    }
-
-    impl ::std::convert::From<&Self> for Value {
-        fn from(value: &Value) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::convert::From<ValueVariant0> for Value {
@@ -48624,12 +44475,6 @@ pub mod types {
         SimpleWithArrays,
         #[serde(rename = "rich")]
         Rich,
-    }
-
-    impl ::std::convert::From<&Self> for ValueFormat {
-        fn from(value: &ValueFormat) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for ValueFormat {
@@ -48719,12 +44564,6 @@ pub mod types {
         Variant2(bool),
     }
 
-    impl ::std::convert::From<&Self> for ValueVariant0 {
-        fn from(value: &ValueVariant0) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::fmt::Display for ValueVariant0 {
         fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
             match self {
@@ -48770,25 +44609,19 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(untagged)]
     pub enum ValueVariant1Item {
-        Variant0(ScalarValue),
-        Variant1(::std::vec::Vec<ScalarValue>),
-    }
-
-    impl ::std::convert::From<&Self> for ValueVariant1Item {
-        fn from(value: &ValueVariant1Item) -> Self {
-            value.clone()
-        }
+        ScalarValue(ScalarValue),
+        Array(::std::vec::Vec<ScalarValue>),
     }
 
     impl ::std::convert::From<ScalarValue> for ValueVariant1Item {
         fn from(value: ScalarValue) -> Self {
-            Self::Variant0(value)
+            Self::ScalarValue(value)
         }
     }
 
     impl ::std::convert::From<::std::vec::Vec<ScalarValue>> for ValueVariant1Item {
         fn from(value: ::std::vec::Vec<ScalarValue>) -> Self {
-            Self::Variant1(value)
+            Self::Array(value)
         }
     }
 
@@ -48826,12 +44659,6 @@ pub mod types {
         }
     }
 
-    impl ::std::convert::From<&WebhookTriggerPayload> for WebhookTriggerPayload {
-        fn from(value: &WebhookTriggerPayload) -> Self {
-            value.clone()
-        }
-    }
-
     impl ::std::convert::From<::serde_json::Map<::std::string::String, ::serde_json::Value>> for WebhookTriggerPayload {
         fn from(value: ::serde_json::Map<::std::string::String, ::serde_json::Value>) -> Self {
             Self(value)
@@ -48861,12 +44688,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
     #[serde(deny_unknown_fields)]
     pub enum WebhookTriggerResult {}
-    impl ::std::convert::From<&Self> for WebhookTriggerResult {
-        fn from(value: &WebhookTriggerResult) -> Self {
-            value.clone()
-        }
-    }
-
     ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
@@ -48913,17 +44734,12 @@ pub mod types {
         ///Any additional context on the error, or the same as `statusMessage`
         /// otherwise.
         pub message: ::std::string::String,
+        ///HTTP status code of the error.
         #[serde(rename = "statusCode")]
         pub status_code: f64,
         ///HTTP status message of the error.
         #[serde(rename = "statusMessage")]
         pub status_message: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&WhoamiResponse> for WhoamiResponse {
-        fn from(value: &WhoamiResponse) -> Self {
-            value.clone()
-        }
     }
 
     ///Metadata about a Coda workspace.
@@ -49013,12 +44829,6 @@ pub mod types {
         pub type_: WorkspaceType,
     }
 
-    impl ::std::convert::From<&Workspace> for Workspace {
-        fn from(value: &Workspace) -> Self {
-            value.clone()
-        }
-    }
-
     ///Response for listing workspace users.
     ///
     /// <details><summary>JSON schema</summary>
@@ -49069,12 +44879,6 @@ pub mod types {
         pub next_page_token: ::std::option::Option<NextPageToken>,
     }
 
-    impl ::std::convert::From<&WorkspaceMembersList> for WorkspaceMembersList {
-        fn from(value: &WorkspaceMembersList) -> Self {
-            value.clone()
-        }
-    }
-
     ///`WorkspacePrincipal`
     ///
     /// <details><summary>JSON schema</summary>
@@ -49118,12 +44922,6 @@ pub mod types {
         pub workspace_id: ::std::string::String,
     }
 
-    impl ::std::convert::From<&WorkspacePrincipal> for WorkspacePrincipal {
-        fn from(value: &WorkspacePrincipal) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this principal.
     ///
     /// <details><summary>JSON schema</summary>
@@ -49143,12 +44941,6 @@ pub mod types {
     pub enum WorkspacePrincipalType {
         #[serde(rename = "workspace")]
         Workspace,
-    }
-
-    impl ::std::convert::From<&Self> for WorkspacePrincipalType {
-        fn from(value: &WorkspacePrincipalType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for WorkspacePrincipalType {
@@ -49269,12 +45061,6 @@ pub mod types {
         pub type_: WorkspaceReferenceType,
     }
 
-    impl ::std::convert::From<&WorkspaceReference> for WorkspaceReference {
-        fn from(value: &WorkspaceReference) -> Self {
-            value.clone()
-        }
-    }
-
     ///The type of this resource.
     ///
     /// <details><summary>JSON schema</summary>
@@ -49294,12 +45080,6 @@ pub mod types {
     pub enum WorkspaceReferenceType {
         #[serde(rename = "workspace")]
         Workspace,
-    }
-
-    impl ::std::convert::From<&Self> for WorkspaceReferenceType {
-        fn from(value: &WorkspaceReferenceType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for WorkspaceReferenceType {
@@ -49417,26 +45197,26 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct WorkspaceRoleActivity {
+        ///Number of active Admins.
         #[serde(rename = "activeAdminCount")]
         pub active_admin_count: f64,
+        ///Number of active Doc Makers.
         #[serde(rename = "activeDocMakerCount")]
         pub active_doc_maker_count: f64,
+        ///Number of active Editors.
         #[serde(rename = "activeEditorCount")]
         pub active_editor_count: f64,
+        ///Number of inactive Admins.
         #[serde(rename = "inactiveAdminCount")]
         pub inactive_admin_count: f64,
+        ///Number of inactive Doc Makers.
         #[serde(rename = "inactiveDocMakerCount")]
         pub inactive_doc_maker_count: f64,
+        ///Number of inactive Editor users.
         #[serde(rename = "inactiveEditorCount")]
         pub inactive_editor_count: f64,
         ///Month corresponding to the data.
         pub month: ::std::string::String,
-    }
-
-    impl ::std::convert::From<&WorkspaceRoleActivity> for WorkspaceRoleActivity {
-        fn from(value: &WorkspaceRoleActivity) -> Self {
-            value.clone()
-        }
     }
 
     ///The type of this resource.
@@ -49458,12 +45238,6 @@ pub mod types {
     pub enum WorkspaceType {
         #[serde(rename = "workspace")]
         Workspace,
-    }
-
-    impl ::std::convert::From<&Self> for WorkspaceType {
-        fn from(value: &WorkspaceType) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for WorkspaceType {
@@ -49630,6 +45404,8 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct WorkspaceUser {
+        ///Number of collaborators that have interacted with docs owned by the
+        /// user in the last 90 days.
         #[serde(rename = "docCollaboratorCount", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub doc_collaborator_count: ::std::option::Option<f64>,
         ///Date when anyone last accessed a doc that the user owns in this
@@ -49643,6 +45419,7 @@ pub mod types {
         pub last_active_at: ::std::option::Option<::chrono::naive::NaiveDate>,
         ///Name of the user.
         pub name: ::std::string::String,
+        ///Number of docs the user owns in this workspace.
         #[serde(rename = "ownedDocs", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub owned_docs: ::std::option::Option<f64>,
         ///Picture url of the user.
@@ -49655,20 +45432,18 @@ pub mod types {
         ///Timestamp for when the user's role last changed in this workspace.
         #[serde(rename = "roleChangedAt", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub role_changed_at: ::std::option::Option<::chrono::DateTime<::chrono::offset::Utc>>,
+        ///Number of unique users that have viewed any doc the user owns,
+        /// manages, or has added pages to in the last 90 days.
         #[serde(rename = "totalDocCollaboratorsLast90Days", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub total_doc_collaborators_last90_days: ::std::option::Option<f64>,
+        ///Number of docs the user owns, manages, or to which they have added
+        /// pages in the last 90 days.
         #[serde(rename = "totalDocs", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub total_docs: ::std::option::Option<f64>,
         ///Date when anyone last accessed a doc the member owns or contributed
         /// to.
         #[serde(rename = "totalDocsLastActiveAt", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub total_docs_last_active_at: ::std::option::Option<::chrono::naive::NaiveDate>,
-    }
-
-    impl ::std::convert::From<&WorkspaceUser> for WorkspaceUser {
-        fn from(value: &WorkspaceUser) -> Self {
-            value.clone()
-        }
     }
 
     ///`WorkspaceUserRole`
@@ -49697,12 +45472,6 @@ pub mod types {
         Admin,
         DocMaker,
         Editor,
-    }
-
-    impl ::std::convert::From<&Self> for WorkspaceUserRole {
-        fn from(value: &WorkspaceUserRole) -> Self {
-            value.clone()
-        }
     }
 
     impl ::std::fmt::Display for WorkspaceUserRole {
@@ -50035,7 +45804,7 @@ impl RawClient {
     pub fn new(baseurl: &str) -> Self {
         #[cfg(not(target_arch = "wasm32"))]
         let client = {
-            let dur = std::time::Duration::from_secs(15);
+            let dur = ::std::time::Duration::from_secs(15u64);
             reqwest::ClientBuilder::new()
                 .connect_timeout(dur)
                 .timeout(dur)

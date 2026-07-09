@@ -4,7 +4,7 @@ use thiserror::Error;
 
 use RichSingleValue::*;
 use RichValue::*;
-use ScalarValue::*;
+use ScalarValue::Number;
 
 #[derive(Debug, Error)]
 pub enum ConvertRichValueRefToF64Error {
@@ -24,7 +24,7 @@ impl TryFrom<&RichValue> for f64 {
     fn try_from(value: &RichValue) -> Result<Self, Self::Error> {
         use ConvertRichValueRefToF64Error::*;
         match value {
-            Single(Scalar(Variant1(number))) => Ok(*number),
+            Single(Scalar(Number(number))) => Ok(*number),
             _ => Err(InvalidInput),
         }
     }
@@ -36,7 +36,7 @@ impl TryFrom<RichValue> for f64 {
     fn try_from(value: RichValue) -> Result<Self, Self::Error> {
         use ConvertRichValueToF64Error::*;
         match value {
-            Single(Scalar(Variant1(number))) => Ok(number),
+            Single(Scalar(Number(number))) => Ok(number),
             rich_value => Err(InvalidInput {
                 rich_value,
             }),

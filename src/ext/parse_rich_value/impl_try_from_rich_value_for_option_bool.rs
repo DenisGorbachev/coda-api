@@ -4,7 +4,7 @@ use thiserror::Error;
 
 use RichSingleValue::*;
 use RichValue::*;
-use ScalarValue::*;
+use ScalarValue::{Boolean, String as ScalarString};
 
 #[derive(Debug, Error)]
 pub enum ConvertRichValueRefToOptionBoolError {
@@ -38,9 +38,9 @@ impl TryFrom<&RichValue> for Option<bool> {
         match value {
             Single(single) => match single {
                 Scalar(scalar) => match scalar {
-                    Variant2(boolean) => Ok(Some(*boolean)),
-                    Variant0(text) if text.trim().is_empty() => Ok(None),
-                    Variant0(_) => Err(StringScalarNotEmpty),
+                    Boolean(boolean) => Ok(Some(*boolean)),
+                    ScalarString(text) if text.trim().is_empty() => Ok(None),
+                    ScalarString(_) => Err(StringScalarNotEmpty),
                     _ => Err(ScalarNotBoolean),
                 },
                 _ => Err(RichSingleValueNotScalar),
@@ -58,8 +58,8 @@ impl TryFrom<RichValue> for Option<bool> {
         match value {
             Single(single) => match single {
                 Scalar(scalar) => match scalar {
-                    Variant2(boolean) => Ok(Some(boolean)),
-                    Variant0(text) => {
+                    Boolean(boolean) => Ok(Some(boolean)),
+                    ScalarString(text) => {
                         if text.trim().is_empty() {
                             Ok(None)
                         } else {

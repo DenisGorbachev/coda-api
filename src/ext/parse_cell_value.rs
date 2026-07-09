@@ -8,7 +8,7 @@ impl TryFrom<CellValue> for String {
         use ConvertCellValueToStringError::*;
         match cell_value {
             CellValue::Value(Value::Variant0(ValueVariant0::Variant0(value))) => Ok(value),
-            CellValue::RichValue(RichValue::Variant0(RichSingleValue::ScalarValue(ScalarValue::Variant0(value)))) => Ok(value),
+            CellValue::RichValue(RichValue::RichSingleValue(RichSingleValue::ScalarValue(ScalarValue::String(value)))) => Ok(value),
             cell_value => Err(InvalidCellValue {
                 cell_value,
             }),
@@ -23,7 +23,7 @@ impl TryFrom<CellValue> for f64 {
         use ConvertCellValueToF64Error::*;
         match cell_value {
             CellValue::Value(Value::Variant0(ValueVariant0::Variant1(value))) => Ok(value),
-            CellValue::RichValue(RichValue::Variant0(RichSingleValue::ScalarValue(ScalarValue::Variant1(value)))) => Ok(value),
+            CellValue::RichValue(RichValue::RichSingleValue(RichSingleValue::ScalarValue(ScalarValue::Number(value)))) => Ok(value),
             cell_value => Err(InvalidCellValue {
                 cell_value,
             }),
@@ -40,7 +40,7 @@ impl TryFrom<CellValue> for Option<bool> {
         match cell_value {
             CellValue::Value(Value::Variant0(ValueVariant0::Variant0(value))) if value.is_empty() => Ok(None),
             CellValue::Value(Value::Variant0(ValueVariant0::Variant2(value))) => Ok(Some(value)),
-            CellValue::RichValue(RichValue::Variant0(RichSingleValue::ScalarValue(ScalarValue::Variant2(value)))) => Ok(Some(value)),
+            CellValue::RichValue(RichValue::RichSingleValue(RichSingleValue::ScalarValue(ScalarValue::Boolean(value)))) => Ok(Some(value)),
             cell_value => Err(InvalidCellValue {
                 cell_value,
             }),

@@ -4,7 +4,7 @@ use thiserror::Error;
 
 use RichSingleValue::*;
 use RichValue::*;
-use ScalarValue::*;
+use ScalarValue::Boolean;
 
 #[derive(Debug, Error)]
 pub enum ConvertRichValueRefToBoolError {
@@ -24,7 +24,7 @@ impl TryFrom<&RichValue> for bool {
     fn try_from(value: &RichValue) -> Result<Self, Self::Error> {
         use ConvertRichValueRefToBoolError::*;
         match value {
-            Single(Scalar(Variant2(boolean))) => Ok(*boolean),
+            Single(Scalar(Boolean(boolean))) => Ok(*boolean),
             _ => Err(InvalidInput),
         }
     }
@@ -36,7 +36,7 @@ impl TryFrom<RichValue> for bool {
     fn try_from(value: RichValue) -> Result<Self, Self::Error> {
         use ConvertRichValueToBoolError::*;
         match value {
-            Single(Scalar(Variant2(boolean))) => Ok(boolean),
+            Single(Scalar(Boolean(boolean))) => Ok(boolean),
             rich_value => Err(InvalidInput {
                 rich_value,
             }),
