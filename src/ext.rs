@@ -1,4 +1,4 @@
-use crate::types::{Column, ColumnList, Doc, DocList, GetTableResponse, ListTablesResponse, NextPageToken, Row, RowList, TableList, TableReference};
+use crate::types::{Column, ColumnList, ControlList, ControlReference, Doc, DocList, FormulaList, FormulaReference, GetTableResponse, ListTablesResponse, NextPageToken, Page, PageList, Row, RowList, TableList, TableReference};
 use crate::{Error, RawClient, types};
 use progenitor_client::{ClientHooks, ClientInfo, OperationInfo, ResponseValue, encode_path};
 use serde::de::DeserializeOwned;
@@ -97,6 +97,48 @@ impl PaginatedResponse<Column> for ColumnList {
     }
 
     fn into_items(self) -> Vec<Column> {
+        self.items
+    }
+}
+
+impl PaginatedResponse<Page> for PageList {
+    fn items(&self) -> &Vec<Page> {
+        &self.items
+    }
+
+    fn next_page_token(&self) -> Option<&NextPageToken> {
+        self.next_page_token.as_ref()
+    }
+
+    fn into_items(self) -> Vec<Page> {
+        self.items
+    }
+}
+
+impl PaginatedResponse<FormulaReference> for FormulaList {
+    fn items(&self) -> &Vec<FormulaReference> {
+        &self.items
+    }
+
+    fn next_page_token(&self) -> Option<&NextPageToken> {
+        self.next_page_token.as_ref()
+    }
+
+    fn into_items(self) -> Vec<FormulaReference> {
+        self.items
+    }
+}
+
+impl PaginatedResponse<ControlReference> for ControlList {
+    fn items(&self) -> &Vec<ControlReference> {
+        &self.items
+    }
+
+    fn next_page_token(&self) -> Option<&NextPageToken> {
+        self.next_page_token.as_ref()
+    }
+
+    fn into_items(self) -> Vec<ControlReference> {
         self.items
     }
 }
@@ -493,3 +535,6 @@ where
 
     Ok(all_items)
 }
+
+mod metadata;
+pub use metadata::*;

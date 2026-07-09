@@ -4166,18 +4166,6 @@
             "$ref": "#/components/parameters/excludePublicPacks"
           },
           {
-            "$ref": "#/components/parameters/excludeIndividualAcls"
-          },
-          {
-            "$ref": "#/components/parameters/excludeWorkspaceAcls"
-          },
-          {
-            "$ref": "#/components/parameters/excludeNomosOrganizationAcls"
-          },
-          {
-            "$ref": "#/components/parameters/excludeGrammarlyInstitutionAcls"
-          },
-          {
             "$ref": "#/components/parameters/packEntrypoint"
           }
         ],
@@ -6399,12 +6387,6 @@
           },
           {
             "$ref": "#/components/parameters/excludePublicPacks"
-          },
-          {
-            "$ref": "#/components/parameters/excludeWorkspaceAcls"
-          },
-          {
-            "$ref": "#/components/parameters/excludeIndividualAcls"
           },
           {
             "$ref": "#/components/parameters/packEntrypoint"
@@ -8634,16 +8616,7 @@
             "$ref": "#/components/schemas/DocSize"
           },
           "sourceDoc": {
-            "allOf": [
-              {
-                "type": "object",
-                "description": "Reference to a Coda doc from which this doc was copied, if any.",
-                "additionalProperties": false
-              },
-              {
-                "$ref": "#/components/schemas/DocReference"
-              }
-            ]
+            "$ref": "#/components/schemas/DocReference"
           },
           "createdAt": {
             "type": "string",
@@ -8847,6 +8820,11 @@
             "type": "boolean",
             "description": "If true, indicates that the doc is over the API size limit.",
             "example": false
+          },
+          "baseTableCount": {
+            "type": "number",
+            "description": "The number of base tables contained within the doc.",
+            "example": 25
           }
         }
       },
@@ -9043,16 +9021,7 @@
             "$ref": "#/components/schemas/DocSize"
           },
           "sourceDoc": {
-            "allOf": [
-              {
-                "type": "object",
-                "description": "Reference to a Coda doc from which this doc was copied, if any.",
-                "additionalProperties": false
-              },
-              {
-                "$ref": "#/components/schemas/DocReference"
-              }
-            ]
+            "$ref": "#/components/schemas/DocReference"
           },
           "createdAt": {
             "type": "string",
@@ -10296,12 +10265,14 @@
         "enum": [
           "canvas",
           "embed",
-          "syncPage"
+          "syncPage",
+          "table"
         ],
         "x-tsEnumNames": [
           "Canvas",
           "Embed",
-          "SyncPage"
+          "SyncPage",
+          "Table"
         ]
       },
       "PageLineStyle": {
@@ -10549,15 +10520,7 @@
             "$ref": "#/components/schemas/Layout"
           },
           "filter": {
-            "allOf": [
-              {
-                "description": "Detailed information about the filter formula for the table, if applicable.",
-                "additionalProperties": false
-              },
-              {
-                "$ref": "#/components/schemas/FormulaDetail"
-              }
-            ]
+            "$ref": "#/components/schemas/FormulaDetail"
           },
           "createdAt": {
             "type": "string",
@@ -10781,7 +10744,16 @@
         "additionalProperties": false,
         "properties": {
           "type": {
-            "$ref": "#/components/schemas/ColumnFormatType"
+            "type": "string",
+            "enum": [
+              "text",
+              "image",
+              "attachments",
+              "packObject",
+              "reaction",
+              "canvas",
+              "other"
+            ]
           },
           "isArray": {
             "type": "boolean",
@@ -10793,88 +10765,103 @@
       "ReferenceColumnFormat": {
         "x-schema-name": "ReferenceColumnFormat",
         "description": "Format of a column that refers to another table.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "person",
+              "lookup"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "table"
-            ],
-            "properties": {
-              "table": {
-                "allOf": [
-                  {
-                    "description": "Reference to the table this column refers to, if applicable.",
-                    "additionalProperties": false
-                  },
-                  {
-                    "$ref": "#/components/schemas/TableReference"
-                  }
-                ]
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "table": {
+            "$ref": "#/components/schemas/TableReference"
           }
-        ]
+        }
       },
       "NumericColumnFormat": {
         "x-schema-name": "NumericColumnFormat",
         "description": "Format of a numeric column.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "number",
+              "percent"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "precision": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 10,
-                "description": "The decimal precision.",
-                "example": 2
-              },
-              "useThousandsSeparator": {
-                "type": "boolean",
-                "description": "Whether to use a thousands separator (like \",\") to format the numeric value.",
-                "example": true
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "precision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10,
+            "description": "The decimal precision.",
+            "example": 2
+          },
+          "useThousandsSeparator": {
+            "type": "boolean",
+            "description": "Whether to use a thousands separator (like \",\") to format the numeric value.",
+            "example": true
           }
-        ]
+        }
       },
       "CurrencyColumnFormat": {
         "x-schema-name": "CurrencyColumnFormat",
         "description": "Format of a currency column.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "currency"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "currencyCode": {
-                "type": "string",
-                "description": "The currency symbol",
-                "example": "$"
-              },
-              "precision": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 10,
-                "description": "The decimal precision.",
-                "example": 2
-              },
-              "format": {
-                "$ref": "#/components/schemas/CurrencyFormatType"
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "description": "The currency symbol",
+            "example": "$"
+          },
+          "precision": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10,
+            "description": "The decimal precision.",
+            "example": 2
+          },
+          "format": {
+            "$ref": "#/components/schemas/CurrencyFormatType"
           }
-        ]
+        }
       },
       "CurrencyFormatType": {
         "x-schema-name": "CurrencyFormatType",
@@ -10894,43 +10881,59 @@
       "DateColumnFormat": {
         "x-schema-name": "DateColumnFormat",
         "description": "Format of a date column.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "date"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "format": {
-                "type": "string",
-                "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
-                "example": "YYYY-MM-DD"
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "format": {
+            "type": "string",
+            "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+            "example": "YYYY-MM-DD"
           }
-        ]
+        }
       },
       "EmailColumnFormat": {
         "x-schema-name": "EmailColumnFormat",
         "description": "Format of an email column.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "email"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "display": {
-                "$ref": "#/components/schemas/EmailDisplayType"
-              },
-              "autocomplete": {
-                "type": "boolean"
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "display": {
+            "$ref": "#/components/schemas/EmailDisplayType"
+          },
+          "autocomplete": {
+            "type": "boolean"
           }
-        ]
+        }
       },
       "EmailDisplayType": {
         "x-schema-name": "EmailDisplayType",
@@ -10950,47 +10953,37 @@
       "ImageReferenceColumnFormat": {
         "x-schema-name": "ImageReferenceColumnFormat",
         "description": "Format of an image reference column.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray",
+          "width",
+          "height",
+          "style"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "imageReference"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "width",
-              "height",
-              "style"
-            ],
-            "properties": {
-              "width": {
-                "allOf": [
-                  {
-                    "description": "The image width.",
-                    "additionalProperties": false
-                  },
-                  {
-                    "$ref": "#/components/schemas/NumberOrNumberFormula"
-                  }
-                ]
-              },
-              "height": {
-                "allOf": [
-                  {
-                    "description": "The image height.",
-                    "additionalProperties": false
-                  },
-                  {
-                    "$ref": "#/components/schemas/NumberOrNumberFormula"
-                  }
-                ]
-              },
-              "style": {
-                "$ref": "#/components/schemas/ImageShapeStyle"
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "width": {
+            "$ref": "#/components/schemas/NumberOrNumberFormula"
+          },
+          "height": {
+            "$ref": "#/components/schemas/NumberOrNumberFormula"
+          },
+          "style": {
+            "$ref": "#/components/schemas/ImageShapeStyle"
           }
-        ]
+        }
       },
       "ImageShapeStyle": {
         "x-schema-name": "ImageShapeStyle",
@@ -11008,25 +11001,33 @@
       "LinkColumnFormat": {
         "x-schema-name": "LinkColumnFormat",
         "description": "Format of a link column.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "link"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "display": {
-                "$ref": "#/components/schemas/LinkDisplayType"
-              },
-              "force": {
-                "type": "boolean",
-                "description": "Force embeds to render on the client instead of the server (for sites that require user login).",
-                "example": true
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "display": {
+            "$ref": "#/components/schemas/LinkDisplayType"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "Force embeds to render on the client instead of the server (for sites that require user login).",
+            "example": true
           }
-        ]
+        }
       },
       "LinkDisplayType": {
         "x-schema-name": "LinkDisplayType",
@@ -11050,77 +11051,93 @@
       "TimeColumnFormat": {
         "x-schema-name": "TimeColumnFormat",
         "description": "Format of a time column.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "time"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "format": {
-                "type": "string",
-                "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
-                "example": "h:mm:ss A"
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "format": {
+            "type": "string",
+            "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+            "example": "h:mm:ss A"
           }
-        ]
+        }
       },
       "DateTimeColumnFormat": {
         "x-schema-name": "DateTimeColumnFormat",
         "description": "Format of a date column.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "dateTime"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "dateFormat": {
-                "type": "string",
-                "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
-                "example": "YYYY-MM-DD"
-              },
-              "timeFormat": {
-                "type": "string",
-                "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
-                "example": "h:mm:ss A"
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "dateFormat": {
+            "type": "string",
+            "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+            "example": "YYYY-MM-DD"
+          },
+          "timeFormat": {
+            "type": "string",
+            "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+            "example": "h:mm:ss A"
           }
-        ]
+        }
       },
       "DurationColumnFormat": {
         "x-schema-name": "DurationColumnFormat",
         "description": "Format of a duration column.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "duration"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "precision": {
-                "type": "integer",
-                "example": 2
-              },
-              "maxUnit": {
-                "allOf": [
-                  {
-                    "description": "The maximum unit of precision, e.g. \"hours\" if this duration need not include minutes.",
-                    "additionalProperties": false
-                  },
-                  {
-                    "$ref": "#/components/schemas/DurationUnit"
-                  }
-                ]
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "precision": {
+            "type": "integer",
+            "example": 2
+          },
+          "maxUnit": {
+            "$ref": "#/components/schemas/DurationUnit"
           }
-        ]
+        }
       },
       "DurationUnit": {
         "x-schema-name": "DurationUnit",
@@ -11158,88 +11175,80 @@
       "SliderColumnFormat": {
         "x-schema-name": "SliderColumnFormat",
         "description": "Format of a numeric column that renders as a slider.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "slider"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "minimum": {
-                "allOf": [
-                  {
-                    "description": "The minimum allowed value for this slider.",
-                    "additionalProperties": false
-                  },
-                  {
-                    "$ref": "#/components/schemas/NumberOrNumberFormula"
-                  }
-                ]
-              },
-              "maximum": {
-                "allOf": [
-                  {
-                    "description": "The maximum allowed value for this slider.",
-                    "additionalProperties": false
-                  },
-                  {
-                    "$ref": "#/components/schemas/NumberOrNumberFormula"
-                  }
-                ]
-              },
-              "step": {
-                "allOf": [
-                  {
-                    "description": "The step size (numeric increment) for this slider.",
-                    "additionalProperties": false
-                  },
-                  {
-                    "$ref": "#/components/schemas/NumberOrNumberFormula"
-                  }
-                ]
-              },
-              "displayType": {
-                "$ref": "#/components/schemas/SliderDisplayType"
-              },
-              "showValue": {
-                "type": "boolean",
-                "description": "Whether the underyling numeric value is also displayed.",
-                "example": true
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "minimum": {
+            "$ref": "#/components/schemas/NumberOrNumberFormula"
+          },
+          "maximum": {
+            "$ref": "#/components/schemas/NumberOrNumberFormula"
+          },
+          "step": {
+            "$ref": "#/components/schemas/NumberOrNumberFormula"
+          },
+          "displayType": {
+            "$ref": "#/components/schemas/SliderDisplayType"
+          },
+          "showValue": {
+            "type": "boolean",
+            "description": "Whether the underyling numeric value is also displayed.",
+            "example": true
           }
-        ]
+        }
       },
       "ButtonColumnFormat": {
         "x-schema-name": "ButtonColumnFormat",
         "description": "Format of a button column.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "button"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "label": {
-                "type": "string",
-                "description": "Label formula for the button.",
-                "example": "Click me"
-              },
-              "disableIf": {
-                "type": "string",
-                "description": "DisableIf formula for the button.",
-                "example": "False()"
-              },
-              "action": {
-                "type": "string",
-                "description": "Action formula for the button.",
-                "example": "OpenUrl(\"www.google.com\")"
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "label": {
+            "type": "string",
+            "description": "Label formula for the button.",
+            "example": "Click me"
+          },
+          "disableIf": {
+            "type": "string",
+            "description": "DisableIf formula for the button.",
+            "example": "False()"
+          },
+          "action": {
+            "type": "string",
+            "description": "Action formula for the button.",
+            "example": "OpenUrl(\"www.google.com\")"
           }
-        ]
+        }
       },
       "IconSet": {
         "x-schema-name": "IconSet",
@@ -11293,59 +11302,65 @@
       "ScaleColumnFormat": {
         "x-schema-name": "ScaleColumnFormat",
         "description": "Format of a numeric column that renders as a scale, like star ratings.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray",
+          "maximum",
+          "icon"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "scale"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "maximum",
-              "icon"
-            ],
-            "properties": {
-              "maximum": {
-                "type": "number",
-                "description": "The maximum number allowed for this scale.",
-                "example": 5
-              },
-              "icon": {
-                "allOf": [
-                  {
-                    "description": "The icon set to use when rendering the scale, e.g. render a 5 star scale.",
-                    "additionalProperties": false
-                  },
-                  {
-                    "$ref": "#/components/schemas/IconSet"
-                  }
-                ]
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "maximum": {
+            "type": "number",
+            "description": "The maximum number allowed for this scale.",
+            "example": 5
+          },
+          "icon": {
+            "$ref": "#/components/schemas/IconSet"
           }
-        ]
+        }
       },
       "SelectColumnFormat": {
         "x-schema-name": "SelectColumnFormat",
         "description": "Format of a select column.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "select"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "options": {
-                "type": "array",
-                "description": "For select format columns, the list of available options. Only returned for select lists that used a fixed set of options. Returns the first 5000 options.",
-                "items": {
-                  "$ref": "#/components/schemas/SelectOption"
-                }
-              }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "options": {
+            "type": "array",
+            "description": "For select format columns, the list of available options. Only returned for select lists that used a fixed set of options. Returns the first 5000 options.",
+            "items": {
+              "$ref": "#/components/schemas/SelectOption"
             }
           }
-        ]
+        }
       },
       "SelectOption": {
         "x-schema-name": "SelectOption",
@@ -11389,23 +11404,29 @@
       "CheckboxColumnFormat": {
         "x-schema-name": "CheckboxColumnFormat",
         "description": "Format of a checkbox column.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/SimpleColumnFormat"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "isArray",
+          "displayType"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "checkbox"
+            ]
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "displayType"
-            ],
-            "properties": {
-              "displayType": {
-                "$ref": "#/components/schemas/CheckboxDisplayType"
-              }
-            }
+          "isArray": {
+            "type": "boolean",
+            "description": "Whether or not this column is an array.",
+            "example": true
+          },
+          "displayType": {
+            "$ref": "#/components/schemas/CheckboxDisplayType"
           }
-        ]
+        }
       },
       "CheckboxDisplayType": {
         "x-schema-name": "CheckboxDisplayType",
@@ -12103,38 +12124,41 @@
       "PersonValue": {
         "x-schema-name": "PersonValue",
         "description": "A named reference to a person, where the person is identified by email address.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/LinkedDataObject"
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "@context",
+          "@type",
+          "name"
+        ],
+        "properties": {
+          "@context": {
+            "type": "string",
+            "description": "A url describing the schema context for this object, typically \"http://schema.org/\".",
+            "example": "http://schema.org/"
           },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "@type",
-              "name"
+          "@type": {
+            "type": "string",
+            "enum": [
+              "Person"
             ],
-            "properties": {
-              "@type": {
-                "type": "string",
-                "enum": [
-                  "Person"
-                ],
-                "x-tsType": "LinkedDataType.Person"
-              },
-              "name": {
-                "type": "string",
-                "description": "The full name of the person.",
-                "example": "Alice Atkins"
-              },
-              "email": {
-                "type": "string",
-                "description": "The email address of the person.",
-                "example": "alice@atkins.com"
-              }
-            }
+            "x-tsType": "LinkedDataType.Person"
+          },
+          "additionalType": {
+            "type": "string",
+            "description": "An identifier of additional type info specific to Coda that may not be present in a schema.org taxonomy."
+          },
+          "name": {
+            "type": "string",
+            "description": "The full name of the person.",
+            "example": "Alice Atkins"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email address of the person.",
+            "example": "alice@atkins.com"
           }
-        ]
+        }
       },
       "CurrencyAmount": {
         "x-schema-name": "CurrencyAmount",
@@ -15763,18 +15787,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "videoWalkthrough": {
-            "type": "string",
-            "nullable": true,
-            "description": "URL or reference to video walkthrough for agent verification.",
-            "maxLength": 512
-          },
-          "additionalDetails": {
-            "type": "string",
-            "nullable": true,
-            "description": "Additional details for the pack review.",
-            "maxLength": 8192
-          },
           "privacyCollectsPersonalInfo": {
             "type": "boolean",
             "nullable": true,
@@ -16003,18 +16015,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "videoWalkthrough": {
-            "type": "string",
-            "nullable": true,
-            "description": "URL or reference to video walkthrough for agent verification.",
-            "maxLength": 512
-          },
-          "additionalDetails": {
-            "type": "string",
-            "nullable": true,
-            "description": "Additional details for the pack review.",
-            "maxLength": 8192
-          },
           "privacyCollectsPersonalInfo": {
             "type": "boolean",
             "nullable": true,
@@ -20822,38 +20822,6 @@
       "excludePublicPacks": {
         "name": "excludePublicPacks",
         "description": "Only get Packs shared with users/workspaces, not publicly.",
-        "in": "query",
-        "schema": {
-          "type": "boolean"
-        }
-      },
-      "excludeWorkspaceAcls": {
-        "name": "excludeWorkspaceAcls",
-        "description": "Do not include Packs that are only shared with workspaces.",
-        "in": "query",
-        "schema": {
-          "type": "boolean"
-        }
-      },
-      "excludeIndividualAcls": {
-        "name": "excludeIndividualAcls",
-        "description": "Do not include Packs that are only shared with the user individually.",
-        "in": "query",
-        "schema": {
-          "type": "boolean"
-        }
-      },
-      "excludeNomosOrganizationAcls": {
-        "name": "excludeNomosOrganizationAcls",
-        "description": "Do not include Packs that are only shared with the user's NOMOS organization.",
-        "in": "query",
-        "schema": {
-          "type": "boolean"
-        }
-      },
-      "excludeGrammarlyInstitutionAcls": {
-        "name": "excludeGrammarlyInstitutionAcls",
-        "description": "Do not include Packs that are only shared with the user's Grammarly institution.",
         "in": "query",
         "schema": {
           "type": "boolean"

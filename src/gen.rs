@@ -2838,55 +2838,145 @@ pub mod types {
         }
     }
 
-    ///`ButtonColumnFormat`
+    ///Format of a button column.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of a button column.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "properties": {
-    ///        "action": {
-    ///          "description": "Action formula for the button.",
-    ///          "examples": [
-    ///            "OpenUrl(\"www.google.com\")"
-    ///          ],
-    ///          "type": "string"
-    ///        },
-    ///        "disableIf": {
-    ///          "description": "DisableIf formula for the button.",
-    ///          "examples": [
-    ///            "False()"
-    ///          ],
-    ///          "type": "string"
-    ///        },
-    ///        "label": {
-    ///          "description": "Label formula for the button.",
-    ///          "examples": [
-    ///            "Click me"
-    ///          ],
-    ///          "type": "string"
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "isArray",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "action": {
+    ///      "description": "Action formula for the button.",
+    ///      "examples": [
+    ///        "OpenUrl(\"www.google.com\")"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "disableIf": {
+    ///      "description": "DisableIf formula for the button.",
+    ///      "examples": [
+    ///        "False()"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "label": {
+    ///      "description": "Label formula for the button.",
+    ///      "examples": [
+    ///        "Click me"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "button"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "ButtonColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum ButtonColumnFormat {}
-    impl ::std::convert::From<&Self> for ButtonColumnFormat {
+    pub struct ButtonColumnFormat {
+        ///Action formula for the button.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub action: ::std::option::Option<::std::string::String>,
+        ///DisableIf formula for the button.
+        #[serde(rename = "disableIf", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub disable_if: ::std::option::Option<::std::string::String>,
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        ///Label formula for the button.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub label: ::std::option::Option<::std::string::String>,
+        #[serde(rename = "type")]
+        pub type_: ButtonColumnFormatType,
+    }
+
+    impl ::std::convert::From<&ButtonColumnFormat> for ButtonColumnFormat {
         fn from(value: &ButtonColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`ButtonColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "button"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum ButtonColumnFormatType {
+        #[serde(rename = "button")]
+        Button,
+    }
+
+    impl ::std::convert::From<&Self> for ButtonColumnFormatType {
+        fn from(value: &ButtonColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for ButtonColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Button => f.write_str("button"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for ButtonColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "button" => Ok(Self::Button),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for ButtonColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for ButtonColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for ButtonColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -3151,40 +3241,121 @@ pub mod types {
         }
     }
 
-    ///`CheckboxColumnFormat`
+    ///Format of a checkbox column.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of a checkbox column.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "displayType"
-    ///      ],
-    ///      "properties": {
-    ///        "displayType": {
-    ///          "$ref": "#/components/schemas/CheckboxDisplayType"
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "displayType",
+    ///    "isArray",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "displayType": {
+    ///      "$ref": "#/components/schemas/CheckboxDisplayType"
+    ///    },
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "checkbox"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "CheckboxColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum CheckboxColumnFormat {}
-    impl ::std::convert::From<&Self> for CheckboxColumnFormat {
+    pub struct CheckboxColumnFormat {
+        #[serde(rename = "displayType")]
+        pub display_type: CheckboxDisplayType,
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        #[serde(rename = "type")]
+        pub type_: CheckboxColumnFormatType,
+    }
+
+    impl ::std::convert::From<&CheckboxColumnFormat> for CheckboxColumnFormat {
         fn from(value: &CheckboxColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`CheckboxColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "checkbox"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum CheckboxColumnFormatType {
+        #[serde(rename = "checkbox")]
+        Checkbox,
+    }
+
+    impl ::std::convert::From<&Self> for CheckboxColumnFormatType {
+        fn from(value: &CheckboxColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for CheckboxColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Checkbox => f.write_str("checkbox"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for CheckboxColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "checkbox" => Ok(Self::Checkbox),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for CheckboxColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for CheckboxColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for CheckboxColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -5738,53 +5909,142 @@ pub mod types {
         }
     }
 
-    ///`CurrencyColumnFormat`
+    ///Format of a currency column.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of a currency column.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "properties": {
-    ///        "currencyCode": {
-    ///          "description": "The currency symbol",
-    ///          "examples": [
-    ///            "$"
-    ///          ],
-    ///          "type": "string"
-    ///        },
-    ///        "format": {
-    ///          "$ref": "#/components/schemas/CurrencyFormatType"
-    ///        },
-    ///        "precision": {
-    ///          "description": "The decimal precision.",
-    ///          "examples": [
-    ///            2
-    ///          ],
-    ///          "type": "integer",
-    ///          "maximum": 10.0,
-    ///          "minimum": 0.0
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "isArray",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "currencyCode": {
+    ///      "description": "The currency symbol",
+    ///      "examples": [
+    ///        "$"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "format": {
+    ///      "$ref": "#/components/schemas/CurrencyFormatType"
+    ///    },
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "precision": {
+    ///      "description": "The decimal precision.",
+    ///      "examples": [
+    ///        2
+    ///      ],
+    ///      "type": "integer",
+    ///      "maximum": 10.0,
+    ///      "minimum": 0.0
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "currency"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "CurrencyColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum CurrencyColumnFormat {}
-    impl ::std::convert::From<&Self> for CurrencyColumnFormat {
+    pub struct CurrencyColumnFormat {
+        ///The currency symbol
+        #[serde(rename = "currencyCode", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub currency_code: ::std::option::Option<::std::string::String>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub format: ::std::option::Option<CurrencyFormatType>,
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        ///The decimal precision.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub precision: ::std::option::Option<i64>,
+        #[serde(rename = "type")]
+        pub type_: CurrencyColumnFormatType,
+    }
+
+    impl ::std::convert::From<&CurrencyColumnFormat> for CurrencyColumnFormat {
         fn from(value: &CurrencyColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`CurrencyColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "currency"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum CurrencyColumnFormatType {
+        #[serde(rename = "currency")]
+        Currency,
+    }
+
+    impl ::std::convert::From<&Self> for CurrencyColumnFormatType {
+        fn from(value: &CurrencyColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for CurrencyColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Currency => f.write_str("currency"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for CurrencyColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "currency" => Ok(Self::Currency),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for CurrencyColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for CurrencyColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for CurrencyColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -6350,86 +6610,257 @@ pub mod types {
         }
     }
 
-    ///`DateColumnFormat`
+    ///Format of a date column.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of a date column.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "properties": {
-    ///        "format": {
-    ///          "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
-    ///          "examples": [
-    ///            "YYYY-MM-DD"
-    ///          ],
-    ///          "type": "string"
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "isArray",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "format": {
+    ///      "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+    ///      "examples": [
+    ///        "YYYY-MM-DD"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "date"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "DateColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum DateColumnFormat {}
-    impl ::std::convert::From<&Self> for DateColumnFormat {
+    pub struct DateColumnFormat {
+        ///A format string using Moment syntax: https://momentjs.com/docs/#/displaying/
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub format: ::std::option::Option<::std::string::String>,
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        #[serde(rename = "type")]
+        pub type_: DateColumnFormatType,
+    }
+
+    impl ::std::convert::From<&DateColumnFormat> for DateColumnFormat {
         fn from(value: &DateColumnFormat) -> Self {
             value.clone()
         }
     }
 
-    ///`DateTimeColumnFormat`
+    ///`DateColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "date"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum DateColumnFormatType {
+        #[serde(rename = "date")]
+        Date,
+    }
+
+    impl ::std::convert::From<&Self> for DateColumnFormatType {
+        fn from(value: &DateColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for DateColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Date => f.write_str("date"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for DateColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "date" => Ok(Self::Date),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for DateColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for DateColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for DateColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    ///Format of a date column.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of a date column.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "properties": {
-    ///        "dateFormat": {
-    ///          "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
-    ///          "examples": [
-    ///            "YYYY-MM-DD"
-    ///          ],
-    ///          "type": "string"
-    ///        },
-    ///        "timeFormat": {
-    ///          "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
-    ///          "examples": [
-    ///            "h:mm:ss A"
-    ///          ],
-    ///          "type": "string"
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "isArray",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "dateFormat": {
+    ///      "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+    ///      "examples": [
+    ///        "YYYY-MM-DD"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "timeFormat": {
+    ///      "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+    ///      "examples": [
+    ///        "h:mm:ss A"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "dateTime"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "DateTimeColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum DateTimeColumnFormat {}
-    impl ::std::convert::From<&Self> for DateTimeColumnFormat {
+    pub struct DateTimeColumnFormat {
+        ///A format string using Moment syntax: https://momentjs.com/docs/#/displaying/
+        #[serde(rename = "dateFormat", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub date_format: ::std::option::Option<::std::string::String>,
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        ///A format string using Moment syntax: https://momentjs.com/docs/#/displaying/
+        #[serde(rename = "timeFormat", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub time_format: ::std::option::Option<::std::string::String>,
+        #[serde(rename = "type")]
+        pub type_: DateTimeColumnFormatType,
+    }
+
+    impl ::std::convert::From<&DateTimeColumnFormat> for DateTimeColumnFormat {
         fn from(value: &DateTimeColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`DateTimeColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "dateTime"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum DateTimeColumnFormatType {
+        #[serde(rename = "dateTime")]
+        DateTime,
+    }
+
+    impl ::std::convert::From<&Self> for DateTimeColumnFormatType {
+        fn from(value: &DateTimeColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for DateTimeColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::DateTime => f.write_str("dateTime"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for DateTimeColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "dateTime" => Ok(Self::DateTime),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for DateTimeColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for DateTimeColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for DateTimeColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -7508,17 +7939,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/DocPublished"
     ///    },
     ///    "sourceDoc": {
-    ///      "allOf": [
-    ///        {
-    ///          "description": "Reference to a Coda doc from which this doc was
-    /// copied, if any.",
-    ///          "type": "object",
-    ///          "additionalProperties": false
-    ///        },
-    ///        {
-    ///          "$ref": "#/components/schemas/DocReference"
-    ///        }
-    ///      ]
+    ///      "$ref": "#/components/schemas/DocReference"
     ///    },
     ///    "type": {
     ///      "description": "The type of this resource.",
@@ -7584,7 +8005,7 @@ pub mod types {
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub published: ::std::option::Option<DocPublished>,
         #[serde(rename = "sourceDoc", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub source_doc: ::std::option::Option<DocSourceDoc>,
+        pub source_doc: ::std::option::Option<DocReference>,
         ///The type of this resource.
         #[serde(rename = "type")]
         pub type_: DocType,
@@ -8887,6 +9308,14 @@ pub mod types {
     ///    "totalRowCount"
     ///  ],
     ///  "properties": {
+    ///    "baseTableCount": {
+    ///      "description": "The number of base tables contained within the
+    /// doc.",
+    ///      "examples": [
+    ///        25
+    ///      ],
+    ///      "type": "number"
+    ///    },
     ///    "overApiSizeLimit": {
     ///      "description": "If true, indicates that the doc is over the API
     /// size limit.",
@@ -8928,6 +9357,8 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DocSize {
+        #[serde(rename = "baseTableCount", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub base_table_count: ::std::option::Option<f64>,
         ///If true, indicates that the doc is over the API size limit.
         #[serde(rename = "overApiSizeLimit")]
         pub over_api_size_limit: bool,
@@ -8941,35 +9372,6 @@ pub mod types {
 
     impl ::std::convert::From<&DocSize> for DocSize {
         fn from(value: &DocSize) -> Self {
-            value.clone()
-        }
-    }
-
-    ///`DocSourceDoc`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "allOf": [
-    ///    {
-    ///      "description": "Reference to a Coda doc from which this doc was
-    /// copied, if any.",
-    ///      "type": "object",
-    ///      "additionalProperties": false
-    ///    },
-    ///    {
-    ///      "$ref": "#/components/schemas/DocReference"
-    ///    }
-    ///  ]
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-    #[serde(deny_unknown_fields)]
-    pub enum DocSourceDoc {}
-    impl ::std::convert::From<&Self> for DocSourceDoc {
-        fn from(value: &DocSourceDoc) -> Self {
             value.clone()
         }
     }
@@ -9228,17 +9630,7 @@ pub mod types {
     ///      "type": "string"
     ///    },
     ///    "sourceDoc": {
-    ///      "allOf": [
-    ///        {
-    ///          "description": "Reference to a Coda doc from which this doc was
-    /// copied, if any.",
-    ///          "type": "object",
-    ///          "additionalProperties": false
-    ///        },
-    ///        {
-    ///          "$ref": "#/components/schemas/DocReference"
-    ///        }
-    ///      ]
+    ///      "$ref": "#/components/schemas/DocReference"
     ///    },
     ///    "type": {
     ///      "description": "The type of this resource.",
@@ -9307,7 +9699,7 @@ pub mod types {
         #[serde(rename = "requestId", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub request_id: ::std::option::Option<::std::string::String>,
         #[serde(rename = "sourceDoc", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub source_doc: ::std::option::Option<DocumentCreationResultSourceDoc>,
+        pub source_doc: ::std::option::Option<DocReference>,
         ///The type of this resource.
         #[serde(rename = "type")]
         pub type_: DocumentCreationResultType,
@@ -9322,35 +9714,6 @@ pub mod types {
 
     impl ::std::convert::From<&DocumentCreationResult> for DocumentCreationResult {
         fn from(value: &DocumentCreationResult) -> Self {
-            value.clone()
-        }
-    }
-
-    ///`DocumentCreationResultSourceDoc`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "allOf": [
-    ///    {
-    ///      "description": "Reference to a Coda doc from which this doc was
-    /// copied, if any.",
-    ///      "type": "object",
-    ///      "additionalProperties": false
-    ///    },
-    ///    {
-    ///      "$ref": "#/components/schemas/DocReference"
-    ///    }
-    ///  ]
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-    #[serde(deny_unknown_fields)]
-    pub enum DocumentCreationResultSourceDoc {}
-    impl ::std::convert::From<&Self> for DocumentCreationResultSourceDoc {
-        fn from(value: &DocumentCreationResultSourceDoc) -> Self {
             value.clone()
         }
     }
@@ -9575,52 +9938,128 @@ pub mod types {
         }
     }
 
-    ///`DurationColumnFormat`
+    ///Format of a duration column.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of a duration column.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "properties": {
-    ///        "maxUnit": {
-    ///          "allOf": [
-    ///            {
-    ///              "description": "The maximum unit of precision, e.g.
-    /// \"hours\" if this duration need not include minutes.",
-    ///              "additionalProperties": false
-    ///            },
-    ///            {
-    ///              "$ref": "#/components/schemas/DurationUnit"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "precision": {
-    ///          "examples": [
-    ///            2
-    ///          ],
-    ///          "type": "integer"
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "isArray",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "maxUnit": {
+    ///      "$ref": "#/components/schemas/DurationUnit"
+    ///    },
+    ///    "precision": {
+    ///      "examples": [
+    ///        2
+    ///      ],
+    ///      "type": "integer"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "duration"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "DurationColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum DurationColumnFormat {}
-    impl ::std::convert::From<&Self> for DurationColumnFormat {
+    pub struct DurationColumnFormat {
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        #[serde(rename = "maxUnit", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub max_unit: ::std::option::Option<DurationUnit>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub precision: ::std::option::Option<i64>,
+        #[serde(rename = "type")]
+        pub type_: DurationColumnFormatType,
+    }
+
+    impl ::std::convert::From<&DurationColumnFormat> for DurationColumnFormat {
         fn from(value: &DurationColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`DurationColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "duration"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum DurationColumnFormatType {
+        #[serde(rename = "duration")]
+        Duration,
+    }
+
+    impl ::std::convert::From<&Self> for DurationColumnFormatType {
+        fn from(value: &DurationColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for DurationColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Duration => f.write_str("duration"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for DurationColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "duration" => Ok(Self::Duration),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for DurationColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for DurationColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for DurationColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -9711,40 +10150,125 @@ pub mod types {
         }
     }
 
-    ///`EmailColumnFormat`
+    ///Format of an email column.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of an email column.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "properties": {
-    ///        "autocomplete": {
-    ///          "type": "boolean"
-    ///        },
-    ///        "display": {
-    ///          "$ref": "#/components/schemas/EmailDisplayType"
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "isArray",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "autocomplete": {
+    ///      "type": "boolean"
+    ///    },
+    ///    "display": {
+    ///      "$ref": "#/components/schemas/EmailDisplayType"
+    ///    },
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "email"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "EmailColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum EmailColumnFormat {}
-    impl ::std::convert::From<&Self> for EmailColumnFormat {
+    pub struct EmailColumnFormat {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub autocomplete: ::std::option::Option<bool>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub display: ::std::option::Option<EmailDisplayType>,
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        #[serde(rename = "type")]
+        pub type_: EmailColumnFormatType,
+    }
+
+    impl ::std::convert::From<&EmailColumnFormat> for EmailColumnFormat {
         fn from(value: &EmailColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`EmailColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "email"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum EmailColumnFormatType {
+        #[serde(rename = "email")]
+        Email,
+    }
+
+    impl ::std::convert::From<&Self> for EmailColumnFormatType {
+        fn from(value: &EmailColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for EmailColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Email => f.write_str("email"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for EmailColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "email" => Ok(Self::Email),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for EmailColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for EmailColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for EmailColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -14261,64 +14785,130 @@ pub mod types {
         }
     }
 
-    ///`ImageReferenceColumnFormat`
+    ///Format of an image reference column.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of an image reference column.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "height",
-    ///        "style",
-    ///        "width"
-    ///      ],
-    ///      "properties": {
-    ///        "height": {
-    ///          "allOf": [
-    ///            {
-    ///              "description": "The image height.",
-    ///              "additionalProperties": false
-    ///            },
-    ///            {
-    ///              "$ref": "#/components/schemas/NumberOrNumberFormula"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "style": {
-    ///          "$ref": "#/components/schemas/ImageShapeStyle"
-    ///        },
-    ///        "width": {
-    ///          "allOf": [
-    ///            {
-    ///              "description": "The image width.",
-    ///              "additionalProperties": false
-    ///            },
-    ///            {
-    ///              "$ref": "#/components/schemas/NumberOrNumberFormula"
-    ///            }
-    ///          ]
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "height",
+    ///    "isArray",
+    ///    "style",
+    ///    "type",
+    ///    "width"
     ///  ],
+    ///  "properties": {
+    ///    "height": {
+    ///      "$ref": "#/components/schemas/NumberOrNumberFormula"
+    ///    },
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "style": {
+    ///      "$ref": "#/components/schemas/ImageShapeStyle"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "imageReference"
+    ///      ]
+    ///    },
+    ///    "width": {
+    ///      "$ref": "#/components/schemas/NumberOrNumberFormula"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "ImageReferenceColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum ImageReferenceColumnFormat {}
-    impl ::std::convert::From<&Self> for ImageReferenceColumnFormat {
+    pub struct ImageReferenceColumnFormat {
+        pub height: NumberOrNumberFormula,
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        pub style: ImageShapeStyle,
+        #[serde(rename = "type")]
+        pub type_: ImageReferenceColumnFormatType,
+        pub width: NumberOrNumberFormula,
+    }
+
+    impl ::std::convert::From<&ImageReferenceColumnFormat> for ImageReferenceColumnFormat {
         fn from(value: &ImageReferenceColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`ImageReferenceColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "imageReference"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum ImageReferenceColumnFormatType {
+        #[serde(rename = "imageReference")]
+        ImageReference,
+    }
+
+    impl ::std::convert::From<&Self> for ImageReferenceColumnFormatType {
+        fn from(value: &ImageReferenceColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for ImageReferenceColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::ImageReference => f.write_str("imageReference"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for ImageReferenceColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "imageReference" => Ok(Self::ImageReference),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for ImageReferenceColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for ImageReferenceColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for ImageReferenceColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -16033,45 +16623,132 @@ pub mod types {
         }
     }
 
-    ///`LinkColumnFormat`
+    ///Format of a link column.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of a link column.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "properties": {
-    ///        "display": {
-    ///          "$ref": "#/components/schemas/LinkDisplayType"
-    ///        },
-    ///        "force": {
-    ///          "description": "Force embeds to render on the client instead of
-    /// the server (for sites that require user login).",
-    ///          "examples": [
-    ///            true
-    ///          ],
-    ///          "type": "boolean"
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "isArray",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "display": {
+    ///      "$ref": "#/components/schemas/LinkDisplayType"
+    ///    },
+    ///    "force": {
+    ///      "description": "Force embeds to render on the client instead of the
+    /// server (for sites that require user login).",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "link"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "LinkColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum LinkColumnFormat {}
-    impl ::std::convert::From<&Self> for LinkColumnFormat {
+    pub struct LinkColumnFormat {
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub display: ::std::option::Option<LinkDisplayType>,
+        ///Force embeds to render on the client instead of the server (for
+        /// sites that require user login).
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub force: ::std::option::Option<bool>,
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        #[serde(rename = "type")]
+        pub type_: LinkColumnFormatType,
+    }
+
+    impl ::std::convert::From<&LinkColumnFormat> for LinkColumnFormat {
         fn from(value: &LinkColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`LinkColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "link"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum LinkColumnFormatType {
+        #[serde(rename = "link")]
+        Link,
+    }
+
+    impl ::std::convert::From<&Self> for LinkColumnFormatType {
+        fn from(value: &LinkColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for LinkColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Link => f.write_str("link"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for LinkColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "link" => Ok(Self::Link),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for LinkColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for LinkColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for LinkColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -20502,51 +21179,145 @@ pub mod types {
         }
     }
 
-    ///`NumericColumnFormat`
+    ///Format of a numeric column.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of a numeric column.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "properties": {
-    ///        "precision": {
-    ///          "description": "The decimal precision.",
-    ///          "examples": [
-    ///            2
-    ///          ],
-    ///          "type": "integer",
-    ///          "maximum": 10.0,
-    ///          "minimum": 0.0
-    ///        },
-    ///        "useThousandsSeparator": {
-    ///          "description": "Whether to use a thousands separator (like
-    /// \",\") to format the numeric value.",
-    ///          "examples": [
-    ///            true
-    ///          ],
-    ///          "type": "boolean"
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "isArray",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "precision": {
+    ///      "description": "The decimal precision.",
+    ///      "examples": [
+    ///        2
+    ///      ],
+    ///      "type": "integer",
+    ///      "maximum": 10.0,
+    ///      "minimum": 0.0
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "number",
+    ///        "percent"
+    ///      ]
+    ///    },
+    ///    "useThousandsSeparator": {
+    ///      "description": "Whether to use a thousands separator (like \",\")
+    /// to format the numeric value.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "NumericColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum NumericColumnFormat {}
-    impl ::std::convert::From<&Self> for NumericColumnFormat {
+    pub struct NumericColumnFormat {
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        ///The decimal precision.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub precision: ::std::option::Option<i64>,
+        #[serde(rename = "type")]
+        pub type_: NumericColumnFormatType,
+        ///Whether to use a thousands separator (like ",") to format the
+        /// numeric value.
+        #[serde(rename = "useThousandsSeparator", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub use_thousands_separator: ::std::option::Option<bool>,
+    }
+
+    impl ::std::convert::From<&NumericColumnFormat> for NumericColumnFormat {
         fn from(value: &NumericColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`NumericColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "number",
+    ///    "percent"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum NumericColumnFormatType {
+        #[serde(rename = "number")]
+        Number,
+        #[serde(rename = "percent")]
+        Percent,
+    }
+
+    impl ::std::convert::From<&Self> for NumericColumnFormatType {
+        fn from(value: &NumericColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for NumericColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Number => f.write_str("number"),
+                Self::Percent => f.write_str("percent"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for NumericColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "number" => Ok(Self::Number),
+                "percent" => Ok(Self::Percent),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for NumericColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for NumericColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for NumericColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -30044,14 +30815,6 @@ pub mod types {
     /// draft",
     ///  "type": "object",
     ///  "properties": {
-    ///    "additionalDetails": {
-    ///      "description": "Additional details for the pack review.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "maxLength": 8192
-    ///    },
     ///    "privacyCollectsPersonalInfo": {
     ///      "description": "Whether the agent or third-party partners collect
     /// personal information.",
@@ -30092,15 +30855,6 @@ pub mod types {
     ///      "items": {
     ///        "type": "string"
     ///      }
-    ///    },
-    ///    "videoWalkthrough": {
-    ///      "description": "URL or reference to video walkthrough for agent
-    /// verification.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "maxLength": 512
     ///    }
     ///  },
     ///  "additionalProperties": false,
@@ -30111,9 +30865,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct PackListingAdditionalInformation {
-        ///Additional details for the pack review.
-        #[serde(rename = "additionalDetails", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub additional_details: ::std::option::Option<PackListingAdditionalInformationAdditionalDetails>,
         ///Whether the agent or third-party partners collect personal
         /// information.
         #[serde(rename = "privacyCollectsPersonalInfo", default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -30128,9 +30879,6 @@ pub mod types {
         ///Categories of personal information collected by the agent.
         #[serde(rename = "privacyPersonalInfoCategories", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub privacy_personal_info_categories: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
-        ///URL or reference to video walkthrough for agent verification.
-        #[serde(rename = "videoWalkthrough", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub video_walkthrough: ::std::option::Option<PackListingAdditionalInformationVideoWalkthrough>,
     }
 
     impl ::std::convert::From<&PackListingAdditionalInformation> for PackListingAdditionalInformation {
@@ -30142,166 +30890,11 @@ pub mod types {
     impl ::std::default::Default for PackListingAdditionalInformation {
         fn default() -> Self {
             Self {
-                additional_details: Default::default(),
                 privacy_collects_personal_info: Default::default(),
                 privacy_data_collected_by: Default::default(),
                 privacy_data_usage_purposes: Default::default(),
                 privacy_personal_info_categories: Default::default(),
-                video_walkthrough: Default::default(),
             }
-        }
-    }
-
-    ///Additional details for the pack review.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "description": "Additional details for the pack review.",
-    ///  "type": "string",
-    ///  "maxLength": 8192
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-    #[serde(transparent)]
-    pub struct PackListingAdditionalInformationAdditionalDetails(::std::string::String);
-    impl ::std::ops::Deref for PackListingAdditionalInformationAdditionalDetails {
-        type Target = ::std::string::String;
-        fn deref(&self) -> &::std::string::String {
-            &self.0
-        }
-    }
-
-    impl ::std::convert::From<PackListingAdditionalInformationAdditionalDetails> for ::std::string::String {
-        fn from(value: PackListingAdditionalInformationAdditionalDetails) -> Self {
-            value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackListingAdditionalInformationAdditionalDetails> for PackListingAdditionalInformationAdditionalDetails {
-        fn from(value: &PackListingAdditionalInformationAdditionalDetails) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::str::FromStr for PackListingAdditionalInformationAdditionalDetails {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if value.chars().count() > 8192usize {
-                return Err("longer than 8192 characters".into());
-            }
-            Ok(Self(value.to_string()))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for PackListingAdditionalInformationAdditionalDetails {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for PackListingAdditionalInformationAdditionalDetails {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for PackListingAdditionalInformationAdditionalDetails {
-        type Error = self::error::ConversionError;
-        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl<'de> ::serde::Deserialize<'de> for PackListingAdditionalInformationAdditionalDetails {
-        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
-        where
-            D: ::serde::Deserializer<'de>,
-        {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
-                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
-        }
-    }
-
-    ///URL or reference to video walkthrough for agent verification.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "description": "URL or reference to video walkthrough for agent
-    /// verification.",
-    ///  "type": "string",
-    ///  "maxLength": 512
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-    #[serde(transparent)]
-    pub struct PackListingAdditionalInformationVideoWalkthrough(::std::string::String);
-    impl ::std::ops::Deref for PackListingAdditionalInformationVideoWalkthrough {
-        type Target = ::std::string::String;
-        fn deref(&self) -> &::std::string::String {
-            &self.0
-        }
-    }
-
-    impl ::std::convert::From<PackListingAdditionalInformationVideoWalkthrough> for ::std::string::String {
-        fn from(value: PackListingAdditionalInformationVideoWalkthrough) -> Self {
-            value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackListingAdditionalInformationVideoWalkthrough> for PackListingAdditionalInformationVideoWalkthrough {
-        fn from(value: &PackListingAdditionalInformationVideoWalkthrough) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::str::FromStr for PackListingAdditionalInformationVideoWalkthrough {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if value.chars().count() > 512usize {
-                return Err("longer than 512 characters".into());
-            }
-            Ok(Self(value.to_string()))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for PackListingAdditionalInformationVideoWalkthrough {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for PackListingAdditionalInformationVideoWalkthrough {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for PackListingAdditionalInformationVideoWalkthrough {
-        type Error = self::error::ConversionError;
-        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl<'de> ::serde::Deserialize<'de> for PackListingAdditionalInformationVideoWalkthrough {
-        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
-        where
-            D: ::serde::Deserializer<'de>,
-        {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
-                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
 
@@ -34444,14 +35037,6 @@ pub mod types {
     ///  "description": "Additional information about the pack review",
     ///  "type": "object",
     ///  "properties": {
-    ///    "additionalDetails": {
-    ///      "description": "Additional details for the pack review.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "maxLength": 8192
-    ///    },
     ///    "privacyCollectsPersonalInfo": {
     ///      "description": "Whether the agent or third-party partners collect
     /// personal information.",
@@ -34492,15 +35077,6 @@ pub mod types {
     ///      "items": {
     ///        "type": "string"
     ///      }
-    ///    },
-    ///    "videoWalkthrough": {
-    ///      "description": "URL or reference to video walkthrough for agent
-    /// verification.",
-    ///      "type": [
-    ///        "string",
-    ///        "null"
-    ///      ],
-    ///      "maxLength": 512
     ///    }
     ///  },
     ///  "additionalProperties": false,
@@ -34511,9 +35087,6 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct PackReviewAdditionalInformation {
-        ///Additional details for the pack review.
-        #[serde(rename = "additionalDetails", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub additional_details: ::std::option::Option<PackReviewAdditionalInformationAdditionalDetails>,
         ///Whether the agent or third-party partners collect personal
         /// information.
         #[serde(rename = "privacyCollectsPersonalInfo", default, skip_serializing_if = "::std::option::Option::is_none")]
@@ -34528,9 +35101,6 @@ pub mod types {
         ///Categories of personal information collected by the agent.
         #[serde(rename = "privacyPersonalInfoCategories", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub privacy_personal_info_categories: ::std::option::Option<::std::vec::Vec<::std::string::String>>,
-        ///URL or reference to video walkthrough for agent verification.
-        #[serde(rename = "videoWalkthrough", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub video_walkthrough: ::std::option::Option<PackReviewAdditionalInformationVideoWalkthrough>,
     }
 
     impl ::std::convert::From<&PackReviewAdditionalInformation> for PackReviewAdditionalInformation {
@@ -34542,166 +35112,11 @@ pub mod types {
     impl ::std::default::Default for PackReviewAdditionalInformation {
         fn default() -> Self {
             Self {
-                additional_details: Default::default(),
                 privacy_collects_personal_info: Default::default(),
                 privacy_data_collected_by: Default::default(),
                 privacy_data_usage_purposes: Default::default(),
                 privacy_personal_info_categories: Default::default(),
-                video_walkthrough: Default::default(),
             }
-        }
-    }
-
-    ///Additional details for the pack review.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "description": "Additional details for the pack review.",
-    ///  "type": "string",
-    ///  "maxLength": 8192
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-    #[serde(transparent)]
-    pub struct PackReviewAdditionalInformationAdditionalDetails(::std::string::String);
-    impl ::std::ops::Deref for PackReviewAdditionalInformationAdditionalDetails {
-        type Target = ::std::string::String;
-        fn deref(&self) -> &::std::string::String {
-            &self.0
-        }
-    }
-
-    impl ::std::convert::From<PackReviewAdditionalInformationAdditionalDetails> for ::std::string::String {
-        fn from(value: PackReviewAdditionalInformationAdditionalDetails) -> Self {
-            value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackReviewAdditionalInformationAdditionalDetails> for PackReviewAdditionalInformationAdditionalDetails {
-        fn from(value: &PackReviewAdditionalInformationAdditionalDetails) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::str::FromStr for PackReviewAdditionalInformationAdditionalDetails {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if value.chars().count() > 8192usize {
-                return Err("longer than 8192 characters".into());
-            }
-            Ok(Self(value.to_string()))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for PackReviewAdditionalInformationAdditionalDetails {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for PackReviewAdditionalInformationAdditionalDetails {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for PackReviewAdditionalInformationAdditionalDetails {
-        type Error = self::error::ConversionError;
-        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl<'de> ::serde::Deserialize<'de> for PackReviewAdditionalInformationAdditionalDetails {
-        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
-        where
-            D: ::serde::Deserializer<'de>,
-        {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
-                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
-        }
-    }
-
-    ///URL or reference to video walkthrough for agent verification.
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "description": "URL or reference to video walkthrough for agent
-    /// verification.",
-    ///  "type": "string",
-    ///  "maxLength": 512
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Serialize, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-    #[serde(transparent)]
-    pub struct PackReviewAdditionalInformationVideoWalkthrough(::std::string::String);
-    impl ::std::ops::Deref for PackReviewAdditionalInformationVideoWalkthrough {
-        type Target = ::std::string::String;
-        fn deref(&self) -> &::std::string::String {
-            &self.0
-        }
-    }
-
-    impl ::std::convert::From<PackReviewAdditionalInformationVideoWalkthrough> for ::std::string::String {
-        fn from(value: PackReviewAdditionalInformationVideoWalkthrough) -> Self {
-            value.0
-        }
-    }
-
-    impl ::std::convert::From<&PackReviewAdditionalInformationVideoWalkthrough> for PackReviewAdditionalInformationVideoWalkthrough {
-        fn from(value: &PackReviewAdditionalInformationVideoWalkthrough) -> Self {
-            value.clone()
-        }
-    }
-
-    impl ::std::str::FromStr for PackReviewAdditionalInformationVideoWalkthrough {
-        type Err = self::error::ConversionError;
-        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            if value.chars().count() > 512usize {
-                return Err("longer than 512 characters".into());
-            }
-            Ok(Self(value.to_string()))
-        }
-    }
-
-    impl ::std::convert::TryFrom<&str> for PackReviewAdditionalInformationVideoWalkthrough {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<&::std::string::String> for PackReviewAdditionalInformationVideoWalkthrough {
-        type Error = self::error::ConversionError;
-        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl ::std::convert::TryFrom<::std::string::String> for PackReviewAdditionalInformationVideoWalkthrough {
-        type Error = self::error::ConversionError;
-        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
-            value.parse()
-        }
-    }
-
-    impl<'de> ::serde::Deserialize<'de> for PackReviewAdditionalInformationVideoWalkthrough {
-        fn deserialize<D>(deserializer: D) -> ::std::result::Result<Self, D::Error>
-        where
-            D: ::serde::Deserializer<'de>,
-        {
-            ::std::string::String::deserialize(deserializer)?
-                .parse()
-                .map_err(|e: self::error::ConversionError| <D::Error as ::serde::de::Error>::custom(e.to_string()))
         }
     }
 
@@ -39805,13 +40220,15 @@ pub mod types {
     ///  "enum": [
     ///    "canvas",
     ///    "embed",
-    ///    "syncPage"
+    ///    "syncPage",
+    ///    "table"
     ///  ],
     ///  "x-schema-name": "PageTypeEnum",
     ///  "x-tsEnumNames": [
     ///    "Canvas",
     ///    "Embed",
-    ///    "SyncPage"
+    ///    "SyncPage",
+    ///    "Table"
     ///  ]
     ///}
     /// ```
@@ -39824,6 +40241,8 @@ pub mod types {
         Embed,
         #[serde(rename = "syncPage")]
         SyncPage,
+        #[serde(rename = "table")]
+        Table,
     }
 
     impl ::std::convert::From<&Self> for PageTypeEnum {
@@ -39838,6 +40257,7 @@ pub mod types {
                 Self::Canvas => f.write_str("canvas"),
                 Self::Embed => f.write_str("embed"),
                 Self::SyncPage => f.write_str("syncPage"),
+                Self::Table => f.write_str("table"),
             }
         }
     }
@@ -39849,6 +40269,7 @@ pub mod types {
                 "canvas" => Ok(Self::Canvas),
                 "embed" => Ok(Self::Embed),
                 "syncPage" => Ok(Self::SyncPage),
+                "table" => Ok(Self::Table),
                 _ => Err("invalid value".into()),
             }
         }
@@ -40450,7 +40871,8 @@ pub mod types {
         }
     }
 
-    ///`PersonValue`
+    ///A named reference to a person, where the person is identified by email
+    /// address.
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -40458,52 +40880,138 @@ pub mod types {
     ///{
     ///  "description": "A named reference to a person, where the person is
     /// identified by email address.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/LinkedDataObject"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "@type",
-    ///        "name"
-    ///      ],
-    ///      "properties": {
-    ///        "@type": {
-    ///          "type": "string",
-    ///          "enum": [
-    ///            "Person"
-    ///          ],
-    ///          "x-tsType": "LinkedDataType.Person"
-    ///        },
-    ///        "email": {
-    ///          "description": "The email address of the person.",
-    ///          "examples": [
-    ///            "alice@atkins.com"
-    ///          ],
-    ///          "type": "string"
-    ///        },
-    ///        "name": {
-    ///          "description": "The full name of the person.",
-    ///          "examples": [
-    ///            "Alice Atkins"
-    ///          ],
-    ///          "type": "string"
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "@context",
+    ///    "@type",
+    ///    "name"
     ///  ],
+    ///  "properties": {
+    ///    "@context": {
+    ///      "description": "A url describing the schema context for this object, typically \"http://schema.org/\".",
+    ///      "examples": [
+    ///        "<http://schema.org/>"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "@type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "Person"
+    ///      ],
+    ///      "x-tsType": "LinkedDataType.Person"
+    ///    },
+    ///    "additionalType": {
+    ///      "description": "An identifier of additional type info specific to
+    /// Coda that may not be present in a schema.org taxonomy.",
+    ///      "type": "string"
+    ///    },
+    ///    "email": {
+    ///      "description": "The email address of the person.",
+    ///      "examples": [
+    ///        "alice@atkins.com"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "name": {
+    ///      "description": "The full name of the person.",
+    ///      "examples": [
+    ///        "Alice Atkins"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "PersonValue"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum PersonValue {}
-    impl ::std::convert::From<&Self> for PersonValue {
+    pub struct PersonValue {
+        ///An identifier of additional type info specific to Coda that may not
+        /// be present in a schema.org taxonomy.
+        #[serde(rename = "additionalType", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub additional_type: ::std::option::Option<::std::string::String>,
+        ///A url describing the schema context for this object, typically "<http://schema.org/>".
+        #[serde(rename = "@context")]
+        pub context: ::std::string::String,
+        ///The email address of the person.
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub email: ::std::option::Option<::std::string::String>,
+        ///The full name of the person.
+        pub name: ::std::string::String,
+        #[serde(rename = "@type")]
+        pub type_: PersonValueType,
+    }
+
+    impl ::std::convert::From<&PersonValue> for PersonValue {
         fn from(value: &PersonValue) -> Self {
             value.clone()
+        }
+    }
+
+    ///`PersonValueType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "Person"
+    ///  ],
+    ///  "x-tsType": "LinkedDataType.Person"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum PersonValueType {
+        Person,
+    }
+
+    impl ::std::convert::From<&Self> for PersonValueType {
+        fn from(value: &PersonValueType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for PersonValueType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Person => f.write_str("Person"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for PersonValueType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "Person" => Ok(Self::Person),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for PersonValueType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for PersonValueType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for PersonValueType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -40953,49 +41461,126 @@ pub mod types {
         }
     }
 
-    ///`ReferenceColumnFormat`
+    ///Format of a column that refers to another table.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of a column that refers to another table.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "table"
-    ///      ],
-    ///      "properties": {
-    ///        "table": {
-    ///          "allOf": [
-    ///            {
-    ///              "description": "Reference to the table this column refers
-    /// to, if applicable.",
-    ///              "additionalProperties": false
-    ///            },
-    ///            {
-    ///              "$ref": "#/components/schemas/TableReference"
-    ///            }
-    ///          ]
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "isArray",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "table": {
+    ///      "$ref": "#/components/schemas/TableReference"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "person",
+    ///        "lookup"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "ReferenceColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum ReferenceColumnFormat {}
-    impl ::std::convert::From<&Self> for ReferenceColumnFormat {
+    pub struct ReferenceColumnFormat {
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub table: ::std::option::Option<TableReference>,
+        #[serde(rename = "type")]
+        pub type_: ReferenceColumnFormatType,
+    }
+
+    impl ::std::convert::From<&ReferenceColumnFormat> for ReferenceColumnFormat {
         fn from(value: &ReferenceColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`ReferenceColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "person",
+    ///    "lookup"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum ReferenceColumnFormatType {
+        #[serde(rename = "person")]
+        Person,
+        #[serde(rename = "lookup")]
+        Lookup,
+    }
+
+    impl ::std::convert::From<&Self> for ReferenceColumnFormatType {
+        fn from(value: &ReferenceColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for ReferenceColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Person => f.write_str("person"),
+                Self::Lookup => f.write_str("lookup"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for ReferenceColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "person" => Ok(Self::Person),
+                "lookup" => Ok(Self::Lookup),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for ReferenceColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for ReferenceColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for ReferenceColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -42527,7 +43112,7 @@ pub mod types {
         }
     }
 
-    ///`ScaleColumnFormat`
+    ///Format of a numeric column that renders as a scale, like star ratings.
     ///
     /// <details><summary>JSON schema</summary>
     ///
@@ -42535,50 +43120,122 @@ pub mod types {
     ///{
     ///  "description": "Format of a numeric column that renders as a scale,
     /// like star ratings.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "required": [
-    ///        "icon",
-    ///        "maximum"
-    ///      ],
-    ///      "properties": {
-    ///        "icon": {
-    ///          "allOf": [
-    ///            {
-    ///              "description": "The icon set to use when rendering the
-    /// scale, e.g. render a 5 star scale.",
-    ///              "additionalProperties": false
-    ///            },
-    ///            {
-    ///              "$ref": "#/components/schemas/IconSet"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "maximum": {
-    ///          "description": "The maximum number allowed for this scale.",
-    ///          "examples": [
-    ///            5
-    ///          ],
-    ///          "type": "number"
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "icon",
+    ///    "isArray",
+    ///    "maximum",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "icon": {
+    ///      "$ref": "#/components/schemas/IconSet"
+    ///    },
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "maximum": {
+    ///      "description": "The maximum number allowed for this scale.",
+    ///      "examples": [
+    ///        5
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "scale"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "ScaleColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum ScaleColumnFormat {}
-    impl ::std::convert::From<&Self> for ScaleColumnFormat {
+    pub struct ScaleColumnFormat {
+        pub icon: IconSet,
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        pub maximum: f64,
+        #[serde(rename = "type")]
+        pub type_: ScaleColumnFormatType,
+    }
+
+    impl ::std::convert::From<&ScaleColumnFormat> for ScaleColumnFormat {
         fn from(value: &ScaleColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`ScaleColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "scale"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum ScaleColumnFormatType {
+        #[serde(rename = "scale")]
+        Scale,
+    }
+
+    impl ::std::convert::From<&Self> for ScaleColumnFormatType {
+        fn from(value: &ScaleColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for ScaleColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Scale => f.write_str("scale"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for ScaleColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "scale" => Ok(Self::Scale),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for ScaleColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for ScaleColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for ScaleColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -42627,43 +43284,129 @@ pub mod types {
         }
     }
 
-    ///`SelectColumnFormat`
+    ///Format of a select column.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of a select column.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "properties": {
-    ///        "options": {
-    ///          "description": "For select format columns, the list of
-    /// available options. Only returned for select lists that used a fixed set
-    /// of options. Returns the first 5000 options.",
-    ///          "type": "array",
-    ///          "items": {
-    ///            "$ref": "#/components/schemas/SelectOption"
-    ///          }
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "isArray",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "options": {
+    ///      "description": "For select format columns, the list of available
+    /// options. Only returned for select lists that used a fixed set of
+    /// options. Returns the first 5000 options.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/SelectOption"
+    ///      }
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "select"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "SelectColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum SelectColumnFormat {}
-    impl ::std::convert::From<&Self> for SelectColumnFormat {
+    pub struct SelectColumnFormat {
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        ///For select format columns, the list of available options. Only
+        /// returned for select lists that used a fixed set of options. Returns
+        /// the first 5000 options.
+        #[serde(default, skip_serializing_if = "::std::vec::Vec::is_empty")]
+        pub options: ::std::vec::Vec<SelectOption>,
+        #[serde(rename = "type")]
+        pub type_: SelectColumnFormatType,
+    }
+
+    impl ::std::convert::From<&SelectColumnFormat> for SelectColumnFormat {
         fn from(value: &SelectColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`SelectColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "select"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum SelectColumnFormatType {
+        #[serde(rename = "select")]
+        Select,
+    }
+
+    impl ::std::convert::From<&Self> for SelectColumnFormatType {
+        fn from(value: &SelectColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for SelectColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Select => f.write_str("select"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for SelectColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "select" => Ok(Self::Select),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for SelectColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for SelectColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for SelectColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -43061,7 +43804,16 @@ pub mod types {
     ///      "type": "boolean"
     ///    },
     ///    "type": {
-    ///      "$ref": "#/components/schemas/ColumnFormatType"
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "text",
+    ///        "image",
+    ///        "attachments",
+    ///        "packObject",
+    ///        "reaction",
+    ///        "canvas",
+    ///        "other"
+    ///      ]
     ///    }
     ///  },
     ///  "additionalProperties": false,
@@ -43076,7 +43828,7 @@ pub mod types {
         #[serde(rename = "isArray")]
         pub is_array: bool,
         #[serde(rename = "type")]
-        pub type_: ColumnFormatType,
+        pub type_: SimpleColumnFormatType,
     }
 
     impl ::std::convert::From<&SimpleColumnFormat> for SimpleColumnFormat {
@@ -43085,81 +43837,240 @@ pub mod types {
         }
     }
 
-    ///`SliderColumnFormat`
+    ///`SimpleColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "text",
+    ///    "image",
+    ///    "attachments",
+    ///    "packObject",
+    ///    "reaction",
+    ///    "canvas",
+    ///    "other"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum SimpleColumnFormatType {
+        #[serde(rename = "text")]
+        Text,
+        #[serde(rename = "image")]
+        Image,
+        #[serde(rename = "attachments")]
+        Attachments,
+        #[serde(rename = "packObject")]
+        PackObject,
+        #[serde(rename = "reaction")]
+        Reaction,
+        #[serde(rename = "canvas")]
+        Canvas,
+        #[serde(rename = "other")]
+        Other,
+    }
+
+    impl ::std::convert::From<&Self> for SimpleColumnFormatType {
+        fn from(value: &SimpleColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for SimpleColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Text => f.write_str("text"),
+                Self::Image => f.write_str("image"),
+                Self::Attachments => f.write_str("attachments"),
+                Self::PackObject => f.write_str("packObject"),
+                Self::Reaction => f.write_str("reaction"),
+                Self::Canvas => f.write_str("canvas"),
+                Self::Other => f.write_str("other"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for SimpleColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "text" => Ok(Self::Text),
+                "image" => Ok(Self::Image),
+                "attachments" => Ok(Self::Attachments),
+                "packObject" => Ok(Self::PackObject),
+                "reaction" => Ok(Self::Reaction),
+                "canvas" => Ok(Self::Canvas),
+                "other" => Ok(Self::Other),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for SimpleColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for SimpleColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for SimpleColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    ///Format of a numeric column that renders as a slider.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of a numeric column that renders as a slider.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "properties": {
-    ///        "displayType": {
-    ///          "$ref": "#/components/schemas/SliderDisplayType"
-    ///        },
-    ///        "maximum": {
-    ///          "allOf": [
-    ///            {
-    ///              "description": "The maximum allowed value for this
-    /// slider.",
-    ///              "additionalProperties": false
-    ///            },
-    ///            {
-    ///              "$ref": "#/components/schemas/NumberOrNumberFormula"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "minimum": {
-    ///          "allOf": [
-    ///            {
-    ///              "description": "The minimum allowed value for this
-    /// slider.",
-    ///              "additionalProperties": false
-    ///            },
-    ///            {
-    ///              "$ref": "#/components/schemas/NumberOrNumberFormula"
-    ///            }
-    ///          ]
-    ///        },
-    ///        "showValue": {
-    ///          "description": "Whether the underyling numeric value is also
-    /// displayed.",
-    ///          "examples": [
-    ///            true
-    ///          ],
-    ///          "type": "boolean"
-    ///        },
-    ///        "step": {
-    ///          "allOf": [
-    ///            {
-    ///              "description": "The step size (numeric increment) for this
-    /// slider.",
-    ///              "additionalProperties": false
-    ///            },
-    ///            {
-    ///              "$ref": "#/components/schemas/NumberOrNumberFormula"
-    ///            }
-    ///          ]
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "isArray",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "displayType": {
+    ///      "$ref": "#/components/schemas/SliderDisplayType"
+    ///    },
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "maximum": {
+    ///      "$ref": "#/components/schemas/NumberOrNumberFormula"
+    ///    },
+    ///    "minimum": {
+    ///      "$ref": "#/components/schemas/NumberOrNumberFormula"
+    ///    },
+    ///    "showValue": {
+    ///      "description": "Whether the underyling numeric value is also
+    /// displayed.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "step": {
+    ///      "$ref": "#/components/schemas/NumberOrNumberFormula"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "slider"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "SliderColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum SliderColumnFormat {}
-    impl ::std::convert::From<&Self> for SliderColumnFormat {
+    pub struct SliderColumnFormat {
+        #[serde(rename = "displayType", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub display_type: ::std::option::Option<SliderDisplayType>,
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub maximum: ::std::option::Option<NumberOrNumberFormula>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub minimum: ::std::option::Option<NumberOrNumberFormula>,
+        ///Whether the underyling numeric value is also displayed.
+        #[serde(rename = "showValue", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub show_value: ::std::option::Option<bool>,
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub step: ::std::option::Option<NumberOrNumberFormula>,
+        #[serde(rename = "type")]
+        pub type_: SliderColumnFormatType,
+    }
+
+    impl ::std::convert::From<&SliderColumnFormat> for SliderColumnFormat {
         fn from(value: &SliderColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`SliderColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "slider"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum SliderColumnFormatType {
+        #[serde(rename = "slider")]
+        Slider,
+    }
+
+    impl ::std::convert::From<&Self> for SliderColumnFormatType {
+        fn from(value: &SliderColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for SliderColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Slider => f.write_str("slider"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for SliderColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "slider" => Ok(Self::Slider),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for SliderColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for SliderColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for SliderColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -43653,16 +44564,7 @@ pub mod types {
     ///      "$ref": "#/components/schemas/ColumnReference"
     ///    },
     ///    "filter": {
-    ///      "allOf": [
-    ///        {
-    ///          "description": "Detailed information about the filter formula
-    /// for the table, if applicable.",
-    ///          "additionalProperties": false
-    ///        },
-    ///        {
-    ///          "$ref": "#/components/schemas/FormulaDetail"
-    ///        }
-    ///      ]
+    ///      "$ref": "#/components/schemas/FormulaDetail"
     ///    },
     ///    "href": {
     ///      "description": "API link to the table.",
@@ -43746,7 +44648,7 @@ pub mod types {
         #[serde(rename = "displayColumn")]
         pub display_column: ColumnReference,
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub filter: ::std::option::Option<TableFilter>,
+        pub filter: ::std::option::Option<FormulaDetail>,
         ///API link to the table.
         pub href: ::std::string::String,
         ///ID of the table.
@@ -43776,34 +44678,6 @@ pub mod types {
 
     impl ::std::convert::From<&Table> for Table {
         fn from(value: &Table) -> Self {
-            value.clone()
-        }
-    }
-
-    ///`TableFilter`
-    ///
-    /// <details><summary>JSON schema</summary>
-    ///
-    /// ```json
-    ///{
-    ///  "allOf": [
-    ///    {
-    ///      "description": "Detailed information about the filter formula for
-    /// the table, if applicable.",
-    ///      "additionalProperties": false
-    ///    },
-    ///    {
-    ///      "$ref": "#/components/schemas/FormulaDetail"
-    ///    }
-    ///  ]
-    ///}
-    /// ```
-    /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-    #[serde(deny_unknown_fields)]
-    pub enum TableFilter {}
-    impl ::std::convert::From<&Self> for TableFilter {
-        fn from(value: &TableFilter) -> Self {
             value.clone()
         }
     }
@@ -44175,41 +45049,125 @@ pub mod types {
         }
     }
 
-    ///`TimeColumnFormat`
+    ///Format of a time column.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Format of a time column.",
-    ///  "allOf": [
-    ///    {
-    ///      "$ref": "#/components/schemas/SimpleColumnFormat"
-    ///    },
-    ///    {
-    ///      "type": "object",
-    ///      "properties": {
-    ///        "format": {
-    ///          "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
-    ///          "examples": [
-    ///            "h:mm:ss A"
-    ///          ],
-    ///          "type": "string"
-    ///        }
-    ///      },
-    ///      "additionalProperties": false
-    ///    }
+    ///  "type": "object",
+    ///  "required": [
+    ///    "isArray",
+    ///    "type"
     ///  ],
+    ///  "properties": {
+    ///    "format": {
+    ///      "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+    ///      "examples": [
+    ///        "h:mm:ss A"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "isArray": {
+    ///      "description": "Whether or not this column is an array.",
+    ///      "examples": [
+    ///        true
+    ///      ],
+    ///      "type": "boolean"
+    ///    },
+    ///    "type": {
+    ///      "type": "string",
+    ///      "enum": [
+    ///        "time"
+    ///      ]
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
     ///  "x-schema-name": "TimeColumnFormat"
     ///}
     /// ```
     /// </details>
-    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub enum TimeColumnFormat {}
-    impl ::std::convert::From<&Self> for TimeColumnFormat {
+    pub struct TimeColumnFormat {
+        ///A format string using Moment syntax: https://momentjs.com/docs/#/displaying/
+        #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub format: ::std::option::Option<::std::string::String>,
+        ///Whether or not this column is an array.
+        #[serde(rename = "isArray")]
+        pub is_array: bool,
+        #[serde(rename = "type")]
+        pub type_: TimeColumnFormatType,
+    }
+
+    impl ::std::convert::From<&TimeColumnFormat> for TimeColumnFormat {
         fn from(value: &TimeColumnFormat) -> Self {
             value.clone()
+        }
+    }
+
+    ///`TimeColumnFormatType`
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "type": "string",
+    ///  "enum": [
+    ///    "time"
+    ///  ]
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+    pub enum TimeColumnFormatType {
+        #[serde(rename = "time")]
+        Time,
+    }
+
+    impl ::std::convert::From<&Self> for TimeColumnFormatType {
+        fn from(value: &TimeColumnFormatType) -> Self {
+            value.clone()
+        }
+    }
+
+    impl ::std::fmt::Display for TimeColumnFormatType {
+        fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+            match *self {
+                Self::Time => f.write_str("time"),
+            }
+        }
+    }
+
+    impl ::std::str::FromStr for TimeColumnFormatType {
+        type Err = self::error::ConversionError;
+        fn from_str(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            match value {
+                "time" => Ok(Self::Time),
+                _ => Err("invalid value".into()),
+            }
+        }
+    }
+
+    impl ::std::convert::TryFrom<&str> for TimeColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &str) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<&::std::string::String> for TimeColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: &::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
+        }
+    }
+
+    impl ::std::convert::TryFrom<::std::string::String> for TimeColumnFormatType {
+        type Error = self::error::ConversionError;
+        fn try_from(value: ::std::string::String) -> ::std::result::Result<Self, self::error::ConversionError> {
+            value.parse()
         }
     }
 
@@ -51929,16 +52887,8 @@ impl RawClient {
     /// - `access_types`: Filter to only return the Packs for which the current
     ///   user has these access types.
     /// - `direction`: Direction to sort results in.
-    /// - `exclude_grammarly_institution_acls`: Do not include Packs that are
-    ///   only shared with the user's Grammarly institution.
-    /// - `exclude_individual_acls`: Do not include Packs that are only shared
-    ///   with the user individually.
-    /// - `exclude_nomos_organization_acls`: Do not include Packs that are only
-    ///   shared with the user's NOMOS organization.
     /// - `exclude_public_packs`: Only get Packs shared with users/workspaces,
     ///   not publicly.
-    /// - `exclude_workspace_acls`: Do not include Packs that are only shared
-    ///   with workspaces.
     /// - `limit`: Maximum number of results to return in this query.
     /// - `only_workspace_id`: Use only this workspace (not all of a user's
     ///   workspaces) to check for Packs shared via workspace ACL.
@@ -51948,7 +52898,7 @@ impl RawClient {
     /// - `parent_workspace_ids`: Filter to only Packs whose parent workspace is
     ///   one of the given IDs.
     /// - `sort_by`: The sort order of the Packs returned.
-    pub async fn list_packs<'a>(&'a self, access_type: Option<types::PackAccessType>, access_types: Option<&'a ::std::vec::Vec<types::PackAccessType>>, direction: Option<types::SortDirection>, exclude_grammarly_institution_acls: Option<bool>, exclude_individual_acls: Option<bool>, exclude_nomos_organization_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, pack_entrypoint: Option<types::PackEntrypoint>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PacksSortBy>) -> Result<ResponseValue<types::PackSummaryList>, Error<types::ListPacksResponse>> {
+    pub async fn list_packs<'a>(&'a self, access_type: Option<types::PackAccessType>, access_types: Option<&'a ::std::vec::Vec<types::PackAccessType>>, direction: Option<types::SortDirection>, exclude_public_packs: Option<bool>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, pack_entrypoint: Option<types::PackEntrypoint>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PacksSortBy>) -> Result<ResponseValue<types::PackSummaryList>, Error<types::ListPacksResponse>> {
         let url = format!("{}/packs", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -51960,11 +52910,7 @@ impl RawClient {
             .query(&progenitor_client::QueryParam::new("accessType", &access_type))
             .query(&progenitor_client::QueryParam::new("accessTypes", &access_types))
             .query(&progenitor_client::QueryParam::new("direction", &direction))
-            .query(&progenitor_client::QueryParam::new("excludeGrammarlyInstitutionAcls", &exclude_grammarly_institution_acls))
-            .query(&progenitor_client::QueryParam::new("excludeIndividualAcls", &exclude_individual_acls))
-            .query(&progenitor_client::QueryParam::new("excludeNomosOrganizationAcls", &exclude_nomos_organization_acls))
             .query(&progenitor_client::QueryParam::new("excludePublicPacks", &exclude_public_packs))
-            .query(&progenitor_client::QueryParam::new("excludeWorkspaceAcls", &exclude_workspace_acls))
             .query(&progenitor_client::QueryParam::new("limit", &limit))
             .query(&progenitor_client::QueryParam::new("onlyWorkspaceId", &only_workspace_id))
             .query(&progenitor_client::QueryParam::new("packEntrypoint", &pack_entrypoint))
@@ -53800,12 +54746,8 @@ impl RawClient {
     ///   that the user is an admin of.
     ///
     /// - `direction`: Direction to sort results in.
-    /// - `exclude_individual_acls`: Do not include Packs that are only shared
-    ///   with the user individually.
     /// - `exclude_public_packs`: Only get Packs shared with users/workspaces,
     ///   not publicly.
-    /// - `exclude_workspace_acls`: Do not include Packs that are only shared
-    ///   with workspaces.
     /// - `install_context`: Type of installation context for which Pack
     ///   information is being requested.
     /// - `limit`: Maximum number of results to return in this query.
@@ -53822,7 +54764,7 @@ impl RawClient {
     ///   one of the given IDs.
     /// - `sort_by`: Specify a sort order for the returned Pack listings
     ///   returned.
-    pub async fn list_pack_listings<'a>(&'a self, certified_agents_only: Option<bool>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, install_context: Option<types::PackListingInstallContextType>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, order_by: Option<types::PackListingsSortBy>, pack_access_types: Option<&'a types::PackAccessTypes>, pack_categories: Option<&'a ::std::vec::Vec<types::PackCategoryType>>, pack_entrypoint: Option<types::PackEntrypoint>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PackListingsSortBy>) -> Result<ResponseValue<types::PackListingList>, Error<types::ListPackListingsResponse>> {
+    pub async fn list_pack_listings<'a>(&'a self, certified_agents_only: Option<bool>, direction: Option<types::SortDirection>, exclude_public_packs: Option<bool>, install_context: Option<types::PackListingInstallContextType>, limit: Option<::std::num::NonZeroU64>, only_workspace_id: Option<&'a str>, order_by: Option<types::PackListingsSortBy>, pack_access_types: Option<&'a types::PackAccessTypes>, pack_categories: Option<&'a ::std::vec::Vec<types::PackCategoryType>>, pack_entrypoint: Option<types::PackEntrypoint>, pack_ids: Option<&'a ::std::vec::Vec<i64>>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a ::std::vec::Vec<::std::string::String>>, sort_by: Option<types::PackListingsSortBy>) -> Result<ResponseValue<types::PackListingList>, Error<types::ListPackListingsResponse>> {
         let url = format!("{}/packs/listings", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -53833,9 +54775,7 @@ impl RawClient {
             .header(::reqwest::header::ACCEPT, ::reqwest::header::HeaderValue::from_static("application/json"))
             .query(&progenitor_client::QueryParam::new("certifiedAgentsOnly", &certified_agents_only))
             .query(&progenitor_client::QueryParam::new("direction", &direction))
-            .query(&progenitor_client::QueryParam::new("excludeIndividualAcls", &exclude_individual_acls))
             .query(&progenitor_client::QueryParam::new("excludePublicPacks", &exclude_public_packs))
-            .query(&progenitor_client::QueryParam::new("excludeWorkspaceAcls", &exclude_workspace_acls))
             .query(&progenitor_client::QueryParam::new("installContext", &install_context))
             .query(&progenitor_client::QueryParam::new("limit", &limit))
             .query(&progenitor_client::QueryParam::new("onlyWorkspaceId", &only_workspace_id))

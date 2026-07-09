@@ -1,5 +1,5 @@
 use crate::types::{Column, Row, Table, TableReference};
-use crate::{ClientTablesError, Error, Limiter, RawClient, ResponseValue, RichRow, RowUpdateResultCorrect, RowsUpsertResultCorrect, TableId, types};
+use crate::{ClientTablesError, Error, Limiter, Metadata, RawClient, ResponseValue, RichRow, RowUpdateResultCorrect, RowsUpsertResultCorrect, TableId, types};
 use crate::{ItemsList, ValueFormatProvider, paginate_all};
 use chrono::{DateTime, NaiveDate, Utc};
 use errgonomic::handle;
@@ -69,6 +69,52 @@ impl Client {
     pub async fn get_doc<'a>(&'a self, doc_id: &'a str) -> Result<ResponseValue<types::Doc>, Error<types::GetDocResponse>> {
         self.limiter.read.until_ready().await;
         self.raw.get_doc(doc_id).await
+    }
+
+    pub async fn get_metadata(&self, doc_id: &str) -> Result<Metadata, ClientGetMetadataError> {
+        use ClientGetMetadataError::*;
+        let doc = handle!(self.get_doc(doc_id).await, GetDocFailed).into_inner();
+        let pages = handle!(
+            paginate_all(move |page_token| async move {
+                self.list_pages(doc_id, None, page_token.as_deref())
+                    .await
+                    .map(|response| response.into_inner())
+            })
+            .await,
+            ListPagesFailed
+        );
+        let tables = handle!(self.tables(doc_id).await, TablesFailed);
+        let table_ids = tables.iter().map(|table| table.id.clone());
+        let columns = handle!(self.columns_map(doc_id, table_ids).await, ColumnsMapFailed)
+            .into_iter()
+            .collect();
+        let formulas = handle!(
+            paginate_all(move |page_token| async move {
+                self.list_formulas(doc_id, None, page_token.as_deref(), None)
+                    .await
+                    .map(|response| response.into_inner())
+            })
+            .await,
+            ListFormulasFailed
+        );
+        let controls = handle!(
+            paginate_all(move |page_token| async move {
+                self.list_controls(doc_id, None, page_token.as_deref(), None)
+                    .await
+                    .map(|response| response.into_inner())
+            })
+            .await,
+            ListControlsFailed
+        );
+
+        Ok(Metadata {
+            doc,
+            pages,
+            tables,
+            columns,
+            formulas,
+            controls,
+        })
     }
 
     pub async fn delete_doc<'a>(&'a self, doc_id: &'a str) -> Result<ResponseValue<types::DocDelete>, Error<types::DeleteDocResponse>> {
@@ -395,10 +441,10 @@ impl Client {
         self.raw.list_workspace_role_activity(workspace_id).await
     }
 
-    pub async fn list_packs<'a>(&'a self, access_type: Option<types::PackAccessType>, access_types: Option<&'a Vec<types::PackAccessType>>, direction: Option<types::SortDirection>, exclude_grammarly_institution_acls: Option<bool>, exclude_individual_acls: Option<bool>, exclude_nomos_organization_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, limit: Option<NonZeroU64>, only_workspace_id: Option<&'a str>, pack_entrypoint: Option<types::PackEntrypoint>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a Vec<String>>, sort_by: Option<types::PacksSortBy>) -> Result<ResponseValue<types::PackSummaryList>, Error<types::ListPacksResponse>> {
+    pub async fn list_packs<'a>(&'a self, access_type: Option<types::PackAccessType>, access_types: Option<&'a Vec<types::PackAccessType>>, direction: Option<types::SortDirection>, exclude_public_packs: Option<bool>, limit: Option<NonZeroU64>, only_workspace_id: Option<&'a str>, pack_entrypoint: Option<types::PackEntrypoint>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a Vec<String>>, sort_by: Option<types::PacksSortBy>) -> Result<ResponseValue<types::PackSummaryList>, Error<types::ListPacksResponse>> {
         self.limiter.read.until_ready().await;
         self.raw
-            .list_packs(access_type, access_types, direction, exclude_grammarly_institution_acls, exclude_individual_acls, exclude_nomos_organization_acls, exclude_public_packs, exclude_workspace_acls, limit, only_workspace_id, pack_entrypoint, page_token, parent_workspace_ids, sort_by)
+            .list_packs(access_type, access_types, direction, exclude_public_packs, limit, only_workspace_id, pack_entrypoint, page_token, parent_workspace_ids, sort_by)
             .await
     }
 
@@ -616,10 +662,10 @@ impl Client {
         self.raw.get_pack_source_code(pack_id, pack_version).await
     }
 
-    pub async fn list_pack_listings<'a>(&'a self, certified_agents_only: Option<bool>, direction: Option<types::SortDirection>, exclude_individual_acls: Option<bool>, exclude_public_packs: Option<bool>, exclude_workspace_acls: Option<bool>, install_context: Option<types::PackListingInstallContextType>, limit: Option<NonZeroU64>, only_workspace_id: Option<&'a str>, order_by: Option<types::PackListingsSortBy>, pack_access_types: Option<&'a types::PackAccessTypes>, pack_categories: Option<&'a Vec<types::PackCategoryType>>, pack_entrypoint: Option<types::PackEntrypoint>, pack_ids: Option<&'a Vec<i64>>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a Vec<String>>, sort_by: Option<types::PackListingsSortBy>) -> Result<ResponseValue<types::PackListingList>, Error<types::ListPackListingsResponse>> {
+    pub async fn list_pack_listings<'a>(&'a self, certified_agents_only: Option<bool>, direction: Option<types::SortDirection>, exclude_public_packs: Option<bool>, install_context: Option<types::PackListingInstallContextType>, limit: Option<NonZeroU64>, only_workspace_id: Option<&'a str>, order_by: Option<types::PackListingsSortBy>, pack_access_types: Option<&'a types::PackAccessTypes>, pack_categories: Option<&'a Vec<types::PackCategoryType>>, pack_entrypoint: Option<types::PackEntrypoint>, pack_ids: Option<&'a Vec<i64>>, page_token: Option<&'a str>, parent_workspace_ids: Option<&'a Vec<String>>, sort_by: Option<types::PackListingsSortBy>) -> Result<ResponseValue<types::PackListingList>, Error<types::ListPackListingsResponse>> {
         self.limiter.read.until_ready().await;
         self.raw
-            .list_pack_listings(certified_agents_only, direction, exclude_individual_acls, exclude_public_packs, exclude_workspace_acls, install_context, limit, only_workspace_id, order_by, pack_access_types, pack_categories, pack_entrypoint, pack_ids, page_token, parent_workspace_ids, sort_by)
+            .list_pack_listings(certified_agents_only, direction, exclude_public_packs, install_context, limit, only_workspace_id, order_by, pack_access_types, pack_categories, pack_entrypoint, pack_ids, page_token, parent_workspace_ids, sort_by)
             .await
     }
 
@@ -910,6 +956,22 @@ impl Client {
 pub struct UpsertRowsConclusivelyResult<T> {
     pub upsert_result: RowsUpsertResultCorrect,
     pub items: Vec<T>,
+}
+
+#[derive(Error, Debug)]
+pub enum ClientGetMetadataError {
+    #[error("failed to get doc")]
+    GetDocFailed { source: Box<Error<types::GetDocResponse>> },
+    #[error("failed to list pages")]
+    ListPagesFailed { source: Box<Error<types::ListPagesResponse>> },
+    #[error("failed to list tables")]
+    TablesFailed { source: Box<ClientTablesError> },
+    #[error("failed to list columns")]
+    ColumnsMapFailed { source: Box<Error<types::ListColumnsResponse>> },
+    #[error("failed to list formulas")]
+    ListFormulasFailed { source: Box<Error<types::ListFormulasResponse>> },
+    #[error("failed to list controls")]
+    ListControlsFailed { source: Box<Error<types::ListControlsResponse>> },
 }
 
 #[derive(Error, Debug)]
