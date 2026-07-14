@@ -1,14 +1,14 @@
 use crate::TableId;
-use crate::types::{Column, ControlReference, Doc, FormulaReference, Page, Table};
+use crate::types::{Column, Control, Doc, Formula, Page, Table};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
-pub struct Metadata {
+pub struct DocMetadata {
     pub doc: Doc,
     pub pages: Vec<Page>,
     pub tables: Vec<Table>,
     pub columns: BTreeMap<TableId, Vec<Column>>,
-    pub formulas: Vec<FormulaReference>,
-    pub controls: Vec<ControlReference>,
+    pub formulas: Vec<Formula>,
+    pub controls: Vec<Control>,
 }

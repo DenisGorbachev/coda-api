@@ -1,15 +1,34 @@
-use crate::types::{Column, Row, Table, TableReference};
-use crate::{ClientTablesError, Error, Limiter, Metadata, RawClient, ResponseValue, RichRow, RowUpdateResultCorrect, RowsUpsertResultCorrect, TableId, types};
+use crate::types::{Column, Control, Formula, Row, Table, TableReference};
+use crate::{ClientTablesError, DocData, DocId, DocMetadata, Error, Limiter, RawClient, ResponseValue, RichRow, RowUpdateResultCorrect, RowsUpsertResultCorrect, TableId, types};
 use crate::{ItemsList, ValueFormatProvider, paginate_all};
 use chrono::{DateTime, NaiveDate, Utc};
-use errgonomic::handle;
+use errgonomic::{ErrVec, ItemError, handle, handle_iter};
+use futures_util::future::join_all;
 use serde::de::DeserializeOwned;
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::num::NonZeroU64;
 use std::time::Duration;
 use thiserror::Error;
 use tokio::time::sleep;
 use uuid::Uuid;
+
+macro_rules! hydrate_references {
+    ($client:expr, $doc_id:expr, $references:expr, $get_method:ident, $error_variant:ident) => {{
+        let responses = join_all(
+            $references.into_iter().map(|reference| async move {
+                let resource_id = reference.id;
+                let result = $client.$get_method($doc_id, &resource_id).await;
+                (result, resource_id)
+            }),
+        )
+        .await;
+        let results = responses.into_iter().map(|(result, resource_id)| {
+            let response = handle!(result, ItemError, item: resource_id);
+            Ok(response.into_inner())
+        });
+        handle_iter!(results, $error_variant)
+    }};
+}
 
 pub struct Client {
     pub raw: RawClient,
@@ -71,8 +90,8 @@ impl Client {
         self.raw.get_doc(doc_id).await
     }
 
-    pub async fn get_metadata(&self, doc_id: &str) -> Result<Metadata, ClientGetMetadataError> {
-        use ClientGetMetadataError::*;
+    pub async fn get_doc_metadata(&self, doc_id: &str) -> Result<DocMetadata, ClientGetDocMetadataError> {
+        use ClientGetDocMetadataError::*;
         let doc = handle!(self.get_doc(doc_id).await, GetDocFailed).into_inner();
         let pages = handle!(
             paginate_all(move |page_token| async move {
@@ -88,32 +107,49 @@ impl Client {
         let columns = handle!(self.columns_map(doc_id, table_ids).await, ColumnsMapFailed)
             .into_iter()
             .collect();
-        let formulas = handle!(
-            paginate_all(move |page_token| async move {
-                self.list_formulas(doc_id, None, page_token.as_deref(), None)
-                    .await
-                    .map(|response| response.into_inner())
-            })
-            .await,
-            ListFormulasFailed
-        );
-        let controls = handle!(
-            paginate_all(move |page_token| async move {
-                self.list_controls(doc_id, None, page_token.as_deref(), None)
-                    .await
-                    .map(|response| response.into_inner())
-            })
-            .await,
-            ListControlsFailed
-        );
+        let formulas = handle!(self.formulas(doc_id).await, FormulasFailed);
+        let controls = handle!(self.controls(doc_id).await, ControlsFailed);
 
-        Ok(Metadata {
+        Ok(DocMetadata {
             doc,
             pages,
             tables,
             columns,
             formulas,
             controls,
+        })
+    }
+
+    pub async fn get_doc_data(&self, doc_id: &DocId) -> Result<DocData, ClientGetDocDataError> {
+        use ClientGetDocDataError::*;
+        use types::TableTypeEnum::*;
+
+        let metadata = handle!(self.get_doc_metadata(doc_id).await, GetDocMetadataFailed);
+        let responses = join_all(
+            metadata
+                .tables
+                .iter()
+                .filter(|table| table.table_type == Table)
+                .map(|table| table.id.clone())
+                .map(|table_id| async move {
+                    let result = self
+                        .rows_correct::<RichRow>(doc_id, &table_id, None, None, None, Some(false), Some(false))
+                        .await;
+                    (result, table_id)
+                }),
+        )
+        .await;
+        let results = responses.into_iter().map(|(result, table_id)| {
+            let rows = handle!(result, ItemError, item: table_id);
+            Ok((table_id, rows))
+        });
+        let rows = handle_iter!(results, RowsCorrectFailed)
+            .into_iter()
+            .collect::<BTreeMap<_, _>>();
+
+        Ok(DocData {
+            metadata,
+            rows,
         })
     }
 
@@ -780,6 +816,38 @@ impl Client {
         Ok(all_tables)
     }
 
+    /// PRUNING: Discards formula reference fields after extracting their IDs because this function replaces every reference with the corresponding full formula data.
+    pub async fn formulas(&self, doc_id: &str) -> Result<Vec<Formula>, ClientFormulasError> {
+        use ClientFormulasError::*;
+        let formula_references = handle!(
+            paginate_all(move |page_token| async move {
+                self.list_formulas(doc_id, None, page_token.as_deref(), None)
+                    .await
+                    .map(ResponseValue::into_inner)
+            })
+            .await,
+            ListFormulasFailed
+        );
+        let formulas = hydrate_references!(self, doc_id, formula_references, get_formula, GetFormulaFailed);
+        Ok(formulas)
+    }
+
+    /// PRUNING: Discards control reference fields after extracting their IDs because this function replaces every reference with the corresponding full control data.
+    pub async fn controls(&self, doc_id: &str) -> Result<Vec<Control>, ClientControlsError> {
+        use ClientControlsError::*;
+        let control_references = handle!(
+            paginate_all(move |page_token| async move {
+                self.list_controls(doc_id, None, page_token.as_deref(), None)
+                    .await
+                    .map(ResponseValue::into_inner)
+            })
+            .await,
+            ListControlsFailed
+        );
+        let controls = hydrate_references!(self, doc_id, control_references, get_control, GetControlFailed);
+        Ok(controls)
+    }
+
     pub async fn columns_map(&self, doc_id: &str, table_ids: impl IntoIterator<Item = TableId>) -> Result<HashMap<TableId, Vec<Column>>, Error<types::ListColumnsResponse>> {
         let mut columns_map = HashMap::new();
 
@@ -959,7 +1027,15 @@ pub struct UpsertRowsConclusivelyResult<T> {
 }
 
 #[derive(Error, Debug)]
-pub enum ClientGetMetadataError {
+pub enum ClientGetDocDataError {
+    #[error("failed to get metadata")]
+    GetDocMetadataFailed { source: Box<ClientGetDocMetadataError> },
+    #[error("failed to get rows from tables")]
+    RowsCorrectFailed { source: ErrVec<ItemError<TableId, Error<types::ListRowsResponse>>> },
+}
+
+#[derive(Error, Debug)]
+pub enum ClientGetDocMetadataError {
     #[error("failed to get doc")]
     GetDocFailed { source: Box<Error<types::GetDocResponse>> },
     #[error("failed to list pages")]
@@ -968,10 +1044,26 @@ pub enum ClientGetMetadataError {
     TablesFailed { source: Box<ClientTablesError> },
     #[error("failed to list columns")]
     ColumnsMapFailed { source: Box<Error<types::ListColumnsResponse>> },
+    #[error("failed to get formulas")]
+    FormulasFailed { source: Box<ClientFormulasError> },
+    #[error("failed to get controls")]
+    ControlsFailed { source: Box<ClientControlsError> },
+}
+
+#[derive(Error, Debug)]
+pub enum ClientFormulasError {
     #[error("failed to list formulas")]
     ListFormulasFailed { source: Box<Error<types::ListFormulasResponse>> },
+    #[error("failed to get formulas")]
+    GetFormulaFailed { source: ErrVec<ItemError<String, Error<types::GetFormulaResponse>>> },
+}
+
+#[derive(Error, Debug)]
+pub enum ClientControlsError {
     #[error("failed to list controls")]
     ListControlsFailed { source: Box<Error<types::ListControlsResponse>> },
+    #[error("failed to get controls")]
+    GetControlFailed { source: ErrVec<ItemError<String, Error<types::GetControlResponse>>> },
 }
 
 #[derive(Error, Debug)]

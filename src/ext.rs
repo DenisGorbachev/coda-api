@@ -5,7 +5,6 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use std::num::NonZeroU64;
 use thiserror::Error;
-
 mod build_query_param;
 #[cfg(feature = "time")]
 mod duration_value_parser;
@@ -17,7 +16,6 @@ mod rich_rows;
 mod row;
 mod string_or_f64;
 mod value_format_provider;
-
 pub use build_query_param::*;
 #[cfg(feature = "time")]
 pub use duration_value_parser::*;
@@ -27,184 +25,140 @@ pub use parse_rich_value::*;
 pub use rich_rows::*;
 pub(crate) use string_or_f64::*;
 pub use value_format_provider::*;
-
 pub type DocId = String;
-
 pub type TableId = String;
-
 pub type RowId = String;
-
-// Generic pagination trait for Coda API responses
 pub trait PaginatedResponse<T> {
     fn items(&self) -> &Vec<T>;
     fn next_page_token(&self) -> Option<&NextPageToken>;
     fn into_items(self) -> Vec<T>;
 }
-
-// Generic pagination helper
 pub struct PaginationState {
     pub next_page_token: Option<String>,
 }
-
 impl PaginationState {
     pub fn new() -> Self {
         Self {
             next_page_token: None,
         }
     }
-
     pub fn update_from_response<T, R: PaginatedResponse<T>>(&mut self, response: &R) {
         self.next_page_token = response.next_page_token().map(|token| token.clone().into());
     }
-
     pub fn has_more_pages(&self) -> bool {
         self.next_page_token.is_some()
     }
-
     pub fn page_token(&self) -> Option<&str> {
         self.next_page_token.as_deref()
     }
 }
-
 impl Default for PaginationState {
     fn default() -> Self {
         Self::new()
     }
 }
-
-// Implement PaginatedResponse for the specific types we need
 impl PaginatedResponse<TableReference> for TableList {
     fn items(&self) -> &Vec<TableReference> {
         &self.items
     }
-
     fn next_page_token(&self) -> Option<&NextPageToken> {
         self.next_page_token.as_ref()
     }
-
     fn into_items(self) -> Vec<TableReference> {
         self.items
     }
 }
-
 impl PaginatedResponse<Column> for ColumnList {
     fn items(&self) -> &Vec<Column> {
         &self.items
     }
-
     fn next_page_token(&self) -> Option<&NextPageToken> {
         self.next_page_token.as_ref()
     }
-
     fn into_items(self) -> Vec<Column> {
         self.items
     }
 }
-
 impl PaginatedResponse<Page> for PageList {
     fn items(&self) -> &Vec<Page> {
         &self.items
     }
-
     fn next_page_token(&self) -> Option<&NextPageToken> {
         self.next_page_token.as_ref()
     }
-
     fn into_items(self) -> Vec<Page> {
         self.items
     }
 }
-
 impl PaginatedResponse<FormulaReference> for FormulaList {
     fn items(&self) -> &Vec<FormulaReference> {
         &self.items
     }
-
     fn next_page_token(&self) -> Option<&NextPageToken> {
         self.next_page_token.as_ref()
     }
-
     fn into_items(self) -> Vec<FormulaReference> {
         self.items
     }
 }
-
 impl PaginatedResponse<ControlReference> for ControlList {
     fn items(&self) -> &Vec<ControlReference> {
         &self.items
     }
-
     fn next_page_token(&self) -> Option<&NextPageToken> {
         self.next_page_token.as_ref()
     }
-
     fn into_items(self) -> Vec<ControlReference> {
         self.items
     }
 }
-
 impl PaginatedResponse<Doc> for DocList {
     fn items(&self) -> &Vec<Doc> {
         &self.items
     }
-
     fn next_page_token(&self) -> Option<&NextPageToken> {
         self.next_page_token.as_ref()
     }
-
     fn into_items(self) -> Vec<Doc> {
         self.items
     }
 }
-
 impl PaginatedResponse<Row> for RowList {
     fn items(&self) -> &Vec<Row> {
         &self.items
     }
-
     fn next_page_token(&self) -> Option<&NextPageToken> {
         self.next_page_token.as_ref()
     }
-
     fn into_items(self) -> Vec<Row> {
         self.items
     }
 }
-
 impl<T> PaginatedResponse<T> for ItemsList<T> {
     fn items(&self) -> &Vec<T> {
         &self.items
     }
-
     fn next_page_token(&self) -> Option<&NextPageToken> {
         self.next_page_token.as_ref()
     }
-
     fn into_items(self) -> Vec<T> {
         self.items
     }
 }
-
 impl RawClient {
     pub const BASE_URL: &'static str = "https://coda.io/apis/v1";
-
     pub fn new_with_key(api_key: &str) -> reqwest::Result<Self> {
         let authorization_header = format!("Bearer {api_key}")
             .parse()
             .expect("API key should be valid");
-
         let mut headers = reqwest::header::HeaderMap::with_capacity(1);
         headers.insert(reqwest::header::AUTHORIZATION, authorization_header);
-
         let client_with_custom_defaults = reqwest::ClientBuilder::new()
             .default_headers(headers)
             .build()?;
-
         let client = Self::new_with_client(Self::BASE_URL, client_with_custom_defaults);
-
         Ok(client)
     }
-
     #[allow(clippy::too_many_arguments)]
     pub async fn list_rows_correct<'a, T: DeserializeOwned + ValueFormatProvider>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, limit: Option<NonZeroU64>, page_token: Option<&'a str>, query: Option<&'a str>, sort_by: Option<types::RowsSortBy>, sync_token: Option<&'a str>, use_column_names: Option<bool>, visible_only: Option<bool>) -> Result<ResponseValue<ItemsList<T>>, Error<types::ListRowsResponse>> {
         let url = format!("{}/docs/{}/tables/{}/rows", self.baseurl, encode_path(doc_id), encode_path(table_id_or_name),);
@@ -243,7 +197,6 @@ impl RawClient {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
-
     ///Get a row
     ///
     ///Returns details about a row in a table.
@@ -297,7 +250,6 @@ impl RawClient {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
-
     ///Insert/upsert rows
     ///
     ///Inserts rows into a table, optionally updating existing rows if any
@@ -349,7 +301,6 @@ impl RawClient {
             _ => Err(Error::UnexpectedResponse(response)),
         }
     }
-
     ///Update row
     ///
     ///Updates the specified row in the table. This endpoint will always return
@@ -402,7 +353,6 @@ impl RawClient {
         }
     }
 }
-
 #[derive(Debug, Error)]
 pub enum ClientTablesError {
     #[error("list tables request failed: {source}")]
@@ -416,7 +366,6 @@ pub enum ClientTablesError {
         source: Error<GetTableResponse>,
     },
 }
-
 ///`RowUpdateResult`
 ///
 /// <details><summary>JSON schema</summary>
@@ -457,7 +406,6 @@ pub struct RowUpdateResultCorrect {
     #[serde(rename = "requestId")]
     pub request_id: String,
 }
-
 ///`RowsUpsertResult`
 ///
 /// <details><summary>JSON schema</summary>
@@ -502,14 +450,11 @@ pub struct RowsUpsertResultCorrect {
     #[serde(rename = "requestId")]
     pub request_id: String,
 }
-
 pub fn format_row_url(doc_id: &str, table_id: &str, row_id: &str) -> String {
     format!("https://coda.io/d/_d{doc_id}#_tu{table_id}/_ru{row_id}")
 }
-
 pub async fn paginate_all<T, R, F, Fut, E>(mut request_fn: F) -> Result<Vec<T>, E>
 where
-    // TODO: Remove the `T: Clone` requirement
     T: Clone,
     R: PaginatedResponse<T>,
     F: FnMut(Option<String>) -> Fut,
@@ -517,12 +462,10 @@ where
 {
     let mut all_items = Vec::new();
     let mut pagination_state = PaginationState::new();
-
     loop {
         match request_fn(pagination_state.next_page_token.clone()).await {
             Ok(response) => {
                 all_items.extend(response.items().iter().cloned());
-
                 if let Some(next_token) = response.next_page_token() {
                     pagination_state.next_page_token = Some(next_token.clone().into());
                 } else {
@@ -532,9 +475,9 @@ where
             Err(err) => return Err(err),
         }
     }
-
     Ok(all_items)
 }
-
-mod metadata;
-pub use metadata::*;
+mod doc_metadata;
+pub use doc_metadata::*;
+mod doc_data;
+pub use doc_data::*;

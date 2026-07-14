@@ -103,6 +103,8 @@ pub struct RichPersonValue {
     pub name: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub email: Option<String>,
+    #[serde(rename = "userId", default, skip_serializing_if = "Option::is_none")]
+    pub user_id: Option<i64>,
 }
 
 #[derive(Deserialize, Serialize, Clone, Debug)]
