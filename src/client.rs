@@ -1031,7 +1031,7 @@ pub enum ClientGetDocDataError {
     #[error("failed to get metadata")]
     GetDocMetadataFailed { source: Box<ClientGetDocMetadataError> },
     #[error("failed to get rows from tables")]
-    RowsCorrectFailed { source: ErrVec<ItemError<TableId, Error<types::ListRowsResponse>>> },
+    RowsCorrectFailed { source: ErrVec<ItemError<TableId, Box<Error<types::ListRowsResponse>>>> },
 }
 
 #[derive(Error, Debug)]
@@ -1055,7 +1055,7 @@ pub enum ClientFormulasError {
     #[error("failed to list formulas")]
     ListFormulasFailed { source: Box<Error<types::ListFormulasResponse>> },
     #[error("failed to get formulas")]
-    GetFormulaFailed { source: ErrVec<ItemError<String, Error<types::GetFormulaResponse>>> },
+    GetFormulaFailed { source: ErrVec<ItemError<String, Box<Error<types::GetFormulaResponse>>>> },
 }
 
 #[derive(Error, Debug)]
@@ -1063,7 +1063,7 @@ pub enum ClientControlsError {
     #[error("failed to list controls")]
     ListControlsFailed { source: Box<Error<types::ListControlsResponse>> },
     #[error("failed to get controls")]
-    GetControlFailed { source: ErrVec<ItemError<String, Error<types::GetControlResponse>>> },
+    GetControlFailed { source: ErrVec<ItemError<String, Box<Error<types::GetControlResponse>>>> },
 }
 
 #[derive(Error, Debug)]
