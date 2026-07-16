@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0](https://github.com/DenisGorbachev/coda-api/compare/v0.4.0...v0.5.0) - 2026-07-16
+
+### Fixed
+
+- update errgonomic
+- update errgonomic
+- clippy
+- clippy
+- general
+- Cargo
+- absolute_paths
+- Cargo
+- bump Rust version
+- AGENTS
+- AGENTS
+- clippy::arithmetic_side_effects
+
 ## [0.4.0](https://github.com/DenisGorbachev/coda-api/compare/v0.3.0...v0.4.0) - 2026-05-03
 
 ### Added
