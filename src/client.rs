@@ -960,11 +960,7 @@ impl Client {
         }
 
         let delay = Duration::from_secs(delay_secs);
-        let mut attempt = 0;
-
-        while attempt < max_attempts {
-            attempt += 1;
-
+        for attempt in 1..=max_attempts {
             for (index, row_id) in row_ids.iter().enumerate() {
                 if rows[index].is_some() {
                     continue;

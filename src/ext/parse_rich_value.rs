@@ -48,9 +48,9 @@ pub fn normalize_rich_string(value: &str) -> String {
 }
 
 pub fn normalize_owned_rich_string(value: String) -> String {
-    if value.len() >= 6 && value.starts_with("```") && value.ends_with("```") {
-        value[3..value.len() - 3].to_string()
-    } else {
-        value
-    }
+    let normalized = value
+        .strip_prefix("```")
+        .and_then(|inner| inner.strip_suffix("```"))
+        .map(str::to_string);
+    normalized.unwrap_or(value)
 }
