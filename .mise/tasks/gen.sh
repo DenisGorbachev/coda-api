@@ -121,7 +121,7 @@ jq '
         {
             "format": {
                 "type": "string",
-                "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+                "description": "A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>",
                 "example": "YYYY-MM-DD"
             }
         }
@@ -134,12 +134,12 @@ jq '
         {
             "dateFormat": {
                 "type": "string",
-                "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+                "description": "A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>",
                 "example": "YYYY-MM-DD"
             },
             "timeFormat": {
                 "type": "string",
-                "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+                "description": "A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>",
                 "example": "h:mm:ss A"
             }
         }
@@ -324,7 +324,7 @@ jq '
         {
             "format": {
                 "type": "string",
-                "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+                "description": "A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>",
                 "example": "h:mm:ss A"
             }
         }

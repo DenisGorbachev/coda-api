@@ -10901,7 +10901,7 @@
           },
           "format": {
             "type": "string",
-            "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+            "description": "A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>",
             "example": "YYYY-MM-DD"
           }
         }
@@ -11071,7 +11071,7 @@
           },
           "format": {
             "type": "string",
-            "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+            "description": "A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>",
             "example": "h:mm:ss A"
           }
         }
@@ -11099,12 +11099,12 @@
           },
           "dateFormat": {
             "type": "string",
-            "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+            "description": "A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>",
             "example": "YYYY-MM-DD"
           },
           "timeFormat": {
             "type": "string",
-            "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+            "description": "A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>",
             "example": "h:mm:ss A"
           }
         }

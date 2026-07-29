@@ -6002,7 +6002,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "format": {
-    ///      "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+    ///      "description": "A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>",
     ///      "examples": [
     ///        "YYYY-MM-DD"
     ///      ],
@@ -6030,7 +6030,7 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DateColumnFormat {
-        ///A format string using Moment syntax: https://momentjs.com/docs/#/displaying/
+        ///A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub format: ::std::option::Option<::std::string::String>,
         ///Whether or not this column is an array.
@@ -6112,7 +6112,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "dateFormat": {
-    ///      "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+    ///      "description": "A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>",
     ///      "examples": [
     ///        "YYYY-MM-DD"
     ///      ],
@@ -6126,7 +6126,7 @@ pub mod types {
     ///      "type": "boolean"
     ///    },
     ///    "timeFormat": {
-    ///      "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+    ///      "description": "A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>",
     ///      "examples": [
     ///        "h:mm:ss A"
     ///      ],
@@ -6147,13 +6147,13 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct DateTimeColumnFormat {
-        ///A format string using Moment syntax: https://momentjs.com/docs/#/displaying/
+        ///A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>
         #[serde(rename = "dateFormat", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub date_format: ::std::option::Option<::std::string::String>,
         ///Whether or not this column is an array.
         #[serde(rename = "isArray")]
         pub is_array: bool,
-        ///A format string using Moment syntax: https://momentjs.com/docs/#/displaying/
+        ///A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>
         #[serde(rename = "timeFormat", default, skip_serializing_if = "::std::option::Option::is_none")]
         pub time_format: ::std::option::Option<::std::string::String>,
         #[serde(rename = "type")]
@@ -41213,7 +41213,7 @@ pub mod types {
     ///  ],
     ///  "properties": {
     ///    "format": {
-    ///      "description": "A format string using Moment syntax: https://momentjs.com/docs/#/displaying/",
+    ///      "description": "A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>",
     ///      "examples": [
     ///        "h:mm:ss A"
     ///      ],
@@ -41241,7 +41241,7 @@ pub mod types {
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct TimeColumnFormat {
-        ///A format string using Moment syntax: https://momentjs.com/docs/#/displaying/
+        ///A format string using Moment syntax: <https://momentjs.com/docs/#/displaying/>
         #[serde(default, skip_serializing_if = "::std::option::Option::is_none")]
         pub format: ::std::option::Option<::std::string::String>,
         ///Whether or not this column is an array.
