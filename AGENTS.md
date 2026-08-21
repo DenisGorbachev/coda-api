@@ -482,25 +482,60 @@ A function marked with `#[test]` or `#[tokio::test]`.
 
 - Don't enforce a line length limit when writing code, comments or documentation
 
+#### Chat thread id
+
+- Must be a string
+- Must contain at least 3 characters
+- Must contain only uppercase characters
+
+Examples:
+
+- `RVC`
+- `AKE`
+- `LMY`
+
+Notes:
+
+- Should match the thread topic
+
+#### findings.md
+
+- If it exists:
+  - Must contain a non-empty list of [findings](#finding)
+
+#### Finding
+
+- Must be formatted as `### {ctid}\n\n[{priority}] {title}. {body} ({references}). Proposed fixes: {fixes}`
+  - `ctid` must be a [chat thread id](#chat-thread-id)
+  - `priority` must be one of `P0`, `P1`, `P2`, `P3`.
+  - `references` must be a comma-separated list of `reference`
+  - `reference` must must be formatted as `{path}:{line}`
+  - `path` must be a file path relative to your working directory
+  - `line` must be the first line of the relevant code or text block
+  - `fixes` must be one of the following:
+    - If there is at least one proposed fix:
+      - Then: "\n\n" and a Markdown nested list of fixes where each fix must have a format `{number}. {description}` (the numbers should start from 1 for each list of fixes)
+      - Else: the exact text "none."
+
 ### Guidelines for `serde`
 
 #### Requirements
 
-* Every input data type must derive `Serialize` and `Deserialize`
-* Every `Option`-wrapped field must have attributes:
-  * `#[serde(skip_serializing_if = "Option::is_none")]`
-* Every `OffsetDateTime` field must have attributes:
-  * `#[serde(with = "time::serde::rfc3339")]`
-* Every `Option<OffsetDateTime>` field must have attributes:
-  * `#[serde(with = "time::serde::rfc3339::option")]`
-* Every field that stores a physical value must be serialized as a map that includes at least two fields: `value` and `unit`
-  * `value` must be a primitive type
-  * `unit` must be a string that contains the unit name in singular form (for example: "nanosecond", "second", "minute", "kilogram", "meter")
-    * `unit` may contain a prefix (for example: "nano", "kilo")
+- Every input data type must derive `Serialize` and `Deserialize`
+- Every `Option`-wrapped field must have attributes:
+  - `#[serde(skip_serializing_if = "Option::is_none")]`
+- Every `OffsetDateTime` field must have attributes:
+  - `#[serde(with = "time::serde::rfc3339")]`
+- Every `Option<OffsetDateTime>` field must have attributes:
+  - `#[serde(with = "time::serde::rfc3339::option")]`
+- Every field that stores a physical value must be serialized as a map that includes at least two fields: `value` and `unit`
+  - `value` must be a primitive type
+  - `unit` must be a string that contains the unit name in singular form (for example: "nanosecond", "second", "minute", "kilogram", "meter")
+    - `unit` may contain a prefix (for example: "nano", "kilo")
 
 #### Notes
 
-* It is recommended to use `serde_with` to reduce the code size by avoiding custom `Serialize`/`Deserialize` impls
+- It is recommended to use `serde_with` to reduce the code size by avoiding custom `Serialize`/`Deserialize` impls
 
 ### Guidelines for `clap`
 
@@ -509,6 +544,10 @@ A function marked with `#[test]` or `#[tokio::test]`.
 - For each enum in project:
   - If enum has only unit variants and doesn't implement `Error`
     - Then: it must derive `ValueEnum` with `#[value(rename_all = "kebab-case")]`
+- For each field in a type that derives `Parser`:
+  - If this field's type is local:
+    - Then: this type must implement `FromStr`
+      - Rationale: `clap` parses types that implement `FromStr` directly without `value_parser`
 
 ### CLI guidelines
 
@@ -1983,6 +2022,8 @@ cargo-binstall = "1.10.15"
 "cargo:taplo-cli" = "0.10.0"
 "cargo:rumdl" = "0.1.0"
 "cargo:sd" = "1.0.0"
+"cargo:cargo-progenitor" = "0.14.0"
+jq = "1.8.1"
 
 [hooks]
 postinstall = { task = "git:install-hooks" }
@@ -2132,12 +2173,16 @@ if_missing = "error"
 env = "exec"
 
 [providers]
-keychain = { type = "keychain", service = "rust-private-lib-template" }
-pass = { type = "password-store", prefix = "rust-private-lib-template/" }
-age = { type = "age", recipients = [
-    "age1sf4r4amev2svqr6llwg8hgtz9n7p5qdh7hh0mavcshzfrmgfduksnq3hql",
-    "age1605gsnxpe536sprwccyumq74veg0g80u55n8ggems0t8deau6qdsfnq3m3"
-] }
+keychain = { type = "keychain", service = "coda-api" }
+age = { type = "age", recipients = ["age1sf4r4amev2svqr6llwg8hgtz9n7p5qdh7hh0mavcshzfrmgfduksnq3hql","age1605gsnxpe536sprwccyumq74veg0g80u55n8ggems0t8deau6qdsfnq3m3","age1hrluqkcgceu59n99fnxmjy3qe5fryut3myel5qzfyz6p6jrtxdns8n2xke"]}
+
+[profiles]
+
+[profiles.test]
+
+[profiles.test.secrets]
+CODA_API_KEY= { provider = "age", value = "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBaWml2eUlsaS9GWG5MbXR3aHIrMEpxZlhZS0tnMmE3Vnd4SWxMVTJJOEhzCnljTDNqRnpXZm03VkVqTHFIUFgwbUVHRHJWbW5WcFZCQlBjU096U0dpQmMKLT4gWDI1NTE5IGhHbzFYT0FTWks0cGFYSlEwL1ZMZFNNTkRna3Y4M3M0ZGh3SFZoNmQ3VVkKZ3pQU245RE5mdjlxUVBoMnMrZDg4dWZlVHdPckZ0ZXZ0UWtDRDkxdEcvMAotPiBYMjU1MTkgZE5GRTRxVHU0OVU5enpTTjVZWXV1UUkwVGI5andsT05SaUlRRDg0UGZWSQppa1dYSXZKN2NSOFc4bmVUNnNtbFQ5SmlWc1ByUEVIRitCVFk0ZzNGN1lnCi0+IFEtZ3JlYXNlCkEvanROb2RvaWJ1NzhadDhnQ2cza2FIVklqV20wNnBveno3UHE4VHlsMW81U3p3bHk5OAotLS0gN054eUhsazRDa3JrSjJqWExzMTh3cXZJTU1EQkdRSnc1SVYwakU1ZEpTQQpb1EA4xZy1M4ehqUsh7LI/7DVnE3v87C99lomMx4TBh8bZuf4P26K/DfvJgx8Tg4AiPWQPUtKZAhuF2jF03naJd1LQsA==" }
+CODA_DOC_ID= { provider = "age", value = "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBGc1FFZVp2S09SUDU0dmNneG1Eb29ieUNJSkNrOVF5L211QlFMMU1ESTBzCmNCcmpHZWhxVGdaQ0RXM2pSbmpMT0xvblBmYzlxSWwyYTNSUEtheDFJMkEKLT4gWDI1NTE5IDRreXJZeTljN2hmZ0tnOUJ2RkZXdGtHd3VHMmpQSkhNZ3BHazloTXVxUW8KbkhDMGRmVDlmeXo3TDVvamJaNVp4QUgvTTM2TjB5bldBWlJaa0Q5MDdlawotPiBYMjU1MTkgSE50dGNMWGdrd05VNHFMa0lNNWZXTFVxNGpsTlp1QlJhWDhNVkVuMmVRQQpzMGh4ZXZCV2FyQXBydXEvTnowRE5LbjBGcTF5Mk1yOWs2c1Vtalh5WGFRCi0+IHhobEAtZ3JlYXNlIHcgISJiZyEyYzMgaWMgYSpPNSEKQktaWVVSNVhlUXl3Ci0tLSBTSXZBNi9TNmdiMHY1aldNeTdzRkoyeFFWRzQvSjdXZE05WUJrZllkWGVzCg7PunzqA2JUDFO04ADgBv+whvZ2/h3w0QDT3HGkzOMxtEZ3vvoyx8VqpA==" }
 ```
 
 #### Cargo.toml
@@ -2228,26 +2273,6 @@ uuid = { version = "1.0", features = ["serde", "v4"] }
 [dev-dependencies]
 clap = { version = "4.5", features = ["derive", "env"] }
 tokio = { version = "1.46", features = ["macros", "fs", "net", "rt", "rt-multi-thread"] }
-```
-
-#### fnox.toml
-
-```toml
-#:schema https://fnox.jdx.dev/schema.json
-
-if_missing = "error"
-
-[providers]
-keychain = { type = "keychain", service = "coda-api" }
-pass = { type = "password-store", prefix = "coda-api/" }
-
-[profiles]
-
-[profiles.test]
-
-[profiles.test.secrets]
-CODA_API_KEY = { provider = "pass", value = "TEST_CODA_API_KEY" }
-CODA_DOC_ID = { provider = "pass", value = "TEST_CODA_DOC_ID" }
 ```
 
 #### src/lib.rs

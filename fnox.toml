@@ -5,7 +5,6 @@ env = "exec"
 
 [providers]
 keychain = { type = "keychain", service = "coda-api" }
-pass = { type = "password-store", prefix = "coda-api/" }
 age = { type = "age", recipients = ["age1sf4r4amev2svqr6llwg8hgtz9n7p5qdh7hh0mavcshzfrmgfduksnq3hql","age1605gsnxpe536sprwccyumq74veg0g80u55n8ggems0t8deau6qdsfnq3m3","age1hrluqkcgceu59n99fnxmjy3qe5fryut3myel5qzfyz6p6jrtxdns8n2xke"]}
 
 [profiles]
@@ -13,5 +12,5 @@ age = { type = "age", recipients = ["age1sf4r4amev2svqr6llwg8hgtz9n7p5qdh7hh0mav
 [profiles.test]
 
 [profiles.test.secrets]
-CODA_API_KEY = { provider = "pass", value = "TEST_CODA_API_KEY" }
-CODA_DOC_ID = { provider = "pass", value = "TEST_CODA_DOC_ID" }
+CODA_API_KEY= { provider = "age", value = "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBaWml2eUlsaS9GWG5MbXR3aHIrMEpxZlhZS0tnMmE3Vnd4SWxMVTJJOEhzCnljTDNqRnpXZm03VkVqTHFIUFgwbUVHRHJWbW5WcFZCQlBjU096U0dpQmMKLT4gWDI1NTE5IGhHbzFYT0FTWks0cGFYSlEwL1ZMZFNNTkRna3Y4M3M0ZGh3SFZoNmQ3VVkKZ3pQU245RE5mdjlxUVBoMnMrZDg4dWZlVHdPckZ0ZXZ0UWtDRDkxdEcvMAotPiBYMjU1MTkgZE5GRTRxVHU0OVU5enpTTjVZWXV1UUkwVGI5andsT05SaUlRRDg0UGZWSQppa1dYSXZKN2NSOFc4bmVUNnNtbFQ5SmlWc1ByUEVIRitCVFk0ZzNGN1lnCi0+IFEtZ3JlYXNlCkEvanROb2RvaWJ1NzhadDhnQ2cza2FIVklqV20wNnBveno3UHE4VHlsMW81U3p3bHk5OAotLS0gN054eUhsazRDa3JrSjJqWExzMTh3cXZJTU1EQkdRSnc1SVYwakU1ZEpTQQpb1EA4xZy1M4ehqUsh7LI/7DVnE3v87C99lomMx4TBh8bZuf4P26K/DfvJgx8Tg4AiPWQPUtKZAhuF2jF03naJd1LQsA==" }
+CODA_DOC_ID= { provider = "age", value = "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBGc1FFZVp2S09SUDU0dmNneG1Eb29ieUNJSkNrOVF5L211QlFMMU1ESTBzCmNCcmpHZWhxVGdaQ0RXM2pSbmpMT0xvblBmYzlxSWwyYTNSUEtheDFJMkEKLT4gWDI1NTE5IDRreXJZeTljN2hmZ0tnOUJ2RkZXdGtHd3VHMmpQSkhNZ3BHazloTXVxUW8KbkhDMGRmVDlmeXo3TDVvamJaNVp4QUgvTTM2TjB5bldBWlJaa0Q5MDdlawotPiBYMjU1MTkgSE50dGNMWGdrd05VNHFMa0lNNWZXTFVxNGpsTlp1QlJhWDhNVkVuMmVRQQpzMGh4ZXZCV2FyQXBydXEvTnowRE5LbjBGcTF5Mk1yOWs2c1Vtalh5WGFRCi0+IHhobEAtZ3JlYXNlIHcgISJiZyEyYzMgaWMgYSpPNSEKQktaWVVSNVhlUXl3Ci0tLSBTSXZBNi9TNmdiMHY1aldNeTdzRkoyeFFWRzQvSjdXZE05WUJrZllkWGVzCg7PunzqA2JUDFO04ADgBv+whvZ2/h3w0QDT3HGkzOMxtEZ3vvoyx8VqpA==" }
