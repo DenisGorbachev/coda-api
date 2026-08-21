@@ -1,2 +1,4 @@
 absolute-paths-allowed-crates = ["serde", "serde_json", "serde-jsonlines", "serde_yaml", "toml", "serde-xml-rs", "quick-xml", "anyhow", "reqwest", "url", "rust_decimal", "time"]
 absolute-paths-max-segments = 2
+# Raw API methods intentionally preserve Progenitor's public error type so callers can inspect typed error responses without an extra allocation.
+large-error-ignored = ["progenitor_client::Error"]

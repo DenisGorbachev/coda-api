@@ -358,12 +358,12 @@ pub enum ClientTablesError {
     #[error("list tables request failed: {source}")]
     ListTablesFailed {
         #[source]
-        source: Error<ListTablesResponse>,
+        source: Box<Error<ListTablesResponse>>,
     },
     #[error("get table request failed: {source}")]
     GetTableFailed {
         #[source]
-        source: Error<GetTableResponse>,
+        source: Box<Error<GetTableResponse>>,
     },
 }
 ///`RowUpdateResult`

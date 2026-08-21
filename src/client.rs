@@ -1065,7 +1065,7 @@ pub enum ClientControlsError {
 #[derive(Error, Debug)]
 pub enum UpsertRowsConclusivelyError {
     #[error("failed to upsert rows")]
-    UpsertFailed { source: Error<types::UpsertRowsResponse> },
+    UpsertFailed { source: Box<Error<types::UpsertRowsResponse>> },
     #[error("failed to ensure rows '{row_ids:?}' are visible for request '{request_id}'")]
     EnsureRowsVisibleFailed { request_id: String, row_ids: Vec<String>, source: WaitForRowsError },
 }
