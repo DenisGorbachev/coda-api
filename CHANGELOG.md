@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.1](https://github.com/DenisGorbachev/coda-api/compare/v0.4.0...v0.4.1) - 2026-08-28
+
+### Fixed
+
+- doc_data
+- AGENTS
+- CargoMetadata
+- update errgonomic
+- update errgonomic
+- update errgonomic
+- support
+- README
+- refactor to support workspaces
+- update errgonomic
+- update errgonomic
+- clippy
+- clippy
+- general
+- Cargo
+- absolute_paths
+- Cargo
+- bump Rust version
+- AGENTS
+- AGENTS
+- clippy::arithmetic_side_effects
+
+### Other
+
+- update errgonomic
+- Merge remote-tracking branch 'repoconf-rust-public-lib-template/main'
+
 ## [0.4.0](https://github.com/DenisGorbachev/coda-api/compare/v0.3.0...v0.4.0) - 2026-05-03
 
 ### Added
