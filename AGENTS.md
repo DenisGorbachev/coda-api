@@ -498,6 +498,16 @@ Notes:
 
 - Should match the thread topic
 
+#### Chat thread id heading
+
+A Markdown heading level 3 that contains only [chat thread id](#chat-thread-id).
+
+Examples:
+
+- `### RVC`
+- `### AKE`
+- `### LMY`
+
 #### findings.md
 
 - If it exists:
@@ -517,6 +527,10 @@ Notes:
       - Then: "\n\n" and a Markdown nested list of fixes where each fix must have a format `{number}. {description}` (the numbers should start from 1 for each list of fixes)
       - Else: the exact text "none."
 
+#### Publishable package
+
+A package that has a remote whose name contains `public` or `pre-public` and ends with `template`.
+
 ### Guidelines for `serde`
 
 #### Requirements
@@ -528,10 +542,6 @@ Notes:
   - `#[serde(with = "time::serde::rfc3339")]`
 - Every `Option<OffsetDateTime>` field must have attributes:
   - `#[serde(with = "time::serde::rfc3339::option")]`
-- Every field that stores a physical value must be serialized as a map that includes at least two fields: `value` and `unit`
-  - `value` must be a primitive type
-  - `unit` must be a string that contains the unit name in singular form (for example: "nanosecond", "second", "minute", "kilogram", "meter")
-    - `unit` may contain a prefix (for example: "nano", "kilo")
 
 #### Notes
 
@@ -590,6 +600,8 @@ fn verify_cli() {
 ##### File `src/command.rs`
 
 - Must define a [command-like struct](#command-like-struct) named `Command`
+  - Must have attributes:
+    - `#[command(author, version, about, propagate_version = true, flatten_help = true, disable_help_subcommand = true)]`
 - Must define a [subcommand-like enum](#subcommand-like-enum) named `Subcommand`
 
 Example:
@@ -601,7 +613,7 @@ use errgonomic::map_err;
 use thiserror::Error;
 
 #[derive(clap::Parser, Debug)]
-#[command(author, version, about, propagate_version = true)]
+#[command(author, version, about, propagate_version = true, flatten_help = true, disable_help_subcommand = true)]
 pub struct Command {
     #[command(subcommand)]
     subcommand: Subcommand,
@@ -642,7 +654,13 @@ pub use print_command::*;
 A struct that contains fields for CLI arguments.
 
 - Must have a name that is a concatenation of all command names leading up to and including this command name, and ends with `Command` (see example above)
-- Must derive `clap::Parser`
+- Must have at least the following attributes:
+  - `derive`
+    - Must contain at least:
+      - `Parser` (`use clap::Parser`)
+  - `command`
+    - Must contain at least:
+      - `flatten_help = true`
 - Must be attached to a parent module: if it's a top-level command: `src/lib.rs`, else: `src/command.rs`
 - For each field:
   - If the field has a collection type (e.g. `Vec`), then it must have attribute `num_args = 1..`
@@ -662,7 +680,10 @@ Command example:
 An enum that contains variants for CLI subcommands.
 
 - Must have a name that is a concatenation of all command names leading up to and including this command name, and ends with `Subcommand` (see example above)
-- Must derive `clap::Subcommand`
+- Must have at least the following attributes:
+  - `derive`
+    - Must contain at least:
+      - `Subcommand` (`use clap::Subcommand`)
 - Must be located in the same file as its parent command struct
 - Each variant must be a tuple variant containing exactly one command
 
@@ -724,20 +745,38 @@ Notes:
   - Must parse `DocDataCli`
   - Must call `DocDataCli::run`
 
-### Error handling guidelines
+### Error handling
 
-* Don't use `?` try operator - use the macros that begin with `handle`
-* Use `handle!` to unwrap `Result` types
-* Use `handle_opt!` to unwrap `Option` types
-* Use `handle_bool!` to return an error if some condition is true
+#### Principle
+
+Every fallible function must return an error with enough data for the caller to retry the call.
+
+#### Guidelines
+
+* Use `handle!` instead of `?` try operator to unwrap `Result` types
+* Use `handle!` instead of `Result::map_err`
+* Use `handle_opt!` instead of `?` try operator to unwrap `Option` types
+* Use `handle_opt!` instead of `Option::ok_or` and `Option::ok_or_else`
+* Use `handle_bool!` instead of `if condition { return Err(...) }` to return an error if some condition is true
 * Use `handle_iter!` or `handle_iter_of_refs!` to collect and return errors from iterators
-* Note that macros that begin with `handle` already contain a `return` statement
-* Don't call `.clone()` on the variables passed into error handling macros (there is no need to clone the variables because the macros consume them only in the error branch). The macros do not consume the variables that are passed into them in the success branch. If you call a macro, you can always use the variables that are passed into the macro call in the subsequent code as if they haven't been moved (because they actually are not moved in the success branch, only in the error branch).
+* Use `handle_into_iter!` to handle errors in collections that implement `IntoIterator` (including `Vec` and `HashMap`)
+* Calls to macros that begin with `handle` must not contain calls to `clone` (must not contain `.clone()`)
+  * Rationale: there is no need to clone the variables because the macros consume them only in the error branch, and the error branch contains a `return` statement. The variables are not consumed in the success branch, so you can always use them in the subsequent code.
 * Don't convert a `Result` into an `Option`, always propagate the error up the call stack
-* Use `thiserror` to derive `Error`
-* Use `thiserror` version `2.0`
-* Do not annotate any error enum variant fields with a `#[from]` attribute
-* Do annotate every error enum variant with an `#[error]` attribute
+* Don't use `unwrap` or `expect`
+* Don't return strings as errors
+* Every fallible function must return a unique error type, even if it contains only one fallible expression
+* Every call to another fallible function must be wrapped in a unique error enum variant
+* Every fallible function body must begin with `use ThisFunctionError::*;`, where `ThisFunctionError` must be the name of this function's error enum (for example: `use ParseConfigError::*;`)
+* Every fallible function body must use the error enum variant names without the error enum name prefix (for example: `ReadFileFailed` instead of `ParseConfigError::ReadFileFailed`)
+* Every error type must be an enum
+* Every error type must derive `Error` via `thiserror` v2
+* Every error type must be located in the same file as the function that returns it below other non-mod items
+* Every error enum variant must be a struct variant
+* Every error enum variant must contain one field per owned variable that is relevant to the fallible expression that this variant wraps
+  * The relevant variable is a variable whose value determines whether the fallible expression returns an `Ok` or an `Err`
+* Every error enum variant must have fields only for [`data types`](#data-type), not for [`non-data types`](#non-data-type)
+* Every error enum variant must have an `#[error]` attribute
   * The `#[error]` attribute must contain the error message displayed for the user
   * The `#[error]` attribute must not contain the `source` field
   * The `#[error]` attribute should contain only those fields that can be displayed on one line
@@ -758,13 +797,119 @@ Notes:
           TaskNotFound { query: String }
       }
       ```
-  * If the `#[error]` attribute contains fields, then those fields must be wrapped in single quotes. This is necessary to correctly display fields that may contain spaces.
-    * Good: `#[error("user '{name}' not found")]`
-    * Bad: `#[error("user {name} not found")]`
+  * If the `#[error]` attribute contains fields whose values may be rendered as [hard-to-see string](#hard-to-see-string), then those fields must be wrapped in single quotes:
+    * `name` can be rendered as hard-to-see string, so it must be wrapped in single quotes:
+      * Good: `#[error("user '{name}' not found")]`
+      * Bad: `#[error("user {name} not found")]`
+    * `len` can't be rendered as hard-to-see string, so it must not be wrapped in single quotes:
+      * Good: `#[error("failed to parse {len} responses", len = responses.len())]`
+      * Bad: `#[error("failed to parse '{len}' responses", len = responses.len())]`
+  * If the error enum variant has a field whose type is `std::process::Command` or `tokio::process::Command`, it must be rendered in the error message in backticks via `render_command` function from `errgonomic` crate (requires `process` feature)
+* If the error enum variant has a `source` field, then this field must be the first field
+* If each field of each variant of the error enum implements `Copy`, then the error enum must implement `Copy` too
+* Every error enum variant field must have an owned type (not a reference)
+* Every error enum variant field must not have a `#[from]` attribute
+* Every variable that contains secret data (the one which must not be displayed or logged, e.g. password, API key, personally identifying information) must have a type that doesn't output the underlying data in the `Debug` and `Display` impls (e.g. `secrecy::SecretBox`)
+* The code that calls a fallible function on each element of a collection should return an `impl Iterator<Item = Result<T, E>>` instead of short-circuiting on the first error
+* If Clippy outputs a `result_large_err` warning, then the large fields of the error enum must be wrapped in a `Box`
+* If an argument of callee implements `Copy`, the callee should not include it in the list of error enum variant fields (the caller must include it because of the rule to include all relevant owned variables)
+* If you see a function that returns a `Result` whose last argument is `()` (e.g. `Result<(), ()>`, `Result<T, ()>`, `Result<u32, ()>`), then you must fix the error handling in this function according to the guidelines and replace `()` with a proper error type
+
+##### Naming
+
+* The name of the error enum must end with `Error` (for example: `ParseConfigError`)
+* The name of the error enum variant should end with `Failed` or `NotFound` or `Invalid` (for example: `ReadFileFailed`, `UserNotFound`, `PasswordInvalid`)
+* If the error variant name is associated with a child function call, the name of the error variant must be equal to the name of the function converted to CamelCase concatenated with `Failed` (for example: if the parent function calls `read_file`, then it should call it like this: `handle!(read_file(&path), ReadFileFailed, path)`
+* The name of the error enum must include the name of the function converted to CamelCase
+  * If the function is a freestanding function, the name of the error type must be exactly equal to the name of the function converted to CamelCase concatenated with `Error`
+  * If the function is an associated function, the name of the error type must be exactly equal to the name of the type without generics concatenated with the name of the function in CamelCase concatenated with `Error`
+  * If the error is specified as an associated type of a foreign trait with multiple functions that return this associated error type, then the name of the error type must be exactly equal to the name of the trait including generics concatenated with the name of the type for which this trait is implemented concatenated with `Error`
+* Every `impl TryFrom<A> for B` must use a special form of error handling that matches on multiple variables at once and returns a single error that contains fields for all available variables. For example:
+  ```rust
+  #[derive(Getters, Clone, Debug)]
+  pub struct Human {
+      name: String,
+      #[getter(copy)]
+      age: u32,
+  }
+  
+  #[derive(Getters, Clone, Debug)]
+  pub struct Adult {
+      name: NonEmptyString,
+      #[getter(copy)]
+      age: u32,
+  }
+  
+  impl TryFrom<Human> for Adult {
+      type Error = TryFromHumanForAdultError;
+  
+      fn try_from(input: Human) -> Result<Self, Self::Error> {
+          use TryFromHumanForAdultError::*;
+          let Human {
+              name,
+              age,
+          } = input;
+          let name_result = NonEmptyString::try_from(name);
+          let is_adult = age > 18;
+          match (name_result, is_adult) {
+              (Ok(name), true) => Ok(Self {
+                  name,
+                  age,
+              }),
+              (name_result, is_adult) => Err(ConversionFailed {
+                  name_result,
+                  age,
+                  is_adult,
+              }),
+          }
+      }
+  }
+  
+  #[derive(Error, Debug)]
+  pub enum TryFromHumanForAdultError {
+      #[error("failed to convert human to adult")]
+      ConversionFailed { name_result: Result<NonEmptyString, TryFromStringForNonEmptyStringError>, age: u32, is_adult: bool },
+  }
+  ```
+
+#### Definitions
+
+##### Fallible expression
+
+An expression that returns a `Result`.
+
+##### Fallible expression group
+
+A group of [fallible expressions](#fallible-expression) where each output variable does not depend on the output variables of other fallible expressions within the same group.
+
+Aliases: FEG.
+
+##### Data type
+
+A type that holds the actual data.
+
+Examples:
+
+* `bool`
+* `String`
+* `PathBuf`
+
+##### Non-data type
+
+A type that doesn't hold the actual data.
+
+Examples:
+
+* `RestClient` doesn't point to the actual data, it only allows querying it.
+* `DatabaseConnection` doesn't hold the actual data, it only allows querying it.
+
+##### Hard-to-see string
+
+A string that is empty or contains only whitespace characters.
 
 #### Files
 
-#### File: src/functions/exit_result.rs
+#### File: src/functions/exit.rs
 
 ````rust
 use crate::eprintln_error;
@@ -779,10 +924,18 @@ use futures::StreamExt;
 use std::pin::pin;
 
 /// Converts a [`Result`] into an [`ExitCode`], printing a detailed error trace on failure.
-pub fn exit_result<E: Error>(result: Result<(), E>) -> ExitCode {
-    match result {
-        Ok(()) => ExitCode::SUCCESS,
-        Err(err) => {
+pub fn exit_result<E: Error>(result: Result<ExitCode, E>) -> ExitCode {
+    result.unwrap_or_else(|err| {
+        eprintln_error(&err);
+        ExitCode::FAILURE
+    })
+}
+
+/// Converts an [`Option`] into an [`ExitCode`], printing a detailed error trace on failure.
+pub fn exit_option<E: Error>(option: Option<E>) -> ExitCode {
+    match option {
+        None => ExitCode::SUCCESS,
+        Some(err) => {
             eprintln_error(&err);
             ExitCode::FAILURE
         }
@@ -832,10 +985,7 @@ pub fn get_root_source(error: &dyn Error) -> &dyn Error {
 ````rust
 use alloc::vec::Vec;
 
-/// Collects `Ok` values unless at least one `Err` is encountered.
-///
-/// This is optimized for `handle_iter!`: once an error appears, previously
-/// collected `Ok` values are dropped and further `Ok` values are ignored.
+/// PRUNING: drops collected `Ok` values and ignores later `Ok` values after the first `Err`, because `handle_iter!` only returns errors when any item fails.
 #[doc(hidden)]
 pub fn partition_result<T, E>(results: impl IntoIterator<Item = Result<T, E>>) -> Result<Vec<T>, Vec<E>> {
     let iter = results.into_iter();
@@ -858,6 +1008,26 @@ pub fn partition_result<T, E>(results: impl IntoIterator<Item = Result<T, E>>) -
     });
 
     if errors.is_empty() { Ok(oks) } else { Err(errors) }
+}
+````
+
+#### File: src/functions/render_command.rs
+
+````rust
+use alloc::string::String;
+use alloc::vec::Vec;
+use core::iter::once;
+use std::process::Command;
+
+pub fn render_command(command: &Command) -> String {
+    let parts = once(command.get_program().to_string_lossy())
+        .chain(command.get_args().map(|arg| arg.to_string_lossy()))
+        .collect::<Vec<_>>();
+    let result = shlex::try_join(parts.iter().map(|x| x.as_ref()));
+    match result {
+        Ok(string) => string,
+        Err(_) => command.get_program().to_string_lossy().into_owned(),
+    }
 }
 ````
 
@@ -901,13 +1071,15 @@ pub enum WriteToNamedTempFileError {
 
 ````rust
 use crate::{ErrorDisplayer, WriteToNamedTempFileError, map_err, write_to_named_temp_file};
+use alloc::format;
 use core::error::Error;
-use core::fmt::Formatter;
+use core::fmt::{self, Formatter};
+use std::eprintln;
 use std::io;
 use std::io::{Write, stderr};
 
 /// Writes a human-readable error trace to the provided formatter.
-pub fn writeln_error_to_formatter<E: Error + ?Sized>(error: &E, f: &mut Formatter<'_>) -> core::fmt::Result {
+pub fn writeln_error_to_formatter<E: Error + ?Sized>(error: &E, f: &mut Formatter<'_>) -> fmt::Result {
     use std::fmt::Write;
     write!(f, "- {error}")?;
     if let Some(source_new) = error.source() {
@@ -986,9 +1158,13 @@ mod tests {
     use I18nUpdateRunError::*;
     use JsonValueNewError::*;
     use UpdateRowError::*;
+    use alloc::string::{String, ToString};
+    use alloc::vec;
     use pretty_assertions::assert_eq;
+    use std::eprintln;
     use std::error::Error;
     use thiserror::Error;
+    use tokio::io::{Error as TokioIoError, ErrorKind as TokioIoErrorKind};
 
     #[test]
     fn must_write_error() {
@@ -1006,7 +1182,7 @@ mod tests {
                         },
                         I18nRequestFailed {
                             source: RequestSendFailed {
-                                source: tokio::io::Error::new(tokio::io::ErrorKind::AddrNotAvailable, "server at 239.143.73.1 did not respond"),
+                                source: TokioIoError::new(TokioIoErrorKind::AddrNotAvailable, "server at 239.143.73.1 did not respond"),
                             },
                             row: Row::new("Bar"),
                         },
@@ -1049,7 +1225,7 @@ mod tests {
         let mut actual = String::new();
         let displayer = ErrorDisplayer(error);
         writeln!(actual, "{displayer}").unwrap();
-        eprintln!("{}", &actual);
+        eprintln!("{actual}");
         assert_eq!(actual, expected)
     }
 
@@ -1082,7 +1258,7 @@ mod tests {
         #[error("failed to construct a JSON schema")]
         JsonSchemaNewFailed { source: JsonSchemaNewError },
         #[error("failed to send a request")]
-        RequestSendFailed { source: tokio::io::Error },
+        RequestSendFailed { source: TokioIoError },
     }
 
     #[derive(Error, Debug)]
@@ -1117,7 +1293,7 @@ mod tests {
 #### File: src/types/debug_as_display.rs
 
 ````rust
-use core::fmt::{Debug, Display, Formatter};
+use core::fmt::{self, Debug, Display, Formatter};
 
 /// A wrapper that renders `Debug` using the inner type's `Display` implementation.
 /// This wrapper is needed for types that have an easy-to-understand `Display` impl but hard-to-understand `Debug` impl.
@@ -1128,13 +1304,13 @@ pub struct DebugAsDisplay<T: Display>(
 );
 
 impl<T: Display> Debug for DebugAsDisplay<T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         Display::fmt(&self.0, f)
     }
 }
 
 impl<T: Display> Display for DebugAsDisplay<T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         Display::fmt(&self.0, f)
     }
 }
@@ -1149,7 +1325,7 @@ impl<T: Display> From<T> for DebugAsDisplay<T> {
 #### File: src/types/display_as_debug.rs
 
 ````rust
-use core::fmt::{Debug, Display, Formatter};
+use core::fmt::{self, Debug, Display, Formatter};
 
 /// A wrapper that renders `Display` using the inner type's `Debug` implementation.
 #[derive(Ord, PartialOrd, Eq, PartialEq, Copy, Clone, Debug)]
@@ -1159,7 +1335,7 @@ pub struct DisplayAsDebug<T: Debug>(
 );
 
 impl<T: Debug> Display for DisplayAsDebug<T> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         Debug::fmt(&self.0, f)
     }
 }
@@ -1175,9 +1351,10 @@ impl<T: Debug> From<T> for DisplayAsDebug<T> {
 
 ````rust
 use crate::ErrorDisplayer;
+use alloc::format;
+use alloc::vec::Vec;
 use core::error::Error;
-use core::fmt::{Debug, Write};
-use core::fmt::{Display, Formatter};
+use core::fmt::{self, Debug, Display, Formatter, Write};
 use core::ops::{Deref, DerefMut};
 
 /// An owned collection of errors
@@ -1191,7 +1368,7 @@ impl<E: Error> ErrVec<E> {
 }
 
 impl<E: Error> Display for ErrVec<E> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "encountered {len} errors", len = self.len())?;
         self.0.iter().try_for_each(|error| {
             f.write_char('\n')?;
@@ -1253,13 +1430,13 @@ impl<E: Error + Clone> From<&[E]> for ErrVec<E> {
 
 ````rust
 use crate::writeln_error_to_formatter;
-use core::fmt::{Display, Formatter};
+use core::fmt::{self, Display, Formatter};
 use std::error::Error;
 
 pub struct ErrorDisplayer<'a, E: ?Sized>(pub &'a E);
 
-impl<'a, E: Error + ?Sized> Display for ErrorDisplayer<'a, E> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+impl<E: Error + ?Sized> Display for ErrorDisplayer<'_, E> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         writeln_error_to_formatter(self.0, f)
     }
 }
@@ -1310,10 +1487,17 @@ cfg_if::cfg_if! {
     if #[cfg(feature = "std")] {
         mod writeln_error;
         mod write_to_named_temp_file;
-        mod exit_result;
+        mod exit;
         pub use writeln_error::*;
         pub use write_to_named_temp_file::*;
-        pub use exit_result::*;
+        pub use exit::*;
+    }
+}
+
+cfg_if::cfg_if! {
+    if #[cfg(all(feature = "process"))] {
+        mod render_command;
+        pub use render_command::*;
     }
 }
 ````
@@ -1392,7 +1576,7 @@ cfg_if::cfg_if! {
 //! # #[derive(Error, Debug)]
 //! # enum Err {}
 //! #
-//! # fn run() -> Result<(), Err> { Ok(()) }
+//! # fn run() -> Result<ExitCode, Err> { Ok(ExitCode::SUCCESS) }
 //! #
 //! pub fn main() -> ExitCode {
 //!     exit_result(run())
@@ -1405,89 +1589,14 @@ cfg_if::cfg_if! {
 #![doc = include_str!("./functions/writeln_error/fixtures/must_write_error.txt")]
 #![doc = "```"]
 //!
-//! ## Better error handling
-//!
-//! **Goal**: Help the caller diagnose the issue, fix it, and retry the call.
-//!
-//! **Approach**: Every error must be represented by a unique enum variant with relevant fields.
-//!
-//! ### Guidelines
-//!
-//! * Every error type must be an enum
-//! * Every error enum variant must be a struct variant
-//! * Every error enum variant must contain one field per owned variable that is relevant to the fallible expression that this variant wraps
-//!   * The relevant variable is a variable whose value determines whether the fallible expression returns an [`Ok`] or an [`Err`]
-//! * Every error enum variant must have fields only for [`data types`](#data-type), not for [`non-data types`](#non-data-type)
-//! * Every error enum variant field must have an owned type (not a reference)
-//! * Every error enum should be located below the function that returns it (in the same file)
-//! * Every fallible function must return a unique error type
-//! * Every call to another fallible function must be wrapped in a unique error enum variant
-//! * If the function contains only one fallible expression, this expression must still be wrapped in an error enum variant
-//! * Every variable that contains secret data (the one which must not be displayed or logged, e.g. password, API key, personally identifying information) must have a type that doesn't output the underlying data in the Debug and Display impls (e.g. [`secrecy::SecretBox`](https://docs.rs/secrecy/latest/secrecy/struct.SecretBox.html))
-//! * The code that calls a fallible function on each element of a collection should return an `impl Iterator<Item = Result<T, E>>` instead of short-circuiting on the first error
-//! * If Clippy outputs a `result_large_err` warning, then the large fields of the error enum must be wrapped in a `Box`
-//! * If the error enum variant has a `source` field, then this field must be the first field
-//! * The code must not use strings for error messages
-//! * The production code must not use `unwrap` or `expect` (only tests may use `unwrap` or `expect`)
-//! * If each field of each variant of the error enum implements `Copy`, then the error enum must implement `Copy` too
-//! * If an argument of callee implements `Copy`, the callee must not include it in the list of error enum variant fields (the caller must include it because of the rule to include all relevant owned variables)
-//!
-//! ### Conveniences
-//!
-//! * Every fallible function body must begin with `use ThisFunctionError::*;`, where `ThisFunctionError` must be the name of this function's error enum (for example: `use ParseConfigError::*;`)
-//! * The error handling code must use the error enum variant names without the error enum name prefix (for example: `ReadFileFailed` instead of `ParseConfigError::ReadFileFailed`)
-//!
-//! ### Naming
-//!
-//! * The name of the error enum must end with `Error` (for example: `ParseConfigError`)
-//! * The name of the error enum variant should end with `Failed` or `NotFound` or `Invalid` (for example: `ReadFileFailed`, `UserNotFound`, `PasswordInvalid`)
-//! * If the error variant name is associated with a child function call, the name of the error variant must be equal to the name of the function converted to CamelCase concatenated with `Failed` (for example: if the parent function calls `read_file`, then it should call it like this: `handle!(read_file(&path), ReadFileFailed, path)`
-//! * The name of the error enum must include the name of the function converted to CamelCase
-//!   * If the function is a freestanding function, the name of the error type must be exactly equal to the name of the function converted to CamelCase concatenated with `Error`
-//!   * If the function is an associated function, the name of the error type must be exactly equal to the name of the type without generics concatenated with the name of the function in CamelCase concatenated with `Error`
-//!   * If the error is specified as an associated type of a foreign trait with multiple functions that return this associated error type, then the name of the error type must be exactly equal to the name of the trait including generics concatenated with the name of the type for which this trait is implemented concatenated with `Error`
-//! * If the error enum is defined for a `TryFrom<A> for B` impl, then its name must be equal to "Convert{A}To{B}Error"
-//!
-//! ## Macros
-//!
-//! Use the following macros for more concise error handling:
-//!
-//! * [`handle!`] instead of [`Result::map_err`]
-//! * [`handle_opt!`] instead of [`Option::ok_or`] and [`Option::ok_or_else`]
-//! * [`handle_bool!`] instead of `if condition { return Err(...) }`
-//! * [`handle_iter!`] instead of code that handles errors in iterators
-//! * [`handle_iter_of_refs!`] instead of code that handles errors in iterators of references (where the values are still being owned by the underlying collection)
-//! * [`handle_into_iter!`] instead of code that handles errors in collections that implement [`IntoIterator`] (including [`Vec`] and [`HashMap`](std::collections::HashMap)
-//!
-//! ## Definitions
-//!
-//! ### Fallible expression
-//!
-//! An expression that returns a [`Result`].
-//!
-//! ### Data type
-//!
-//! A type that holds the actual data.
-//!
-//! For example:
-//!
-//! * `bool`
-//! * `String`
-//! * `PathBuf`
-//!
-//! ### Non-data type
-//!
-//! A type that doesn't hold the actual data.
-//!
-//! For example:
-//!
-//! * `RestClient` doesn't point to the actual data, it only allows querying it.
-//! * `DatabaseConnection` doesn't hold the actual data, it only allows querying it.
 
-#![cfg_attr(not(feature = "std"), no_std)]
+#![cfg_attr(not(test), deny(unused_crate_dependencies))]
+#![no_std]
 
 extern crate alloc;
 extern crate core;
+#[cfg(feature = "std")]
+extern crate std;
 
 mod macros;
 
@@ -1498,6 +1607,9 @@ pub use types::*;
 mod functions;
 
 pub use functions::*;
+
+#[cfg(all(test, feature = "std"))]
+mod drafts;
 ````
 
 #### File: src/macros.rs
@@ -1657,6 +1769,21 @@ macro_rules! map_err {
     };
 }
 
+/// Converts [`None`] into an error variant without returning early.
+///
+/// [`map_none`](crate::map_none) should be used only when the error variant doesn't capture any owned variables (which is very rare), or exactly at the end of the block (in the position of returned expression).
+#[macro_export]
+macro_rules! map_none {
+    ($option:expr, $variant:ident$(,)? $($arg:ident$(: $value:expr)?),*) => {
+        match $option {
+            Some(value) => Ok(value),
+            None => Err($variant {
+                $($arg: $crate::_into!($arg$(: $value)?)),*
+            })
+        }
+    };
+}
+
 /// Internal
 #[doc(hidden)]
 #[macro_export]
@@ -1690,10 +1817,14 @@ macro_rules! _index_err_async {
 #[cfg(all(test, feature = "std"))]
 mod tests {
     use crate::{ErrVec, ItemError, PathBufDisplay};
+    use alloc::boxed::Box;
+    use alloc::string::String;
+    use alloc::vec::Vec;
     use futures::future::join_all;
     use serde::{Deserialize, Serialize};
     use std::io;
     use std::path::{Path, PathBuf};
+    use std::println;
     use std::str::FromStr;
     use std::sync::{Arc, RwLock};
     use thiserror::Error;
@@ -1739,12 +1870,12 @@ mod tests {
         }
     }
 
-    /// This function tests the [`crate::handle_opt!`] macro
+    /// This function tests the [`crate::handle_opt!`] and [`crate::map_none!`] macros.
     #[allow(dead_code)]
-    fn find_even(numbers: Vec<u32>) -> Result<u32, FindEvenError> {
-        use FindEvenError::*;
-        let even = handle_opt!(numbers.iter().find(|x| *x % 2 == 0), NotFound);
-        Ok(*even)
+    fn first_word(lines: &[String]) -> Result<&str, FirstWordError> {
+        use FirstWordError::*;
+        let line = handle_opt!(lines.first(), LineNotFound);
+        map_none!(line.split_whitespace().next(), WordNotFound)
     }
 
     /// This function tests the [`crate::handle_iter!`] macro
@@ -1754,7 +1885,12 @@ mod tests {
         let results = numbers.into_iter().map(|number| {
             use CheckEvenError::*;
             if number % 2 == 0 {
-                Ok(number * 10)
+                match number.checked_mul(10) {
+                    Some(product) => Ok(product),
+                    None => Err(NumberOverflowed {
+                        number,
+                    }),
+                }
             } else {
                 Err(NumberNotEven {
                     number,
@@ -1849,9 +1985,11 @@ mod tests {
     }
 
     #[derive(Error, Debug)]
-    enum FindEvenError {
-        #[error("even number not found")]
-        NotFound,
+    enum FirstWordError {
+        #[error("line not found")]
+        LineNotFound {},
+        #[error("word not found")]
+        WordNotFound {},
     }
 
     #[derive(Error, Debug)]
@@ -1876,6 +2014,8 @@ mod tests {
     enum CheckEvenError {
         #[error("number is not even: {number}")]
         NumberNotEven { number: u32 },
+        #[error("number overflowed: {number}")]
+        NumberOverflowed { number: u32 },
     }
 
     async fn check_file(path: PathBuf) -> Result<String, CheckFileError> {
@@ -1909,7 +2049,7 @@ mod tests {
     }
 
     #[derive(Clone, Debug)]
-    struct Db {
+    struct State {
         user: User,
     }
 
@@ -1919,12 +2059,19 @@ mod tests {
     }
 
     #[allow(dead_code)]
-    fn get_username(db: Arc<RwLock<Db>>) -> Result<String, GetUsernameError> {
+    #[derive(Clone, Debug)]
+    struct Book {
+        user_idx: usize,
+        name: String,
+    }
+
+    #[allow(dead_code)]
+    fn get_username(state: Arc<RwLock<State>>) -> Result<String, GetUsernameError> {
         use GetUsernameError::*;
-        // `db.read()` returns `LockResult` whose Err variant is `PoisonError<RwLockReadGuard<'_, T>>`, which contains an anonymous lifetime
+        // `state.read()` returns `LockResult` whose Err variant is `PoisonError<RwLockReadGuard<'_, T>>`, which contains an anonymous lifetime
         // The error enum returned from this function must contain only owned fields, so it can't contain a `source` that has a lifetime
         // Therefore, we have to use handle_discard!, although it is discouraged
-        let guard = handle_discard!(db.read(), AcquireReadLockFailed);
+        let guard = handle_discard!(state.read(), AcquireReadLockFailed);
         let username = guard.user.username.clone();
         Ok(username)
     }
@@ -1933,6 +2080,42 @@ mod tests {
     pub enum GetUsernameError {
         #[error("failed to acquire read lock")]
         AcquireReadLockFailed,
+    }
+
+    #[derive(Clone, Debug)]
+    struct Db {
+        users: Vec<User>,
+        books: Vec<Book>,
+    }
+
+    impl Db {
+        /// Validates only the foreign keys
+        /// Assumes that the collection items have already been validated before they were inserted
+        #[allow(dead_code)]
+        pub fn validate(&self) -> impl Iterator<Item = DbValidateError> {
+            use DbValidateError::*;
+
+            self.books
+                .iter()
+                .enumerate()
+                .filter_map(|(book_idx, book)| {
+                    let user_idx = book.user_idx;
+                    if self.users.get(user_idx).is_none() {
+                        Some(UserNotFound {
+                            book_idx,
+                            user_idx,
+                        })
+                    } else {
+                        None
+                    }
+                })
+        }
+    }
+
+    #[derive(Error, Debug)]
+    pub enum DbValidateError {
+        #[error("book #{book_idx} has a non-existent user #{user_idx}")]
+        UserNotFound { book_idx: usize, user_idx: usize },
     }
 
     #[allow(dead_code)]
@@ -1995,6 +2178,15 @@ cfg_if::cfg_if! {
     }
 }
 ````
+
+### Project info
+
+#### `git remote`
+
+```shell
+origin
+repoconf-rust-public-lib-template
+```
 
 ### Project files
 
@@ -2257,7 +2449,7 @@ workspace = true
 [dependencies]
 chrono = { version = "0.4", default-features = false, features = ["serde"] }
 derive_more = { version = "2.0", features = ["display"] }
-errgonomic = { version = "0.4.0" }
+errgonomic = "0.5.0"
 futures-util = "0.3.32"
 governor = { version = "0.10" }
 # progenitor-client version must be pinned

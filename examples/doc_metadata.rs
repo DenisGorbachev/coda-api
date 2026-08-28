@@ -18,14 +18,14 @@ pub struct DocMetadataCli {
 }
 
 impl DocMetadataCli {
-    pub async fn run(&self) -> Result<(), DocMetadataCliRunError> {
+    pub async fn run(&self) -> Result<ExitCode, DocMetadataCliRunError> {
         use DocMetadataCliRunError::*;
         let client = handle!(Client::new_with_key(&self.api_key), NewWithKeyFailed);
         let metadata = handle!(client.get_doc_metadata(&self.doc_id).await, GetDocMetadataFailed);
         let mut stdout = io::stdout().lock();
         handle!(serde_json::to_writer_pretty(&mut stdout, &metadata), ToWriterPrettyFailed);
         handle!(writeln!(stdout), WriteNewlineFailed);
-        Ok(())
+        Ok(ExitCode::SUCCESS)
     }
 }
 

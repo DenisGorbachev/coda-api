@@ -18,14 +18,14 @@ pub struct DocDataCli {
 }
 
 impl DocDataCli {
-    pub async fn run(&self) -> Result<(), DocDataCliRunError> {
+    pub async fn run(&self) -> Result<ExitCode, DocDataCliRunError> {
         use DocDataCliRunError::*;
         let client = handle!(Client::new_with_key(&self.api_key), NewWithKeyFailed);
         let doc_data = handle!(client.get_doc_data(&self.doc_id).await, GetDocDataFailed);
         let mut stdout = io::stdout().lock();
         handle!(serde_json::to_writer_pretty(&mut stdout, &doc_data), ToWriterPrettyFailed);
         handle!(writeln!(stdout), WriteNewlineFailed);
-        Ok(())
+        Ok(ExitCode::SUCCESS)
     }
 }
 
