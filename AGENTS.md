@@ -1039,7 +1039,7 @@ clap = { version = "4.5", features = ["derive", "env"] }
 tokio = { version = "1.46", features = ["macros", "fs", "net", "rt", "rt-multi-thread"] }
 ```
 
-#### src/lib.rs
+### src/lib.rs
 
 ```rust
 mod r#gen;
