@@ -373,14 +373,16 @@ jq '
     | jq . > "$SPEC_FORMATTED"
 mv "$SPEC_FORMATTED" "$SPEC"
 
-cargo progenitor -i $SPEC -o $TEMP -n coda_api -v 0.1.0
+cargo progenitor -i "$SPEC" -o "$TEMP" -n coda_api -v 0.1.0
 mkdir -p src
 rm -f "$GEN"
 # #![allow(unreachable_code)] is needed to work around .clone() calls on empty enums
 # this line must be at the top of the file
-echo "#![allow(unreachable_code)]" >> $GEN
-echo "#![allow(clippy::absolute_paths)]" >> $GEN
-cat $TEMP/$LIB >> $GEN
+{
+    echo "#![allow(unreachable_code)]"
+    echo "#![allow(clippy::absolute_paths)]"
+    cat "$TEMP/$LIB"
+} >> "$GEN"
 $SDF '///!' '/// !' $GEN
 $SDF '<span>' '' $GEN
 $SDF 'go/<name>/<var1>/<var2>' 'go/{name}/{var1}/{var2}' $GEN

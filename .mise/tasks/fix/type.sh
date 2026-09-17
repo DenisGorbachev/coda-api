@@ -5,15 +5,14 @@
 
 set -euo pipefail
 
-needle=$usage_needle
-replacement_file=$usage_replacement_file
-target_file=$usage_target_file
+needle=${usage_needle:?needle is required}
+replacement_file=${usage_replacement_file:?replacement_file is required}
+target_file=${usage_target_file:?target_file is required}
 
 needle_line=$(rg -n --no-filename "$needle" "$target_file" | cut -d: -f1)
 
 # delete the #[derive(...)]
 # delete the #[serde(deny_unknown_fields)]
-delete_from_line=$((needle_line - 2))
 delete_to_line=$((needle_line))
 insert_after_line=$((needle_line - 3))
 
