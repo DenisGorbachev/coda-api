@@ -2303,7 +2303,7 @@ depends = ["fix:cargo", "fix:fnox"]
 depends = ["fix:name", "fix:code:style", "fix:shell"]
 
 [tasks."fix:shell"]
-run = "shuck check --fix ."
+run = '''shuck --config "lint.source-paths = ['$HOME']" check --fix .'''
 
 [tasks."fix:code:warnings"]
 depends = ["fix:cargo"]
