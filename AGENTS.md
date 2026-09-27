@@ -2211,10 +2211,6 @@ fd = "10.4.2"
 "cargo:cargo-expand" = "1.0.114"
 "cargo:taplo-cli" = "0.10.0"
 "cargo:sd" = "1.0.0"
-"cargo:cargo-progenitor" = "0.14.0"
-jq = "1.8.1"
-fd = "10.4.2"
-shellcheck = "0.11.0"
 
 [hooks]
 postinstall = { task = "git:install-hooks" }
@@ -2254,7 +2250,7 @@ run = "cargo clippy --locked --workspace --all-targets --all-features -- -D warn
 run = "cargo fmt --all -- --check"
 
 [tasks."lint:shell"]
-run = "git ls-files --cached --others --exclude-standard -z -- '*.sh' '*.bash' '*.zsh' | xargs -0 --no-run-if-empty shellcheck --shell bash"
+run = '''shuck --config "lint.source-paths = ['$HOME']" check .'''
 
 [tasks."lint:docs"]
 run = "rumdl check"
