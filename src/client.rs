@@ -976,6 +976,9 @@ impl Client {
                         if matches!(status, Some(404)) {
                             continue;
                         }
+                        if attempt < max_attempts && matches!(&error, Error::ErrorResponse(response) if response.status().as_u16() == 400 && response.message == "Doc is not yet up to date.") {
+                            continue;
+                        }
                         return Err(RequestFailed {
                             attempt,
                             row_id: row_id.clone(),
