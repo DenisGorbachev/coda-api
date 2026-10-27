@@ -37929,11 +37929,11 @@ pub mod types {
     #[serde(deny_unknown_fields)]
     pub struct PushButtonResult {
         #[serde(rename = "rowId")]
-        row_id: String,
+        pub row_id: String,
         #[serde(rename = "columnId")]
-        column_id: String,
+        pub column_id: String,
         #[serde(rename = "requestId")]
-        request_id: String,
+        pub request_id: String,
     }
     ///Format of a column that refers to another table.
     ///
