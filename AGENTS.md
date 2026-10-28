@@ -53,13 +53,6 @@ Write code that minimizes losses:
 - Don't run `git diff` or `git status` solely to review your own work at the end of a turn
 - If a later instruction overrides the former instruction: follow the later instruction (last override wins)
 - If I explicitly ask to update the code in a way that deviates from the spec, update both the code and the spec
-- If you need to patch a dependency:
-  - If the dependency is owned by Denis Gorbachev:
-    - Then:
-      - Find it in `~/workspace`
-      - Apply edits
-      - Add a temporary local `[patch]` in `.cargo/config.toml`
-    - Else: tell me about it, but don't patch it without my explicit permission
 - If you notice unexpected edits, keep them and don't mention them
 - If you notice incorrect code, tell me
 - If you have to apply a workaround, add a comment next to the workaround that explains why it is necessary, and also mention the workaround in your final report
@@ -442,10 +435,13 @@ A function marked with `#[test]` or `#[tokio::test]`.
 #### Macros
 
 - Write `macro_rules!` macros to reduce boilerplate
+- In `macro_rules!` expansions:
+  - Use full paths without a leading `::` for foreign types (e.g. `std::sync::Arc`), except those in the standard prelude.
+  - Use `$crate` paths for types defined in this crate (e.g. `$crate::MyType`).
 - If you see similar code in different places, write a macro and replace the similar code with a macro call
-- If the macros has variadic args:
-  - Then: do add `$(,)?`
-  - Else: don't add `$(,)?`
+- If the last arg of a macro arm is variadic (e.g. `$($item:ident),*`):
+  - Then: do add trailing `$(,)?`
+  - Else: don't add trailing `$(,)?`
 
 #### Shell
 
@@ -2194,7 +2190,7 @@ deno = "1.46.1"
 fnox = "1.33.1"
 fd = "10.4.2"
 "github:ewhauser/shuck" = "0.2.2"
-"aqua:rvben/rumdl" = "0.1.0"
+"aqua:rvben/rumdl" = "0.3.0"
 "npm:@commitlint/config-conventional" = "19.6.0"
 "npm:@commitlint/cli" = "19.6.0"
 "npm:@commitlint/types" = "19.5.0"
@@ -2205,6 +2201,7 @@ fd = "10.4.2"
 "cargo:cargo-expand" = "1.0.114"
 "cargo:taplo-cli" = "0.10.0"
 "cargo:sd" = "1.0.0"
+"cargo:cargo-edit" = "0.13.13"
 
 [hooks]
 postinstall = { task = "git:install-hooks" }
@@ -2244,7 +2241,8 @@ run = "cargo clippy --locked --workspace --all-targets --all-features -- -D warn
 run = "cargo fmt --all -- --check"
 
 [tasks."lint:shell"]
-run = '''shuck --config "lint.source-paths = ['$HOME']" check .'''
+# Shuck 0.2.2 scans Git-ignored local files, so exclude them explicitly.
+run = '''shuck --config "lint.source-paths = ['$HOME']" check --extend-exclude '*.local.*' .'''
 
 [tasks."lint:docs"]
 run = "rumdl check"
@@ -2286,7 +2284,7 @@ depends = ["fix:cargo", "fix:fnox"]
 depends = ["fix:name", "fix:code:style", "fix:shell"]
 
 [tasks."fix:shell"]
-run = '''shuck --config "lint.source-paths = ['$HOME']" check --fix .'''
+run = [{ task = "lint:shell", args = ["--fix"] }]
 
 [tasks."fix:code:warnings"]
 depends = ["fix:cargo"]
@@ -2368,6 +2366,21 @@ age = { type = "age", recipients = ["age1sf4r4amev2svqr6llwg8hgtz9n7p5qdh7hh0mav
 [profiles.test.secrets]
 CODA_API_KEY= { provider = "age", value = "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBzOEpkbWxWZktIeHlrN2tFbXZoVGt0V0k4eStWQlRZSnZqMzFxZjZJa3lrCjhWYjIrZ0duc3FaUnN1eVJ2cEZaZThSTFpwbjd4VUVQb0k4dW9GRGVJSlkKLT4gWDI1NTE5IGRTTFBzR0pEYVRKREhjTDEzYXpMTlIzeHJMbnh3MkRUQVJiTmRIdEJCM00KNjNEZUErUEtIVWR4OW1HTUZNOWlkcWlPaE5pUWpCajI4azA0aHVwSWtrVQotPiBYMjU1MTkgNkZrV01aYzlhbEE2NHdJd0tFT09hcGp1TERtajdvZ0ZaWTdkOFMxK1lnMAorNnVOZjY4aWlWWDc2dm9sdytvSFhpa1Y1aXg0Q3lkd2Y0NVJyZW4rSzE0Ci0+ICx9WzEtZ3JlYXNlIEAgeSB4e2VqICUxP2BvQiJjCmtQblBEejdLNzRJWnRHd042T2RyZmN1ZQotLS0gVnduM2c4TVMwSmw3bnM5bHlPdXV4dkRGdjVsZytGZngzNXNBVGdjeE11ZwpZhnFpeUo6OqzQLWdLugSw9mm6ou05Xvp3yEzv7jbfmJKP0P1pUCUDptfly/5jIS1/w2jByKOpXi2vhLdza8lWtRsFDQ==" }
 CODA_DOC_ID= { provider = "age", value = "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBqWmw3QWRBVnFFSTV0djlWZjgyckNkTDFDVVFhZGFvdW90ODk3QmROMWhRCjg5MzNGem13TGpnb01pVTUzWVRMRiswOWh3MEdQVEZVa1dPRG9xWkZGalEKLT4gWDI1NTE5IHJsbXkrRkgvK1dwV0UyQ0p6WW5wdWtLSlg2aEZTakJhdW5sc1NFUkJ6aTAKczlCeTZYQWI2ZHJoc3hvclR0OGo0UnJSZm5JUWRRMFJPU05INzZrUE5tcwotPiBYMjU1MTkgTzNlajZEdGJHOTN4TEFDMDRyMlExREtGdzM2U1VwbG4wZFdxMVVEbUxnWQpzM01FV1RMZ3JZL2NWelBhVVhtU0c5cDlDVUYvblAyaHEyVGZCaC92WnFJCi0+IHpXdiQicmAtZ3JlYXNlIE9HWT5ANzcgIUxYWWogMnVfO19vdGcgPFVbcUQqZHUKc3NYU0pBaXNWV29rc0Z2dlA4OW5oN0t6dGJyelRIekdINTVseUJuRmVSSjIzcCtNOSszUlN4R2FTZ1hmd0pXRQpvUFVyNVNRRE4wd2VOMUtzUS9peE1ocld2aU9rUytvcDJub05ONHB1T3VjCi0tLSBGK3pNRjdGOXNMUGFKakNYL2xIbW1GamZIdzJPYStzUXREb295OXgyNWMwCjJJSHxWbtLbYOKdUoK7d5ZFuxH311LQeag+yzIWPywxMFNuQYCnPELtQQ==" }
+```
+
+### ~/.cargo/config.toml
+
+```toml
+[build]
+target = "host-tuple"
+# In the sandbox, ~/workspace is mounted from macOS, while Cargo's cache home is on the container-local filesystem.
+# Concurrent Cargo commands have failed when compilation intermediates were stored on the macOS mount.
+# Give each workspace its own local build directory: one directory shared by all workspaces would serialize their builds and let `cargo clean` in one workspace remove another workspace's artifacts.
+# sccache shares reusable compiler outputs without sharing mutable Cargo state.
+build-dir = "{cargo-cache-home}/build/{workspace-path-hash}"
+
+[net]
+git-fetch-with-cli = true
 ```
 
 ### Cargo.toml
