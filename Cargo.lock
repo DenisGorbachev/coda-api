@@ -1334,7 +1334,7 @@ dependencies = [
 [[package]]
 name = "retry-please"
 version = "0.1.0"
-source = "git+https://github.com/DenisGorbachev/retry-please#3f0a2191e90993a7c9cbccdd6217876a2d7e3d91"
+source = "git+https://github.com/DenisGorbachev/retry-please#41a699dbcfb3004cd3359ba3f34ecc9f89989644"
 dependencies = [
  "errgonomic 0.5.3 (git+https://github.com/DenisGorbachev/errgonomic)",
  "thiserror",
