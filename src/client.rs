@@ -2,9 +2,10 @@ use crate::types::{Column, Control, Formula, Row, Table, TableReference};
 use crate::{ClientTablesError, DocData, DocId, DocMetadata, Error, Limiter, RawClient, ResponseValue, RichRow, RowUpdateResultCorrect, RowsUpsertResultCorrect, TableId, types};
 use crate::{ItemsList, ValueFormatProvider, paginate_all};
 use chrono::{DateTime, NaiveDate, Utc};
-use errgonomic::{ErrVec, ItemError, handle, handle_bool, handle_iter, handle_opt};
+use errgonomic::{ErrVec, ItemError, handle, handle_bool, handle_iter};
 use futures_util::future::join_all;
 use futures_util::{Stream, StreamExt, stream};
+use retry_please::{RetryAsyncError, retry_async};
 use serde::de::DeserializeOwned;
 use std::collections::{BTreeMap, HashMap};
 use std::num::NonZeroU64;
@@ -1026,39 +1027,34 @@ impl Client {
         Ok(status.into_inner())
     }
 
-    pub async fn wait_for_mutation(&self, request_id: &str, retry_count: u64, retry_delay: Duration) -> Result<(), ClientWaitForMutationError> {
+    pub async fn wait_for_mutation<E>(&self, request_id: &str, on_error: impl AsyncFnMut(&ClientPollMutationError) -> Result<bool, E>) -> Result<(), ClientWaitForMutationError<E>> {
         use ClientWaitForMutationError::*;
-        let mut retries = 0..retry_count;
-        loop {
-            match self.poll_mutation(request_id).await {
-                Ok(status) => {
-                    if let Some(warning) = status.warning {
-                        return Err(MutationWarning {
-                            request_id: request_id.into(),
-                            warning,
-                        });
-                    }
-                    return Ok(());
-                }
-                Err(source) => {
-                    handle_opt!(retries.next(), PollMutationFailed, source, request_id, retry_count, retry_delay);
-                    sleep(retry_delay).await;
-                }
-            }
+        let status = handle!(retry_async(|| self.poll_mutation(request_id), on_error).await, RetryAsyncFailed, request_id);
+        if let Some(warning) = status.warning {
+            return Err(MutationWarning {
+                request_id: request_id.into(),
+                warning,
+            });
         }
+        Ok(())
     }
 
-    pub fn update_rows_conclusively<'a, I>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, disable_parsing: Option<bool>, updates: I, retry_count: u64, retry_delay: Duration) -> impl Stream<Item = Result<RowUpdateResultCorrect, ClientUpdateRowsConclusivelyError>> + 'a
+    pub fn update_rows_conclusively<'a, I, H, E>(&'a self, doc_id: &'a str, table_id_or_name: &'a str, disable_parsing: Option<bool>, updates: I, mut make_on_error: impl FnMut() -> H + 'a) -> impl Stream<Item = Result<RowUpdateResultCorrect, ClientUpdateRowsConclusivelyError<E>>> + 'a
     where
         I: IntoIterator<Item = (&'a str, &'a types::RowUpdate)> + 'a,
         I::IntoIter: 'a,
+        H: AsyncFnMut(&ClientPollMutationError) -> Result<bool, E> + 'a,
+        E: 'a,
     {
-        stream::iter(updates).then(move |(row_id, body)| async move {
-            use ClientUpdateRowsConclusivelyError::*;
-            let response = handle!(self.update_row_correct(doc_id, table_id_or_name, row_id, disable_parsing, body).await, UpdateRowCorrectFailed, doc_id, table_id: table_id_or_name, row_id);
-            let result = response.into_inner();
-            handle!(self.wait_for_mutation(&result.request_id, retry_count, retry_delay).await, WaitForMutationFailed, doc_id, table_id: table_id_or_name, result);
-            Ok(result)
+        stream::iter(updates).then(move |(row_id, body)| {
+            let on_error = make_on_error();
+            async move {
+                use ClientUpdateRowsConclusivelyError::*;
+                let response = handle!(self.update_row_correct(doc_id, table_id_or_name, row_id, disable_parsing, body).await, UpdateRowCorrectFailed, doc_id, table_id: table_id_or_name, row_id);
+                let result = response.into_inner();
+                handle!(self.wait_for_mutation(&result.request_id, on_error).await, WaitForMutationFailed, doc_id, table_id: table_id_or_name, result);
+                Ok(result)
+            }
         })
     }
 }
@@ -1072,19 +1068,19 @@ pub enum ClientPollMutationError {
 }
 
 #[derive(Error, Debug)]
-pub enum ClientWaitForMutationError {
-    #[error("Coda mutation '{request_id}' was not confirmed after {retry_count} retries")]
-    PollMutationFailed { source: ClientPollMutationError, request_id: String, retry_count: u64, retry_delay: Duration },
+pub enum ClientWaitForMutationError<E> {
+    #[error("Coda mutation '{request_id}' was not confirmed")]
+    RetryAsyncFailed { source: RetryAsyncError<ClientPollMutationError, E>, request_id: String },
     #[error("Coda mutation '{request_id}' completed with warning: {warning}")]
     MutationWarning { request_id: String, warning: String },
 }
 
 #[derive(Error, Debug)]
-pub enum ClientUpdateRowsConclusivelyError {
+pub enum ClientUpdateRowsConclusivelyError<E> {
     #[error("update of row '{row_id}' in table '{table_id}' of doc '{doc_id}' has an uncertain outcome; the write was not retried")]
     UpdateRowCorrectFailed { source: Box<Error<types::UpdateRowResponse>>, doc_id: String, table_id: String, row_id: String },
     #[error("failed to confirm update of row '{row_id}' in table '{table_id}' of doc '{doc_id}'", row_id = result.id)]
-    WaitForMutationFailed { source: ClientWaitForMutationError, doc_id: String, table_id: String, result: RowUpdateResultCorrect },
+    WaitForMutationFailed { source: ClientWaitForMutationError<E>, doc_id: String, table_id: String, result: RowUpdateResultCorrect },
 }
 
 #[derive(Debug)]

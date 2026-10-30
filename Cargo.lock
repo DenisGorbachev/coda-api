@@ -240,12 +240,13 @@ dependencies = [
  "chrono",
  "clap",
  "derive_more",
- "errgonomic",
+ "errgonomic 0.5.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures-util",
  "governor",
  "progenitor-client",
  "regress",
  "reqwest",
+ "retry-please",
  "serde",
  "serde_json",
  "thiserror",
@@ -376,6 +377,15 @@ checksum = "eec2d86c5cf47aed488f1b449df946eaef15aabd96a4fa13aa3d906a03a90618"
 dependencies = [
  "cfg-if",
  "tempfile",
+ "thiserror",
+]
+
+[[package]]
+name = "errgonomic"
+version = "0.5.3"
+source = "git+https://github.com/DenisGorbachev/errgonomic#3ab25f519805ed57434b71f280a1ce0e6f5c1645"
+dependencies = [
+ "cfg-if",
  "thiserror",
 ]
 
@@ -1319,6 +1329,15 @@ dependencies = [
  "wasm-bindgen-futures",
  "wasm-streams",
  "web-sys",
+]
+
+[[package]]
+name = "retry-please"
+version = "0.1.0"
+source = "git+https://github.com/DenisGorbachev/retry-please?rev=b9c8f97c1dc21b36288e49779427091888d60445#b9c8f97c1dc21b36288e49779427091888d60445"
+dependencies = [
+ "errgonomic 0.5.3 (git+https://github.com/DenisGorbachev/errgonomic)",
+ "thiserror",
 ]
 
 [[package]]

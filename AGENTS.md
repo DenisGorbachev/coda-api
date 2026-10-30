@@ -2389,6 +2389,9 @@ git-fetch-with-cli = true
 [workspace]
 resolver = "3"
 
+[workspace.dependencies]
+retry-please = { git = "https://github.com/DenisGorbachev/retry-please", rev = "b9c8f97c1dc21b36288e49779427091888d60445" }
+
 [workspace.package]
 version = "0.4.0"
 edition = "2024"
@@ -2465,6 +2468,7 @@ governor = { version = "0.10" }
 progenitor-client = { version = "0.14.0" }
 regress = "0.10"
 reqwest = { version = "0.13.4", default-features = false, features = ["json", "stream", "default-tls"] }
+retry-please.workspace = true
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 thiserror = "2.0"
