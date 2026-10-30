@@ -28,6 +28,8 @@ pub use value_format_provider::*;
 pub type DocId = String;
 pub type TableId = String;
 pub type RowId = String;
+/// Name or ID.
+pub type RowHandle = String;
 pub trait PaginatedResponse<T> {
     fn items(&self) -> &Vec<T>;
     fn next_page_token(&self) -> Option<&NextPageToken>;
