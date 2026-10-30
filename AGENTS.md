@@ -2390,7 +2390,7 @@ git-fetch-with-cli = true
 resolver = "3"
 
 [workspace.dependencies]
-retry-please = { git = "https://github.com/DenisGorbachev/retry-please", rev = "b9c8f97c1dc21b36288e49779427091888d60445" }
+retry-please = { git = "https://github.com/DenisGorbachev/retry-please", rev = "8cbd1852d96e1390bef4cba862dbb877534da060" }
 
 [workspace.package]
 version = "0.4.0"
