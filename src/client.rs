@@ -1,6 +1,6 @@
 use crate::types::{Column, Control, Formula, Row, Table, TableReference};
 use crate::{ClientTablesError, DocData, DocId, DocMetadata, Error, Limiter, RawClient, ResponseValue, RichRow, RowUpdateResultCorrect, RowsUpsertResultCorrect, TableId, types};
-use crate::{ItemsList, ValueFormatProvider, paginate_all};
+use crate::{ItemsList, Retryable, ValueFormatProvider, paginate_all};
 use chrono::{DateTime, NaiveDate, Utc};
 use errgonomic::{ErrVec, ItemError, handle, handle_bool, handle_iter};
 use futures_util::future::join_all;
@@ -978,7 +978,7 @@ impl Client {
                         if matches!(status, Some(404)) {
                             continue;
                         }
-                        if attempt < max_attempts && matches!(&error, Error::ErrorResponse(response) if response.status().as_u16() == 400 && response.message == "Doc is not yet up to date.") {
+                        if attempt < max_attempts && error.should_retry() {
                             continue;
                         }
                         return Err(RequestFailed {
@@ -1027,9 +1027,16 @@ impl Client {
         Ok(status.into_inner())
     }
 
-    pub async fn wait_for_mutation<E>(&self, request_id: &str, on_error: impl AsyncFnMut(&ClientPollMutationError) -> Result<bool, E>) -> Result<(), ClientWaitForMutationError<E>> {
+    pub async fn wait_for_mutation<E>(&self, request_id: &str, mut on_error: impl AsyncFnMut(&ClientPollMutationError) -> Result<bool, E>) -> Result<(), ClientWaitForMutationError<E>> {
         use ClientWaitForMutationError::*;
-        let status = handle!(retry_async(|| self.poll_mutation(request_id), on_error).await, RetryAsyncFailed, request_id);
+        let result = retry_async(
+            || self.poll_mutation(request_id),
+            async |error: &ClientPollMutationError| {
+                if error.should_retry() { on_error(error).await } else { Ok(false) }
+            },
+        )
+        .await;
+        let status = handle!(result, RetryAsyncFailed, request_id);
         if let Some(warning) = status.warning {
             return Err(MutationWarning {
                 request_id: request_id.into(),
@@ -1065,6 +1072,21 @@ pub enum ClientPollMutationError {
     GetMutationStatusFailed { source: Box<Error<types::GetMutationStatusResponse>>, request_id: String },
     #[error("Coda mutation '{request_id}' has not completed")]
     MutationIncomplete { request_id: String },
+}
+
+impl Retryable for ClientPollMutationError {
+    fn should_retry(&self) -> bool {
+        use ClientPollMutationError::*;
+        match self {
+            GetMutationStatusFailed {
+                source,
+                ..
+            } => source.should_retry(),
+            MutationIncomplete {
+                ..
+            } => true,
+        }
+    }
 }
 
 #[derive(Error, Debug)]
