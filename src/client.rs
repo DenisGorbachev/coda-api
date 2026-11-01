@@ -1,11 +1,11 @@
 use crate::types::{Column, Control, Formula, Row, Table, TableReference};
 use crate::{ClientTablesError, DocData, DocId, DocMetadata, Error, Limiter, RawClient, ResponseValue, RichRow, RowUpdateResultCorrect, RowsUpsertResultCorrect, TableId, types};
-use crate::{ItemsList, Retryable, ValueFormatProvider, paginate_all};
+use crate::{ItemsList, ValueFormatProvider, paginate_all};
 use chrono::{DateTime, NaiveDate, Utc};
 use errgonomic::{ErrVec, ItemError, handle, handle_bool, handle_iter};
 use futures_util::future::join_all;
 use futures_util::{Stream, StreamExt, stream};
-use retry_please::{RetryAsyncError, retry_async};
+use retry_please::{IsRetryable, RetryAsyncError, retry_async};
 use serde::de::DeserializeOwned;
 use std::collections::{BTreeMap, HashMap};
 use std::num::NonZeroU64;
@@ -978,7 +978,7 @@ impl Client {
                         if matches!(status, Some(404)) {
                             continue;
                         }
-                        if attempt < max_attempts && error.should_retry() {
+                        if attempt < max_attempts && IsRetryable::is_retryable(&error) {
                             continue;
                         }
                         return Err(RequestFailed {
@@ -1032,7 +1032,7 @@ impl Client {
         let result = retry_async(
             || self.poll_mutation(request_id),
             async |error: &ClientPollMutationError| {
-                if error.should_retry() { on_error(error).await } else { Ok(false) }
+                if error.is_retryable() { on_error(error).await } else { Ok(false) }
             },
         )
         .await;
@@ -1074,14 +1074,14 @@ pub enum ClientPollMutationError {
     MutationIncomplete { request_id: String },
 }
 
-impl Retryable for ClientPollMutationError {
-    fn should_retry(&self) -> bool {
+impl IsRetryable for ClientPollMutationError {
+    fn is_retryable(&self) -> bool {
         use ClientPollMutationError::*;
         match self {
             GetMutationStatusFailed {
                 source,
                 ..
-            } => source.should_retry(),
+            } => IsRetryable::is_retryable(source.as_ref()),
             MutationIncomplete {
                 ..
             } => true,

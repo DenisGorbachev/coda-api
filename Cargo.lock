@@ -1334,9 +1334,10 @@ dependencies = [
 [[package]]
 name = "retry-please"
 version = "0.1.0"
-source = "git+https://github.com/DenisGorbachev/retry-please#41a699dbcfb3004cd3359ba3f34ecc9f89989644"
+source = "git+https://github.com/DenisGorbachev/retry-please#aa0efa10cceb1a8f122e8976c2724053c4442ad5"
 dependencies = [
  "errgonomic 0.5.3 (git+https://github.com/DenisGorbachev/errgonomic)",
+ "progenitor-client",
  "thiserror",
 ]
 

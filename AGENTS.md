@@ -2390,7 +2390,7 @@ git-fetch-with-cli = true
 resolver = "3"
 
 [workspace.dependencies]
-retry-please = { git = "https://github.com/DenisGorbachev/retry-please" }
+retry-please = { git = "https://github.com/DenisGorbachev/retry-please", features = ["progenitor-client"] }
 
 [workspace.package]
 version = "0.4.0"

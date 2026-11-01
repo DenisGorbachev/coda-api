@@ -485,5 +485,4 @@ pub use doc_metadata::*;
 mod doc_data;
 pub use doc_data::*;
 
-mod retryable;
-pub use retryable::*;
+mod is_retryable;
