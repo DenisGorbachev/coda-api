@@ -1,4 +1,4 @@
-use crate::types::{GetMutationStatusResponse, GetRowResponse, ListRowsResponse};
+use crate::types::{GetMutationStatusResponse, GetRowResponse, ListRowsResponse, PushButtonResponse};
 
 macro_rules! impl_is_retryable {
     ($($response:ty),* $(,)?) => {
@@ -10,4 +10,4 @@ macro_rules! impl_is_retryable {
     };
 }
 
-impl_is_retryable!(GetMutationStatusResponse, GetRowResponse, ListRowsResponse);
+impl_is_retryable!(GetMutationStatusResponse, GetRowResponse, ListRowsResponse, PushButtonResponse);
