@@ -1,6 +1,7 @@
 use crate::types::{Column, ColumnList, ControlList, ControlReference, Doc, DocList, FormulaList, FormulaReference, GetTableResponse, ListTablesResponse, NextPageToken, Page, PageList, Row, RowList, TableList, TableReference};
 use crate::{Error, RawClient, types};
 use progenitor_client::{ClientHooks, ClientInfo, OperationInfo, ResponseValue, encode_path};
+use retry_please::IsRetryable;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use std::num::NonZeroU64;
@@ -368,6 +369,20 @@ pub enum ClientTablesError {
         #[source]
         source: Box<Error<GetTableResponse>>,
     },
+}
+
+impl IsRetryable for ClientTablesError {
+    fn is_retryable(&self) -> bool {
+        use ClientTablesError::*;
+        match self {
+            ListTablesFailed {
+                source,
+            } => IsRetryable::is_retryable(source.as_ref()),
+            GetTableFailed {
+                source,
+            } => IsRetryable::is_retryable(source.as_ref()),
+        }
+    }
 }
 ///`RowUpdateResult`
 ///

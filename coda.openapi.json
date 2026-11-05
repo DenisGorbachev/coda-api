@@ -814,7 +814,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SearchPrincipalsResponse"
+                  "$ref": "#/components/schemas/SearchPrincipalsResult"
                 }
               }
             }
@@ -1580,7 +1580,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BeginPageContentExportResponse"
+                  "$ref": "#/components/schemas/BeginPageContentExportResult"
                 }
               }
             }
@@ -2826,7 +2826,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddCustomDocDomainResponse"
+                  "$ref": "#/components/schemas/AddCustomDocDomainResult"
                 }
               }
             }
@@ -2868,7 +2868,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeleteCustomDocDomainResponse"
+                  "$ref": "#/components/schemas/DeleteCustomDocDomainResult"
                 }
               }
             }
@@ -2919,7 +2919,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UpdateCustomDocDomainResponse"
+                  "$ref": "#/components/schemas/UpdateCustomDocDomainResult"
                 }
               }
             }
@@ -4215,7 +4215,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreatePackResponse"
+                  "$ref": "#/components/schemas/CreatePackResult"
                 }
               }
             }
@@ -4362,7 +4362,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeletePackResponse"
+                  "$ref": "#/components/schemas/DeletePackResult"
                 }
               }
             }
@@ -4881,7 +4881,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ListPackReviewsResponse"
+                  "$ref": "#/components/schemas/ListPackReviewsResult"
                 }
               }
             }
@@ -4932,7 +4932,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreatePackReviewResponse"
+                  "$ref": "#/components/schemas/CreatePackReviewResult"
                 }
               }
             }
@@ -4974,7 +4974,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CancelPackReviewResponse"
+                  "$ref": "#/components/schemas/CancelPackReviewResult"
                 }
               }
             }
@@ -5016,7 +5016,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetPackListingDraftResponse"
+                  "$ref": "#/components/schemas/GetPackListingDraftResult"
                 }
               }
             }
@@ -5067,7 +5067,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UpsertPackListingDraftResponse"
+                  "$ref": "#/components/schemas/UpsertPackListingDraftResult"
                 }
               }
             }
@@ -5107,7 +5107,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeletePackListingDraftResponse"
+                  "$ref": "#/components/schemas/DeletePackListingDraftResult"
                 }
               }
             }
@@ -5434,7 +5434,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddPackPermissionResponse"
+                  "$ref": "#/components/schemas/AddPackPermissionResult"
                 }
               }
             }
@@ -5519,7 +5519,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeletePackPermissionResponse"
+                  "$ref": "#/components/schemas/DeletePackPermissionResult"
                 }
               }
             }
@@ -5657,7 +5657,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreatePackInvitationResponse"
+                  "$ref": "#/components/schemas/CreatePackInvitationResult"
                 }
               }
             }
@@ -5713,7 +5713,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UpdatePackInvitationResponse"
+                  "$ref": "#/components/schemas/UpdatePackInvitationResult"
                 }
               }
             }
@@ -5756,7 +5756,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeletePackInvitationResponse"
+                  "$ref": "#/components/schemas/DeletePackInvitationResult"
                 }
               }
             }
@@ -5851,7 +5851,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ListPackMakersResponse"
+                  "$ref": "#/components/schemas/ListPackMakersResult"
                 }
               }
             }
@@ -5904,7 +5904,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddPackMakerResponse"
+                  "$ref": "#/components/schemas/AddPackMakerResult"
                 }
               }
             }
@@ -5949,7 +5949,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeletePackMakerResponse"
+                  "$ref": "#/components/schemas/DeletePackMakerResult"
                 }
               }
             }
@@ -5991,7 +5991,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ListPackCategoriesResponse"
+                  "$ref": "#/components/schemas/ListPackCategoriesResult"
                 }
               }
             }
@@ -6044,7 +6044,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddPackCategoryResponse"
+                  "$ref": "#/components/schemas/AddPackCategoryResult"
                 }
               }
             }
@@ -6089,7 +6089,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeletePackCategoryResponse"
+                  "$ref": "#/components/schemas/DeletePackCategoryResult"
                 }
               }
             }
@@ -6243,7 +6243,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PackAssetUploadCompleteResponse"
+                  "$ref": "#/components/schemas/PackAssetUploadCompleteResult"
                 }
               }
             }
@@ -6299,7 +6299,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PackSourceCodeUploadCompleteResponse"
+                  "$ref": "#/components/schemas/PackSourceCodeUploadCompleteResult"
                 }
               }
             }
@@ -7414,7 +7414,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UpdatePackFeaturedDocsResponse"
+                  "$ref": "#/components/schemas/UpdatePackFeaturedDocsResult"
                 }
               }
             }
@@ -8464,8 +8464,8 @@
         "additionalProperties": false,
         "properties": {}
       },
-      "SearchPrincipalsResponse": {
-        "x-schema-name": "SearchPrincipalsResponse",
+      "SearchPrincipalsResult": {
+        "x-schema-name": "SearchPrincipalsResult",
         "description": "Metadata about the principals that match the given query.",
         "type": "object",
         "required": [
@@ -9190,8 +9190,8 @@
           "NotConnected"
         ]
       },
-      "AddCustomDocDomainResponse": {
-        "x-schema-name": "AddCustomDocDomainResponse",
+      "AddCustomDocDomainResult": {
+        "x-schema-name": "AddCustomDocDomainResult",
         "type": "object",
         "description": "The result of adding a custom domain to a published doc.",
         "additionalProperties": false,
@@ -9213,8 +9213,8 @@
           }
         }
       },
-      "UpdateCustomDocDomainResponse": {
-        "x-schema-name": "UpdateCustomDocDomainResponse",
+      "UpdateCustomDocDomainResult": {
+        "x-schema-name": "UpdateCustomDocDomainResult",
         "type": "object",
         "description": "The result of updating a custom domain for a published doc.",
         "additionalProperties": false,
@@ -9227,8 +9227,8 @@
         "additionalProperties": false,
         "properties": {}
       },
-      "DeleteCustomDocDomainResponse": {
-        "x-schema-name": "DeleteCustomDocDomainResponse",
+      "DeleteCustomDocDomainResult": {
+        "x-schema-name": "DeleteCustomDocDomainResult",
         "type": "object",
         "description": "The result of deleting a custom domain from a published doc.",
         "additionalProperties": false,
@@ -10080,8 +10080,8 @@
           }
         }
       },
-      "BeginPageContentExportResponse": {
-        "x-schema-name": "BeginPageContentExportResponse",
+      "BeginPageContentExportResult": {
+        "x-schema-name": "BeginPageContentExportResult",
         "description": "Response when beginning an export of page content.",
         "type": "object",
         "additionalProperties": false,
@@ -15692,8 +15692,8 @@
           }
         }
       },
-      "CreatePackReviewResponse": {
-        "x-schema-name": "CreatePackReviewResponse",
+      "CreatePackReviewResult": {
+        "x-schema-name": "CreatePackReviewResult",
         "description": "Response containing created review information",
         "type": "object",
         "required": [
@@ -15708,8 +15708,8 @@
           }
         }
       },
-      "CancelPackReviewResponse": {
-        "x-schema-name": "CancelPackReviewResponse",
+      "CancelPackReviewResult": {
+        "x-schema-name": "CancelPackReviewResult",
         "description": "Response confirming the pack review was canceled",
         "type": "object",
         "additionalProperties": false,
@@ -15818,8 +15818,8 @@
           }
         }
       },
-      "ListPackReviewsResponse": {
-        "x-schema-name": "ListPackReviewsResponse",
+      "ListPackReviewsResult": {
+        "x-schema-name": "ListPackReviewsResult",
         "description": "Response containing pack reviews",
         "type": "object",
         "required": [
@@ -16046,8 +16046,8 @@
           }
         }
       },
-      "GetPackListingDraftResponse": {
-        "x-schema-name": "GetPackListingDraftResponse",
+      "GetPackListingDraftResult": {
+        "x-schema-name": "GetPackListingDraftResult",
         "description": "Response containing the Pack listing draft",
         "type": "object",
         "additionalProperties": false,
@@ -16076,8 +16076,8 @@
           }
         }
       },
-      "UpsertPackListingDraftResponse": {
-        "x-schema-name": "UpsertPackListingDraftResponse",
+      "UpsertPackListingDraftResult": {
+        "x-schema-name": "UpsertPackListingDraftResult",
         "description": "Response containing the upserted Pack listing draft",
         "type": "object",
         "required": [
@@ -16101,8 +16101,8 @@
           }
         }
       },
-      "DeletePackListingDraftResponse": {
-        "x-schema-name": "DeletePackListingDraftResponse",
+      "DeletePackListingDraftResult": {
+        "x-schema-name": "DeletePackListingDraftResult",
         "description": "Response after deleting a Pack listing draft",
         "type": "object",
         "additionalProperties": false
@@ -16839,8 +16839,8 @@
           }
         }
       },
-      "CreatePackResponse": {
-        "x-schema-name": "CreatePackResponse",
+      "CreatePackResult": {
+        "x-schema-name": "CreatePackResult",
         "description": "Info about a Pack that was just created.",
         "type": "object",
         "required": [
@@ -19366,15 +19366,15 @@
           }
         }
       },
-      "DeletePackResponse": {
-        "x-schema-name": "DeletePackResponse",
+      "DeletePackResult": {
+        "x-schema-name": "DeletePackResult",
         "description": "Confirmation of successful Pack deletion.",
         "type": "object",
         "additionalProperties": false,
         "properties": {}
       },
-      "ListPackMakersResponse": {
-        "x-schema-name": "ListPackMakersResponse",
+      "ListPackMakersResult": {
+        "x-schema-name": "ListPackMakersResult",
         "description": "Confirmation of successfully retrieving Pack makers.",
         "type": "object",
         "required": [
@@ -19406,22 +19406,22 @@
           }
         }
       },
-      "AddPackMakerResponse": {
-        "x-schema-name": "AddPackMakerResponse",
+      "AddPackMakerResult": {
+        "x-schema-name": "AddPackMakerResult",
         "description": "Confirmation of successfully adding a Pack maker.",
         "type": "object",
         "additionalProperties": false,
         "properties": {}
       },
-      "DeletePackMakerResponse": {
-        "x-schema-name": "AddPackMakerResponse",
+      "DeletePackMakerResult": {
+        "x-schema-name": "AddPackMakerResult",
         "description": "Confirmation of successfully deleting a Pack maker.",
         "type": "object",
         "additionalProperties": false,
         "properties": {}
       },
-      "ListPackCategoriesResponse": {
-        "x-schema-name": "ListPackCategoriesResponse",
+      "ListPackCategoriesResult": {
+        "x-schema-name": "ListPackCategoriesResult",
         "description": "Confirmation of successfully retrieving Pack categories.",
         "type": "object",
         "required": [
@@ -19454,15 +19454,15 @@
           }
         }
       },
-      "AddPackCategoryResponse": {
-        "x-schema-name": "AddPackCategoryResponse",
+      "AddPackCategoryResult": {
+        "x-schema-name": "AddPackCategoryResult",
         "description": "Confirmation of successfully adding a Pack category.",
         "type": "object",
         "additionalProperties": false,
         "properties": {}
       },
-      "DeletePackCategoryResponse": {
-        "x-schema-name": "DeletePackCategoryResponse",
+      "DeletePackCategoryResult": {
+        "x-schema-name": "DeletePackCategoryResult",
         "description": "Confirmation of successfully deleting a Pack category.",
         "type": "object",
         "additionalProperties": false,
@@ -19486,8 +19486,8 @@
           }
         }
       },
-      "AddPackPermissionResponse": {
-        "x-schema-name": "AddPackPermissionResponse",
+      "AddPackPermissionResult": {
+        "x-schema-name": "AddPackPermissionResult",
         "description": "Confirmation of successfully upserting a Pack permission.",
         "type": "object",
         "required": [
@@ -19501,8 +19501,8 @@
           }
         }
       },
-      "DeletePackPermissionResponse": {
-        "x-schema-name": "DeletePackPermissionResponse",
+      "DeletePackPermissionResult": {
+        "x-schema-name": "DeletePackPermissionResult",
         "description": "Confirmation of successfully deleting a Pack permission.",
         "type": "object",
         "additionalProperties": false,
@@ -19535,8 +19535,8 @@
           }
         }
       },
-      "CreatePackInvitationResponse": {
-        "x-schema-name": "CreatePackInvitationResponse",
+      "CreatePackInvitationResult": {
+        "x-schema-name": "CreatePackInvitationResult",
         "description": "Confirmation of successfully creating a Pack invitation.",
         "type": "object",
         "required": [
@@ -19592,15 +19592,15 @@
           }
         }
       },
-      "UpdatePackInvitationResponse": {
-        "x-schema-name": "UpdatePackInvitationResponse",
+      "UpdatePackInvitationResult": {
+        "x-schema-name": "UpdatePackInvitationResult",
         "description": "Confirmation of successfully updating a Pack invitation.",
         "type": "object",
         "additionalProperties": false,
         "properties": {}
       },
-      "DeletePackInvitationResponse": {
-        "x-schema-name": "DeletePackInvitationResponse",
+      "DeletePackInvitationResult": {
+        "x-schema-name": "DeletePackInvitationResult",
         "description": "Confirmation of successfully deleting a Pack invitation.",
         "type": "object",
         "additionalProperties": false,
@@ -19651,8 +19651,8 @@
           }
         }
       },
-      "PackAssetUploadCompleteResponse": {
-        "x-schema-name": "PackAssetUploadCompleteResponse",
+      "PackAssetUploadCompleteResult": {
+        "x-schema-name": "PackAssetUploadCompleteResult",
         "description": "Response for noting a Pack asset upload is complete.",
         "type": "object",
         "additionalProperties": false,
@@ -19694,8 +19694,8 @@
           }
         }
       },
-      "PackSourceCodeUploadCompleteResponse": {
-        "x-schema-name": "PackSourceCodeUploadCompleteResponse",
+      "PackSourceCodeUploadCompleteResult": {
+        "x-schema-name": "PackSourceCodeUploadCompleteResult",
         "description": "Response for noting a Pack source code upload is complete.",
         "type": "object",
         "additionalProperties": false,
@@ -19939,8 +19939,8 @@
           }
         }
       },
-      "UpdatePackFeaturedDocsResponse": {
-        "x-schema-name": "UpdatePackFeaturedDocsResponse",
+      "UpdatePackFeaturedDocsResult": {
+        "x-schema-name": "UpdatePackFeaturedDocsResult",
         "description": "Confirmation of successful Pack featured docs update.",
         "type": "object",
         "additionalProperties": false,

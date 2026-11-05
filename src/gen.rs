@@ -391,6 +391,60 @@ pub mod types {
         pub custom_doc_domain: ::std::string::String,
     }
 
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Unauthorized"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        401
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Unauthorized"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct AddCustomDocDomainResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
     ///The result of adding a custom domain to a published doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -401,14 +455,14 @@ pub mod types {
     /// doc.",
     ///  "type": "object",
     ///  "additionalProperties": false,
-    ///  "x-schema-name": "AddCustomDocDomainResponse"
+    ///  "x-schema-name": "AddCustomDocDomainResult"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct AddCustomDocDomainResponse {}
-    impl ::std::default::Default for AddCustomDocDomainResponse {
+    pub struct AddCustomDocDomainResult {}
+    impl ::std::default::Default for AddCustomDocDomainResult {
         fn default() -> Self {
             Self {}
         }
@@ -974,26 +1028,73 @@ pub mod types {
         pub category_name: ::std::string::String,
     }
 
-    ///Confirmation of successfully adding a Pack category.
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Confirmation of successfully adding a Pack category.",
-    ///  "type": "object",
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "AddPackCategoryResponse"
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct AddPackCategoryResponse {}
-    impl ::std::default::Default for AddPackCategoryResponse {
-        fn default() -> Self {
-            Self {}
-        }
+    pub struct AddPackCategoryResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<AddPackCategoryResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -1031,6 +1132,28 @@ pub mod types {
         }
     }
 
+    ///Confirmation of successfully adding a Pack category.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully adding a Pack category.",
+    ///  "type": "object",
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "AddPackCategoryResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct AddPackCategoryResult {}
+    impl ::std::default::Default for AddPackCategoryResult {
+        fn default() -> Self {
+            Self {}
+        }
+    }
+
     ///Payload for adding a Pack maker.
     ///
     /// <details><summary>JSON schema</summary>
@@ -1064,26 +1187,73 @@ pub mod types {
         pub login_id: ::std::string::String,
     }
 
-    ///Confirmation of successfully adding a Pack maker.
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Confirmation of successfully adding a Pack maker.",
-    ///  "type": "object",
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "AddPackMakerResponse"
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct AddPackMakerResponse {}
-    impl ::std::default::Default for AddPackMakerResponse {
-        fn default() -> Self {
-            Self {}
-        }
+    pub struct AddPackMakerResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<AddPackMakerResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -1121,6 +1291,28 @@ pub mod types {
         }
     }
 
+    ///Confirmation of successfully adding a Pack maker.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully adding a Pack maker.",
+    ///  "type": "object",
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "AddPackMakerResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct AddPackMakerResult {}
+    impl ::std::default::Default for AddPackMakerResult {
+        fn default() -> Self {
+            Self {}
+        }
+    }
+
     ///Payload for upserting a Pack permission.
     ///
     /// <details><summary>JSON schema</summary>
@@ -1153,35 +1345,73 @@ pub mod types {
         pub principal: PackPrincipal,
     }
 
-    ///Confirmation of successfully upserting a Pack permission.
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Confirmation of successfully upserting a Pack
-    /// permission.",
-    ///  "type": "object",
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
     ///  "required": [
-    ///    "permissionId"
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
     ///  ],
     ///  "properties": {
-    ///    "permissionId": {
-    ///      "description": "The ID of the permission created or updated.",
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
     ///      "type": "string"
     ///    }
     ///  },
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "AddPackPermissionResponse"
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct AddPackPermissionResponse {
-        ///The ID of the permission created or updated.
-        #[serde(rename = "permissionId")]
-        pub permission_id: ::std::string::String,
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<AddPackPermissionResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -1217,6 +1447,37 @@ pub mod types {
                 validation_errors: Default::default(),
             }
         }
+    }
+
+    ///Confirmation of successfully upserting a Pack permission.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully upserting a Pack
+    /// permission.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "permissionId"
+    ///  ],
+    ///  "properties": {
+    ///    "permissionId": {
+    ///      "description": "The ID of the permission created or updated.",
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "AddPackPermissionResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct AddPackPermissionResult {
+        ///The ID of the permission created or updated.
+        #[serde(rename = "permissionId")]
+        pub permission_id: ::std::string::String,
     }
 
     ///Payload for granting a new permission.
@@ -2336,6 +2597,60 @@ pub mod types {
         pub output_format: PageContentOutputFormat,
     }
 
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct BeginPageContentExportResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
     ///Response when beginning an export of page content.
     ///
     /// <details><summary>JSON schema</summary>
@@ -2373,13 +2688,13 @@ pub mod types {
     ///    }
     ///  },
     ///  "additionalProperties": false,
-    ///  "x-schema-name": "BeginPageContentExportResponse"
+    ///  "x-schema-name": "BeginPageContentExportResult"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct BeginPageContentExportResponse {
+    pub struct BeginPageContentExportResult {
         ///The URL that reports the status of this export. Poll this URL to get
         /// the content URL when the export has completed.
         pub href: ::std::string::String,
@@ -2670,6 +2985,60 @@ pub mod types {
         }
     }
 
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct CancelPackReviewResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
     ///Response confirming the pack review was canceled
     ///
     /// <details><summary>JSON schema</summary>
@@ -2679,14 +3048,14 @@ pub mod types {
     ///  "description": "Response confirming the pack review was canceled",
     ///  "type": "object",
     ///  "additionalProperties": false,
-    ///  "x-schema-name": "CancelPackReviewResponse"
+    ///  "x-schema-name": "CancelPackReviewResult"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct CancelPackReviewResponse {}
-    impl ::std::default::Default for CancelPackReviewResponse {
+    pub struct CancelPackReviewResult {}
+    impl ::std::default::Default for CancelPackReviewResult {
         fn default() -> Self {
             Self {}
         }
@@ -4646,38 +5015,73 @@ pub mod types {
         pub email: ::std::string::String,
     }
 
-    ///Confirmation of successfully creating a Pack invitation.
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Confirmation of successfully creating a Pack
-    /// invitation.",
-    ///  "type": "object",
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
     ///  "required": [
-    ///    "invitationId"
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
     ///  ],
     ///  "properties": {
-    ///    "invitationId": {
-    ///      "description": "The ID of the invitation created.",
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
     ///      "examples": [
-    ///        "550e8400-e29b-41d4-a716-446655440000"
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
     ///      ],
     ///      "type": "string"
     ///    }
     ///  },
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "CreatePackInvitationResponse"
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct CreatePackInvitationResponse {
-        ///The ID of the invitation created.
-        #[serde(rename = "invitationId")]
-        pub invitation_id: ::std::string::String,
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<CreatePackInvitationResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -4713,6 +5117,40 @@ pub mod types {
                 validation_errors: Default::default(),
             }
         }
+    }
+
+    ///Confirmation of successfully creating a Pack invitation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully creating a Pack
+    /// invitation.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "invitationId"
+    ///  ],
+    ///  "properties": {
+    ///    "invitationId": {
+    ///      "description": "The ID of the invitation created.",
+    ///      "examples": [
+    ///        "550e8400-e29b-41d4-a716-446655440000"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "CreatePackInvitationResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct CreatePackInvitationResult {
+        ///The ID of the invitation created.
+        #[serde(rename = "invitationId")]
+        pub invitation_id: ::std::string::String,
     }
 
     ///Payload for creating a new Pack release.
@@ -4940,6 +5378,60 @@ pub mod types {
         }
     }
 
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct CreatePackResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
     ///Info about a Pack that was just created.
     ///
     /// <details><summary>JSON schema</summary>
@@ -4961,13 +5453,13 @@ pub mod types {
     ///    }
     ///  },
     ///  "additionalProperties": false,
-    ///  "x-schema-name": "CreatePackResponse"
+    ///  "x-schema-name": "CreatePackResult"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct CreatePackResponse {
+    pub struct CreatePackResult {
         ///The ID assigned to the newly-created Pack.
         #[serde(rename = "packId")]
         pub pack_id: f64,
@@ -5090,35 +5582,73 @@ pub mod types {
         }
     }
 
-    ///Response containing created review information
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Response containing created review information",
-    ///  "type": "object",
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
     ///  "required": [
-    ///    "packReviewId"
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
     ///  ],
     ///  "properties": {
-    ///    "packReviewId": {
-    ///      "description": "ID of the created review",
-    ///      "type": "string",
-    ///      "format": "uuid"
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
     ///    }
     ///  },
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "CreatePackReviewResponse"
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct CreatePackReviewResponse {
-        ///ID of the created review
-        #[serde(rename = "packReviewId")]
-        pub pack_review_id: ::uuid::Uuid,
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<CreatePackReviewResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -5154,6 +5684,37 @@ pub mod types {
                 validation_errors: Default::default(),
             }
         }
+    }
+
+    ///Response containing created review information
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Response containing created review information",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "packReviewId"
+    ///  ],
+    ///  "properties": {
+    ///    "packReviewId": {
+    ///      "description": "ID of the created review",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "CreatePackReviewResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct CreatePackReviewResult {
+        ///ID of the created review
+        #[serde(rename = "packReviewId")]
+        pub pack_review_id: ::uuid::Uuid,
     }
 
     ///Payload for Pack version upload complete.
@@ -6218,6 +6779,60 @@ pub mod types {
         }
     }
 
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Unauthorized"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        401
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Unauthorized"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeleteCustomDocDomainResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
     ///The result of deleting a custom domain from a published doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -6228,14 +6843,14 @@ pub mod types {
     /// doc.",
     ///  "type": "object",
     ///  "additionalProperties": false,
-    ///  "x-schema-name": "DeleteCustomDocDomainResponse"
+    ///  "x-schema-name": "DeleteCustomDocDomainResult"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct DeleteCustomDocDomainResponse {}
-    impl ::std::default::Default for DeleteCustomDocDomainResponse {
+    pub struct DeleteCustomDocDomainResult {}
+    impl ::std::default::Default for DeleteCustomDocDomainResult {
         fn default() -> Self {
             Self {}
         }
@@ -6371,27 +6986,73 @@ pub mod types {
         }
     }
 
-    ///Confirmation of successfully deleting a Pack category.
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Confirmation of successfully deleting a Pack
-    /// category.",
-    ///  "type": "object",
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "DeletePackCategoryResponse"
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct DeletePackCategoryResponse {}
-    impl ::std::default::Default for DeletePackCategoryResponse {
-        fn default() -> Self {
-            Self {}
-        }
+    pub struct DeletePackCategoryResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<DeletePackCategoryResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -6429,27 +7090,96 @@ pub mod types {
         }
     }
 
-    ///Confirmation of successfully deleting a Pack invitation.
+    ///Confirmation of successfully deleting a Pack category.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
     ///  "description": "Confirmation of successfully deleting a Pack
-    /// invitation.",
+    /// category.",
     ///  "type": "object",
     ///  "additionalProperties": false,
-    ///  "x-schema-name": "DeletePackInvitationResponse"
+    ///  "x-schema-name": "DeletePackCategoryResult"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct DeletePackInvitationResponse {}
-    impl ::std::default::Default for DeletePackInvitationResponse {
+    pub struct DeletePackCategoryResult {}
+    impl ::std::default::Default for DeletePackCategoryResult {
         fn default() -> Self {
             Self {}
         }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeletePackInvitationResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<DeletePackInvitationResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -6487,6 +7217,83 @@ pub mod types {
         }
     }
 
+    ///Confirmation of successfully deleting a Pack invitation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully deleting a Pack
+    /// invitation.",
+    ///  "type": "object",
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "DeletePackInvitationResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeletePackInvitationResult {}
+    impl ::std::default::Default for DeletePackInvitationResult {
+        fn default() -> Self {
+            Self {}
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Unauthorized"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        401
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Unauthorized"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeletePackListingDraftResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
     ///Response after deleting a Pack listing draft
     ///
     /// <details><summary>JSON schema</summary>
@@ -6496,39 +7303,86 @@ pub mod types {
     ///  "description": "Response after deleting a Pack listing draft",
     ///  "type": "object",
     ///  "additionalProperties": false,
-    ///  "x-schema-name": "DeletePackListingDraftResponse"
+    ///  "x-schema-name": "DeletePackListingDraftResult"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct DeletePackListingDraftResponse {}
-    impl ::std::default::Default for DeletePackListingDraftResponse {
+    pub struct DeletePackListingDraftResult {}
+    impl ::std::default::Default for DeletePackListingDraftResult {
         fn default() -> Self {
             Self {}
         }
     }
 
-    ///Confirmation of successfully deleting a Pack maker.
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Confirmation of successfully deleting a Pack maker.",
-    ///  "type": "object",
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "AddPackMakerResponse"
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct DeletePackMakerResponse {}
-    impl ::std::default::Default for DeletePackMakerResponse {
-        fn default() -> Self {
-            Self {}
-        }
+    pub struct DeletePackMakerResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<DeletePackMakerResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -6566,27 +7420,95 @@ pub mod types {
         }
     }
 
-    ///Confirmation of successfully deleting a Pack permission.
+    ///Confirmation of successfully deleting a Pack maker.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Confirmation of successfully deleting a Pack
-    /// permission.",
+    ///  "description": "Confirmation of successfully deleting a Pack maker.",
     ///  "type": "object",
     ///  "additionalProperties": false,
-    ///  "x-schema-name": "DeletePackPermissionResponse"
+    ///  "x-schema-name": "AddPackMakerResult"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct DeletePackPermissionResponse {}
-    impl ::std::default::Default for DeletePackPermissionResponse {
+    pub struct DeletePackMakerResult {}
+    impl ::std::default::Default for DeletePackMakerResult {
         fn default() -> Self {
             Self {}
         }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeletePackPermissionResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<DeletePackPermissionResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -6624,6 +7546,83 @@ pub mod types {
         }
     }
 
+    ///Confirmation of successfully deleting a Pack permission.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully deleting a Pack
+    /// permission.",
+    ///  "type": "object",
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "DeletePackPermissionResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeletePackPermissionResult {}
+    impl ::std::default::Default for DeletePackPermissionResult {
+        fn default() -> Self {
+            Self {}
+        }
+    }
+
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct DeletePackResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
     ///Confirmation of successful Pack deletion.
     ///
     /// <details><summary>JSON schema</summary>
@@ -6633,14 +7632,14 @@ pub mod types {
     ///  "description": "Confirmation of successful Pack deletion.",
     ///  "type": "object",
     ///  "additionalProperties": false,
-    ///  "x-schema-name": "DeletePackResponse"
+    ///  "x-schema-name": "DeletePackResult"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct DeletePackResponse {}
-    impl ::std::default::Default for DeletePackResponse {
+    pub struct DeletePackResult {}
+    impl ::std::default::Default for DeletePackResult {
         fn default() -> Self {
             Self {}
         }
@@ -11367,46 +12366,73 @@ pub mod types {
         }
     }
 
-    ///Response containing the Pack listing draft
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Response containing the Pack listing draft",
-    ///  "type": "object",
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
     ///  "properties": {
-    ///    "listingData": {
-    ///      "$ref": "#/components/schemas/PackListingDraftData"
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
     ///    },
-    ///    "packListingDraftId": {
-    ///      "description": "ID of the listing draft",
-    ///      "type": "string",
-    ///      "format": "uuid"
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
     ///    }
     ///  },
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "GetPackListingDraftResponse"
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct GetPackListingDraftResponse {
-        #[serde(rename = "listingData", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub listing_data: ::std::option::Option<PackListingDraftData>,
-        ///ID of the listing draft
-        #[serde(rename = "packListingDraftId", default, skip_serializing_if = "::std::option::Option::is_none")]
-        pub pack_listing_draft_id: ::std::option::Option<::uuid::Uuid>,
-    }
-
-    impl ::std::default::Default for GetPackListingDraftResponse {
-        fn default() -> Self {
-            Self {
-                listing_data: Default::default(),
-                pack_listing_draft_id: Default::default(),
-            }
-        }
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<GetPackListingDraftResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -11440,6 +12466,48 @@ pub mod types {
         fn default() -> Self {
             Self {
                 validation_errors: Default::default(),
+            }
+        }
+    }
+
+    ///Response containing the Pack listing draft
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Response containing the Pack listing draft",
+    ///  "type": "object",
+    ///  "properties": {
+    ///    "listingData": {
+    ///      "$ref": "#/components/schemas/PackListingDraftData"
+    ///    },
+    ///    "packListingDraftId": {
+    ///      "description": "ID of the listing draft",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "GetPackListingDraftResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct GetPackListingDraftResult {
+        #[serde(rename = "listingData", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub listing_data: ::std::option::Option<PackListingDraftData>,
+        ///ID of the listing draft
+        #[serde(rename = "packListingDraftId", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub pack_listing_draft_id: ::std::option::Option<::uuid::Uuid>,
+    }
+
+    impl ::std::default::Default for GetPackListingDraftResult {
+        fn default() -> Self {
+            Self {
+                listing_data: Default::default(),
+                pack_listing_draft_id: Default::default(),
             }
         }
     }
@@ -17109,37 +18177,73 @@ pub mod types {
         pub status_message: ::std::string::String,
     }
 
-    ///Confirmation of successfully retrieving Pack categories.
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Confirmation of successfully retrieving Pack
-    /// categories.",
-    ///  "type": "object",
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
     ///  "required": [
-    ///    "categories"
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
     ///  ],
     ///  "properties": {
-    ///    "categories": {
-    ///      "description": "The names of categories associated with a Pack.",
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/PublishingCategory"
-    ///      }
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
     ///    }
     ///  },
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "ListPackCategoriesResponse"
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct ListPackCategoriesResponse {
-        ///The names of categories associated with a Pack.
-        pub categories: ::std::vec::Vec<PublishingCategory>,
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<ListPackCategoriesResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -17175,6 +18279,39 @@ pub mod types {
                 validation_errors: Default::default(),
             }
         }
+    }
+
+    ///Confirmation of successfully retrieving Pack categories.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully retrieving Pack
+    /// categories.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "categories"
+    ///  ],
+    ///  "properties": {
+    ///    "categories": {
+    ///      "description": "The names of categories associated with a Pack.",
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/PublishingCategory"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "ListPackCategoriesResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ListPackCategoriesResult {
+        ///The names of categories associated with a Pack.
+        pub categories: ::std::vec::Vec<PublishingCategory>,
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -17660,34 +18797,73 @@ pub mod types {
         }
     }
 
-    ///Confirmation of successfully retrieving Pack makers.
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Confirmation of successfully retrieving Pack makers.",
-    ///  "type": "object",
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
     ///  "required": [
-    ///    "makers"
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
     ///  ],
     ///  "properties": {
-    ///    "makers": {
-    ///      "type": "array",
-    ///      "items": {
-    ///        "$ref": "#/components/schemas/Maker"
-    ///      }
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
     ///    }
     ///  },
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "ListPackMakersResponse"
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct ListPackMakersResponse {
-        pub makers: ::std::vec::Vec<Maker>,
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<ListPackMakersResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -17723,6 +18899,36 @@ pub mod types {
                 validation_errors: Default::default(),
             }
         }
+    }
+
+    ///Confirmation of successfully retrieving Pack makers.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully retrieving Pack makers.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "makers"
+    ///  ],
+    ///  "properties": {
+    ///    "makers": {
+    ///      "type": "array",
+    ///      "items": {
+    ///        "$ref": "#/components/schemas/Maker"
+    ///      }
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "ListPackMakersResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ListPackMakersResult {
+        pub makers: ::std::vec::Vec<Maker>,
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -17829,6 +19035,60 @@ pub mod types {
         }
     }
 
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct ListPackReviewsResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
     ///Response containing pack reviews
     ///
     /// <details><summary>JSON schema</summary>
@@ -17859,13 +19119,13 @@ pub mod types {
     ///    }
     ///  },
     ///  "additionalProperties": false,
-    ///  "x-schema-name": "ListPackReviewsResponse"
+    ///  "x-schema-name": "ListPackReviewsResult"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct ListPackReviewsResponse {
+    pub struct ListPackReviewsResult {
         ///List of pack reviews
         pub items: ::std::vec::Vec<PackReview>,
         ///Link for fetching the next page of results
@@ -21004,48 +22264,73 @@ pub mod types {
         pub pack_asset_type: PackAssetType,
     }
 
-    ///Response for noting a Pack asset upload is complete.
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Response for noting a Pack asset upload is complete.",
-    ///  "type": "object",
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
     ///  "required": [
-    ///    "assetId",
-    ///    "requestId"
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
     ///  ],
     ///  "properties": {
-    ///    "assetId": {
-    ///      "description": "An identifier of this uploaded asset.",
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
     ///      "examples": [
-    ///        "e23fcb5e564f08b71183d424c2c380c0"
+    ///        "Bad Request"
     ///      ],
     ///      "type": "string"
     ///    },
-    ///    "requestId": {
-    ///      "description": "An arbitrary unique identifier for this request.",
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
     ///      "examples": [
-    ///        "abc-123-def-456"
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
     ///      ],
     ///      "type": "string"
     ///    }
     ///  },
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "PackAssetUploadCompleteResponse"
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct PackAssetUploadCompleteResponse {
-        ///An identifier of this uploaded asset.
-        #[serde(rename = "assetId")]
-        pub asset_id: ::std::string::String,
-        ///An arbitrary unique identifier for this request.
-        #[serde(rename = "requestId")]
-        pub request_id: ::std::string::String,
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<PackAssetUploadCompleteResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -21081,6 +22366,50 @@ pub mod types {
                 validation_errors: Default::default(),
             }
         }
+    }
+
+    ///Response for noting a Pack asset upload is complete.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Response for noting a Pack asset upload is complete.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "assetId",
+    ///    "requestId"
+    ///  ],
+    ///  "properties": {
+    ///    "assetId": {
+    ///      "description": "An identifier of this uploaded asset.",
+    ///      "examples": [
+    ///        "e23fcb5e564f08b71183d424c2c380c0"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "requestId": {
+    ///      "description": "An arbitrary unique identifier for this request.",
+    ///      "examples": [
+    ///        "abc-123-def-456"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackAssetUploadCompleteResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackAssetUploadCompleteResult {
+        ///An identifier of this uploaded asset.
+        #[serde(rename = "assetId")]
+        pub asset_id: ::std::string::String,
+        ///An arbitrary unique identifier for this request.
+        #[serde(rename = "requestId")]
+        pub request_id: ::std::string::String,
     }
 
     ///Information indicating where to upload the Pack asset, and an endpoint
@@ -32455,38 +33784,73 @@ pub mod types {
         pub filename: ::std::string::String,
     }
 
-    ///Response for noting a Pack source code upload is complete.
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Response for noting a Pack source code upload is
-    /// complete.",
-    ///  "type": "object",
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
     ///  "required": [
-    ///    "requestId"
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
     ///  ],
     ///  "properties": {
-    ///    "requestId": {
-    ///      "description": "An arbitrary unique identifier for this request.",
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
     ///      "examples": [
-    ///        "abc-123-def-456"
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
     ///      ],
     ///      "type": "string"
     ///    }
     ///  },
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "PackSourceCodeUploadCompleteResponse"
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct PackSourceCodeUploadCompleteResponse {
-        ///An arbitrary unique identifier for this request.
-        #[serde(rename = "requestId")]
-        pub request_id: ::std::string::String,
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<PackSourceCodeUploadCompleteResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -32522,6 +33886,40 @@ pub mod types {
                 validation_errors: Default::default(),
             }
         }
+    }
+
+    ///Response for noting a Pack source code upload is complete.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Response for noting a Pack source code upload is
+    /// complete.",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "requestId"
+    ///  ],
+    ///  "properties": {
+    ///    "requestId": {
+    ///      "description": "An arbitrary unique identifier for this request.",
+    ///      "examples": [
+    ///        "abc-123-def-456"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "PackSourceCodeUploadCompleteResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct PackSourceCodeUploadCompleteResult {
+        ///An arbitrary unique identifier for this request.
+        #[serde(rename = "requestId")]
+        pub request_id: ::std::string::String,
     }
 
     ///Information indicating where to upload the Pack source code, and an
@@ -39549,6 +40947,60 @@ pub mod types {
         }
     }
 
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct SearchPrincipalsResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
     ///Metadata about the principals that match the given query.
     ///
     /// <details><summary>JSON schema</summary>
@@ -39577,13 +41029,13 @@ pub mod types {
     ///    }
     ///  },
     ///  "additionalProperties": false,
-    ///  "x-schema-name": "SearchPrincipalsResponse"
+    ///  "x-schema-name": "SearchPrincipalsResult"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct SearchPrincipalsResponse {
+    pub struct SearchPrincipalsResult {
         pub groups: ::std::vec::Vec<GroupPrincipal>,
         pub users: ::std::vec::Vec<UserSummary>,
     }
@@ -41932,6 +43384,60 @@ pub mod types {
         }
     }
 
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Unauthorized"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        401
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Unauthorized"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpdateCustomDocDomainResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
     ///The result of updating a custom domain for a published doc.
     ///
     /// <details><summary>JSON schema</summary>
@@ -41942,14 +43448,14 @@ pub mod types {
     /// doc.",
     ///  "type": "object",
     ///  "additionalProperties": false,
-    ///  "x-schema-name": "UpdateCustomDocDomainResponse"
+    ///  "x-schema-name": "UpdateCustomDocDomainResult"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct UpdateCustomDocDomainResponse {}
-    impl ::std::default::Default for UpdateCustomDocDomainResponse {
+    pub struct UpdateCustomDocDomainResult {}
+    impl ::std::default::Default for UpdateCustomDocDomainResult {
         fn default() -> Self {
             Self {}
         }
@@ -42147,6 +43653,60 @@ pub mod types {
         pub items: Vec<PackFeaturedDocRequestItem>,
     }
 
+    ///An HTTP error resulting from an unsuccessful request.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpdatePackFeaturedDocsResponse {
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
+    }
+
     ///Confirmation of successful Pack featured docs update.
     ///
     /// <details><summary>JSON schema</summary>
@@ -42156,14 +43716,14 @@ pub mod types {
     ///  "description": "Confirmation of successful Pack featured docs update.",
     ///  "type": "object",
     ///  "additionalProperties": false,
-    ///  "x-schema-name": "UpdatePackFeaturedDocsResponse"
+    ///  "x-schema-name": "UpdatePackFeaturedDocsResult"
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct UpdatePackFeaturedDocsResponse {}
-    impl ::std::default::Default for UpdatePackFeaturedDocsResponse {
+    pub struct UpdatePackFeaturedDocsResult {}
+    impl ::std::default::Default for UpdatePackFeaturedDocsResult {
         fn default() -> Self {
             Self {}
         }
@@ -42196,27 +43756,73 @@ pub mod types {
         pub access: PackAccessType,
     }
 
-    ///Confirmation of successfully updating a Pack invitation.
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Confirmation of successfully updating a Pack
-    /// invitation.",
-    ///  "type": "object",
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "UpdatePackInvitationResponse"
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
+    ///  "required": [
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
+    ///  ],
+    ///  "properties": {
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
+    ///    },
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
+    ///      "type": "number"
+    ///    },
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
-    pub struct UpdatePackInvitationResponse {}
-    impl ::std::default::Default for UpdatePackInvitationResponse {
-        fn default() -> Self {
-            Self {}
-        }
+    pub struct UpdatePackInvitationResponse {
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<UpdatePackInvitationResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -42251,6 +43857,29 @@ pub mod types {
             Self {
                 validation_errors: Default::default(),
             }
+        }
+    }
+
+    ///Confirmation of successfully updating a Pack invitation.
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Confirmation of successfully updating a Pack
+    /// invitation.",
+    ///  "type": "object",
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "UpdatePackInvitationResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpdatePackInvitationResult {}
+    impl ::std::default::Default for UpdatePackInvitationResult {
+        fn default() -> Self {
+            Self {}
         }
     }
 
@@ -43871,49 +45500,73 @@ pub mod types {
         pub listing_data: PackListingDraftInputData,
     }
 
-    ///Response containing the upserted Pack listing draft
+    ///An HTTP error resulting from an unsuccessful request.
     ///
     /// <details><summary>JSON schema</summary>
     ///
     /// ```json
     ///{
-    ///  "description": "Response containing the upserted Pack listing draft",
-    ///  "type": "object",
+    ///  "description": "An HTTP error resulting from an unsuccessful request.",
     ///  "required": [
-    ///    "listingData",
-    ///    "packId",
-    ///    "packListingDraftId"
+    ///    "message",
+    ///    "statusCode",
+    ///    "statusMessage"
     ///  ],
     ///  "properties": {
-    ///    "listingData": {
-    ///      "$ref": "#/components/schemas/PackListingDraftData"
+    ///    "codaDetail": {
+    ///      "description": "Detail about why this request was rejected.",
+    ///      "type": "object",
+    ///      "properties": {
+    ///        "validationErrors": {
+    ///          "type": "array",
+    ///          "items": {
+    ///            "$ref": "#/components/schemas/ValidationError"
+    ///          }
+    ///        }
+    ///      },
+    ///      "additionalProperties": false
     ///    },
-    ///    "packId": {
-    ///      "description": "ID of the Pack",
+    ///    "message": {
+    ///      "description": "Any additional context on the error, or the same as
+    /// `statusMessage` otherwise.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
+    ///    },
+    ///    "statusCode": {
+    ///      "description": "HTTP status code of the error.",
+    ///      "examples": [
+    ///        400
+    ///      ],
     ///      "type": "number"
     ///    },
-    ///    "packListingDraftId": {
-    ///      "description": "ID of the listing draft",
-    ///      "type": "string",
-    ///      "format": "uuid"
+    ///    "statusMessage": {
+    ///      "description": "HTTP status message of the error.",
+    ///      "examples": [
+    ///        "Bad Request"
+    ///      ],
+    ///      "type": "string"
     ///    }
     ///  },
-    ///  "additionalProperties": false,
-    ///  "x-schema-name": "UpsertPackListingDraftResponse"
+    ///  "additionalProperties": false
     ///}
     /// ```
     /// </details>
     #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
     #[serde(deny_unknown_fields)]
     pub struct UpsertPackListingDraftResponse {
-        #[serde(rename = "listingData")]
-        pub listing_data: PackListingDraftData,
-        ///ID of the Pack
-        #[serde(rename = "packId")]
-        pub pack_id: f64,
-        ///ID of the listing draft
-        #[serde(rename = "packListingDraftId")]
-        pub pack_listing_draft_id: ::uuid::Uuid,
+        #[serde(rename = "codaDetail", default, skip_serializing_if = "::std::option::Option::is_none")]
+        pub coda_detail: ::std::option::Option<UpsertPackListingDraftResponseCodaDetail>,
+        ///Any additional context on the error, or the same as `statusMessage`
+        /// otherwise.
+        pub message: ::std::string::String,
+        ///HTTP status code of the error.
+        #[serde(rename = "statusCode")]
+        pub status_code: f64,
+        ///HTTP status message of the error.
+        #[serde(rename = "statusMessage")]
+        pub status_message: ::std::string::String,
     }
 
     ///Detail about why this request was rejected.
@@ -43949,6 +45602,51 @@ pub mod types {
                 validation_errors: Default::default(),
             }
         }
+    }
+
+    ///Response containing the upserted Pack listing draft
+    ///
+    /// <details><summary>JSON schema</summary>
+    ///
+    /// ```json
+    ///{
+    ///  "description": "Response containing the upserted Pack listing draft",
+    ///  "type": "object",
+    ///  "required": [
+    ///    "listingData",
+    ///    "packId",
+    ///    "packListingDraftId"
+    ///  ],
+    ///  "properties": {
+    ///    "listingData": {
+    ///      "$ref": "#/components/schemas/PackListingDraftData"
+    ///    },
+    ///    "packId": {
+    ///      "description": "ID of the Pack",
+    ///      "type": "number"
+    ///    },
+    ///    "packListingDraftId": {
+    ///      "description": "ID of the listing draft",
+    ///      "type": "string",
+    ///      "format": "uuid"
+    ///    }
+    ///  },
+    ///  "additionalProperties": false,
+    ///  "x-schema-name": "UpsertPackListingDraftResult"
+    ///}
+    /// ```
+    /// </details>
+    #[derive(::serde::Deserialize, ::serde::Serialize, Clone, Debug)]
+    #[serde(deny_unknown_fields)]
+    pub struct UpsertPackListingDraftResult {
+        #[serde(rename = "listingData")]
+        pub listing_data: PackListingDraftData,
+        ///ID of the Pack
+        #[serde(rename = "packId")]
+        pub pack_id: f64,
+        ///ID of the listing draft
+        #[serde(rename = "packListingDraftId")]
+        pub pack_listing_draft_id: ::uuid::Uuid,
     }
 
     ///An HTTP error resulting from an unsuccessful request.
@@ -46261,7 +47959,7 @@ impl RawClient {
     ///Arguments:
     /// - `doc_id`: ID of the doc.
     /// - `query`: Search term used to filter down results.
-    pub async fn search_principals<'a>(&'a self, doc_id: &'a str, query: Option<&'a str>) -> Result<ResponseValue<types::SearchPrincipalsResponse>, Error<types::SearchPrincipalsResponse>> {
+    pub async fn search_principals<'a>(&'a self, doc_id: &'a str, query: Option<&'a str>) -> Result<ResponseValue<types::SearchPrincipalsResult>, Error<types::SearchPrincipalsResponse>> {
         let url = format!("{}/docs/{}/acl/principals/search", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -46764,7 +48462,7 @@ impl RawClient {
     ///   selected.
     ///
     /// - `body`: Parameters for requesting a page content export.
-    pub async fn begin_page_content_export<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str, body: &'a types::BeginPageContentExportRequest) -> Result<ResponseValue<types::BeginPageContentExportResponse>, Error<types::BeginPageContentExportResponse>> {
+    pub async fn begin_page_content_export<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str, body: &'a types::BeginPageContentExportRequest) -> Result<ResponseValue<types::BeginPageContentExportResult>, Error<types::BeginPageContentExportResponse>> {
         let url = format!("{}/docs/{}/pages/{}/export", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&page_id_or_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -47680,7 +49378,7 @@ impl RawClient {
     ///Arguments:
     /// - `doc_id`: ID of the doc.
     /// - `body`: Parameters for adding a custom domain to a published doc.
-    pub async fn add_custom_doc_domain<'a>(&'a self, doc_id: &'a str, body: &'a types::AddCustomDocDomainRequest) -> Result<ResponseValue<types::AddCustomDocDomainResponse>, Error<types::AddCustomDocDomainResponse>> {
+    pub async fn add_custom_doc_domain<'a>(&'a self, doc_id: &'a str, body: &'a types::AddCustomDocDomainRequest) -> Result<ResponseValue<types::AddCustomDocDomainResult>, Error<types::AddCustomDocDomainResponse>> {
         let url = format!("{}/docs/${}/domains", self.baseurl, encode_path(&doc_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -47718,7 +49416,7 @@ impl RawClient {
     ///Arguments:
     /// - `doc_id`: ID of the doc.
     /// - `custom_doc_domain`: A custom domain for a published doc.
-    pub async fn delete_custom_doc_domain<'a>(&'a self, doc_id: &'a str, custom_doc_domain: &'a str) -> Result<ResponseValue<types::DeleteCustomDocDomainResponse>, Error<types::DeleteCustomDocDomainResponse>> {
+    pub async fn delete_custom_doc_domain<'a>(&'a self, doc_id: &'a str, custom_doc_domain: &'a str) -> Result<ResponseValue<types::DeleteCustomDocDomainResult>, Error<types::DeleteCustomDocDomainResponse>> {
         let url = format!("{}/docs/{}/domains/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&custom_doc_domain.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -47756,7 +49454,7 @@ impl RawClient {
     /// - `doc_id`: ID of the doc.
     /// - `custom_doc_domain`: A custom domain for a published doc.
     /// - `body`: Properties of a custom domain to update.
-    pub async fn update_custom_doc_domain<'a>(&'a self, doc_id: &'a str, custom_doc_domain: &'a str, body: &'a types::UpdateCustomDocDomainRequest) -> Result<ResponseValue<types::UpdateCustomDocDomainResponse>, Error<types::UpdateCustomDocDomainResponse>> {
+    pub async fn update_custom_doc_domain<'a>(&'a self, doc_id: &'a str, custom_doc_domain: &'a str, body: &'a types::UpdateCustomDocDomainRequest) -> Result<ResponseValue<types::UpdateCustomDocDomainResult>, Error<types::UpdateCustomDocDomainResponse>> {
         let url = format!("{}/docs/{}/domains/{}", self.baseurl, encode_path(&doc_id.to_string()), encode_path(&custom_doc_domain.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -48714,7 +50412,7 @@ impl RawClient {
     ///
     ///Arguments:
     /// - `body`: Parameters for creating the Pack.
-    pub async fn create_pack<'a>(&'a self, body: &'a types::CreatePackRequest) -> Result<ResponseValue<types::CreatePackResponse>, Error<types::CreatePackResponse>> {
+    pub async fn create_pack<'a>(&'a self, body: &'a types::CreatePackRequest) -> Result<ResponseValue<types::CreatePackResult>, Error<types::CreatePackResponse>> {
         let url = format!("{}/packs", self.baseurl,);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -48790,7 +50488,7 @@ impl RawClient {
     ///
     ///Arguments:
     /// - `pack_id`: ID of a Pack
-    pub async fn delete_pack<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::DeletePackResponse>, Error<types::DeletePackResponse>> {
+    pub async fn delete_pack<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::DeletePackResult>, Error<types::DeletePackResponse>> {
         let url = format!("{}/packs/{}", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -49244,7 +50942,7 @@ impl RawClient {
     /// - `limit`: Maximum number of results to return.
     /// - `page_token`: An opaque token used to fetch the next page of results.
     /// - `status`: Filter reviews by status.
-    pub async fn list_pack_reviews<'a>(&'a self, pack_id: ::std::num::NonZeroU64, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, status: Option<types::PackReviewStatus>) -> Result<ResponseValue<types::ListPackReviewsResponse>, Error<types::ListPackReviewsResponse>> {
+    pub async fn list_pack_reviews<'a>(&'a self, pack_id: ::std::num::NonZeroU64, limit: Option<::std::num::NonZeroU64>, page_token: Option<&'a str>, status: Option<types::PackReviewStatus>) -> Result<ResponseValue<types::ListPackReviewsResult>, Error<types::ListPackReviewsResponse>> {
         let url = format!("{}/packs/{}/reviews", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -49285,7 +50983,7 @@ impl RawClient {
     ///Arguments:
     /// - `pack_id`: ID of a Pack
     /// - `body`: Parameters for creating pack review.
-    pub async fn create_pack_review<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::CreatePackReviewRequest) -> Result<ResponseValue<types::CreatePackReviewResponse>, Error<types::CreatePackReviewResponse>> {
+    pub async fn create_pack_review<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::CreatePackReviewRequest) -> Result<ResponseValue<types::CreatePackReviewResult>, Error<types::CreatePackReviewResponse>> {
         let url = format!("{}/packs/{}/reviews", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -49324,7 +51022,7 @@ impl RawClient {
     ///
     ///Arguments:
     /// - `pack_id`: ID of a Pack
-    pub async fn cancel_pack_review<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::CancelPackReviewResponse>, Error<types::CancelPackReviewResponse>> {
+    pub async fn cancel_pack_review<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::CancelPackReviewResult>, Error<types::CancelPackReviewResponse>> {
         let url = format!("{}/packs/{}/reviews/pending/cancel", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -49361,7 +51059,7 @@ impl RawClient {
     ///
     ///Arguments:
     /// - `pack_id`: ID of a Pack
-    pub async fn get_pack_listing_draft<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::GetPackListingDraftResponse>, Error<types::GetPackListingDraftResponse>> {
+    pub async fn get_pack_listing_draft<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::GetPackListingDraftResult>, Error<types::GetPackListingDraftResponse>> {
         let url = format!("{}/packs/{}/listingDraft", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -49399,7 +51097,7 @@ impl RawClient {
     ///Arguments:
     /// - `pack_id`: ID of a Pack
     /// - `body`: The listing draft data to save.
-    pub async fn upsert_pack_listing_draft<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::UpsertPackListingDraftRequest) -> Result<ResponseValue<types::UpsertPackListingDraftResponse>, Error<types::UpsertPackListingDraftResponse>> {
+    pub async fn upsert_pack_listing_draft<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::UpsertPackListingDraftRequest) -> Result<ResponseValue<types::UpsertPackListingDraftResult>, Error<types::UpsertPackListingDraftResponse>> {
         let url = format!("{}/packs/{}/listingDraft", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -49437,7 +51135,7 @@ impl RawClient {
     ///
     ///Arguments:
     /// - `pack_id`: ID of a Pack
-    pub async fn delete_pack_listing_draft<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::DeletePackListingDraftResponse>, Error<types::DeletePackListingDraftResponse>> {
+    pub async fn delete_pack_listing_draft<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::DeletePackListingDraftResult>, Error<types::DeletePackListingDraftResponse>> {
         let url = format!("{}/packs/{}/listingDraft", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -49712,7 +51410,7 @@ impl RawClient {
     ///Arguments:
     /// - `pack_id`: ID of a Pack
     /// - `body`: Parameters for creating/updating Pack permissions.
-    pub async fn add_pack_permission<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::AddPackPermissionRequest) -> Result<ResponseValue<types::AddPackPermissionResponse>, Error<types::AddPackPermissionResponse>> {
+    pub async fn add_pack_permission<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::AddPackPermissionRequest) -> Result<ResponseValue<types::AddPackPermissionResult>, Error<types::AddPackPermissionResponse>> {
         let url = format!("{}/packs/{}/permissions", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -49790,7 +51488,7 @@ impl RawClient {
     ///Arguments:
     /// - `pack_id`: ID of a Pack
     /// - `permission_id`: ID of a permission on a doc.
-    pub async fn delete_pack_permission<'a>(&'a self, pack_id: ::std::num::NonZeroU64, permission_id: &'a str) -> Result<ResponseValue<types::DeletePackPermissionResponse>, Error<types::DeletePackPermissionResponse>> {
+    pub async fn delete_pack_permission<'a>(&'a self, pack_id: ::std::num::NonZeroU64, permission_id: &'a str) -> Result<ResponseValue<types::DeletePackPermissionResult>, Error<types::DeletePackPermissionResponse>> {
         let url = format!("{}/packs/{}/permissions/{}", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&permission_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -49910,7 +51608,7 @@ impl RawClient {
     ///Arguments:
     /// - `pack_id`: ID of a Pack
     /// - `body`: Parameters for creating Pack invitation.
-    pub async fn create_pack_invitation<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::CreatePackInvitationRequest) -> Result<ResponseValue<types::CreatePackInvitationResponse>, Error<types::CreatePackInvitationResponse>> {
+    pub async fn create_pack_invitation<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::CreatePackInvitationRequest) -> Result<ResponseValue<types::CreatePackInvitationResult>, Error<types::CreatePackInvitationResponse>> {
         let url = format!("{}/packs/{}/invitations", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -49951,7 +51649,7 @@ impl RawClient {
     /// - `pack_id`: ID of a Pack
     /// - `invitation_id`: ID of a Pack invitation
     /// - `body`: Parameters for updating Pack invitation.
-    pub async fn update_pack_invitation<'a>(&'a self, pack_id: ::std::num::NonZeroU64, invitation_id: &'a ::uuid::Uuid, body: &'a types::UpdatePackInvitationRequest) -> Result<ResponseValue<types::UpdatePackInvitationResponse>, Error<types::UpdatePackInvitationResponse>> {
+    pub async fn update_pack_invitation<'a>(&'a self, pack_id: ::std::num::NonZeroU64, invitation_id: &'a ::uuid::Uuid, body: &'a types::UpdatePackInvitationRequest) -> Result<ResponseValue<types::UpdatePackInvitationResult>, Error<types::UpdatePackInvitationResponse>> {
         let url = format!("{}/packs/{}/invitations/{}", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&invitation_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -49991,7 +51689,7 @@ impl RawClient {
     ///Arguments:
     /// - `pack_id`: ID of a Pack
     /// - `invitation_id`: ID of a Pack invitation
-    pub async fn delete_pack_invitation<'a>(&'a self, pack_id: ::std::num::NonZeroU64, invitation_id: &'a ::uuid::Uuid) -> Result<ResponseValue<types::DeletePackInvitationResponse>, Error<types::DeletePackInvitationResponse>> {
+    pub async fn delete_pack_invitation<'a>(&'a self, pack_id: ::std::num::NonZeroU64, invitation_id: &'a ::uuid::Uuid) -> Result<ResponseValue<types::DeletePackInvitationResult>, Error<types::DeletePackInvitationResponse>> {
         let url = format!("{}/packs/{}/invitations/{}", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&invitation_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -50070,7 +51768,7 @@ impl RawClient {
     ///
     ///Arguments:
     /// - `pack_id`: ID of a Pack
-    pub async fn list_pack_makers<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::ListPackMakersResponse>, Error<types::ListPackMakersResponse>> {
+    pub async fn list_pack_makers<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::ListPackMakersResult>, Error<types::ListPackMakersResponse>> {
         let url = format!("{}/packs/{}/makers", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -50110,7 +51808,7 @@ impl RawClient {
     ///Arguments:
     /// - `pack_id`: ID of a Pack
     /// - `body`: Payload for adding a Pack maker.
-    pub async fn add_pack_maker<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::AddPackMakerRequest) -> Result<ResponseValue<types::AddPackMakerResponse>, Error<types::AddPackMakerResponse>> {
+    pub async fn add_pack_maker<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::AddPackMakerRequest) -> Result<ResponseValue<types::AddPackMakerResult>, Error<types::AddPackMakerResponse>> {
         let url = format!("{}/packs/{}/maker", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -50151,7 +51849,7 @@ impl RawClient {
     ///Arguments:
     /// - `pack_id`: ID of a Pack
     /// - `login_id`: Email of a Coda user.
-    pub async fn delete_pack_maker<'a>(&'a self, pack_id: ::std::num::NonZeroU64, login_id: &'a str) -> Result<ResponseValue<types::DeletePackMakerResponse>, Error<types::DeletePackMakerResponse>> {
+    pub async fn delete_pack_maker<'a>(&'a self, pack_id: ::std::num::NonZeroU64, login_id: &'a str) -> Result<ResponseValue<types::DeletePackMakerResult>, Error<types::DeletePackMakerResponse>> {
         let url = format!("{}/packs/{}/maker/{}", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&login_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -50189,7 +51887,7 @@ impl RawClient {
     ///
     ///Arguments:
     /// - `pack_id`: ID of a Pack
-    pub async fn list_pack_categories<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::ListPackCategoriesResponse>, Error<types::ListPackCategoriesResponse>> {
+    pub async fn list_pack_categories<'a>(&'a self, pack_id: ::std::num::NonZeroU64) -> Result<ResponseValue<types::ListPackCategoriesResult>, Error<types::ListPackCategoriesResponse>> {
         let url = format!("{}/packs/{}/categories", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -50228,7 +51926,7 @@ impl RawClient {
     ///Arguments:
     /// - `pack_id`: ID of a Pack
     /// - `body`: Payload for adding a Pack category.
-    pub async fn add_pack_category<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::AddPackCategoryRequest) -> Result<ResponseValue<types::AddPackCategoryResponse>, Error<types::AddPackCategoryResponse>> {
+    pub async fn add_pack_category<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::AddPackCategoryRequest) -> Result<ResponseValue<types::AddPackCategoryResult>, Error<types::AddPackCategoryResponse>> {
         let url = format!("{}/packs/{}/category", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -50268,7 +51966,7 @@ impl RawClient {
     ///Arguments:
     /// - `pack_id`: ID of a Pack
     /// - `category_name`: Name of a publishing category
-    pub async fn delete_pack_category<'a>(&'a self, pack_id: ::std::num::NonZeroU64, category_name: &'a str) -> Result<ResponseValue<types::DeletePackCategoryResponse>, Error<types::DeletePackCategoryResponse>> {
+    pub async fn delete_pack_category<'a>(&'a self, pack_id: ::std::num::NonZeroU64, category_name: &'a str) -> Result<ResponseValue<types::DeletePackCategoryResult>, Error<types::DeletePackCategoryResponse>> {
         let url = format!("{}/packs/{}/category/{}", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&category_name.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -50390,7 +52088,7 @@ impl RawClient {
     /// - `pack_id`: ID of a Pack
     /// - `pack_asset_id`: Unique identifier for a Pack asset.
     /// - `pack_asset_type`: Pack asset type.
-    pub async fn pack_asset_upload_complete<'a>(&'a self, pack_id: ::std::num::NonZeroU64, pack_asset_id: &'a str, pack_asset_type: types::PackAssetType) -> Result<ResponseValue<types::PackAssetUploadCompleteResponse>, Error<types::PackAssetUploadCompleteResponse>> {
+    pub async fn pack_asset_upload_complete<'a>(&'a self, pack_id: ::std::num::NonZeroU64, pack_asset_id: &'a str, pack_asset_type: types::PackAssetType) -> Result<ResponseValue<types::PackAssetUploadCompleteResult>, Error<types::PackAssetUploadCompleteResponse>> {
         let url = format!("{}/packs/{}/assets/{}/assetType/{}/uploadComplete", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&pack_asset_id.to_string()), encode_path(&pack_asset_type.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -50431,7 +52129,7 @@ impl RawClient {
     /// - `pack_id`: ID of a Pack
     /// - `pack_version`: Semantic version of a Pack
     /// - `body`: Parameters to specify the source code being uploaded.
-    pub async fn pack_source_code_upload_complete<'a>(&'a self, pack_id: ::std::num::NonZeroU64, pack_version: &'a str, body: &'a types::PackSourceCodeUploadCompleteRequest) -> Result<ResponseValue<types::PackSourceCodeUploadCompleteResponse>, Error<types::PackSourceCodeUploadCompleteResponse>> {
+    pub async fn pack_source_code_upload_complete<'a>(&'a self, pack_id: ::std::num::NonZeroU64, pack_version: &'a str, body: &'a types::PackSourceCodeUploadCompleteRequest) -> Result<ResponseValue<types::PackSourceCodeUploadCompleteResult>, Error<types::PackSourceCodeUploadCompleteResponse>> {
         let url = format!("{}/packs/{}/versions/{}/sourceCode/uploadComplete", self.baseurl, encode_path(&pack_id.to_string()), encode_path(&pack_version.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));
@@ -51096,7 +52794,7 @@ impl RawClient {
     ///Arguments:
     /// - `pack_id`: ID of a Pack
     /// - `body`: Parameters for updating the Pack's featured docs.
-    pub async fn update_pack_featured_docs<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::UpdatePackFeaturedDocsRequest) -> Result<ResponseValue<types::UpdatePackFeaturedDocsResponse>, Error<types::UpdatePackFeaturedDocsResponse>> {
+    pub async fn update_pack_featured_docs<'a>(&'a self, pack_id: ::std::num::NonZeroU64, body: &'a types::UpdatePackFeaturedDocsRequest) -> Result<ResponseValue<types::UpdatePackFeaturedDocsResult>, Error<types::UpdatePackFeaturedDocsResponse>> {
         let url = format!("{}/packs/{}/featuredDocs", self.baseurl, encode_path(&pack_id.to_string()),);
         let mut header_map = ::reqwest::header::HeaderMap::with_capacity(1usize);
         header_map.append(::reqwest::header::HeaderName::from_static("api-version"), ::reqwest::header::HeaderValue::from_static(Self::api_version()));

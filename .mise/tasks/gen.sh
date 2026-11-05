@@ -19,6 +19,12 @@ done
 for FIELD in aiCreditsChat aiCreditsBlock aiCreditsColumn aiCreditsAssistant aiCreditsReviewer aiCredits; do
     $SDF "$FIELD," "$FIELD" $SPEC
 done
+# Workaround: progenitor names endpoint errors OperationResponse, which collides with success schemas using that name.
+while IFS= read -r RESPONSE; do
+    RESULT="${RESPONSE%Response}Result"
+    $SDF "\"$RESPONSE\"" "\"$RESULT\"" "$SPEC"
+    $SDF "/$RESPONSE\"" "/$RESULT\"" "$SPEC"
+done < <(jq -r '[.paths[][] | .operationId? // empty | (.[0:1] | ascii_upcase) + .[1:] + "Response"] as $responses | .components.schemas | keys[] | select(IN($responses[]))' "$SPEC")
 # add the "json" language tag
 $SDF '[JSON-LD](https://json-ld.org/) format.\n\n```\n  // Currency' '[JSON-LD](https://json-ld.org/) format.\n\n```json\n  // Currency' $SPEC
 jq '

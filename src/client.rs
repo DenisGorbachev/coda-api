@@ -185,7 +185,7 @@ impl Client {
         self.raw.delete_permission(doc_id, permission_id).await
     }
 
-    pub async fn search_principals<'a>(&'a self, doc_id: &'a str, query: Option<&'a str>) -> Result<ResponseValue<types::SearchPrincipalsResponse>, Error<types::SearchPrincipalsResponse>> {
+    pub async fn search_principals<'a>(&'a self, doc_id: &'a str, query: Option<&'a str>) -> Result<ResponseValue<types::SearchPrincipalsResult>, Error<types::SearchPrincipalsResponse>> {
         self.limiter.read.until_ready().await;
         self.raw.search_principals(doc_id, query).await
     }
@@ -235,7 +235,7 @@ impl Client {
         self.raw.delete_page(doc_id, page_id_or_name).await
     }
 
-    pub async fn begin_page_content_export<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str, body: &'a types::BeginPageContentExportRequest) -> Result<ResponseValue<types::BeginPageContentExportResponse>, Error<types::BeginPageContentExportResponse>> {
+    pub async fn begin_page_content_export<'a>(&'a self, doc_id: &'a str, page_id_or_name: &'a str, body: &'a types::BeginPageContentExportRequest) -> Result<ResponseValue<types::BeginPageContentExportResult>, Error<types::BeginPageContentExportResponse>> {
         self.limiter.write_doc_content.until_ready().await;
         self.raw
             .begin_page_content_export(doc_id, page_id_or_name, body)
@@ -362,19 +362,19 @@ impl Client {
         self.raw.list_custom_doc_domains(doc_id).await
     }
 
-    pub async fn add_custom_doc_domain<'a>(&'a self, doc_id: &'a str, body: &'a types::AddCustomDocDomainRequest) -> Result<ResponseValue<types::AddCustomDocDomainResponse>, Error<types::AddCustomDocDomainResponse>> {
+    pub async fn add_custom_doc_domain<'a>(&'a self, doc_id: &'a str, body: &'a types::AddCustomDocDomainRequest) -> Result<ResponseValue<types::AddCustomDocDomainResult>, Error<types::AddCustomDocDomainResponse>> {
         self.limiter.write.until_ready().await;
         self.raw.add_custom_doc_domain(doc_id, body).await
     }
 
-    pub async fn delete_custom_doc_domain<'a>(&'a self, doc_id: &'a str, custom_doc_domain: &'a str) -> Result<ResponseValue<types::DeleteCustomDocDomainResponse>, Error<types::DeleteCustomDocDomainResponse>> {
+    pub async fn delete_custom_doc_domain<'a>(&'a self, doc_id: &'a str, custom_doc_domain: &'a str) -> Result<ResponseValue<types::DeleteCustomDocDomainResult>, Error<types::DeleteCustomDocDomainResponse>> {
         self.limiter.write.until_ready().await;
         self.raw
             .delete_custom_doc_domain(doc_id, custom_doc_domain)
             .await
     }
 
-    pub async fn update_custom_doc_domain<'a>(&'a self, doc_id: &'a str, custom_doc_domain: &'a str, body: &'a types::UpdateCustomDocDomainRequest) -> Result<ResponseValue<types::UpdateCustomDocDomainResponse>, Error<types::UpdateCustomDocDomainResponse>> {
+    pub async fn update_custom_doc_domain<'a>(&'a self, doc_id: &'a str, custom_doc_domain: &'a str, body: &'a types::UpdateCustomDocDomainRequest) -> Result<ResponseValue<types::UpdateCustomDocDomainResult>, Error<types::UpdateCustomDocDomainResponse>> {
         self.limiter.write.until_ready().await;
         self.raw
             .update_custom_doc_domain(doc_id, custom_doc_domain, body)
@@ -486,7 +486,7 @@ impl Client {
             .await
     }
 
-    pub async fn create_pack<'a>(&'a self, body: &'a types::CreatePackRequest) -> Result<ResponseValue<types::CreatePackResponse>, Error<types::CreatePackResponse>> {
+    pub async fn create_pack<'a>(&'a self, body: &'a types::CreatePackRequest) -> Result<ResponseValue<types::CreatePackResult>, Error<types::CreatePackResponse>> {
         self.limiter.write.until_ready().await;
         self.raw.create_pack(body).await
     }
@@ -496,7 +496,7 @@ impl Client {
         self.raw.get_pack(pack_id).await
     }
 
-    pub async fn delete_pack<'a>(&'a self, pack_id: NonZeroU64) -> Result<ResponseValue<types::DeletePackResponse>, Error<types::DeletePackResponse>> {
+    pub async fn delete_pack<'a>(&'a self, pack_id: NonZeroU64) -> Result<ResponseValue<types::DeletePackResult>, Error<types::DeletePackResponse>> {
         self.limiter.write.until_ready().await;
         self.raw.delete_pack(pack_id).await
     }
@@ -593,12 +593,12 @@ impl Client {
         self.raw.get_pack_permissions(pack_id).await
     }
 
-    pub async fn add_pack_permission<'a>(&'a self, pack_id: NonZeroU64, body: &'a types::AddPackPermissionRequest) -> Result<ResponseValue<types::AddPackPermissionResponse>, Error<types::AddPackPermissionResponse>> {
+    pub async fn add_pack_permission<'a>(&'a self, pack_id: NonZeroU64, body: &'a types::AddPackPermissionRequest) -> Result<ResponseValue<types::AddPackPermissionResult>, Error<types::AddPackPermissionResponse>> {
         self.limiter.write.until_ready().await;
         self.raw.add_pack_permission(pack_id, body).await
     }
 
-    pub async fn delete_pack_permission<'a>(&'a self, pack_id: NonZeroU64, permission_id: &'a str) -> Result<ResponseValue<types::DeletePackPermissionResponse>, Error<types::DeletePackPermissionResponse>> {
+    pub async fn delete_pack_permission<'a>(&'a self, pack_id: NonZeroU64, permission_id: &'a str) -> Result<ResponseValue<types::DeletePackPermissionResult>, Error<types::DeletePackPermissionResponse>> {
         self.limiter.write.until_ready().await;
         self.raw
             .delete_pack_permission(pack_id, permission_id)
@@ -617,19 +617,19 @@ impl Client {
             .await
     }
 
-    pub async fn create_pack_invitation<'a>(&'a self, pack_id: NonZeroU64, body: &'a types::CreatePackInvitationRequest) -> Result<ResponseValue<types::CreatePackInvitationResponse>, Error<types::CreatePackInvitationResponse>> {
+    pub async fn create_pack_invitation<'a>(&'a self, pack_id: NonZeroU64, body: &'a types::CreatePackInvitationRequest) -> Result<ResponseValue<types::CreatePackInvitationResult>, Error<types::CreatePackInvitationResponse>> {
         self.limiter.write.until_ready().await;
         self.raw.create_pack_invitation(pack_id, body).await
     }
 
-    pub async fn update_pack_invitation<'a>(&'a self, pack_id: NonZeroU64, invitation_id: &'a Uuid, body: &'a types::UpdatePackInvitationRequest) -> Result<ResponseValue<types::UpdatePackInvitationResponse>, Error<types::UpdatePackInvitationResponse>> {
+    pub async fn update_pack_invitation<'a>(&'a self, pack_id: NonZeroU64, invitation_id: &'a Uuid, body: &'a types::UpdatePackInvitationRequest) -> Result<ResponseValue<types::UpdatePackInvitationResult>, Error<types::UpdatePackInvitationResponse>> {
         self.limiter.write.until_ready().await;
         self.raw
             .update_pack_invitation(pack_id, invitation_id, body)
             .await
     }
 
-    pub async fn delete_pack_invitation<'a>(&'a self, pack_id: NonZeroU64, invitation_id: &'a Uuid) -> Result<ResponseValue<types::DeletePackInvitationResponse>, Error<types::DeletePackInvitationResponse>> {
+    pub async fn delete_pack_invitation<'a>(&'a self, pack_id: NonZeroU64, invitation_id: &'a Uuid) -> Result<ResponseValue<types::DeletePackInvitationResult>, Error<types::DeletePackInvitationResponse>> {
         self.limiter.write.until_ready().await;
         self.raw
             .delete_pack_invitation(pack_id, invitation_id)
@@ -641,32 +641,32 @@ impl Client {
         self.raw.reply_to_pack_invitation(invitation_id, body).await
     }
 
-    pub async fn list_pack_makers<'a>(&'a self, pack_id: NonZeroU64) -> Result<ResponseValue<types::ListPackMakersResponse>, Error<types::ListPackMakersResponse>> {
+    pub async fn list_pack_makers<'a>(&'a self, pack_id: NonZeroU64) -> Result<ResponseValue<types::ListPackMakersResult>, Error<types::ListPackMakersResponse>> {
         self.limiter.read.until_ready().await;
         self.raw.list_pack_makers(pack_id).await
     }
 
-    pub async fn add_pack_maker<'a>(&'a self, pack_id: NonZeroU64, body: &'a types::AddPackMakerRequest) -> Result<ResponseValue<types::AddPackMakerResponse>, Error<types::AddPackMakerResponse>> {
+    pub async fn add_pack_maker<'a>(&'a self, pack_id: NonZeroU64, body: &'a types::AddPackMakerRequest) -> Result<ResponseValue<types::AddPackMakerResult>, Error<types::AddPackMakerResponse>> {
         self.limiter.write.until_ready().await;
         self.raw.add_pack_maker(pack_id, body).await
     }
 
-    pub async fn delete_pack_maker<'a>(&'a self, pack_id: NonZeroU64, login_id: &'a str) -> Result<ResponseValue<types::DeletePackMakerResponse>, Error<types::DeletePackMakerResponse>> {
+    pub async fn delete_pack_maker<'a>(&'a self, pack_id: NonZeroU64, login_id: &'a str) -> Result<ResponseValue<types::DeletePackMakerResult>, Error<types::DeletePackMakerResponse>> {
         self.limiter.write.until_ready().await;
         self.raw.delete_pack_maker(pack_id, login_id).await
     }
 
-    pub async fn list_pack_categories<'a>(&'a self, pack_id: NonZeroU64) -> Result<ResponseValue<types::ListPackCategoriesResponse>, Error<types::ListPackCategoriesResponse>> {
+    pub async fn list_pack_categories<'a>(&'a self, pack_id: NonZeroU64) -> Result<ResponseValue<types::ListPackCategoriesResult>, Error<types::ListPackCategoriesResponse>> {
         self.limiter.read.until_ready().await;
         self.raw.list_pack_categories(pack_id).await
     }
 
-    pub async fn add_pack_category<'a>(&'a self, pack_id: NonZeroU64, body: &'a types::AddPackCategoryRequest) -> Result<ResponseValue<types::AddPackCategoryResponse>, Error<types::AddPackCategoryResponse>> {
+    pub async fn add_pack_category<'a>(&'a self, pack_id: NonZeroU64, body: &'a types::AddPackCategoryRequest) -> Result<ResponseValue<types::AddPackCategoryResult>, Error<types::AddPackCategoryResponse>> {
         self.limiter.write.until_ready().await;
         self.raw.add_pack_category(pack_id, body).await
     }
 
-    pub async fn delete_pack_category<'a>(&'a self, pack_id: NonZeroU64, category_name: &'a str) -> Result<ResponseValue<types::DeletePackCategoryResponse>, Error<types::DeletePackCategoryResponse>> {
+    pub async fn delete_pack_category<'a>(&'a self, pack_id: NonZeroU64, category_name: &'a str) -> Result<ResponseValue<types::DeletePackCategoryResult>, Error<types::DeletePackCategoryResponse>> {
         self.limiter.write.until_ready().await;
         self.raw.delete_pack_category(pack_id, category_name).await
     }
@@ -681,14 +681,14 @@ impl Client {
         self.raw.upload_pack_source_code(pack_id, body).await
     }
 
-    pub async fn pack_asset_upload_complete<'a>(&'a self, pack_id: NonZeroU64, pack_asset_id: &'a str, pack_asset_type: types::PackAssetType) -> Result<ResponseValue<types::PackAssetUploadCompleteResponse>, Error<types::PackAssetUploadCompleteResponse>> {
+    pub async fn pack_asset_upload_complete<'a>(&'a self, pack_id: NonZeroU64, pack_asset_id: &'a str, pack_asset_type: types::PackAssetType) -> Result<ResponseValue<types::PackAssetUploadCompleteResult>, Error<types::PackAssetUploadCompleteResponse>> {
         self.limiter.write.until_ready().await;
         self.raw
             .pack_asset_upload_complete(pack_id, pack_asset_id, pack_asset_type)
             .await
     }
 
-    pub async fn pack_source_code_upload_complete<'a>(&'a self, pack_id: NonZeroU64, pack_version: &'a str, body: &'a types::PackSourceCodeUploadCompleteRequest) -> Result<ResponseValue<types::PackSourceCodeUploadCompleteResponse>, Error<types::PackSourceCodeUploadCompleteResponse>> {
+    pub async fn pack_source_code_upload_complete<'a>(&'a self, pack_id: NonZeroU64, pack_version: &'a str, body: &'a types::PackSourceCodeUploadCompleteRequest) -> Result<ResponseValue<types::PackSourceCodeUploadCompleteResult>, Error<types::PackSourceCodeUploadCompleteResponse>> {
         self.limiter.write.until_ready().await;
         self.raw
             .pack_source_code_upload_complete(pack_id, pack_version, body)
@@ -768,7 +768,7 @@ impl Client {
         self.raw.list_pack_featured_docs(pack_id).await
     }
 
-    pub async fn update_pack_featured_docs<'a>(&'a self, pack_id: NonZeroU64, body: &'a types::UpdatePackFeaturedDocsRequest) -> Result<ResponseValue<types::UpdatePackFeaturedDocsResponse>, Error<types::UpdatePackFeaturedDocsResponse>> {
+    pub async fn update_pack_featured_docs<'a>(&'a self, pack_id: NonZeroU64, body: &'a types::UpdatePackFeaturedDocsRequest) -> Result<ResponseValue<types::UpdatePackFeaturedDocsResult>, Error<types::UpdatePackFeaturedDocsResponse>> {
         self.limiter.write.until_ready().await;
         self.raw.update_pack_featured_docs(pack_id, body).await
     }
@@ -1097,12 +1097,47 @@ pub enum ClientWaitForMutationError<E> {
     MutationWarning { request_id: String, warning: String },
 }
 
+impl<E> IsRetryable for ClientWaitForMutationError<E> {
+    fn is_retryable(&self) -> bool {
+        use ClientWaitForMutationError::*;
+        match self {
+            RetryAsyncFailed {
+                source: RetryAsyncError::OperationFailed {
+                    source,
+                },
+                ..
+            } => source.is_retryable(),
+            RetryAsyncFailed {
+                ..
+            }
+            | MutationWarning {
+                ..
+            } => false,
+        }
+    }
+}
+
 #[derive(Error, Debug)]
 pub enum ClientUpdateRowsConclusivelyError<E> {
     #[error("update of row '{row_id}' in table '{table_id}' of doc '{doc_id}' has an uncertain outcome; the write was not retried")]
     UpdateRowCorrectFailed { source: Box<Error<types::UpdateRowResponse>>, doc_id: String, table_id: String, row_id: String },
     #[error("failed to confirm update of row '{row_id}' in table '{table_id}' of doc '{doc_id}'", row_id = result.id)]
     WaitForMutationFailed { source: ClientWaitForMutationError<E>, doc_id: String, table_id: String, result: RowUpdateResultCorrect },
+}
+
+impl<E> IsRetryable for ClientUpdateRowsConclusivelyError<E> {
+    fn is_retryable(&self) -> bool {
+        use ClientUpdateRowsConclusivelyError::*;
+        match self {
+            UpdateRowCorrectFailed {
+                source,
+                ..
+            } => matches!(source.as_ref(), Error::ErrorResponse(response) if response.is_retryable()),
+            WaitForMutationFailed {
+                ..
+            } => false,
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -1117,6 +1152,22 @@ pub enum ClientGetDocDataError {
     GetDocMetadataFailed { source: Box<ClientGetDocMetadataError> },
     #[error("failed to get rows from tables")]
     RowsCorrectFailed { source: ErrVec<ItemError<TableId, Box<Error<types::ListRowsResponse>>>> },
+}
+
+impl IsRetryable for ClientGetDocDataError {
+    fn is_retryable(&self) -> bool {
+        use ClientGetDocDataError::*;
+        match self {
+            GetDocMetadataFailed {
+                source,
+            } => source.is_retryable(),
+            RowsCorrectFailed {
+                source,
+            } => source
+                .iter()
+                .all(|error| IsRetryable::is_retryable(error.source.as_ref())),
+        }
+    }
 }
 
 #[derive(Error, Debug)]
@@ -1135,12 +1186,54 @@ pub enum ClientGetDocMetadataError {
     ControlsFailed { source: Box<ClientControlsError> },
 }
 
+impl IsRetryable for ClientGetDocMetadataError {
+    fn is_retryable(&self) -> bool {
+        use ClientGetDocMetadataError::*;
+        match self {
+            GetDocFailed {
+                source,
+            } => IsRetryable::is_retryable(source.as_ref()),
+            ListPagesFailed {
+                source,
+            } => IsRetryable::is_retryable(source.as_ref()),
+            TablesFailed {
+                source,
+            } => source.is_retryable(),
+            ColumnsMapFailed {
+                source,
+            } => IsRetryable::is_retryable(source.as_ref()),
+            FormulasFailed {
+                source,
+            } => source.is_retryable(),
+            ControlsFailed {
+                source,
+            } => source.is_retryable(),
+        }
+    }
+}
+
 #[derive(Error, Debug)]
 pub enum ClientFormulasError {
     #[error("failed to list formulas")]
     ListFormulasFailed { source: Box<Error<types::ListFormulasResponse>> },
     #[error("failed to get formulas")]
     GetFormulaFailed { source: ErrVec<ItemError<String, Box<Error<types::GetFormulaResponse>>>> },
+}
+
+impl IsRetryable for ClientFormulasError {
+    fn is_retryable(&self) -> bool {
+        use ClientFormulasError::*;
+        match self {
+            ListFormulasFailed {
+                source,
+            } => IsRetryable::is_retryable(source.as_ref()),
+            GetFormulaFailed {
+                source,
+            } => source
+                .iter()
+                .all(|error| IsRetryable::is_retryable(error.source.as_ref())),
+        }
+    }
 }
 
 #[derive(Error, Debug)]
@@ -1151,12 +1244,42 @@ pub enum ClientControlsError {
     GetControlFailed { source: ErrVec<ItemError<String, Box<Error<types::GetControlResponse>>>> },
 }
 
+impl IsRetryable for ClientControlsError {
+    fn is_retryable(&self) -> bool {
+        use ClientControlsError::*;
+        match self {
+            ListControlsFailed {
+                source,
+            } => IsRetryable::is_retryable(source.as_ref()),
+            GetControlFailed {
+                source,
+            } => source
+                .iter()
+                .all(|error| IsRetryable::is_retryable(error.source.as_ref())),
+        }
+    }
+}
+
 #[derive(Error, Debug)]
 pub enum UpsertRowsConclusivelyError {
     #[error("failed to upsert rows")]
     UpsertFailed { source: Box<Error<types::UpsertRowsResponse>> },
     #[error("failed to ensure rows '{row_ids:?}' are visible for request '{request_id}'")]
     EnsureRowsVisibleFailed { request_id: String, row_ids: Vec<String>, source: WaitForRowsError },
+}
+
+impl IsRetryable for UpsertRowsConclusivelyError {
+    fn is_retryable(&self) -> bool {
+        use UpsertRowsConclusivelyError::*;
+        match self {
+            UpsertFailed {
+                source,
+            } => matches!(source.as_ref(), Error::ErrorResponse(response) if response.is_retryable()),
+            EnsureRowsVisibleFailed {
+                ..
+            } => false,
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -1174,10 +1297,36 @@ pub enum UpsertRowsConclusivelyRichError {
     // EnsureRowsVisibleFailed { request_id: String, row_ids: Vec<String>, source: WaitForRowsError },
 }
 
+impl IsRetryable for UpsertRowsConclusivelyRichError {
+    fn is_retryable(&self) -> bool {
+        use UpsertRowsConclusivelyRichError::*;
+        match self {
+            UpsertRowsConclusivelyFailed {
+                source,
+            } => source.is_retryable(),
+        }
+    }
+}
+
 #[derive(Error, Debug)]
 pub enum WaitForRowsError {
     #[error("get row '{row_id}' attempt {attempt} failed")]
     RequestFailed { attempt: usize, row_id: String, source: Box<Error<types::GetRowResponse>> },
     #[error("rows '{missing_row_ids:?}' did not appear after {attempts} attempts")]
     RowsMissing { attempts: usize, missing_row_ids: Vec<String> },
+}
+
+impl IsRetryable for WaitForRowsError {
+    fn is_retryable(&self) -> bool {
+        use WaitForRowsError::*;
+        match self {
+            RequestFailed {
+                source,
+                ..
+            } => IsRetryable::is_retryable(source.as_ref()),
+            RowsMissing {
+                ..
+            } => true,
+        }
+    }
 }
