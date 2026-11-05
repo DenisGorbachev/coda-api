@@ -240,7 +240,7 @@ dependencies = [
  "chrono",
  "clap",
  "derive_more",
- "errgonomic 0.5.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "errgonomic 0.6.0",
  "futures-util",
  "governor",
  "progenitor-client",
@@ -372,20 +372,21 @@ checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 [[package]]
 name = "errgonomic"
 version = "0.5.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eec2d86c5cf47aed488f1b449df946eaef15aabd96a4fa13aa3d906a03a90618"
+source = "git+https://github.com/DenisGorbachev/errgonomic#3ab25f519805ed57434b71f280a1ce0e6f5c1645"
 dependencies = [
  "cfg-if",
- "tempfile",
  "thiserror",
 ]
 
 [[package]]
 name = "errgonomic"
-version = "0.5.3"
-source = "git+https://github.com/DenisGorbachev/errgonomic#3ab25f519805ed57434b71f280a1ce0e6f5c1645"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "028f96ed6730c5448cd9e01619f34cbd4152f9cf639e8da3eb11a01d3253bb25"
 dependencies = [
  "cfg-if",
+ "shlex",
+ "tempfile",
  "thiserror",
 ]
 
@@ -396,7 +397,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "778e2ac28f6c47af28e4907f13ffd1e1ddbd400980a9abd7c8df189bf578a5ad"
 dependencies = [
  "libc",
- "windows-sys 0.60.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -1183,7 +1184,7 @@ dependencies = [
  "once_cell",
  "socket2",
  "tracing",
- "windows-sys 0.60.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -1336,7 +1337,7 @@ name = "retry-please"
 version = "0.1.0"
 source = "git+https://github.com/DenisGorbachev/retry-please#aa0efa10cceb1a8f122e8976c2724053c4442ad5"
 dependencies = [
- "errgonomic 0.5.3 (git+https://github.com/DenisGorbachev/errgonomic)",
+ "errgonomic 0.5.3",
  "progenitor-client",
  "thiserror",
 ]
@@ -1386,7 +1387,7 @@ dependencies = [
  "errno",
  "libc",
  "linux-raw-sys",
- "windows-sys 0.60.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -1443,7 +1444,7 @@ dependencies = [
  "security-framework",
  "security-framework-sys",
  "webpki-root-certs",
- "windows-sys 0.60.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -1696,7 +1697,7 @@ dependencies = [
  "getrandom 0.3.3",
  "once_cell",
  "rustix",
- "windows-sys 0.59.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
@@ -2102,7 +2103,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.60.2",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]

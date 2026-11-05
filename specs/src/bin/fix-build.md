@@ -2,18 +2,18 @@
 
 ## Background
 
-* I'm running a build of this repository in GitHub Actions
-* The build on Rust `stable` succeeds
-* The build on Rust `beta` fails
-* The build on Rust `nightly` fails
-* More than approximately a month ago, the builds on `nightly` and `beta` succeeded
-* Less than approximately a month ago, the build on `nightly` started to fail, but the build on `beta` succeeded
-* Now, the build on `beta` fails, too
+- I'm running a build of this repository in GitHub Actions
+- The build on Rust `stable` succeeds
+- The build on Rust `beta` fails
+- The build on Rust `nightly` fails
+- More than approximately a month ago, the builds on `nightly` and `beta` succeeded
+- Less than approximately a month ago, the build on `nightly` started to fail, but the build on `beta` succeeded
+- Now, the build on `beta` fails, too
 
 ## Tasks
 
-* Diagnose the root cause
-* Suggest the ways to fix it
+- Diagnose the root cause
+- Suggest the ways to fix it
 
 ## Files
 

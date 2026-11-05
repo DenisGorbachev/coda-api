@@ -20,7 +20,6 @@ exclude = [
     "specs",
     "AGENTS.ts",
     "CargoMetadata.ts",
-    "GeneratedFile.ts",
     "README.ts",
     "AGENTS*.md",
     "deno.lock",
@@ -76,7 +75,7 @@ workspace = true
 [dependencies]
 chrono = { version = "0.4", default-features = false, features = ["serde"] }
 derive_more = { version = "2.0", features = ["display"] }
-errgonomic = "0.5.3"
+errgonomic = "0.6.0"
 futures-util = "0.3.32"
 governor = { version = "0.10" }
 # progenitor-client version must be pinned
