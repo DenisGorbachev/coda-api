@@ -396,6 +396,8 @@ $SDF '"http://schema.org/"' '"<http://schema.org/>"' $GEN
 $SDF 'https://coda.io/trust/tos' '<https://coda.io/trust/tos>' $GEN
 $SDF '\n/// border' ' border' $GEN
 $SDF '    Your doc ID' 'Your doc ID' $GEN
+# Keep the form in one HTML block so rustdoc does not nest a Markdown paragraph inside the fieldset.
+$SDF $'///    \n///  Your doc ID' '///  Your doc ID' "$GEN"
 $SDF "elided_named_lifetimes" "mismatched_lifetime_syntaxes" $GEN
 $SDF "pub struct Client {" "pub struct RawClient {" $GEN
 $SDF "impl Client {" "impl RawClient {" $GEN

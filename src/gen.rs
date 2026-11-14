@@ -47318,7 +47318,6 @@ pub mod types {
 ///    <legend>Doc ID Extractor</legend>
 ///    <input type="text" id="de_docUrl" placeholder="Paste in a Coda doc URL"
 ///           style="width: 250px; padding: 8px; margin-right: 20px;" />
-///    
 ///  Your doc ID is:&nbsp;&nbsp;&nbsp;
 ///      <input id="de_docId" readonly="true"
 ///             style="width: 150px; padding: 8px; font-family: monospace;
