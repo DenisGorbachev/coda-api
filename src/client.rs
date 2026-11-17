@@ -32,6 +32,7 @@ macro_rules! hydrate_references {
     }};
 }
 
+/// The Coda API Client
 pub struct Client {
     pub raw: RawClient,
     pub limiter: Limiter,
