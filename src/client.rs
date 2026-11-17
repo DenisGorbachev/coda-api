@@ -17,8 +17,8 @@ use uuid::Uuid;
 macro_rules! hydrate_references {
     ($client:expr, $doc_id:expr, $references:expr, $get_method:ident, $error_variant:ident) => {{
         let responses = join_all(
-            $references.into_iter().map(|reference| async move {
-                let resource_id = reference.id;
+            $references.into_iter().map(|resource| async move {
+                let resource_id = resource.id;
                 let result = $client.$get_method($doc_id, &resource_id).await;
                 (result, resource_id)
             }),
