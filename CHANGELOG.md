@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Use retry-please 0.1.0 from crates.io.
 - tolerate Clippy derive macro regression
 - validate generated files before commits
 - CLAUDE
