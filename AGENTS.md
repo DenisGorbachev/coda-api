@@ -1626,7 +1626,7 @@ resolver = "3"
 retry-please = { version = "0.1.0", features = ["progenitor-client"] }
 
 [workspace.package]
-version = "0.4.0"
+version = "0.5.0"
 edition = "2024"
 rust-version = "1.93.1"
 license = "Apache-2.0 OR MIT"
