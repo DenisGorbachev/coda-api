@@ -1623,7 +1623,7 @@ CODA_DOC_ID= { provider = "age", value = "YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNT
 resolver = "3"
 
 [workspace.dependencies]
-retry-please = { git = "https://github.com/DenisGorbachev/retry-please", features = ["progenitor-client"] }
+retry-please = { version = "0.1.0", features = ["progenitor-client"] }
 
 [workspace.package]
 version = "0.4.0"

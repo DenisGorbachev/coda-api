@@ -240,7 +240,7 @@ dependencies = [
  "chrono",
  "clap",
  "derive_more",
- "errgonomic 0.6.0",
+ "errgonomic",
  "futures-util",
  "governor",
  "progenitor-client",
@@ -368,15 +368,6 @@ name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
-
-[[package]]
-name = "errgonomic"
-version = "0.5.3"
-source = "git+https://github.com/DenisGorbachev/errgonomic#3ab25f519805ed57434b71f280a1ce0e6f5c1645"
-dependencies = [
- "cfg-if",
- "thiserror",
-]
 
 [[package]]
 name = "errgonomic"
@@ -1335,9 +1326,10 @@ dependencies = [
 [[package]]
 name = "retry-please"
 version = "0.1.0"
-source = "git+https://github.com/DenisGorbachev/retry-please#aa0efa10cceb1a8f122e8976c2724053c4442ad5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "19990fa47093f979dae7d8d292f499c2c53b84e58c44216822f586d2e33df34b"
 dependencies = [
- "errgonomic 0.5.3",
+ "errgonomic",
  "progenitor-client",
  "thiserror",
 ]
